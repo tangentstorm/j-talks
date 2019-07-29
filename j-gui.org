@@ -1,7 +1,5 @@
 
 
-
-
 * hello world
 The minimum script to create a window requires a parent control (window) and a child.
 
@@ -16,7 +14,7 @@ to close it:
 #+end_src
 
 
-To make it self closing:
+Let user close it:
 
 #+begin_src j
   wd 'pc w closeok'
@@ -51,6 +49,33 @@ w_g_mblup =: 3 : 0
 )
 #+end_src
 
+
+* two viewmats:
+
+#+begin_src j
+NB. demo of a gui with two viewmat controls side by side
+
+load'viewmat'
+vmcc_z_ =: glpaint_jgl2_@viewmatcc_jviewmat_
+
+wd 'pc w closeok; minwh 640 320'
+wd 'bin h'
+wd 'minwh  20 320; cc g0 isidraw'
+wd 'minwh 320 320; cc g1 isidraw'
+wd 'pshow'
+
+i0 =: ,.i. 16
+vmcc i0;'g0'
+
+NB. snow crash :)
+sys_timer_z_ =: verb define
+  i1 =: ? 64 64 $ 2
+  vmcc i1;'g1'
+)
+wd 'timer 20'
+
+NB. wd 'timer 0'
+#+end_src
 
 
 * links
