@@ -1,0 +1,379 @@
+#+title: collatz conjecture talk
+
+#+begin_src J
+S =: 1 + 3 * ]                    NB. scale
+R =: -:^:(-.@(2&|))  NB. ^:_            NB. reduce
+C =: (R`S)@.(2&|)^:(1&<)M."0      NB. collatz
+b6 =: 6 & #.^:_1                  NB. int to digits in base 6
+p6 =: (6 p.~ |.)@x:               NB. digits in base 6 to int
+odd =: >:@+:
+#+end_src
+
+
+* IDEA : track the carries for a given prefix in base xxx
+#+begin_src j
+c6 =: 3 : ',.~ ([: {. -~/) &> (<@b6@(,.C))"0  y'
+#+end_src
+
+The goal is to consider suffixes: the n least significant digits of a number in some base n.
+
+I want to know whether the process of running each step of the collatz routine emits any carry digits off to the left, or if the string just changes in place.
+
+EXAMPLE... =4 4 4= in base 6 (172) changes in place to =2 2 2=, which changes to =1 1 1=. The length of the string does not change. On the other hand, =1 0=  goes to =3=, so we've lost a digit.
+
+Now =3= goes to =1 4= so we carried.
+
+So if we consider the length-1 sequence =3=, we would want to record that it maps to the length 1 sequence =4= and there was a carry of =1=, which overflowed.
+
+However, if we consider length 2 sequences, then in the same case, we started with =0 3= and it goes to =1 4= , which then goes to =0 5=, then =2 4= , then back to =0 1=.
+
+Consider:
+
+#+begin_src j
+   <@(>"1)|:  _2 (}.;{.)"1   b6 C^:(<15) (6^32x) + 3
+┌─────────────────────────────────────────────────────────────┬───┐
+│1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│0 3│
+│3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│1 4│
+│1 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│0 5│
+│4 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│2 4│
+│0 1 4 0 4 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│0 1│
+│0 5 0 2 1 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│0 4│
+│0 1 1 3 3 2 1 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│0 1│
+│0 3 4 4 4 0 4 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│0 4│
+│0 0 5 4 1 0 1 0 4 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│0 1│
+│0 2 5 0 3 0 3 2 1 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│0 4│
+│0 0 4 1 3 4 3 5 0 2 1 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│0 1│
+│0 2 0 4 5 1 5 3 1 0 4 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│0 4│
+│0 0 3 1 1 1 5 5 1 4 4 0 4 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│0 1│
+│0 1 3 3 3 5 5 3 5 2 0 2 1 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│0 4│
+│0 0 2 2 2 2 5 5 2 5 0 0 3 2 1 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│0 1│
+└─────────────────────────────────────────────────────────────┴───┘
+#+end_src
+
+each row shows the base 6 digits for a number in a sequence, starting with
+=(6^32x) + 3= ... the line on the right just shows that we're focusing on the last two digits.
+
+#+begin_src j
+   <@(>"1)|:  _2 (}.;{.)"1   b6 C^:(<15) (6^32x) + 9
+┌─────────────────────────────────────────────────────────────┬───┐
+│1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│1 3│
+│3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│4 4│
+│0 4 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│1 1│
+│2 1 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│3 4│
+│1 0 4 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│1 5│
+│3 2 1 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│5 4│
+│1 4 0 4 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│2 5│
+│5 0 2 1 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1│2 4│
+│1 1 3 3 2 1 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│2 1│
+│3 4 4 4 0 4 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1│0 4│
+│0 2 5 0 3 0 3 2 1 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│0 5│
+│1 2 3 1 3 1 4 0 4 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│2 4│
+│0 0 3 1 1 1 5 5 1 4 4 0 4 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│0 1│
+│0 1 3 3 3 5 5 3 5 2 0 2 1 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│0 4│
+│0 0 2 2 2 2 5 5 2 5 0 0 3 2 1 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│0 1│
+└─────────────────────────────────────────────────────────────┴───┘
+#+end_src
+
+
+the 1 all the way to the left is just to illustrate that there's stuff off to the left getting closer and closer on each tick..
+
+
+counting up, 7 is the first two-digit number in base 6 where we have a carry:
+
+#+begin_src j
+   <@(>"1)|:  _2 (}.;{.)"1   b6 C^:(<15)  7
+┌─┬───┐
+│0│1 1│ 7
+│0│3 4│ 22
+│0│1 5│ 11
+│0│5 4│ 34
+│0│2 5│ 17
+│1│2 4│ 52 ~ 16 (mod 36)
+│0│2 1│ 13
+│1│0 4│ 40 ~ 4 (mod 6)
+│0│0 5│ 5
+│0│2 4│ 16
+│0│0 1│ 1
+│0│0 1│ 1
+│0│0 1│ 1
+│0│0 1│ 1
+│0│0 1│ 1
+└─┴───┘
+#+end_src
+
+
+* emitter, buffer, turbine
+:PROPERTIES:
+:TS:       <2019-08-01 06:35PM>
+:ID:       vui9zrk07fi0
+:END:
+
+I want to consider the collatz problem as a sort of cellular automaton, that takes place on an infinite ray of digits. Assuming the least significant digits are on the right, then far out to the left there's an infinite stream of zeros, and then the first non-zero digit.
+
+: 00000 (emitter) (buffer) (turbine)
+
+
+Bascially, the turbine is just a "window" that includes the rightmost n digits in the ray.
+
+The turbine is essentially a state machine that transitions between states at each tick. With nothing but zeros to the left, the turbine has a tendency to cycle between whatever two digit sequences represent the numbers 1 and 4:
+
+#+begin_src j
+   ,. C^:(<20) 100000000000000000000000001x
+100000000000000000000000001
+300000000000000000000000004
+ 75000000000000000000000001
+225000000000000000000000004
+ 56250000000000000000000001
+168750000000000000000000004
+ 42187500000000000000000001
+126562500000000000000000004
+ 31640625000000000000000001
+ 94921875000000000000000004
+ 23730468750000000000000001
+ 71191406250000000000000004
+ 17797851562500000000000001
+ 53393554687500000000000004
+ 13348388671875000000000001
+ 40045166015625000000000004
+ 10011291503906250000000001
+ 30033874511718750000000004
+  7508468627929687500000001
+ 22525405883789062500000004
+#+end_src
+
+Notice how the pattern on the right stays the same.
+
+Meanwhile, the 1 on the left in the first row keeps getting multiplied by 3 and then divided by 4.
+
+Everything is pretty predictable up until the moment the thing on the left gets shifted rightward enough that it touches the turbine:
+
+#+begin_src j
+   ,. C^:(<12) 1000000001x
+1000000001
+3000000004
+ 750000001
+2250000004
+ 562500001
+1687500004
+ 421875001
+1265625004
+ 316406251
+ 949218754
+ 474609377
+1423828132
+#+end_src
+
+here's a similar thing, with the digits in base 6:
+
+#+begin_src j
+   b6"1 C^:(<13) (6^10x)+1
+1 0 0 0 0 0 0 0 0 0 1
+3 0 0 0 0 0 0 0 0 0 4
+0 4 3 0 0 0 0 0 0 0 1
+2 1 3 0 0 0 0 0 0 0 4
+0 3 2 1 3 0 0 0 0 0 1
+1 4 0 4 3 0 0 0 0 0 4
+0 2 3 1 0 4 3 0 0 0 1
+1 1 3 3 2 1 3 0 0 0 4
+0 1 5 2 2 0 2 1 3 0 1
+0 5 4 1 0 1 0 4 3 0 4
+0 0 2 0 4 5 1 5 3 1 1
+0 1 0 2 2 3 5 4 3 3 4
+0 0 3 1 1 1 5 5 1 4 5
+#+end_src
+
+* NOTE . viewmat visualization
+:PROPERTIES:
+:TS:       <2019-08-01 07:59PM>
+:ID:       kv6lyno07fi0
+:END:
+
+here's how a bunch of different patterns evolve:
+#+begin_src j
+viewmat |: b6 C^:(<50*n) p6 4,(n$0),1 1,(n$0),1,(n$0),3,(n$0),5,(n$0),1 [ n=. 32
+#+end_src
+
+or a smaller view, before they start touching each other:
+
+#+begin_src j
+viewmat b6 C^:(<n) p6 4,(n$0),1 1,(n$0),1,(n$0),3,(n$0),5,(n$0),1 [ n=. 32
+#+end_src
+
+
+* the "emitter" and "buffer"
+:PROPERTIES:
+:TS:       <2019-08-01 08:02PM>
+:ID:       m1d4kto07fi0
+:END:
+
+Conceptually, the emitter is just some section of the digits out to the left, which "emits" digits into the buffer.
+
+But in base 2, I like to think of it as a single starting bit off to the left...
+
+Specifically, I like to consider the hypothetical lowest number, L, for which the collatz sequence diverges, and visualize the digits in base 2 (so... bits). In that case, the emitter is simply the position containing the leftmost 1 bit in this number.
+
+Because we've assumed L is the lowest number for which the sequence diverges, it means that the unending sequence of zeros off to the left will never move past the emitter bit. Either the emitter or some bit off to the left must remain set, or the array of bits would represent a number smaller than L.
+
+Now there are three forces acting on the sequence as a whole: division by two, multiplication by 3, and addition by 1.
+
+Division by two is a shift of the whole sequence to the right.
+
+Adding 1 just sends a carry bit off to the left from the right edge. In practice, it flips each bit it finds until it flips a 0.
+
+So: the only way a carry bit from the +1 can make it all the way to the emitter is if all the bits to the right are 1. But: any time a sequence of bits all the way to the right edge are 1 and you add 1, they all become 0, and then the next collatz step wipes them all out.
+
+So: the emitter needs to somehow prevent this from happening.
+
+Anyway, the third operation is multiplying by 3. In binary, this looks like this:
+
+#+begin_src j
+   #: 3^i.20
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 1
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 1 1
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 1 0 0 0 1
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 0 0 1 1
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 1 1 0 1 1 0 0 1
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 0 0 0 1 0 1 1
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 1 1 0 1 0 0 0 0 1
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 1 1 0 0 1 1 1 0 0 0 1 1
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 0 0 1 1 0 1 0 1 0 1 0 0 1
+0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 1 0 1 1 0 0 1 1 1 1 1 1 1 0 1 1
+0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 1 0 1 1 1 1 1 1 0 0 0 1
+0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 1 0 1 0 0 1 1 1 1 0 1 0 0 1 1
+0 0 0 0 0 0 0 0 1 0 0 1 0 0 0 1 1 1 1 1 0 1 1 0 1 1 1 1 0 0 1
+0 0 0 0 0 0 0 1 1 0 1 1 0 1 0 1 1 1 1 0 0 1 0 0 1 1 0 1 0 1 1
+0 0 0 0 0 1 0 1 0 0 1 0 0 0 0 1 1 0 1 0 1 1 1 0 1 0 0 0 0 0 1
+0 0 0 0 1 1 1 1 0 1 1 0 0 1 0 1 0 0 0 0 1 0 1 1 1 0 0 0 0 1 1
+0 0 1 0 1 1 1 0 0 0 1 0 1 1 1 1 0 0 1 0 0 0 1 0 1 0 0 1 0 0 1
+1 0 0 0 1 0 1 0 1 0 0 0 1 1 0 1 0 1 1 0 0 1 1 1 1 0 1 1 0 1 1
+#+end_src
+
+BUT: because there is always a divide by two over on the right, we have to shift each row over by (at least) one more than the previous. So first let's pad this a bit:
+
+#+begin_src j
+   #:  (2^n) * (2&^ %~ 3&^) i.n=.20x
+0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 1 1 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 1 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 1 1 1 1 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 1 0 1 1 0 1 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 1 0 0 0 1 0 0 0 1 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 1 1 0 0 1 1 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 1 0 0 1 1 0 0 1 1 1 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 1 1 1 0 0 1 1 0 1 0 1 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 1 0 1 0 1 1 0 0 1 1 1 1 1 1 1 0 1 1 0 0 0 0 0 0 0 0 0
+0 0 0 0 1 0 0 0 0 0 0 1 1 0 1 1 1 1 1 1 0 0 0 1 0 0 0 0 0 0 0 0
+0 0 0 0 1 1 0 0 0 0 1 0 1 0 0 1 1 1 1 0 1 0 0 1 1 0 0 0 0 0 0 0
+0 0 0 1 0 0 1 0 0 0 1 1 1 1 1 0 1 1 0 1 1 1 1 0 0 1 0 0 0 0 0 0
+0 0 0 1 1 0 1 1 0 1 0 1 1 1 1 0 0 1 0 0 1 1 0 1 0 1 1 0 0 0 0 0
+0 0 1 0 1 0 0 1 0 0 0 0 1 1 0 1 0 1 1 1 0 1 0 0 0 0 0 1 0 0 0 0
+0 0 1 1 1 1 0 1 1 0 0 1 0 1 0 0 0 0 1 0 1 1 1 0 0 0 0 1 1 0 0 0
+0 1 0 1 1 1 0 0 0 1 0 1 1 1 1 0 0 1 0 0 0 1 0 1 0 0 1 0 0 1 0 0
+1 0 0 0 1 0 1 0 1 0 0 0 1 1 0 1 0 1 1 0 0 1 1 1 1 0 1 1 0 1 1 0
+#+end_src
+
+
+The buffer is some sequence of bits between the emitter and the turbine.
+
+It's not actually necessary (we can just have a bigger turbine), but I like to put a buffer of zeros in so I can isolate the emitter.
+
+That's because when you multiply the turbine by 3, even though we've set things up so the carry from the +1 won't reach the emitter, there are other carries just from multiplying by 3, which means the turbine can send bits leftward to boost the signal of the emitter.
+
+And, of course, as you can see in the image above, the emitter is the row with the 1 in it.
+#+begin_src j
+  cc =. #:  (2^n) * (2&^ %~ 3&^) i.n=.20x
+  cc
+0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 1 1 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 1 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 1 1 1 1 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 1 0 1 1 0 1 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 1 0 0 0 1 0 0 0 1 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 1 1 0 0 1 1 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 1 0 0 1 1 0 0 1 1 1 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 1 1 1 0 0 1 1 0 1 0 1 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 1 0 1 0 1 1 0 0 1 1 1 1 1 1 1 0 1 1 0 0 0 0 0 0 0 0 0
+0 0 0 0 1 0 0 0 0 0 0 1 1 0 1 1 1 1 1 1 0 0 0 1 0 0 0 0 0 0 0 0
+0 0 0 0 1 1 0 0 0 0 1 0 1 0 0 1 1 1 1 0 1 0 0 1 1 0 0 0 0 0 0 0
+0 0 0 1 0 0 1 0 0 0 1 1 1 1 1 0 1 1 0 1 1 1 1 0 0 1 0 0 0 0 0 0
+0 0 0 1 1 0 1 1 0 1 0 1 1 1 1 0 0 1 0 0 1 1 0 1 0 1 1 0 0 0 0 0
+0 0 1 0 1 0 0 1 0 0 0 0 1 1 0 1 0 1 1 1 0 1 0 0 0 0 0 1 0 0 0 0
+0 0 1 1 1 1 0 1 1 0 0 1 0 1 0 0 0 0 1 0 1 1 1 0 0 0 0 1 1 0 0 0
+0 1 0 1 1 1 0 0 0 1 0 1 1 1 1 0 0 1 0 0 0 1 0 1 0 0 1 0 0 1 0 0
+1 0 0 0 1 0 1 0 1 0 0 0 1 1 0 1 0 1 1 0 0 1 1 1 1 0 1 1 0 1 1 0
+   c =. I. {. cc     NB. index of the 1 in row 0
+
+   (c&{.; (c&{); (c+1)&}.) {. cc  NB. cut it into 3 sections
+┌─────────────────────┬─┬───────────────────────────────────────┐
+│0 0 0 0 0 0 0 0 0 0 0│1│0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│
+└─────────────────────┴─┴───────────────────────────────────────┘
+#+end_src
+
+Here's what that looks like if we highlight the emitter:
+
+#+begin_src j
+   |: each ,./&.:>"1 |:  (c&{. ; ([:,.c&{) ; (c+1)&}.)"1 cc
+┌─────────────────────┬─┬───────────────────────────────────────┐
+│0 0 0 0 0 0 0 0 0 0 0│1│0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│
+│0 0 0 0 0 0 0 0 0 0 0│1│1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│
+│0 0 0 0 0 0 0 0 0 0 1│0│0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│
+│0 0 0 0 0 0 0 0 0 0 1│1│0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│
+│0 0 0 0 0 0 0 0 0 1 0│1│0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│
+│0 0 0 0 0 0 0 0 0 1 1│1│1 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0│
+│0 0 0 0 0 0 0 0 1 0 1│1│0 1 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0│
+│0 0 0 0 0 0 0 1 0 0 0│1│0 0 0 1 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0│
+│0 0 0 0 0 0 0 1 1 0 0│1│1 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0│
+│0 0 0 0 0 0 1 0 0 1 1│0│0 1 1 1 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0│
+│0 0 0 0 0 0 1 1 1 0 0│1│1 0 1 0 1 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0│
+│0 0 0 0 0 1 0 1 0 1 1│0│0 1 1 1 1 1 1 1 0 1 1 0 0 0 0 0 0 0 0 0│
+│0 0 0 0 1 0 0 0 0 0 0│1│1 0 1 1 1 1 1 1 0 0 0 1 0 0 0 0 0 0 0 0│
+│0 0 0 0 1 1 0 0 0 0 1│0│1 0 0 1 1 1 1 0 1 0 0 1 1 0 0 0 0 0 0 0│
+│0 0 0 1 0 0 1 0 0 0 1│1│1 1 1 0 1 1 0 1 1 1 1 0 0 1 0 0 0 0 0 0│
+│0 0 0 1 1 0 1 1 0 1 0│1│1 1 1 0 0 1 0 0 1 1 0 1 0 1 1 0 0 0 0 0│
+│0 0 1 0 1 0 0 1 0 0 0│0│1 1 0 1 0 1 1 1 0 1 0 0 0 0 0 1 0 0 0 0│
+│0 0 1 1 1 1 0 1 1 0 0│1│0 1 0 0 0 0 1 0 1 1 1 0 0 0 0 1 1 0 0 0│
+│0 1 0 1 1 1 0 0 0 1 0│1│1 1 1 0 0 1 0 0 0 1 0 1 0 0 1 0 0 1 0 0│
+│1 0 0 0 1 0 1 0 1 0 0│0│1 1 0 1 0 1 1 0 0 1 1 1 1 0 1 1 0 1 1 0│
+└─────────────────────┴─┴───────────────────────────────────────┘
+#+end_src
+
+NB. or even simpler:
+
+#+begin_src j
+    (+:{.cc)+"1 cc
+0 0 0 0 0 0 0 0 0 0 0 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 3 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 1 2 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 1 3 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 1 0 3 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 1 1 3 1 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 1 0 1 3 0 1 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 1 0 0 0 3 0 0 0 1 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 1 1 0 0 3 1 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 1 0 0 1 1 2 0 1 1 1 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 1 1 1 0 0 3 1 0 1 0 1 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 1 0 1 0 1 1 2 0 1 1 1 1 1 1 1 0 1 1 0 0 0 0 0 0 0 0 0
+0 0 0 0 1 0 0 0 0 0 0 3 1 0 1 1 1 1 1 1 0 0 0 1 0 0 0 0 0 0 0 0
+0 0 0 0 1 1 0 0 0 0 1 2 1 0 0 1 1 1 1 0 1 0 0 1 1 0 0 0 0 0 0 0
+0 0 0 1 0 0 1 0 0 0 1 3 1 1 1 0 1 1 0 1 1 1 1 0 0 1 0 0 0 0 0 0
+0 0 0 1 1 0 1 1 0 1 0 3 1 1 1 0 0 1 0 0 1 1 0 1 0 1 1 0 0 0 0 0
+0 0 1 0 1 0 0 1 0 0 0 2 1 1 0 1 0 1 1 1 0 1 0 0 0 0 0 1 0 0 0 0
+0 0 1 1 1 1 0 1 1 0 0 3 0 1 0 0 0 0 1 0 1 1 1 0 0 0 0 1 1 0 0 0
+0 1 0 1 1 1 0 0 0 1 0 3 1 1 1 0 0 1 0 0 0 1 0 1 0 0 1 0 0 1 0 0
+1 0 0 0 1 0 1 0 1 0 0 2 1 1 0 1 0 1 1 0 0 1 1 1 1 0 1 1 0 1 1 0
+   viewmat  (+:{.cc)+"1 cc
+
+#+end_src
+
+
+Here's a nice visualization with that all on one line:
+
+#+begin_src j
+viewmat  (+:{.cc)+"1 cc =. #:  (2^n) * (2&^ %~ 3&^) i.n=.32x
+#+end_src
