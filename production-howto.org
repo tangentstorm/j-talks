@@ -1,0 +1,24 @@
+* hardware used
+logitech hd 1080p camera
+turtle beach streaming mic - green setting
+
+https://support.turtlebeach.com/hc/en-us/articles/227345727-Stream-Mic-User-Guide-and-Quick-Start-Guide
+
+not sure about model numbers
+
+* software used
+- emacs org-mode for scripts
+- OBS Studio
+- J
+- Blender
+
+* j setup checklist
+- [ ] run screen-setup.ijs to arrange j editor and terminal
+- [ ] try to remember to close the sidebar!
+
+
+* recording
+
+* editing in blender
+- New / Video Editing
+- 
