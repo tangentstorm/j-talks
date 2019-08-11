@@ -1,5 +1,5 @@
 load 'viewmat'
-require '~/ver/j-talks/vmcc.ijs'
+vmcc =: glpaint_jgl2_@viewmatcc_jviewmat_
 
 base =: 2 : 'v&(#.^:_1)y'
 
@@ -16,17 +16,29 @@ rsp =: monad define
 )
 
 settle =: monad define          NB. recursively settle sandpiles with entries > 3
-  if. # I. , gt =. y > 3 do.
+  if. # I. , y > 3 do.
+    gt =: ((3&<)*[:<.@-:2^.]) y NB. if>3, send floor(1/2 * log2(x)) in all directions
+    NB. gt =: y > 3
+    cn =: y - 4 * gt
     up =.  }. gt , 0            NB. shift in each of the 4 directions
     dn =.  0 , }: gt            NB. (filling in with 0 rather than wrapping)
     lf =.  }."1 gt ,. 0
     rt =.  0 ,. }:"1 gt
-    up + dn + lf + rt + y - gt * 4
+    up + dn + lf + rt + cn
   else. y end.
 )
 
+1r4 * grid - cn =. 4 | grid      NB. center square keeps only remainder
+
+grid =: i. 16 16
+wd'timer 100'
+grid
 hue =: 31 31 31, 63 255 63, 255 63 63,: 255 255 255
-hue =: 255 255 255, 120 120 200, 63 299 93,: 31 31 31
+hue =: 180 180 255, 120 120 200, 63 44 93,: 0 0 15
+lo =: 16b00000f 16b3f2c5d 16b7878c8 16bc4c4ff   NB. i.4 are shades of blue
+hi =: 16bff0000 + 16b001100 * i._16            NB. 4+i.204 are yellow..red
+pal =: lo,hi
+
 
 
 wd 'pc w closeok; minwh 640 640;'
@@ -75,13 +87,21 @@ grid =: 2 * grid
 grid =: 200 (25) } 50 50 $ 2  NB. neat
 
 show =: 3 : 0
-  hue vmcc y;'g'
+  'rgb' vmcc (pal {~ (<:#pal) <.(3+[:<.1.5^.])^:(3&<)"0 y);'g'
 )
+
+render =: verb define
+  if. 2 = #$ im            NB. only render if im is a 2d array
+  do. vmcc im;'g0' end.    NB. (this avoids infinite error boxes)
+)
+
 
 step =: verb define
   grid =: settle grid
-  show 3 <. grid
+  if. 2 = #$ grid            NB. only render if grid is a 2d array
+  do.  show  grid end.
 )
+
 
 sys_timer_z_ =: 3 : 'step_base_ 0'
 
@@ -101,3 +121,9 @@ NB. neat + high res but takes long time
 NB. show grid =: 9 | >.| j./~i:100
 
 grid =: i. 2 2  NB. color palette
+grid =: i. 1 256
+
+load'plot'
+grid =: 1024 * = i. 256
+wd'sm focus edit' [ 'bar' plot ^.1+ +/|: (i.300)=/255<.,grid
+wd'sm focus edit' [ pd'show'
