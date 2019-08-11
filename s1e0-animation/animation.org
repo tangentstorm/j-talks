@@ -1,0 +1,252 @@
+#+title: animations in j
+
+* intro
+** topic
+This video is about
+interactive animations in J.
+
+** screen orientation
+So on the screen here,
+I have two J windows open.
+Down here is the J terminal.
+On the right is the integrated editor.
+I happen to be running running version j807
+but pretty much any version from the past
+couple years should work.
+
+* viewmat
+
+Okay so the first thing we'll do is load viewmat.
+I typed it into the editor window.
+I press control enter.
+And it runs in the terminal.
+
+If you try this and get an error,
+you probably just need to install viewmat.
+To fix that, go to tools/package manager
+from either one of these windows.
+Then select graphics/viewmat
+from this list of packages,
+and hit install.
+Or do what I do and select everything.
+The entire collection is only about 53 megabytes.
+
+Once you get this line to run,
+we can test that viewmat works
+by telling it to render a 10 by 10 grid.                     viewmat i. 10 10
+
+Notice that if we run this line again
+we get another window.
+
+We're going to use viewmat
+as a quick way to get some pixels on the screen.
+
+But for animation
+we want to re-use the same window over and over again.
+so let's make that happen.
+
+* custom window
+
+** lines of code
+#+begin_src j
+wd 'pc w0 closeok'                  NB. parent control (window) named 'w0'
+wd 'minwh 500 500; cc g0 isidraw;'  NB. add an 'isidraw' child control named 'g0'
+wd 'pshow'                          NB. show the window.
+#+end_src
+
+** what the three lines do
+These three lines are what you need to build a GUI in J.
+=wd= stands for window driver.
+It's a verb that interprets
+a mini language for building GUIs.
+
+The first line defines a parent control.
+A parent is just some kind of container.
+In this case it's a window,
+and we named it w0.
+
+The second line creates a 500 by 500 pixel
+child component called g0.
+It's an isidraw, which is a sort of canvas
+component that comes with J.
+
+I believe ISI stands for Iverson Software Incorporated,
+the old company name before jsoftware.
+
+The last line shows the window.
+
+Run all three lines with Control-enter,
+and the window appears.
+
+** position the window
+Just for the purpose of the video, I'm going to change that last line.
+
+#+begin_src j
+wd 'pshow; pmove 40 510 0 0'        NB. show the window at the given coordinates.
+#+end_src
+
+=pmove= just moves and optionally resizes the parent control.
+
+We'll get our feedback from the window itself
+so we don't really need the terminal
+unless there's a bug.
+
+But just as another example of how we're going to control
+this interface through code,
+let's paste in two more lines:
+
+#+begin_src j
+wd 'sm focus term'                  NB. session manager: bring terminal to front
+wd 'psel w0; ptop'                  NB. bring our window to front
+#+end_src
+
+The first line tells the j session manager
+to activate the terminal.
+
+So now the keyboard focus is in the terminal.
+
+If I alt tab, I'm back in the editor
+and I can run this second line to bring my
+parent control back to the top.
+
+* vmcc
+We have two more bits of setup.
+
+First, we want to get viewmat running in that window.
+
+#+begin_src j
+vmcc =: glpaint_jgl2_@viewmatcc_jviewmat_   NB. viewmat to a child control
+#+end_src
+
+I wish I didn't need this line.
+It's something internal to viewmat
+that used to be exposed by default.
+All it does is run viewmat
+and send the output to a child control.
+
+It looks like this:
+
+#+begin_src j
+im =: ? 10 10 $ 100
+vmcc im;'g0'
+#+end_src
+
+So this line just generates a 10 by 10
+grid of integers between 0 and 99.
+
+We're assigning it to a variable named im.
+The left bracket dumps it to the terminal
+just so you can see it.
+
+The next line renders it to our canvas, g0.
+And if we run these two lines again, then
+we get a new random matrix and the image
+gets rendered in place.
+
+And if we kept doing that on a timer,
+that gives us our animation system.
+
+* =step= verb
+So first we'll move these two lines
+into a verb called =step=.
+
+#+begin_src j
+step =: verb define
+  im =: ? 10 10 $ 10
+  vmcc im;'g0'
+)
+#+end_src
+
+To run this, you put the cursor on the end of the first line.
+and press control return
+and it runs the whole definition.
+
+This verb ignores its arguments,
+so we can just pass it anything, and run it like this:
+#+begin_src j
+step''
+#+end_src
+Every time we run it, we get a new random matrix
+and it gets drawn to the screen.
+
+* the timer
+** add =sys_timer=
+Next we need to define a verb called =sys_timer= in the z locale,
+and it's just going to be an alias for =step=.
+#+begin_src j
+sys_timer_z_ =: step_base_
+#+end_src
+
+I don't want to get too deep into locales right now.
+They're very similar to objects in javascript.
+They're just namespaces, but they're chained together,
+so when you look a name up,
+you look at each locale in
+the chain until you find it.
+
+** locales
+The =z= locale is special, in that every chain always ends with =z=.
+By putting something in the =z= locale you're effectively making it global.
+
+The syntax is a little backwards from what you'd see in object orient programming.
+I like to think of these trailing underscores as like the subscripts they use in math.
+So where in most languages you might say this as =z.sys_timer=,
+in J you say, =sys_timer_z_=.
+
+The word =base= is also a locale. It's not special,
+except that it's the default namespace that you get when you start j.
+
+We have to write it here because z is the end of the chain, so it can't
+see anything outside of z, unless we give it an explicit namespace.
+
+** =wd timer=
+So now that we've done this, we can invoke our local =step= verb
+as the global verb =sys_timer=:
+
+#+begin_src j
+sys_timer''
+#+end_src
+
+What was the point of that?
+
+Well, the window driver has a timer capability,
+and it explicitly calls =sys_timer_z_=.
+
+We could have just defined our step verb as =sys_timer_z_= to begin with, but I just prefer this style.
+
+Anyway, you start the timer like this:
+
+#+begin_src j
+wd 'timer 100'
+#+end_src
+
+The number says how many milliseconds to wait between frames.
+Setting it to 0 turns it off.
+
+Okay, so now we've got our animation system.
+
+** update/render
+
+So let's make a small refactoring,
+and split these into separate functions.
+
+
+#+begin_src j
+update =: verb define
+  im =: ? 10 10 $ 100
+)
+
+render =: verb define
+  vmcc im;'g0'
+)
+
+step =: render @ update
+#+end_src
+
+* clock animation
+** jgl2
+** draw a clock
+** move it clockwise
+** time dependent calculations
+* colors for viewmat
+* outro
