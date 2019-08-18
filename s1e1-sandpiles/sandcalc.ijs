@@ -19,8 +19,6 @@ NB. basic sandpile logic ---------------------------------------
 settle =: monad define          NB. recursively settle sandpiles with entries > 3
   if. # I. , y > 3 do.
     gt =: y > 3
-    NB. alternate rule : if>3, send floor(1/2 * log2(x)) in all directions
-    NB. gt =: ((3&<)*[:<.@-:2^.]) y 
     cn =: y - 4 * gt
     up =. }. gt , 0             NB. shift in each of the 4 directions
     dn =. 0 , }: gt             NB. (filling in with 0 rather than wrapping)
@@ -29,7 +27,6 @@ settle =: monad define          NB. recursively settle sandpiles with entries > 
     up + dn + lf + rt + cn
   else. y end.
 )
-
 
 NB. color palette ----------------------------------------------
 
@@ -42,13 +39,12 @@ NB. main animation logic ---------------------------------------
 
 stl =: settle^:_
 NxN =: 5 5
-ZSP =: ([: stl ] - stl) NxN $ 6    NB. calculate zero for NxN
-NB. https://codegolf.stackexchange.com/questions/106963/find-the-identity-sandpile
+ZSP =: stl (4 - stl) NxN $ 4    NB. zero for NxN: https://hal.archives-ouvertes.fr/hal-00016378
 
 pen =: 0                           NB. color to draw with
 sp0 =: NxN $ 0
-sp1 =: ZSP
-sp2 =: NxN $ 3
+sp1 =: NxN $ 3
+sp2 =: ZSP
 
 update =: verb define
   sp3 =: settle^:_ sp0 + sp1 + sp2
@@ -126,13 +122,19 @@ set_box =: dyad : 'pen (<0>.(<:$x)<.whichbox y) } x'
 NB. click the palette to change current pen
 scw_pal_mblup =: verb : 'glpaint glsel ''pal'' [ pen =: {. whichbox 50'
 
+NB. mouse wheel on any input pile rotates through palette
+scw_sp0_mwheel =: verb define
+  pen =: 4|pen-*{:".sysdata NB. absolute val of last item is wheel dir
+  glpaint glsel'pal'
+)
+scw_sp1_mwheel =: scw_sp2_mwheel =: scw_sp0_mwheel
+
 NB. left click draws on the input
 scw_sp0_mblup =: verb : 'sp0 =: sp0 set_box boxsize'
 scw_sp1_mblup =: verb : 'sp1 =: sp1 set_box boxsize'
 scw_sp2_mblup =: verb : 'sp2 =: sp2 set_box boxsize'
 
 NB. left drag does the same
-NB. scw_sp1_mmove =: scw_sp1_mblup^:([: button 0:)  NB. gave me errors dragging left.
 scw_sp0_mmove =: verb : 'if. button 0 do. scw_sp0_mblup _ end.'
 scw_sp1_mmove =: verb : 'if. button 0 do. scw_sp1_mblup _ end.'
 scw_sp2_mmove =: verb : 'if. button 0 do. scw_sp2_mblup _ end.'
@@ -144,8 +146,8 @@ scw_sp2_mbrup =: verb : 'sp2 =: sp3'
 
 NB. middle click to reset the input
 scw_sp0_mbmup =: verb : 'sp0 =: NxN$0'
-scw_sp1_mbmup =: verb : 'sp1 =: ZSP'
-scw_sp2_mbmup =: verb : 'sp2 =: NxN$3'
+scw_sp1_mbmup =: verb : 'sp1 =: NxN$3'
+scw_sp2_mbmup =: verb : 'sp2 =: ZSP'
 
 
 NB. animation engine -------------------------------------------

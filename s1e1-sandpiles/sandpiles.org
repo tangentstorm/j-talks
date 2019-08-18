@@ -1,16 +1,66 @@
 #+title: sandpile cellular automaton
 
-* basic sandpile rules
+* Intro
+** sandpile demo
+What you're looking at here is called a sandpile.
+It's just a 2 dimensional array of natural numbers, and each number represents a number of grains of sand.
+The numbers 0,1,2, and 3 make stable piles
+But as soon as you put a number greater than 4 on the board, the pile in that cell topples,
+sending one grain of sand to each of its four neighbors.
 
-* the rules in j
-** neighborhood (explicit)
+If you put a four next to the edge of the board, one of the grains just falls off the edge.
+Same thing in the corners: two grains fall off.
+
+If you have a four next to a three, then you wind up with a chain reaction.
+It's a bit like dominoes.
+
+And if you have any number greater than four, (say 2 to 16th),
+then it will just keep pumping out four grains at each step,
+until it runs down.
+
+** segue to j
+As you can see, you can start to get some really intricate mandala-like patterns.
+
+* sandpaint
+** orientation
+my last video talked about how to use vmcc to draw 2d arrays (matrices) on the screen
+nothing's changed for this big sandpile array
+we're just drawing a matrix called ~sp~ on each tick.
+
+Also note that we're passing in 'rgb' for our palette.
+This means the numbers we pass in are 32bit rgba numbers like you'd see in html.
+J lets you use any base you want.
+
+** drawing the palette
+the palette on the left isn't much different,
+we're drawing a 1 by 16 matrix called pal
+
+except we're also drawing some numbers
+and we have this box to represent
+the currently selected color.
+that's stored in a variable called pen
+
+** changing the pen color
+mouse click handler:  =win_pal_mblup=
+increment pen
+which one we clicked
+sysdata
+=whichbox=
+=pal_num=
+=pal_rgb=
+=pal_txt=
+
+** drawing on the canvas
+mapping colors to rgb
+same mouse calculation, but now use amend
+
+** the rules in j
+
+** keyboard bindings
 
 
-* neighborhood (tacit)
-* 
-* logarithmic scale
-** animated plot
-
+* cookbook
+** generating arrays
 
 So the promise was that we'd provide some way to control all this with code.
 Here's what I had in mind:
@@ -31,8 +81,7 @@ im =: ~:/\^:(<@#) 8 # 1      NB. mysterious triangle??
 
 These are just a bunch of lines I came up with.
 
-
-
+** transformations
 #+begin_src j
 NB. operators on the current pattern:
 im =: im * i.$im             NB. rainbowfy a black and white image
@@ -55,7 +104,6 @@ im =: }."1 im ,. 0           NB. shift left, pad with 0
 im =: 0 ,. }:"1 im           NB. shift right, pad with 0
 #+end_src
 
-
 you can experiment with running these lines interactively with ctrl-enter,
 or ctrl-r which runs the line without advancing the cursor (so you can run it over and over again)
 
@@ -74,18 +122,95 @@ render =: verb define
 )
 #+end_src
 
-Finally, here are a couple different takes on the update function:
 
-#+begin_src j
-NB. some update strategies:
-update =: verb def 'im =: 10 | im + 1'   NB. rotate the palette
-update =: ]                              NB. do nothing
-#+end_src
+* The Sandpile Paper
 
-Anyway, my hope is that some of you actually download and experiment with this code.
-You can also post questions to the jsoftware forums or the IRC channel.
+Sandpiles were introduced in a physics paper in 1987.
 
-I intend this to be the first in a series of videos about interactive j.
-The next couple videos are going to build on this initial framework
-to do some more interesting things.
+As far as I can tell, they were trying to model the idea that certain systems
+tend to naturally settle into a critical point that's just barely stable,
+where a slight disturbance triggers a huge change -
+something like an avalanches and earthquakes.
 
+So for their work, they generated big grids full of random big numbers,
+letting everything settle, and then studied how far the cascade extended when
+they then added a single extra gain of sand.
+
+* Sandpile Math
+Since then, sandpiles have caught the attention of mathematicians.
+In fact, I first heard about them on a numberphile video
+(which I've linked in the description)
+that explains how for any size grid
+(or even arbitrary connected graph)
+there's a subset of sandpile configurations
+that form a group under addition with settling.
+
+So to show what that means, here's a little calculator.
+Basically, you can this all-zero sandpile to any sandpile,
+and it acts just like adding zero to an integer.
+
+But you can never add any two other sandpiles together
+to get this one, because you'd always leave some sand on the table.
+
+But it turns out that for any size grid you can come up with,
+there's always a subset of configurations for which you can define
+a second zero, and for any sandpile in this subset, there's always
+an inverse sandpile that brings it back to zero.
+
+So this number in the middle is the group zero, and
+according to this calculator, adding it to the grid of all
+threes produces the grid of all threes.
+
+If I understood everything correctly, then you can test whether
+a particular configuration is in the group just by adding this
+middle zero to it. If it comes out the same, then it ought
+to have an inverse.
+
+So for example, this grid of all threes has an inverse,
+but any time you put two zeros next to each other,
+you get something different. Same thing with any square of ones.
+There's nothing you can add to this to get back to zero.
+
+Well, okay, but how do we actually know this block of solid threes has an inverse?
+I suspect there's an algorithm that comes up with it, and that people who have
+studied this already know what it is. But I don't know what it is.
+
+However, I do know what the inverse of this sandpile is, because I found it:
+
+3 1 3 1 3
+1 3 2 3 1
+3 2 1 2 3
+1 3 2 3 1
+3 1 3 1 3
+
+It's actually kind of an interesting puzzle to find a group item and then try to figure this out.
+
+
+* Video Description and Links
+
+Code for this episode:
+https://github.com/tangentstorm/j-talks/tree/master/s1e1-sandpiles
+
+Numberphile video on sandpiles with Dr Luis David Garcia-Puente:
+https://www.youtube.com/watch?v=1MtEUErz7Gg
+
+Professor David Perkinson has a textbook on sandpile math, as well as interactive software:
+http://people.reed.edu/~davidp/
+
+Original sandpile paper:
+http://cqb.pku.edu.cn/tanglab/pdf/1987-63.pdf
+
+Sandpile math paper, including the algorithm to generate the "zero":
+https://hal.archives-ouvertes.fr/hal-00016378
+
+WikiZero on sandpiles:
+https://www.wikizero.com/en/Sandpile
+
+Code golf challenge with sandpiles in various languages:
+https://codegolf.stackexchange.com/questions/92251/build-a-sandpile
+
+J Vocabulary:
+https://code.jsoftware.com/wiki/NuVoc
+
+Download J from:
+https://code.jsoftware.com/wiki/Guides/Getting_Started
