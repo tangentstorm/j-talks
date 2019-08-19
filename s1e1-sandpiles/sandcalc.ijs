@@ -11,56 +11,31 @@ NB. https://en.wikipedia.org/wiki/Abelian_sandpile_model
 NB. https://www.youtube.com/watch?v=1MtEUErz7Gg (numberphile)
 NB. ------------------------------------------------------------
 
-load 'viewmat'
-coinsert each 'jviewmat';'jgl2'
-
-NB. basic sandpile logic ---------------------------------------
-
-settle =: monad define          NB. recursively settle sandpiles with entries > 3
-  if. # I. , y > 3 do.
-    gt =: y > 3
-    cn =: y - 4 * gt
-    up =. }. gt , 0             NB. shift in each of the 4 directions
-    dn =. 0 , }: gt             NB. (filling in with 0 rather than wrapping)
-    lf =. }."1 gt ,. 0
-    rt =. 0 ,. }:"1 gt
-    up + dn + lf + rt + cn
-  else. y end.
-)
-
-NB. color palette ----------------------------------------------
-
-lo =: 16b00000f 16b3f2c5d 16b7878c8 16bc4c4ff  NB. i.4 drawn as shades of blue
-hi =: 16bff0000 + 16b001100 * i._16            NB. 4+i.204 are yellow..red
-pal =: lo,hi
+require 'viewmat'
+coinsert 'jviewmat jgl2'
+require '~JTalks/s1e1-sandpiles/sandpiles.ijs'
 
 
 NB. main animation logic ---------------------------------------
 
 stl =: settle^:_
 NxN =: 5 5
-ZSP =: stl (4 - stl) NxN $ 4    NB. zero for NxN: https://hal.archives-ouvertes.fr/hal-00016378
+ZSP =: stl (4 - stl) NxN $ 4    NB. "zero": https://hal.archives-ouvertes.fr/hal-00016378
 
-pen =: 0                           NB. color to draw with
+pen =: 0                        NB. color to draw with
 sp0 =: NxN $ 0
 sp1 =: NxN $ 3
 sp2 =: ZSP
 
 update =: verb define
-  sp3 =: settle^:_ sp0 + sp1 + sp2
+  sp3 =: stl sp0 + sp1 + sp2
 )
 
 render =: verb define
-  spcc sp0;'sp0'
-  spcc sp1;'sp1'
-  spcc sp2;'sp2'
-  spcc sp3;'sp3'
-)
-
-spcc =: verb define   NB. view a sandpile in a child control.
-  'sp cc' =. y
-  'rgb' vmcc (pal {~ (<:#pal) <. sp);cc
-  glpaint''
+  spcc 'scw';'sp0';sp0
+  spcc 'scw';'sp1';sp1
+  spcc 'scw';'sp2';sp2
+  spcc 'scw';'sp3';sp3
 )
 
 
@@ -123,11 +98,11 @@ NB. click the palette to change current pen
 scw_pal_mblup =: verb : 'glpaint glsel ''pal'' [ pen =: {. whichbox 50'
 
 NB. mouse wheel on any input pile rotates through palette
-scw_sp0_mwheel =: verb define
+scw_pal_mwheel =: verb define
   pen =: 4|pen-*{:".sysdata NB. absolute val of last item is wheel dir
   glpaint glsel'pal'
 )
-scw_sp1_mwheel =: scw_sp2_mwheel =: scw_sp0_mwheel
+scw_sp0_mwheel =: scw_sp1_mwheel =: scw_sp2_mwheel =: scw_pal_mwheel
 
 NB. left click draws on the input
 scw_sp0_mblup =: verb : 'sp0 =: sp0 set_box boxsize'

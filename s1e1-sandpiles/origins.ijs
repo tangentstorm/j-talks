@@ -4,4 +4,5 @@ NB. by Per Bak, Chao Tang and Kurt Wiesenfeld
 
 grid =: 4 + ?100 100 $ 4
 wd 'timer 1'
-grid =: 4 (<? 100 100) } grid
+grid =: 4 (<? 100 100) } grid0 =: grid
+viewmat grid0 ~: grid
