@@ -3,60 +3,545 @@
 * Intro
 ** sandpile demo
 What you're looking at here is called a sandpile.
-It's just a 2 dimensional array of natural numbers, and each number represents a number of grains of sand.
-The numbers 0,1,2, and 3 make stable piles
-But as soon as you put a number greater than 4 on the board, the pile in that cell topples,
-sending one grain of sand to each of its four neighbors.
+Each square contains zero or more grains of sand, indicated by the color.
+If you have 0, 1, 2 or 3 grains, the pile is stable.
+But as soon as you put more than 3 in a cell, the sand topples over
+and sends one grain of sand to each of its four neighbors.
 
-If you put a four next to the edge of the board, one of the grains just falls off the edge.
-Same thing in the corners: two grains fall off.
+If you put a four next to the edge of the board, it still sends out four, but one falls off the edge.
+Same thing in the corners: put a four grains here, and two fall off the edge.
 
-If you have a four next to a three, then you wind up with a chain reaction.
-It's a bit like dominoes.
+If you have a four next to a three, then when the four topples,
+it adds a grain to the three, and then that one topples,
+so you get a chain reaction.
 
-And if you have any number greater than four, (say 2 to 16th),
+And if you have any number greater than four, (say 256),
 then it will just keep pumping out four grains at each step,
 until it runs down.
 
-** segue to j
-As you can see, you can start to get some really intricate mandala-like patterns.
+Those are the rules. As you can see, you start getting
+some really intricate patterns rather quickly,
+and it's kind of fun to just draw a pattern,
+let it run, and see what comes out.
+
+This video is about how to make applications like this
+in the J programming language.
+
+We'll cover both the interactive mouse and keyboard part
+and the actual sandpile simulation.
+
 
 * sandpaint
-** orientation
-my last video talked about how to use vmcc to draw 2d arrays (matrices) on the screen
-nothing's changed for this big sandpile array
-we're just drawing a matrix called ~sp~ on each tick.
+** The colors
+My last video talked about how to use vmcc to draw 2d arrays (matrices) on the screen.
+The only thing that's changed here is the way I'm specifying colors.
 
-Also note that we're passing in 'rgb' for our palette.
-This means the numbers we pass in are 32bit rgba numbers like you'd see in html.
-J lets you use any base you want.
+Normally viewmat takes the min and max numbers in the matrix you're viewing
+and maps the palette evenly across that range. But that doesn't work so well
+when you have a mix of really small numbers like zero through four,
+and then really big numbers like 2^16.
+
+I'm still using a palette, but I map the numbers on the grid to the numbers in the
+palette up front, and then tell viewmat to just render the numbers as RGB color values
+by passing in the string 'rgb' as the left parameter.
+
+#+begin_src j
+
+lo =: 16b00000f 16b3f3f9d 16b7878d8 16bacacff   NB. i.4 drawn as shades of blue
+hi =: 16bff0000 + 16b001100 * i._16             NB. 4+i.204 are yellow..red
+
+pal =: lo,hi
+num =: 0 1 2 3, 2^2+i.16                        NB. the actual values to draw
+#+end_src
+
+So the first four colors are just these blueish colors that I picked by hand,
+and this formula calculates the gradient between yellow and red.
+This '16b' indicates that the number is hexadecimal,
+(kind of an unusual prefix, but you can specify any base you want)
+then these two digits represent the red byte, (ff is 255, which is the highest value for a byte, so this is pure red),
+the middle two represent green. 11 in hex is 16+1 or 17 so this is a really dark green.
+Then here we're multiplying that green by the numbers 0 through 15, so it goes from 00 or black to ff or pure green.
+And when you add the red, that gives you these shades of yellow and orange.
+
+
+So pal is the palette, num is the number to actually put in the grid when we draw,
+and then ... sandcolor is a verb that maps any number back to the palette.
+
+#+begin_src j
+NB. map any non-negative integer to the palette
+sandcolor =: pal {~ (<:#pal) <.(2+[:<.2^.])^:(>4:)"0
+#+end_src
+
+It says for each number in the input, if it's less than or equal to four, leave it alone,
+otherwise take the base 2 logarithm, round it down, and add two.
+If that number is bigger than the length of the palette minus one
+(meaning the last index, since they're numbered at zero),
+then replace it with that number. (This symbol is max.)
+Now we're left with an index, and we just take that item from the palette.
+
+So if we apply this function the values in num, we should see our palette.
+
+: hfd sandcolor num
+
+** Drawing the sandpile
+
+So to draw a sandpile, we just use viewmat.
+This is pretty much what we had last time, except I'm also explicitly passing in the name of the window so I can bring up second window in a little while.
+
+#+begin_src j
+render =: verb define
+  spcc 'spw';'sp';grid
+  if. showgrid do.
+    'vw vh' =. glqwh'sp' [ 'gh gw' =. $ grid
+    glpen glrgb 255 255 255
+    gllines (0, ], vw, ])"0 (vh%gh) * i.gh
+    gllines (], 0, vh,~])"0 (vw%gw) * i.gw
+  end.
+)
+#+end_src
+
+
+And of course I'm also drawing the lines for this grid.
+The shape of the grid gives us its height and width.
+And this means query width and height of the viewport.
+If we divide the viewport into this many chunks we get the cell size,
+and if we multiply that by this range, we get the y coordinate for each horizontal line.
+So then this part maps each y coordinate to the start and end coordinates,
+and gllines draws the whole array.
+Same thing for the vertical lines.
+
+So that's the sandpile drawing.
 
 ** drawing the palette
-the palette on the left isn't much different,
-we're drawing a 1 by 16 matrix called pal
 
-except we're also drawing some numbers
-and we have this box to represent
-the currently selected color.
-that's stored in a variable called pen
+Notice that up until now, we've never explicitly use a loop.
+Working with arrays just gives us that implicitly.
+
+When it came time to draw the labels on the palette,
+I decided to use an actual loop.
+
+You could certainly cram all this into one line without a loop,
+but there's a lot going on, and it's not terribly interesting.
+
+Basically, to center something, you take half the width of the drawing area
+and subtract half the width of the thing you're drawing.
+
+In the interest of time I'm not going to say more than that,
+but if you want a better understanding of this,
+the easiest way is to just download the code and experiment.
 
 ** changing the pen color
-mouse click handler:  =win_pal_mblup=
-increment pen
-which one we clicked
-sysdata
-=whichbox=
-=pal_num=
-=pal_rgb=
-=pal_txt=
 
-** drawing on the canvas
-mapping colors to rgb
-same mouse calculation, but now use amend
+I will point out that the the current drawing color
+is stored in a member variable called pen. It's just
+a number betwen 0 and 19 corresponding to an index
+in the pal and num arrays.
+
+You should be able to select a color either by clicking on it,
+or by turning the mouse wheel. And you should be able to turn
+the wheel even while you're drawing.
+
+[ TODO: clear the screen ]
+
+So the way this works, is we add a mouse wheel event handler
+for both the sandpile and palette controls.
+
+#+begin_src j
+NB. mouse wheel on either control rotates through palette
+spw_sp_mwheel =: spw_pal_mwheel =: verb define
+  smoutput sysdata
+  pen =: (#pal)|pen-*{:".sysdata NB. sign of last item is wheel dir
+  glpaint glsel'pal'
+)
+#+end_src
+
+Event handlers are just verbs, and they follow this naming convention of
+parent name, child name, event name. So here I'm just giving two names to
+the same verb, and they start working immediately.
+
+Now the way mouse events work is that the coordinates get stuck in this string called sysdata.
+Let's have it print each time I scroll the mouse wheel.
+
+: smoutput sysdata
+
+For every mouse event on an isigraph, sysdata is going to be a string with the position of the mouse cursor,
+the width and height of the viewport, a set of bits representing which of the first three buttons were down,
+two bits for whether shift or control were pressed,
+and the mouse wheel rotation in degrees.
+(These two bits are always zero)
+
+So here we just convert that string to an array, take the last item.
+For my mouse that seems to always be either fifteen or negative fifteen, but probably it changes with different hardware.
+Anyway, we don't care about the number, just the direction, so asterisk takes the sign of that, giving us -1, 0, or 1.
+We add that to our pen variable, and then take that modulo the length of the palette so it wraps around.
+
+Then we just tell the palette control to repaint, which triggers a paint event, which calls =spw_pal_paint=.
+
+Now to handle clicking we make another event handler -- =mblup= means mouse button left up.
+
+#+begin_src j
+
+whichbox =: verb : '|. <. y %~ 2 {. ".sysdata'
+
+NB. click the palette to choose a color:
+spw_pal_mblup =: verb define
+  glpaint glsel 'pal' [ pen =: {. whichbox 40
+)
+#+end_src
+
+But this time we want to pay attention to the first two numbers to figure out which box got clicked on.
+We divide by the size of the boxes, (which I passed in here) round down and then reverse because
+the mouse coordinates are x y but for an array the y coordinate comes first.
+
+So that gives us the y and x coordinates of the box in the grid, but we only have one column so we only need the y.
+So we use the behead operator and that's our new pen, and again we tell the palette to repaint itself.
+
+** clicking to draw
+
+Now, when we click the sandpile widget, the same calculation needs to happen.
+
+#+begin_src j
+NB. left click or drag draws on the input
+spw_sp_mblup =: verb define
+ boxsize =. (glqwh 'sp')% |.$ grid
+ grid =: grid mousedraw boxsize
+)
+#+end_src
+
+For the palette, the box size was fixed, but for the sandpile,
+we can change the size of the grid, so we have to figure it out dynamically.
+And of course, it's the same calculation as before, where
+we query the width and height of the canvas and divide by the shape of the grid
+with this reverse in the middle because shape gives height and width instead
+of width and height.
+
+Then we call mousedraw:
+
+#+begin_src j
+mousedraw =: dyad define
+  (pen { num) (<  0>.(<:$x)<.  whichbox y) } x
+)
+#+end_src
+
+Now mousedraw takes the grid on the left (so that's x)
+and the box size on the right. (That's y).
+The box size goes into whichbox,
+which looks at sysdata
+and gives back the y x grid coordinates of the mouse.
+
+This part in the middle clamps those coordinates so they're between zero zero (which is upper left)
+and the lower right corner, which is one less than the height and width of the grid.
+This is completely un-necessary for clicking because this =mblup= only fires when you're actually inside the grid.
+But we're going to use this routine again later for dragging
+and if you drag off the side it sometimes fires the event even when you're out of bounds.
+
+Okay so now we have the clamped grid coordinates, and this less than sign puts them in a box.
+Now this whole line says to take the number corresponding to the current pen,
+and put it into a copy of the grid at the coordinates we calculated.
+
+** Amend
+
+The operation is called amend. The way to remember what's happening is that when
+'from' (left curly) takes something out of an array, it points away.
+Amend puts something into the array and it takes two arguments on the left to tell it what and where.
+So 'from' is a dyadic verb, and 'amend' is an adverb that takes the position and returns a dyadic verb.
+
+Amend is something you'll do all the time, so lets pause a minute and do a simpler example.
+
+Suppose you have a grid like
+
+#+begin_src j
+  i. 3 5
+#+end_src
+
+Then the coordinates of the seven are one down and two to the right.
+Then we can replace the seven with infinity like this:
+
+#+begin_src j
+  _ (<1 2) } i. 3 5
+#+end_src
+
+The reason we box 1 2 is because we can assign multiple positions at once, and we need some way to distinguish pairs of coordinates from pairs of items. The items of a matrix are its rows, so without the box, it replaces the entirety of rows one and two. Likewise, if we want to replace two different individual cells, we can pass in two boxes.
+
+#+begin_src j
+  _ (0 0; 1 2) } i. 3 5
+#+end_src
+
+Semicolon is called link. Roughly speaking, it boxes its arguments and combines them into an array.
+More precisely, it boxes x and then boxes y unless y is already boxed. That way you can use it as a separator
+and not wind up with nested boxes.
+
+** boxing
+
+Why is it called boxing?
+
+Well...
+
+#+begin_src j
+ 0 0 ; 1 2
+#+end_src
+
+Partially because J draws it as a box...
+
+#+begin_src j
+  < 0 0 ; 1 2
+#+end_src
+
+And also because every value in an array has to have the same type in J.
+You can't have an array that contains both numbers and characters:
+
+But you can have an array with two boxes, regardless of what's inside them.
+
+Anyway, to recap, boxing is also the way to amend an array at particular coordinates, and that's what we're doing in mousedraw. So now, we can click to our heart's content and draw with our pen in the grid.
+
+** drag to draw
+
+And of course it would be much nicer if we could draw continously by holding the left button down and moving the mouse.
+
+So that looks like this:
+
+#+begin_src j
+button  =: verb : 'y { 4 }. ".sysdata'
+spw_sp_mmove =: verb : 'if. button 0 do. spw_sp_mblup _ end.'
+#+end_src
+
+When the mouse moves over the sandpile in the sandpile window,
+if button zero is down then just call the click method.
+
+The infinity symbol is just serving as a dummy value to invoke the function.
+It doesn't matter what value you pass in since =mblup= ignores its argument.
+Normally you use the empty string,
+but since this is so short I just stuck the definition on one line,
+replacing the usual 'define' with just a bare colon followed by a string.
+So if I used the empty string here
+I'd have to escape it with two extra apostrophes,
+and that's just silly.
+
+Anyway, now we can draw continuously.
+
+** keyboard bindings
+
+One more thing before we move onto the simulation part. Let's add some key bindings.
+
+It's just another event handler:
+
+#+begin_src j
+spw_pal_char =: spw_sp_char =: verb define
+  smoutput sysdata
+)
+#+end_src
+
+Except now sysdata contains the character you type on the keyboard.
+It's actually a string but with some special handling for arrow keys.
+There's also a separate event for function keys and control key combinations
+because those are global to the whole window, and these are specific to a child control.
+But this is good enough for now. So let's grab the first character and make it do things.
+
+#+begin_src j
+ select. {. sysdata
+   case. 'z' do. render grid =: ($grid)$0          NB. z = all zero
+   case. 'r' do. render grid =:?($grid)$4          NB. r = random
+   case. 'g' do. render showgrid =: -. showgrid    NB. g = toggle grid lines
+   case. '1' do. wd'timer 1000'                    NB. 1 = pretty slow
+   case. '2' do. wd'timer 500'                     NB. ...
+   case. '3' do. wd'timer 100'
+   case. '4' do. wd'timer 50'
+   case. '5' do. wd'timer 25'                      NB. ...
+   case. '9' do. wd'timer 1'                       NB. 9 = fast as possible
+   case. '0' do. wd'timer 0'                       NB. 0 = stop
+   case. ' ' do. step [ wd'timer 0'                NB. space = single step
+ end.
+#+end_src
+
+As it says, z sets every cell to zero, r makes every cell a random int between 0 and 3.
+g toggles the grid display. (This -. symbol means 'not', or 1 minus.)
+Various number keys run the simulation at different speeds,
+Zero stops the timer completely.
+Space makes sure it's stopped and then takes a single step.
+
+If you recall, step is just the composition of render and update.
+We've already looked at render, so now we need to implement update.
+
+All update needs to do is take one step in the sandpile simulation.
+I'm going to call that operation 'settle':
+
+#+begin_src j
+update =: verb define
+  grid =: settle grid
+)
+
+settle =: ] NB. TODO
+#+end_src
+
+Before I fill this in, let's add a few more keyboard shortcuts so we can look at each step in isolation:
 
 ** the rules in j
 
-** keyboard bindings
+The first rule is that any cell with 3 grains or fewer is stable,
+and we only need to address the values that are greater than 3.
+
+#+begin_src j
+   case. '>' do. render grid =: grid > 3           NB. > = greater than 3
+#+end_src
+
+The greater than operator has rank 0,
+meaning it operates on each individual number in the input array,
+and returns a result with the same shape as the input,
+with a 1 in each cell where the left argument was greater,
+and ther rest of the cells filled with zeros.
+
+So if we press r to make a random array of numbers less than four,
+sprinkle in some big numbers
+and then press the button
+we reduce the whole thing to ones and zeros.
+
+So these blue cells have at least four grains of sand.
+We need to send one grain in each of the four directions.
+
+One way to do that is to make four copies of this grid, shifted up, down, left, and right,
+and add them all together.
+
+We know how to add, so let's look at one way we could do shift.
+
+#+begin_src j
+   case. 'w' do. render grid =: }. grid , 0     NB. w = move up
+#+end_src
+
+Right curly dot is 'behead'. So all this does is append a row of zeros to the bottom of the grid,
+and then chop off the first row. So all the values move up, and eventually some fall off the top.
+
+#+begin_src j
+   case. 's' do. render grid =: }: 0 , grid     NB. s = move down
+#+end_src
+
+In the other direction, right curly colon is 'curtail'.
+It drops the last item of its input, so in this case, it drops the last row.
+And prior to that, the zero comma appends a row of zeros to the top.
+So this shifts the whole grid down.
+
+#+begin_src j
+   case. 'a' do. render grid =: }."1   grid ,. 0     NB. a = move left
+   case. 'd' do. render grid =: }:"1 ] 0 ,. grid     NB. d = move right
+#+end_src
+
+Left and right work the exact same way, but you have to tell it to operate at rank 1,
+meaning the rows of values rather than the list of rows.
+
+Double quote is pronounced "rank" so this literally says behead at rank 1, curtail at rank 1.
+The right bracket is just a passthrough function to separate the 1 from the 0 so they don't make an array.
+(We could use parens the same way.)
+
+Comma dot is called stitch. In this particular case it's the same thing as comma rank 1.
+More precisely, it's comma rank negative 1, meaning one less than the rank of the inputs.
+Since a grid is a rank two array, it has the effect of comma rank 1 and also looks a bit nicer.
+
+** settle
+
+Okay, so now we can write settle.
+
+#+begin_src j
+settle =: monad define          NB. settle sandpiles with entries > 3
+  gt =. y > 3
+  up =. }.   gt ,  0            NB. shift in each of the 4 directions
+  dn =. }:    0 ,  gt           NB. (filling in with 0 rather than wrapping)
+  lf =. }."1 gt ,. 0
+  rt =. }:"1  0 ,. gt
+  cn =. _4 * gt                 NB. one more for 4 grains we subtract from the center
+  y + up + dn + lf + rt + cn
+)
+#+end_src
+
+So now when I press =2= to start the timer at two frames per second,
+I can draw with sand and it topples in real time.
+
+** golfing
+
+That's one way to write this in J.
+
+If you're disappointed that this is too readable and easy to understand
+and you were hoping for something more exotic to impress your friends
+and terrify your enemies
+then I have just the thing for you.
+
+Here is a complete standalone J program that fills a 50 by 50 grid with the
+number four, runs the sandpile simulation until it stops, and outputs the results.
+
+
+
+
+
+
+
+* The Sandpile Paper
+
+#+begin_src j
+   NB. -- original experiment --
+   case. 'R' do. render grid =: 4 + ? 100 100 $ 4   NB. R = random 'big' numbers
+   case. 'f' do. render grid =: settle^:_ grid      NB. f = fast forward
+   case. 'c' do. copy =: grid                       NB. c = copy
+   case. 'x' do. render 'grid copy' =: copy;grid    NB. x = swap
+   case. '?' do. viewmat copy ~: grid               NB. ? = show diff
+#+end_src
+
+Sandpiles were introduced in a physics paper in 1987.
+
+As far as I can tell, they were trying to model the idea that certain systems
+tend to naturally settle into a critical point that's just barely stable,
+where a slight disturbance triggers a huge change -
+something like an avalanches and earthquakes.
+
+So for their work, they generated big grids full of random big numbers,
+letting everything settle, and then studied how far the cascade extended when
+they set a single cell to four.
+
+* Sandpile Math
+Since then, sandpiles have caught the attention of mathematicians.
+In fact, I first heard about them on a numberphile video
+(which I've linked in the description)
+that explains how for any size grid
+(or even arbitrary connected graph)
+there's a subset of sandpile configurations
+that form a group under addition with settling.
+
+So to show what that means, here's a little calculator.
+Basically, you can this all-zero sandpile to any sandpile,
+and it acts just like adding zero to an integer.
+
+But you can never add any two other sandpiles together
+to get this one, because you'd always leave some sand on the table.
+
+But it turns out that for any size grid you can come up with,
+there's always a subset of configurations for which you can define
+a second zero, and for any sandpile in this subset, there's always
+an inverse sandpile that brings it back to zero.
+
+So this number in the middle is the group zero, and
+according to this calculator, adding it to the grid of all
+threes produces the grid of all threes.
+
+If I understood everything correctly, then you can test whether
+a particular configuration is in the group just by adding this
+middle zero to it. If it comes out the same, then it ought
+to have an inverse.
+
+So for example, this grid of all threes has an inverse,
+but any time you put two zeros next to each other,
+you get something different. Same thing with any square of ones.
+There's nothing you can add to this to get back to zero.
+
+Well, okay, but how do we actually know this block of solid threes has an inverse?
+I suspect there's an algorithm that comes up with it, and that people who have
+studied this already know what it is. But I don't know what it is.
+
+However, I do know what the inverse of this sandpile is, because I found it:
+
+3 1 3 1 3
+1 3 2 3 1
+3 2 1 2 3
+1 3 2 3 1
+3 1 3 1 3
+
+It's actually kind of an interesting puzzle to find a group item and then try to figure out the inverse.
 
 
 * cookbook
@@ -123,67 +608,6 @@ render =: verb define
 #+end_src
 
 
-* The Sandpile Paper
-
-Sandpiles were introduced in a physics paper in 1987.
-
-As far as I can tell, they were trying to model the idea that certain systems
-tend to naturally settle into a critical point that's just barely stable,
-where a slight disturbance triggers a huge change -
-something like an avalanches and earthquakes.
-
-So for their work, they generated big grids full of random big numbers,
-letting everything settle, and then studied how far the cascade extended when
-they then added a single extra gain of sand.
-
-* Sandpile Math
-Since then, sandpiles have caught the attention of mathematicians.
-In fact, I first heard about them on a numberphile video
-(which I've linked in the description)
-that explains how for any size grid
-(or even arbitrary connected graph)
-there's a subset of sandpile configurations
-that form a group under addition with settling.
-
-So to show what that means, here's a little calculator.
-Basically, you can this all-zero sandpile to any sandpile,
-and it acts just like adding zero to an integer.
-
-But you can never add any two other sandpiles together
-to get this one, because you'd always leave some sand on the table.
-
-But it turns out that for any size grid you can come up with,
-there's always a subset of configurations for which you can define
-a second zero, and for any sandpile in this subset, there's always
-an inverse sandpile that brings it back to zero.
-
-So this number in the middle is the group zero, and
-according to this calculator, adding it to the grid of all
-threes produces the grid of all threes.
-
-If I understood everything correctly, then you can test whether
-a particular configuration is in the group just by adding this
-middle zero to it. If it comes out the same, then it ought
-to have an inverse.
-
-So for example, this grid of all threes has an inverse,
-but any time you put two zeros next to each other,
-you get something different. Same thing with any square of ones.
-There's nothing you can add to this to get back to zero.
-
-Well, okay, but how do we actually know this block of solid threes has an inverse?
-I suspect there's an algorithm that comes up with it, and that people who have
-studied this already know what it is. But I don't know what it is.
-
-However, I do know what the inverse of this sandpile is, because I found it:
-
-3 1 3 1 3
-1 3 2 3 1
-3 2 1 2 3
-1 3 2 3 1
-3 1 3 1 3
-
-It's actually kind of an interesting puzzle to find a group item and then try to figure this out.
 
 
 * Video Description and Links
