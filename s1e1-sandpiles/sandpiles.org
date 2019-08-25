@@ -474,8 +474,13 @@ number four, runs the sandpile simulation until it stops, and outputs the result
 
 * The Sandpile Paper
 
+Sandpiles were introduced in a physics paper in 1987.
+
 #+begin_src j
    NB. -- original experiment --
+   NB. Sandpiles were originally used as a simulation in the paper
+   NB. "Self-organized criticality: an explanation of 1/f noise"
+   NB. by Per Bak, Chao Tang and Kurt Wiesenfeld
    case. 'R' do. render grid =: 4 + ? 100 100 $ 4   NB. R = random 'big' numbers
    case. 'f' do. render grid =: settle^:_ grid      NB. f = fast forward
    case. 'c' do. copy =: grid                       NB. c = copy
@@ -483,9 +488,9 @@ number four, runs the sandpile simulation until it stops, and outputs the result
    case. '?' do. viewmat copy ~: grid               NB. ? = show diff
 #+end_src
 
-Sandpiles were introduced in a physics paper in 1987.
+As a layman, it was pretty hard for me to follow, but there's a link to in in the video description.
 
-As far as I can tell, they were trying to model the idea that certain systems
+As far as I could tell, though, they were trying to model the idea that certain systems
 tend to naturally settle into a critical point that's just barely stable,
 where a slight disturbance triggers a huge change -
 something like an avalanches and earthquakes.
