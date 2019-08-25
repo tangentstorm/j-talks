@@ -92,7 +92,7 @@ NB. mouse events -----------------------------------------------
 whichbox =: verb : '|. <. y %~ 2 {. ".sysdata'
 button  =: verb : 'y { 4 }. ".sysdata'
 boxsize =: 200 %{.NxN
-set_box =: dyad : 'pen (<0>.(<:$x)<.whichbox y) } x'
+mousedraw =: dyad : 'pen (<0>.(<:$x)<.whichbox y) } x'
 
 NB. click the palette to change current pen
 scw_pal_mblup =: verb : 'glpaint glsel ''pal'' [ pen =: {. whichbox 50'
@@ -105,9 +105,9 @@ scw_pal_mwheel =: verb define
 scw_sp0_mwheel =: scw_sp1_mwheel =: scw_sp2_mwheel =: scw_pal_mwheel
 
 NB. left click draws on the input
-scw_sp0_mblup =: verb : 'sp0 =: sp0 set_box boxsize'
-scw_sp1_mblup =: verb : 'sp1 =: sp1 set_box boxsize'
-scw_sp2_mblup =: verb : 'sp2 =: sp2 set_box boxsize'
+scw_sp0_mblup =: verb : 'sp0 =: sp0 mousedraw boxsize'
+scw_sp1_mblup =: verb : 'sp1 =: sp1 mousedraw boxsize'
+scw_sp2_mblup =: verb : 'sp2 =: sp2 mousedraw boxsize'
 
 NB. left drag does the same
 scw_sp0_mmove =: verb : 'if. button 0 do. scw_sp0_mblup _ end.'
