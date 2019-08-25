@@ -15,7 +15,7 @@ settle =: monad define          NB. settle sandpiles with entries > 3
   dn =. }:    0 ,  gt           NB. (filling in with 0 rather than wrapping)
   lf =. }."1 gt ,.  0
   rt =. }:"1 [0 ,. gt
-  cn =. _4 * gt                 NB. one more for 4 grains we subtract from the center
+  cn =. _4 * gt                 NB. the 4 we subtract from the center
   y + up + dn + lf + rt + cn
 )
 

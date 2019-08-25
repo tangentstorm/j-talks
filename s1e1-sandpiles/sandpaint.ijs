@@ -63,11 +63,11 @@ spw_pal_char =: spw_sp_char =: verb define
    case. '0' do. wd'timer 0'                       NB. 0 = stop
 
    NB. -- original experiment --
-   case. 'R' do. render grid =: 4 + ? 100 100 $ 4   NB. R = random 'big' numbers
-   case. 'f' do. render grid =: settle^:_ grid      NB. f = fast forward
-   case. 'c' do. copy =: grid                       NB. c = copy
-   case. 'x' do. render 'grid copy' =: copy;grid    NB. x = swap
-   case. '?' do. viewmat copy ~: grid               NB. ? = show diff
+   case. 'R' do. render grid =: 4 + ? 100 100 $ 4  NB. R = 'big' random
+   case. 'f' do. render grid =: settle^:_ grid     NB. f = fast forward
+   case. 'c' do. copy =: grid                      NB. c = copy
+   case. 'x' do. render 'grid copy' =: copy;grid   NB. x = swap
+   case. '?' do. viewmat copy ~: grid              NB. ? = show diff
  end.
 )
 

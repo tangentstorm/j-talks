@@ -20,7 +20,9 @@ NB. main animation logic ---------------------------------------
 
 stl =: settle^:_
 NxN =: 5 5
-ZSP =: stl (4 - stl) NxN $ 4    NB. "zero": https://hal.archives-ouvertes.fr/hal-00016378
+
+NB. "zero": https://hal.archives-ouvertes.fr/hal-00016378
+ZSP =: stl (4 - stl) NxN $ 4
 
 pen =: 0                        NB. color to draw with
 sp0 =: NxN $ 0
@@ -95,14 +97,16 @@ boxsize =: 200 %{.NxN
 mousedraw =: dyad : 'pen (<0>.(<:$x)<.whichbox y) } x'
 
 NB. click the palette to change current pen
-scw_pal_mblup =: verb : 'glpaint glsel ''pal'' [ pen =: {. whichbox 50'
+scw_pal_mblup =: verb define
+ glpaint glsel 'pal' [ pen =: {. whichbox 50
+)
 
 NB. mouse wheel on any input pile rotates through palette
 scw_pal_mwheel =: verb define
-  pen =: 4|pen-*{:".sysdata NB. absolute val of last item is wheel dir
+  pen =: 4|pen-*{:".sysdata NB. sign of last item is wheel dir
   glpaint glsel'pal'
 )
-scw_sp0_mwheel =: scw_sp1_mwheel =: scw_sp2_mwheel =: scw_pal_mwheel
+scw_sp0_mwheel=: scw_sp1_mwheel=: scw_sp2_mwheel=: scw_pal_mwheel
 
 NB. left click draws on the input
 scw_sp0_mblup =: verb : 'sp0 =: sp0 mousedraw boxsize'
