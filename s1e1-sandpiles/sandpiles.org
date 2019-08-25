@@ -1,39 +1,81 @@
 #+title: sandpile cellular automaton
 
-* Intro
-** sandpile demo
+* Intro (sandpile demo)
+# on stage: the 512 grain-in-the-center sandpile, copied to buffer.
+# pen =: 0
 What you're looking at here is called a sandpile.
-Each square contains zero or more grains of sand, indicated by the color.
-If you have 0, 1, 2 or 3 grains, the pile is stable.
-But as soon as you put more than 3 in a cell, the sand topples over
-and sends one grain of sand to each of its four neighbors.
 
-If you put a four next to the edge of the board, it still sends out four, but one falls off the edge.
-Same thing in the corners: put a four grains here, and two fall off the edge.
+# toggle grid
+It's a two dimensional grid.
+Each square contains zero or more grains of sand, indicated by the color.
+
+# start drawing
+If you have 0, 1, 2 or 3 grains, the pile is stable.
+But as soon as you get to four grains, the sand topples over
+sending one grain to each of the four neighboring cells.
+
+If you have a four next to the edge of the board,
+the same thing happens,
+but one of the grains falls off the edge.
+
+Similarly, if you have a four in the corner, then two grains fall off.
 
 If you have a four next to a three, then when the four topples,
-it adds a grain to the three, and then that one topples,
+it adds a grain to the three,
+giving you a new four
+and then that one topples,
 so you get a chain reaction.
 
 And if you have any number greater than four, (say 256),
-then it will just keep pumping out four grains at each step,
-until it runs down.
+then it will just keep pumping out four grains at each step.
 
-Those are the rules. As you can see, you start getting
-some really intricate patterns rather quickly,
+# let the four neighbors pile up
+So after four ticks, we have four piles of four, plus 240 grains left in the center. All four of these topple,
+and then the center keeps pumping out more.
+# step until we get the diagonals
+Now we have four cells with with one grain in them,
+but each one has three neighbors that are about to topple.
+So each of these ones will turn into fours.
+# step
+And each time the four surrounding the center topple,
+the center sends out four,
+but they simultaneously send four back
+so for that particular step in the process,
+the number in the center doesn't change.
+
+# press 3
+Anyway it goes on like that, and there's a little bit of back and forth
+but before long the whole thing always winds down and comes to a stop.
+# (fast forward)
+
+The picture we started with was the same thing with 512 grains.
+# (show)
+If we just kept adding sand in the center here,
+it would eventually grow to become this.
+
+So as you can see, with just this one simple rule,
+you start generating really intricate patterns rather quickly.
 and it's kind of fun to just draw a pattern,
 let it run, and see what comes out.
 
-This video is about how to make applications like this
-in the J programming language.
+Depending on how you start you might get a nice pretty picture like this,
+or if you just start pouring sand
+# speed 3, then draw with pen 64
+.. fast forward a bit...
+# (fast forward)
+you might just get a mess.
 
-We'll cover both the interactive mouse and keyboard part
-and the actual sandpile simulation.
-
+I've got a few more demos later on.
+But mostly this video is about
+making interactive applications
+in the J programming language,
+using this sandpaint app as our example.
 
 * sandpaint
-** The colors
+** Recap
 My last video talked about how to use vmcc to draw 2d arrays (matrices) on the screen.
+
+** The colors
 The only thing that's changed here is the way I'm specifying colors.
 
 Normally viewmat takes the min and max numbers in the matrix you're viewing
@@ -465,12 +507,6 @@ then I have just the thing for you.
 
 Here is a complete standalone J program that fills a 50 by 50 grid with the
 number four, runs the sandpile simulation until it stops, and outputs the results.
-
-
-
-
-
-
 
 * The Sandpile Paper
 
