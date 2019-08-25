@@ -488,7 +488,7 @@ settle =: monad define          NB. settle sandpiles with entries > 3
   dn =. }:    0 ,  gt           NB. (filling in with 0 rather than wrapping)
   lf =. }."1 gt ,. 0
   rt =. }:"1  0 ,. gt
-  cn =. _4 * gt                 NB. one more for 4 grains we subtract from the center
+  cn =. _4 * gt                 NB. the 4 we subtract from the center
   y + up + dn + lf + rt + cn
 )
 #+end_src
@@ -517,11 +517,11 @@ Sandpiles were introduced in a physics paper in 1987.
    NB. Sandpiles were originally used as a simulation in the paper
    NB. "Self-organized criticality: an explanation of 1/f noise"
    NB. by Per Bak, Chao Tang and Kurt Wiesenfeld
-   case. 'R' do. render grid =: 4 + ? 100 100 $ 4   NB. R = random 'big' numbers
-   case. 'f' do. render grid =: settle^:_ grid      NB. f = fast forward
-   case. 'c' do. copy =: grid                       NB. c = copy
-   case. 'x' do. render 'grid copy' =: copy;grid    NB. x = swap
-   case. '?' do. viewmat copy ~: grid               NB. ? = show diff
+   case. 'R' do. render grid =: 4 + ? 100 100 $ 4  NB. R = 'big' random
+   case. 'f' do. render grid =: settle^:_ grid     NB. f = fast forward
+   case. 'c' do. copy =: grid                      NB. c = copy
+   case. 'x' do. render 'grid copy' =: copy;grid   NB. x = swap
+   case. '?' do. viewmat copy ~: grid              qNB. ? = show diff
 #+end_src
 
 As a layman, it was pretty hard for me to follow, but there's a link to in in the video description.
@@ -583,72 +583,6 @@ However, I do know what the inverse of this sandpile is, because I found it:
 3 1 3 1 3
 
 It's actually kind of an interesting puzzle to find a group item and then try to figure out the inverse.
-
-
-* cookbook
-** generating arrays
-
-So the promise was that we'd provide some way to control all this with code.
-Here's what I had in mind:
-
-#+begin_src j
-NB. some nice arrays to look at.
-im =: ? 10 10 $ 2            NB. random black/white pattern
-im =: ? 100 100 $ 2          NB. higher resolution
-im =: i. 10 10               NB. count to 100
-im =: |: i. 10 10            NB. same thing, transposed
-im =: i. 2 2                 NB. a simple 4-square
-im =: j./~ i:10              NB. the complex plane, near the origin
-im =: |j./~ i:10             NB. magnitudes from the center
-im =: 10 10 $ 1              NB. pure white
-im =: 1 (<5 5) } 11 11 $ 0   NB. one white pixel in the middle
-im =: ~:/\^:(<@#) 8 # 1      NB. mysterious triangle??
-#+end_src
-
-These are just a bunch of lines I came up with.
-
-** transformations
-#+begin_src j
-NB. operators on the current pattern:
-im =: im * i.$im             NB. rainbowfy a black and white image
-im =: 2 | im                 NB. reduce color to black and white (using mod 2)
-im =: |: im                  NB. transpose
-im =: |. im                  NB. flip top to bottom
-im =: |."1 im                NB. flip left to right
-im =: |: |. im               NB. rotate 90 degrees
-im =: |. |: im               NB. rotate the other way
-im =: -. im                  NB. flip the bits
-im =: ,~ ,.~ im              NB. split into four copies
-im =: (,|.) (,. |."1) im     NB. four copies, but mirrored across each axis
-im =:  1 |. im               NB. rotate up (top row moves to bottom)
-im =: _1 |. im               NB. rotate down
-im =:  1 |."1 im             NB. rotate left
-im =: _1 |."1 im             NB. rotate right
-im =: }. im , 0              NB. shift up, pad with 0
-im =: 0 , }: im              NB. shift down, pad with 0
-im =: }."1 im ,. 0           NB. shift left, pad with 0
-im =: 0 ,. }:"1 im           NB. shift right, pad with 0
-#+end_src
-
-you can experiment with running these lines interactively with ctrl-enter,
-or ctrl-r which runs the line without advancing the cursor (so you can run it over and over again)
-
-before i end, i should point out that while I was typing these, i'd occasionally
-screw something up and set im to something that wasn't a 2d matrix.
-This caused a modal error message to pop up on every frame, so that
-and so every time I closed the message it popped right back up.
-
-The only way to recover was to kill J, which was really annoying.
-So to fix that, I added some trapping for this in the render verb:
-
-#+begin_src j
-render =: verb define
-  if. 2 = #$ im            NB. only render if im is a 2d array
-  do. vmcc im;'g0' end.    NB. (this avoids infinite error boxes)
-)
-#+end_src
-
-
 
 
 * Video Description and Links
