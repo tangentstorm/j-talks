@@ -1,3 +1,51 @@
+
+* recording checklist
+** OBS
+- [ ] studio mode off
+** j windows
+- [ ] run screen-setup.ijs to arrange j editor and terminal
+- [ ] close the sidebar!
+- [ ] INCREASE THE FONT SIZE! (16 pt consolas)
+- [ ] have autohotkey scripts running (tools/viewmat.ahk) if necessary
+** microphone
+- [ ] green setting
+
+
+* editing in blender
+** usage notes
+- New / Video Editing
+
+- frame count starts at 1 (not 0)
+
+- "K" cuts clips at the playhead...
+- Make sure audio is good volume before you start cutting.
+- To batch-edit a property (e.g. volume) on clips later:
+  - select them (ctrl-L selects long chains of adjacent clips)
+  - set the property on one, then right click the property and "copy to selected"
+
+** rendering to video
+- output panel in preview pane
+- format: ffmpeg
+- container: matroska
+- video settings:
+  - codec: h.264
+  - quality: high
+  - audio code
+- audio settings:
+  - mp3 / bitrate=192
+
+
+* publishing on youtube
+- switch to tangentstorm account
+- add to 'j demos' playlist
+- link to gist with finished code
+
+* marketing checklist
+- reddit.com/r/apljk
+- j programming forum
+- twitter
+
+
 * hardware used
 logitech hd 1080p camera
 turtle beach streaming mic - green setting
@@ -11,14 +59,3 @@ not sure about model numbers
 - OBS Studio
 - J
 - Blender
-
-* j setup checklist
-- [ ] run screen-setup.ijs to arrange j editor and terminal
-- [ ] try to remember to close the sidebar!
-
-
-* recording
-
-* editing in blender
-- New / Video Editing
-- 
