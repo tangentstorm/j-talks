@@ -2,9 +2,8 @@
 
 * Intro (sandpile demo)
 # on stage: the 512 grain-in-the-center sandpile, copied to buffer.
-# pen =: 0
+# pen =: 1, grid off, timer off, focus in window!
 What you're looking at here is called a sandpile.
-
 # toggle grid
 It's a two dimensional grid.
 Each square contains zero or more grains of sand, indicated by the color.
@@ -14,23 +13,28 @@ If you have 0, 1, 2 or 3 grains, the pile is stable.
 But as soon as you get to four grains, the sand topples over
 sending one grain to each of the four neighboring cells.
 
+# draw by the edge
 If you have a four next to the edge of the board,
 the same thing happens,
 but one of the grains falls off the edge.
-
+# .. and corner
 Similarly, if you have a four in the corner, then two grains fall off.
 
-If you have a four next to a three, then when the four topples,
+# draw line of 3 at bottom
+If you have a bunch threes in a row,
+and put a four next to it,
+then when the four topples,
 it adds a grain to the three,
 giving you a new four
 and then that one topples,
-so you get a chain reaction.
-
-And if you have any number greater than four, (say 256),
+and you get a chain reaction.
+# put mouse in center and press z to clear screen
+And if you start with a bigger number number, (say 256),
 then it will just keep pumping out four grains at each step.
 
-# let the four neighbors pile up
-So after four ticks, we have four piles of four, plus 240 grains left in the center. All four of these topple,
+# space a few times until zthe four neighbors pile up
+So after four ticks, we have four piles of four, plus 240 grains left in the center.
+All four of these topple,
 and then the center keeps pumping out more.
 # step until we get the diagonals
 Now we have four cells with with one grain in them,
@@ -42,16 +46,13 @@ the center sends out four,
 but they simultaneously send four back
 so for that particular step in the process,
 the number in the center doesn't change.
+# press 4
 
-# press 3
 Anyway it goes on like that, and there's a little bit of back and forth
 but before long the whole thing always winds down and comes to a stop.
 # (fast forward)
 
 The picture we started with was the same thing with 512 grains.
-# (show)
-If we just kept adding sand in the center here,
-it would eventually grow to become this.
 
 So as you can see, with just this one simple rule,
 you start generating really intricate patterns rather quickly.
@@ -65,15 +66,41 @@ or if you just start pouring sand
 # (fast forward)
 you might just get a mess.
 
-I've got a few more demos later on.
-But mostly this video is about
-making interactive applications
-in the J programming language,
-using this sandpaint app as our example.
+So that's sandpiles.
+
+So, I've got a few more demos at the end of the video.
+But mostly I want to talk about how to build
+applications like this in J. Including both
+the mouse and keyboard parts and also just how to
+approach coding the rules for this kind of simulation.
+
 
 * sandpaint
 ** Recap
 My last video talked about how to use vmcc to draw 2d arrays (matrices) on the screen.
+
+#+begin_src j
+require 'viewmat'
+coinsert 'jviewmat jgl2'
+
+NB. window and animation engine (from "basic animation" video)
+NB. ------------------------------------------------------------
+
+wd'pc spw closebutton; minwh 640 640;'   NB. create window 'spw'
+wd'pn "sandpaint: sandpile explorer";'   NB. add title
+wd'bin h;'                               NB. horizontal bin
+wd'minwh 50 800; cc pal isigraph;'       NB.   narrow isigraph for palette
+wd'set pal sizepolicy fixed fixed;'      NB.   keep it from resizing
+wd'minwh 800 800; cc sp isidraw;'        NB.   square isigraph for drawing
+wd'bin z;'                               NB. /bin
+wd'pmove 900 100 0 0 ; ptop; pshow;'     NB. position and show window.
+
+render =: update =: ]  NB. do nothing yet
+
+step =: render @ update
+sys_timer_z_ =: step_base_
+wd 'timer 0'
+#+end_src
 
 ** The colors
 The only thing that's changed here is the way I'm specifying colors.
@@ -88,7 +115,6 @@ palette up front, and then tell viewmat to just render the numbers as RGB color 
 by passing in the string 'rgb' as the left parameter.
 
 #+begin_src j
-
 lo =: 16b00000f 16b3f3f9d 16b7878d8 16bacacff   NB. i.4 drawn as shades of blue
 hi =: 16bff0000 + 16b001100 * i._16             NB. 4+i.204 are yellow..red
 
@@ -222,7 +248,6 @@ Then we just tell the palette control to repaint, which triggers a paint event, 
 Now to handle clicking we make another event handler -- =mblup= means mouse button left up.
 
 #+begin_src j
-
 whichbox =: verb : '|. <. y %~ 2 {. ".sysdata'
 
 NB. click the palette to choose a color:
