@@ -5,7 +5,7 @@
 ** j windows
 - [ ] run screen-setup.ijs to arrange j editor and terminal
 - [ ] close the sidebar!
-- [ ] INCREASE THE FONT SIZE! (16 pt consolas)
+- [ ] Set font size to Consolas 18
 - [ ] have autohotkey scripts running (tools/viewmat.ahk) if necessary
 ** microphone
 - [ ] green setting
@@ -14,9 +14,7 @@
 * editing in blender
 ** usage notes
 - New / Video Editing
-
 - frame count starts at 1 (not 0)
-
 - "K" cuts clips at the playhead...
 - Make sure audio is good volume before you start cutting.
 - To batch-edit a property (e.g. volume) on clips later:
@@ -27,13 +25,17 @@
 - output panel in preview pane
 - format: ffmpeg
 - container: matroska
-- video settings:
-  - codec: h.264
-  - quality: high
-  - audio code
-- audio settings:
-  - mp3 / bitrate=192
-
+- what i did for s1e0
+  - video settings:
+    - codec: h.264
+    - quality: high
+    - audio code
+  - audio settings:
+    - mp3 / bitrate=192
+- [ ] youtube recommendations https://support.google.com/youtube/answer/1722171?hl=en
+    - container: mp4
+    - audio codec: aac-lc stereo; sample rate: 96khz or 48khz
+    - video codec: H.264
 
 * publishing on youtube
 - switch to tangentstorm account
@@ -44,7 +46,6 @@
 - reddit.com/r/apljk
 - j programming forum
 - twitter
-
 
 * hardware used
 logitech hd 1080p camera
