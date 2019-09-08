@@ -1,0 +1,258 @@
+#+title: gridpad
+
+* Recap
+
+My last video talked about how to use vmcc to draw 2d arrays (matrices) on the screen.
+
+#+begin_src j
+require 'viewmat'
+coinsert 'jviewmat jgl2'
+
+NB. window and animation engine (from "basic animation" video)
+NB. ------------------------------------------------------------
+
+wd'pc spw closebutton; minwh 640 640;'   NB. create window 'spw'
+wd'pn "sandpaint: sandpile explorer";'   NB. add title
+wd'bin h;'                               NB. horizontal bin
+wd'minwh 50 800; cc pal isigraph;'       NB.   narrow isigraph for palette
+wd'set pal sizepolicy fixed fixed;'      NB.   keep it from resizing
+wd'minwh 800 800; cc sp isidraw;'        NB.   square isigraph for drawing
+wd'bin z;'                               NB. /bin
+wd'pmove 900 100 0 0 ; ptop; pshow;'     NB. position and show window.
+
+render =: update =: ]  NB. do nothing yet
+
+step =: render @ update
+sys_timer_z_ =: step_base_
+wd 'timer 0'
+#+end_src
+
+* Palette
+
+The only thing that's changed here is the way I'm specifying colors.
+
+Normally viewmat takes the min and max numbers in the matrix you're viewing
+and maps the palette evenly across that range. But that doesn't work so well
+when you have a mix of really small numbers like zero through four,
+and then really big numbers like 2^16.
+
+I'm still using a palette, but I map the numbers on the grid to the numbers in the
+palette up front, and then tell viewmat to just render the numbers as RGB color values
+by passing in the string 'rgb' as the left parameter.
+
+* drawing the grid
+So to draw a sandpile, we just use viewmat.
+This is pretty much what we had last time, except I'm also explicitly passing in the name of the window so I can bring up second window in a little while.
+
+#+begin_src j
+render =: verb define
+  spcc 'spw';'sp';grid
+  if. showgrid do.
+    'vw vh' =. glqwh'sp' [ 'gh gw' =. $ grid
+    glpen glrgb 255 255 255
+    gllines (0, ], vw, ])"0 (vh%gh) * i.gh
+    gllines (], 0, vh,~])"0 (vw%gw) * i.gw
+  end.
+)
+#+end_src
+
+
+And of course I'm also drawing the lines for this grid.
+The shape of the grid gives us its height and width.
+And this means query width and height of the viewport.
+If we divide the viewport into this many chunks we get the cell size,
+and if we multiply that by this range, we get the y coordinate for each horizontal line.
+So then this part maps each y coordinate to the start and end coordinates,
+and gllines draws the whole array.
+Same thing for the vertical lines.
+
+* changing the pen color
+
+I will point out that the the current drawing color
+is stored in a member variable called pen. It's just
+a number betwen 0 and 19 corresponding to an index
+in the pal and num arrays.
+
+You should be able to select a color either by clicking on it,
+or by turning the mouse wheel. And you should be able to turn
+the wheel even while you're drawing.
+
+[ TODO: clear the screen ]
+
+So the way this works, is we add a mouse wheel event handler
+for both the sandpile and palette controls.
+
+#+begin_src j
+NB. mouse wheel on either control rotates through palette
+spw_sp_mwheel =: spw_pal_mwheel =: verb define
+  smoutput sysdata
+  pen =: (#pal)|pen-*{:".sysdata NB. sign of last item is wheel dir
+  glpaint glsel'pal'
+)
+#+end_src
+
+Event handlers are just verbs, and they follow this naming convention of
+parent name, child name, event name. So here I'm just giving two names to
+the same verb, and they start working immediately.
+
+Now the way mouse events work is that the coordinates get stuck in this string called sysdata.
+Let's have it print each time I scroll the mouse wheel.
+
+: smoutput sysdata
+
+For every mouse event on an isigraph, sysdata is going to be a string with the position of the mouse cursor,
+the width and height of the viewport, a set of bits representing which of the first three buttons were down,
+two bits for whether shift or control were pressed,
+and the mouse wheel rotation in degrees.
+(These two bits are always zero)
+
+So here we just convert that string to an array, take the last item.
+For my mouse that seems to always be either fifteen or negative fifteen, but probably it changes with different hardware.
+Anyway, we don't care about the number, just the direction, so asterisk takes the sign of that, giving us -1, 0, or 1.
+We add that to our pen variable, and then take that modulo the length of the palette so it wraps around.
+
+Then we just tell the palette control to repaint, which triggers a paint event, which calls =spw_pal_paint=.
+
+Now to handle clicking we make another event handler -- =mblup= means mouse button left up.
+
+#+begin_src j
+whichbox =: verb : '|. <. y %~ 2 {. ".sysdata'
+
+NB. click the palette to choose a color:
+spw_pal_mblup =: verb define
+  glpaint glsel 'pal' [ pen =: {. whichbox 40
+)
+#+end_src
+
+But this time we want to pay attention to the first two numbers to figure out which box got clicked on.
+We divide by the size of the boxes, (which I passed in here) round down and then reverse because
+the mouse coordinates are x y but for an array the y coordinate comes first.
+
+So that gives us the y and x coordinates of the box in the grid, but we only have one column so we only need the y.
+So we use the behead operator and that's our new pen, and again we tell the palette to repaint itself.
+
+* clicking to draw
+
+Now, when we click the sandpile widget, the same calculation needs to happen.
+
+#+begin_src j
+NB. left click or drag draws on the input
+spw_sp_mblup =: verb define
+ boxsize =. (glqwh 'sp')% |.$ grid
+ grid =: grid mousedraw boxsize
+)
+#+end_src
+
+For the palette, the box size was fixed, but for the sandpile,
+we can change the size of the grid, so we have to figure it out dynamically.
+And of course, it's the same calculation as before, where
+we query the width and height of the canvas and divide by the shape of the grid
+with this reverse in the middle because shape gives height and width instead
+of width and height.
+
+Then we call mousedraw:
+
+#+begin_src j
+mousedraw =: dyad define
+  (pen { num) (<  0>.(<:$x)<.  whichbox y) } x
+)
+#+end_src
+
+Now mousedraw takes the grid on the left (so that's x)
+and the box size on the right. (That's y).
+The box size goes into whichbox,
+which looks at sysdata
+and gives back the y x grid coordinates of the mouse.
+
+This part in the middle clamps those coordinates so they're between zero zero (which is upper left)
+and the lower right corner, which is one less than the height and width of the grid.
+This is completely un-necessary for clicking because this =mblup= only fires when you're actually inside the grid.
+But we're going to use this routine again later for dragging
+and if you drag off the side it sometimes fires the event even when you're out of bounds.
+
+Okay so now we have the clamped grid coordinates, and this less than sign puts them in a box.
+Now this whole line says to take the number corresponding to the current pen,
+and put it into a copy of the grid at the coordinates we calculated.
+
+* Amend
+
+The operation is called amend. The way to remember what's happening is that when
+'from' (left curly) takes something out of an array, it points away.
+Amend puts something into the array and it takes two arguments on the left to tell it what and where.
+So 'from' is a dyadic verb, and 'amend' is an adverb that takes the position and returns a dyadic verb.
+
+Amend is something you'll do all the time, so lets pause a minute and do a simpler example.
+
+Suppose you have a grid like
+
+#+begin_src j
+  i. 3 5
+#+end_src
+
+Then the coordinates of the seven are one down and two to the right.
+Then we can replace the seven with infinity like this:
+
+#+begin_src j
+  _ (<1 2) } i. 3 5
+#+end_src
+
+The reason we box 1 2 is because we can assign multiple positions at once, and we need some way to distinguish pairs of coordinates from pairs of items. The items of a matrix are its rows, so without the box, it replaces the entirety of rows one and two. Likewise, if we want to replace two different individual cells, we can pass in two boxes.
+
+#+begin_src j
+  _ (0 0; 1 2) } i. 3 5
+#+end_src
+
+Semicolon is called link. Roughly speaking, it boxes its arguments and combines them into an array.
+More precisely, it boxes x and then boxes y unless y is already boxed. That way you can use it as a separator
+and not wind up with nested boxes.
+
+* boxing
+
+Why is it called boxing?
+
+Well...
+
+#+begin_src j
+ 0 0 ; 1 2
+#+end_src
+
+Partially because J draws it as a box...
+
+#+begin_src j
+  < 0 0 ; 1 2
+#+end_src
+
+And also because every value in an array has to have the same type in J.
+You can't have an array that contains both numbers and characters:
+
+But you can have an array with two boxes, regardless of what's inside them.
+
+Anyway, to recap, boxing is also the way to amend an array at particular coordinates, and that's what we're doing in mousedraw. So now, we can click to our heart's content and draw with our pen in the grid.
+
+* drag to draw
+
+And of course it would be much nicer if we could draw continously by holding the left button down and moving the mouse.
+
+So that looks like this:
+
+#+begin_src j
+button  =: verb : 'y { 4 }. ".sysdata'
+spw_sp_mmove =: verb : 'if. button 0 do. spw_sp_mblup _ end.'
+#+end_src
+
+When the mouse moves over the sandpile in the sandpile window,
+if button zero is down then just call the click method.
+
+The infinity symbol is just serving as a dummy value to invoke the function.
+It doesn't matter what value you pass in since =mblup= ignores its argument.
+Normally you use the empty string,
+but since this is so short I just stuck the definition on one line,
+replacing the usual 'define' with just a bare colon followed by a string.
+So if I used the empty string here
+I'd have to escape it with two extra apostrophes,
+and that's just silly.
+
+Anyway, now we can draw continuously.
+
+* keyboard bindings
+
