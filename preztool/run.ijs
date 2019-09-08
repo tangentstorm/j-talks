@@ -83,17 +83,19 @@ NB. teleprompter window --------------------------------
 )
 wd'pc tpw closeok;'
 wd'minwh 630 440; cc tp webview flush;'
+wd'set tp html *',freads'~JTalks/preztool/tpw.html'
 wd'pmove 0 0 0 0; pshow;'
 
 
 
 NB. keyboard navigation --------------------------------
+NB. same keys work in both windows so i don't have to think about window focus.
 
 cur=:0
 fwd=:verb :'cur=:(<:#out)<.>:cur'
 bak=:verb :'cur=:0>.<:cur'
 
-txt=:verb define
+code =:verb define
   (org {~ >:@[ + i.@<:@-~)/ y { src
 )
 
@@ -101,20 +103,43 @@ jsn =: verb define
  tok =. (a: = y)  }  |:tok,.<"0 tok =. jlex y
  ('[',']',~]) ','joinstring enc_json L:2 tok
 )
+
 sho =: verb define
-  wd'cmd jc src *',jsrc =: jsn txt cur
+  wd'psel jcw'
+  wd'cmd jc src *',jsrc =: jsn code cur
+)
+
+speed =: verb define
+  wd'psel tpw'
+  wd'cmd tp spd ',":y
+)
+
+tpw =: verb define
+  wd'psel tpw'
+  wd'cmd tp txt *',txt =: text cur
 )
 
 
 jcw_jc_post =: verb define
-  smoutput 'name:  ', jc_name
-  smoutput 'value: ', jc_value
-  select. jc_name
+  jc_name on_event jc_value
+)
+
+tpw_tp_post =: verb define
+  tp_name on_event tp_value
+)
+
+on_event =: dyad define
+  NB. smoutput 'name:  ', x
+  NB. smoutput 'value: ', y
+  select. x
    case. 'init' do. sho''
    case. 'key'  do.
-     select. key [ 'key shf ctl alt ' =. ".jc_value
-       case. a.i.'0' do. sho fwd''
-       case. a.i.'9' do. sho bak''
+     select. key=. a. {~ {. 'key shf ctl alt ' =. ".YY=:y
+       case. '`' do. speed 0
+       case. '1' do. speed '-1'
+       case. '2' do. speed '+1'
+       case. '0' do. sho fwd''
+       case. '9' do. sho bak''
      end.
   end.
 )
