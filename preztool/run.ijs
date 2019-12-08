@@ -5,6 +5,26 @@ NB. --------------------------------------------
 require'regex'
 require'convert/json'
 
+smoutput help =: noun define
+This utility opens two windows, both generated from the same *.org file.
+The keyboard controls both windows, and the keys work regardless of
+which window is focused.
+
+  j code window  (jcw.html, shows highlighted j code)
+  -------------
+  0 next slide
+  1 previous slide
+
+  prompter window  (tpw.html, shows text from the org file)
+  ---------------
+  ` freeze
+  1 slow down
+  2 speed up
+
+In the org file, each slide should have its own header.
+
+)
+
 NB. j syntax highlighting ------------------------------
 
 jtoks =: verb define
@@ -55,11 +75,29 @@ jlex =: verb def '(jtype;]) L:0 jtoks each ,. y'
 
 NB. org file parser -------------------------------------
 
-org=:'b'freads'~JTalks/s1e1-sandpiles/sandpiles.org'
+org=: jpath '~JTalks/s1e1-gridpad/gridpad.org'
+org=:'b'freads  wd'mb open1 "Open org file" "',org,'" "org (*.org)"'
 sig=:{.&> org
-out=:I. '*' = sig
-src=:|:>([: I.org=<)&> '#+begin_src j';'#+end_src'
+headbits =: '*' = sig                  NB. 1 if org line starts with '*' (a headline)
+slide0 =: headbits <;.1 org            NB. group lines: each headline starts a new slide
+between =: (>:@[ +  i.@<:@-~)/         NB. between 3 7 ->  4 5 6
 
+
+parse =: monad define                   NB. returns (head; text; src) triple
+  head =. (2+I.'* 'E.h) }. h=.>{. y     NB. strip any number of leading '*'s, up to ' '
+  text =. }. y
+  srcd =. '#+begin_src j';'#+end_src'   NB. source code delimiters
+  src =: , |: I. y ="1 0 srcd           NB. indices of start and end delimiters
+  if. #src do.
+     code =. y {~ between 2$src         NB. only take the first source block
+     text =. text -. code, srcd
+  else.
+     code =. a:
+  end.
+  (<head),(<text),(<code)
+)
+
+slides =: > parse each slide0
 
 
 NB. j code window (the "slides") ------------------------
@@ -70,7 +108,7 @@ NB. j code window (the "slides") ------------------------
 
 wd'pc jcw closebutton;'
 wd'pn "J-Talks by tangentstorm";'
-1920-640
+
 wd'minwh 1280 1080; cc jc webview flush;'
 wd'set jc html *',freads'~JTalks/preztool/jcw.html'
 wd'pmove 630 _32 0 0; pshow; ptop;'
@@ -95,36 +133,40 @@ cur=:0
 fwd=:verb :'cur=:(<:#out)<.>:cur'
 bak=:verb :'cur=:0>.<:cur'
 
-code =:verb define
-  (org {~ >:@[ + i.@<:@-~)/ y { src
-)
+head =: verb : '> (<y,0) { slides'  NB. -> str
+text =: verb : '> (<y,1) { slides'  NB. -> [box(str)]
+code =: verb : '> (<y,2) { slides'  NB. -> [box(str)]
+
 
 jsn =: verb define
+ NB. generate json for highlighted source code
+ if. y -: a: do. '[]' return. end.
  tok =. (a: = y)  }  |:tok,.<"0 tok =. jlex y
  ('[',']',~]) ','joinstring enc_json L:2 tok
 )
 
 sho =: verb define
+  NB. show the headline, code, and teleprompter text
   wd'psel jcw'
+  wd'cmd jc head *',enc_json head cur
   wd'cmd jc src *',jsrc =: jsn code cur
+  wd'psel tpw'
+  wd'cmd tp txt *',txt =: enc_json text cur
 )
 
 speed =: verb define
+  NB. set speed of the prompter
   wd'psel tpw'
   wd'cmd tp spd ',":y
 )
 
-tpw =: verb define
-  wd'psel tpw'
-  wd'cmd tp txt *',txt =: text cur
-)
-
-
 jcw_jc_post =: verb define
+  NB. pass messages from the code window's web control to on_event
   jc_name on_event jc_value
 )
 
 tpw_tp_post =: verb define
+  NB. pass messages from the prompter's web control to on_event
   tp_name on_event tp_value
 )
 

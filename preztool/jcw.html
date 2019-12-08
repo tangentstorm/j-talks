@@ -24,7 +24,7 @@
 </head>
 <body>
 <div id="app">
-  <h1>hello world</h1>
+  <h1>{{head}}</h1>
   <j-code :src="src"></j-code>
 </div>
 </body>
@@ -44,7 +44,7 @@ Vue.component('j-code', {
   }
 });
 
-var data = {src:'text goes here'},
+var data = {head:'head goes here', src:'code goes here'},
     app = new Vue({el:"#app", data:data}),
     qcom;
 
@@ -75,6 +75,7 @@ function jnotify(s) {
 // -- api exposed to j -----------------------------
 
 function jsrc(x) { data['src'] = JSON.parse(x); }
+function jhead(x) { data['head'] = JSON.parse(x); }
 function jset(k,v) { data[k] = JSON.stringify(v); }
 function jget(k) { jpost('get', [k, data[k]]); }
 jsrc(JSON.stringify([[['noun','ok!']]]));
