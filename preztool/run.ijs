@@ -21,8 +21,11 @@ which window is focused.
   1 slow down
   2 speed up
 
-In the org file, each slide should have its own header.
+  general
+  -------
+  r reload slides and text for current file
 
+In the org file, each block of code should have its own header.
 )
 
 NB. j syntax highlighting ------------------------------
@@ -75,21 +78,22 @@ jlex =: verb def '(jtype;]) L:0 jtoks each ,. y'
 
 NB. org file parser -------------------------------------
 
-org=: jpath '~JTalks/s1e1-gridpad/gridpad.org'
-org=:'b'freads  wd'mb open1 "Open org file" "',org,'" "org (*.org)"'
-sig=:{.&> org
-headbits =: '*' = sig                  NB. 1 if org line starts with '*' (a headline)
-slide0 =: headbits <;.1 org            NB. group lines: each headline starts a new slide
-between =: (>:@[ +  i.@<:@-~)/         NB. between 3 7 ->  4 5 6
+verb : 0 ''  NB. initialize org_path if it isn't already defined.
+  if. -. (<'org_path') e. nl'' do. org_path =: jpath '~JTalks' end.
+)
 
+org_path =: wd'mb open1 "Open org file" "',org_path,'" "org (*.org)"'
 
-parse =: monad define                   NB. returns (head; text; src) triple
-  head =. (2+I.'* 'E.h) }. h=.>{. y     NB. strip any number of leading '*'s, up to ' '
+between =: (>:@[ +  i.@<:@-~)/           NB. between 3 7 ->  4 5 6
+parse =: monad define
+  NB. parse a single slide
+  NB. returns (head; text; src) triple
+  head =. (2+I.'* 'E.h) }. h=.>{. y      NB. strip any number of leading '*'s, up to ' '
   text =. }. y
-  srcd =. '#+begin_src j';'#+end_src'   NB. source code delimiters
-  src =: , |: I. y ="1 0 srcd           NB. indices of start and end delimiters
+  srcd =. '#+begin_src j';'#+end_src'    NB. source code delimiters
+  src =: , |: I. y ="1 0 srcd            NB. indices of start and end delimiters
   if. #src do.
-     code =. y {~ between 2$src         NB. only take the first source block
+     code =. y {~ between 2$src          NB. only take the first source block
      text =. text -. code, srcd
   else.
      code =. a:
@@ -97,7 +101,15 @@ parse =: monad define                   NB. returns (head; text; src) triple
   (<head),(<text),(<code)
 )
 
-slides =: > parse each slide0
+load_slides =: verb define
+  org =. 'b'freads org_path              NB. returns a vector of boxed strings
+  headbits =. '*' = {.&> org             NB. 1 if org line starts with '*' (a headline)
+  slide0 =. headbits <;.1 org            NB. group lines: each headline starts a new slide
+  slides =: > parse each slide0
+)
+
+load_slides''
+
 
 
 NB. j code window (the "slides") ------------------------
@@ -130,7 +142,7 @@ NB. keyboard navigation --------------------------------
 NB. same keys work in both windows so i don't have to think about window focus.
 
 cur=:0
-fwd=:verb :'cur=:(<:#out)<.>:cur'
+fwd=:verb :'cur=:(<:#slides)<.>:cur'
 bak=:verb :'cur=:0>.<:cur'
 
 head =: verb : '> (<y,0) { slides'  NB. -> str
@@ -170,6 +182,10 @@ tpw_tp_post =: verb define
   tp_name on_event tp_value
 )
 
+reload_slides =: verb define
+  sho cur [ load_slides 0
+)
+
 on_event =: dyad define
   NB. smoutput 'name:  ', x
   NB. smoutput 'value: ', y
@@ -182,6 +198,7 @@ on_event =: dyad define
        case. '2' do. speed '+1'
        case. '0' do. sho fwd''
        case. '9' do. sho bak''
+       case. 'r' do. reload_slides''
      end.
   end.
 )
