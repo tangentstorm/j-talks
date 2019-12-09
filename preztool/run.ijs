@@ -14,6 +14,7 @@ which window is focused.
   -------------
   0 next slide
   1 previous slide
+  e execute code on this slide
 
   prompter window  (tpw.html, shows text from the org file)
   ---------------
@@ -186,6 +187,11 @@ reload_slides =: verb define
   sho cur [ load_slides 0
 )
 
+run_code =: verb define
+  NB. immediately execute the j code from the current slide
+  immexj LF joinstring code cur
+)
+
 on_event =: dyad define
   NB. smoutput 'name:  ', x
   NB. smoutput 'value: ', y
@@ -199,6 +205,7 @@ on_event =: dyad define
        case. '0' do. sho fwd''
        case. '9' do. sho bak''
        case. 'r' do. reload_slides''
+       case. 'e' do. run_code''
      end.
   end.
 )
