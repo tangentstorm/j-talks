@@ -1,30 +1,112 @@
 #+title: gridpad
+#+property: header-args:j  :tangle "gridpad.ijs" :noweb tangle
+: (require 'ox-org)   <- eval this line to export tangled org with C-c C-e O o (org-org-export-to-org)
+
+* setup slide
+#+begin_src j
+NB. This slide is only for development.
+NB. Presentation starts on next slide.
+
+gpw_close =: verb define
+  wd'psel gpw; pclose; timer 0'
+)
+
+NB. close old copy of the gridpad window, if one exists.
+gpw_close^:(wdisparent'gpw')
+#+end_src
 
 * Recap
+#+name: tangle-test
+#+begin_src j  :exports none
+wd 'bin v'                                NB. vertical bin
+wd '  bin h'                              NB.   horizontal bin
+wd '    minwh 50 800; cc pal isigraph'    NB.     narrow isigraph for palette
+wd '    set pal sizepolicy fixed fixed'   NB.     keep palette it from resizing
+wd '    minwh 800 800; cc sp isidraw'     NB.     square isigraph for drawing
+wd '  bin z'                              NB.   /bin
+wd '  cc sb statusbar'                    NB.   status bar
+wd '  set sb addlabel text'               NB.   ... with status text
+wd 'bin z'                                NB. /bin
+#+end_src
 
-My last video talked about how to use vmcc to draw 2d arrays (matrices) on the screen.
-
-#+begin_src j
+#+begin_src j :noweb yes
 require 'viewmat'
 coinsert 'jviewmat jgl2'
 
-NB. window and animation engine (from "basic animation" video)
+NB. window and animation engine (covered in animation video)
 NB. ------------------------------------------------------------
 
-wd'pc spw closebutton; minwh 640 640;'   NB. create window 'spw'
-wd'pn "sandpaint: sandpile explorer";'   NB. add title
-wd'bin h;'                               NB. horizontal bin
-wd'minwh 50 800; cc pal isigraph;'       NB.   narrow isigraph for palette
-wd'set pal sizepolicy fixed fixed;'      NB.   keep it from resizing
-wd'minwh 800 800; cc sp isidraw;'        NB.   square isigraph for drawing
-wd'bin z;'                               NB. /bin
-wd'pmove 900 100 0 0 ; ptop; pshow;'     NB. position and show window.
+wd 'pc gpw closebutton; minwh 640 640'    NB. create window 'gpw'
+wd 'pn "gridpad: simple sprite editor"'   NB. add title
+<<tangle-test>>
+wd 'pmove 900 100 0 0; ptop; pshow'       NB. position and show window.
 
-render =: update =: ]  NB. do nothing yet
+render =: update =: ]  NB. placeholder verbs
 
+NB. call 'render' and 'update' 10 times a second.
 step =: render @ update
 sys_timer_z_ =: step_base_
-wd 'timer 0'
+wd 'timer 100'
+#+end_src
+
+* Draw a grid
+#+begin_src j
+showgrid =: 0
+
+render =: verb define
+  spcc 'spw';'sp';grid
+  if. showgrid do.
+    'vw vh' =. glqwh'sp' [ 'gh gw' =. $ grid
+    glpen glrgb 255 255 255
+    gllines (0, ], vw, ])"0 (vh%gh) * i.gh
+    gllines (], 0, vh,~])"0 (vw%gw) * i.gw
+  end.
+)
+#+end_src
+
+And of course I'm also drawing the lines for this grid.
+The shape of the grid gives us its height and width.
+And this means query width and height of the viewport.
+If we divide the viewport into this many chunks we get the cell size,
+and if we multiply that by this range, we get the y coordinate for each horizontal line.
+So then this part maps each y coordinate to the start and end coordinates,
+and gllines draws the whole array.
+Same thing for the vertical lines.
+
+* G to toggle grid
+* Mouse coordinates
+Let's show the mouse coordinates.
+#+begin_src j
+whichbox =: verb define
+  |. <. y %~ 2 {. ".sysdata
+)
+#+end_src
+* Grid coordinates
+
+
+
+* eraser
+
+* palette
+
+* file menu
+#+begin_src j
+require 'png'
+
+wd'menupop "&File"'
+wd'menu open "&Open" "Ctrl+O"'
+wd'menu save "&Save" "Ctrl+S"'
+wd'menupopz'
+
+gpw_open_button =: verb define
+  path =. wd 'mb open1 "Load a png file" filename "PNG (*.png)"'
+  if. #path do. img =: readpng path end.
+)
+
+gpw_save_button =: verb define
+  path =. wd 'mb save "Save image" filename "PNG (*.png)"'
+  if. #path do. img =: writepng path end.
+)
 #+end_src
 
 * Palette
@@ -39,32 +121,6 @@ and then really big numbers like 2^16.
 I'm still using a palette, but I map the numbers on the grid to the numbers in the
 palette up front, and then tell viewmat to just render the numbers as RGB color values
 by passing in the string 'rgb' as the left parameter.
-
-* drawing the grid
-So to draw a sandpile, we just use viewmat.
-This is pretty much what we had last time, except I'm also explicitly passing in the name of the window so I can bring up second window in a little while.
-
-#+begin_src j
-render =: verb define
-  spcc 'spw';'sp';grid
-  if. showgrid do.
-    'vw vh' =. glqwh'sp' [ 'gh gw' =. $ grid
-    glpen glrgb 255 255 255
-    gllines (0, ], vw, ])"0 (vh%gh) * i.gh
-    gllines (], 0, vh,~])"0 (vw%gw) * i.gw
-  end.
-)
-#+end_src
-
-
-And of course I'm also drawing the lines for this grid.
-The shape of the grid gives us its height and width.
-And this means query width and height of the viewport.
-If we divide the viewport into this many chunks we get the cell size,
-and if we multiply that by this range, we get the y coordinate for each horizontal line.
-So then this part maps each y coordinate to the start and end coordinates,
-and gllines draws the whole array.
-Same thing for the vertical lines.
 
 * changing the pen color
 
@@ -84,7 +140,7 @@ for both the sandpile and palette controls.
 
 #+begin_src j
 NB. mouse wheel on either control rotates through palette
-spw_sp_mwheel =: spw_pal_mwheel =: verb define
+gpw_sp_mwheel =: gpw_pal_mwheel =: verb define
   smoutput sysdata
   pen =: (#pal)|pen-*{:".sysdata NB. sign of last item is wheel dir
   glpaint glsel'pal'
@@ -116,10 +172,8 @@ Then we just tell the palette control to repaint, which triggers a paint event, 
 Now to handle clicking we make another event handler -- =mblup= means mouse button left up.
 
 #+begin_src j
-whichbox =: verb : '|. <. y %~ 2 {. ".sysdata'
-
 NB. click the palette to choose a color:
-spw_pal_mblup =: verb define
+gpw_pal_mblup =: verb define
   glpaint glsel 'pal' [ pen =: {. whichbox 40
 )
 #+end_src
@@ -137,7 +191,7 @@ Now, when we click the sandpile widget, the same calculation needs to happen.
 
 #+begin_src j
 NB. left click or drag draws on the input
-spw_sp_mblup =: verb define
+gpw_sp_mblup =: verb define
  boxsize =. (glqwh 'sp')% |.$ grid
  grid =: grid mousedraw boxsize
 )
@@ -184,19 +238,19 @@ So 'from' is a dyadic verb, and 'amend' is an adverb that takes the position and
 Amend is something you'll do all the time, so lets pause a minute and do a simpler example.
 
 Suppose you have a grid like
-
+** Amend
 #+begin_src j
   i. 3 5
 #+end_src
 
 Then the coordinates of the seven are one down and two to the right.
 Then we can replace the seven with infinity like this:
-
+** Amend
 #+begin_src j
   _ (<1 2) } i. 3 5
 #+end_src
-
 The reason we box 1 2 is because we can assign multiple positions at once, and we need some way to distinguish pairs of coordinates from pairs of items. The items of a matrix are its rows, so without the box, it replaces the entirety of rows one and two. Likewise, if we want to replace two different individual cells, we can pass in two boxes.
+** Amend
 
 #+begin_src j
   _ (0 0; 1 2) } i. 3 5
@@ -207,7 +261,7 @@ More precisely, it boxes x and then boxes y unless y is already boxed. That way 
 and not wind up with nested boxes.
 
 * boxing
-
+** boxing
 Why is it called boxing?
 
 Well...
@@ -216,6 +270,7 @@ Well...
  0 0 ; 1 2
 #+end_src
 
+** boxing
 Partially because J draws it as a box...
 
 #+begin_src j
