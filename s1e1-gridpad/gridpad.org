@@ -4,11 +4,11 @@
 
 * Window setup
 #+begin_src j
-gpw_close =: verb define                  NB. called when close button on 'gpw' clicked
+gpw_close =: verb define                  NB. when 'gpw' close button clicked
   wd'psel gpw; pclose; timer 0'
 )
 
-gpw_close^:(wdisparent'gpw')''            NB. close old window (if any) each time we run.
+gpw_close^:(wdisparent'gpw')''            NB. close old window each time we run.
 
 wd 'pc gpw closebutton; minwh 640 640'    NB. create window 'gpw'
 wd 'pn "gridpad: simple sprite editor"'   NB. add title
@@ -30,7 +30,7 @@ require 'viewmat'
 coinsert 'jviewmat jgl2'
 
 vmcc =: verb define                       NB. invoke viewmat in a child control
-  'pc cc img' =. y                        NB. usage: vmcc(parentControl;childControl;rgbPixelData)
+  'pc cc img' =. y                        NB. usage: vmcc(parent;child;pixels)
   glsel cc [ wd'psel ',pc                 NB. select window and child control
   glpaint [ 'rgb' vmcc_jviewmat_ img;cc   NB. blit the pixel data and repaint.
 )
@@ -102,8 +102,8 @@ gpw_img_mmove =: verb define
 * Grid coordinates
 
 #+begin_src j
-whichbox =: verb define          NB. which box is the mouse over? (only works inside mouse event)
-  |. <. y %~ 2 {. ".sysdata
+whichbox =: verb define                   NB. which box is the mouse over?
+  |. <. y %~ 2 {. ".sysdata               NB. (only works inside mouse events)
 )
 
 gpw_img_mmove =: verb define
@@ -111,6 +111,48 @@ gpw_img_mmove =: verb define
   wd 'set sb setlabel text *', ": whichbox size
 )
 #+end_src
+* click to draw
+
+Now, when we click the sandpile widget, the same calculation needs to happen.
+
+#+begin_src j
+NB. left click or drag draws on the input
+gpw_img_mblup =: verb define
+ boxsize =. (glqwh glsel'img')% |.$ image
+ image =: image mousedraw boxsize
+)
+#+end_src
+
+For the palette, the box size was fixed, but for the sandpile,
+we can change the size of the grid, so we have to figure it out dynamically.
+And of course, it's the same calculation as before, where
+we query the width and height of the canvas and divide by the shape of the grid
+with this reverse in the middle because shape gives height and width instead
+of width and height.
+
+* mousedraw:
+
+#+begin_src j
+mousedraw =: dyad define
+  (pen { pal) (<  0>.(<:$x)<.  whichbox y) } x
+)
+#+end_src
+
+Now mousedraw takes the grid on the left (so that's x)
+and the box size on the right. (That's y).
+The box size goes into whichbox,
+which looks at sysdata
+and gives back the y x grid coordinates of the mouse.
+
+This part in the middle clamps those coordinates so they're between zero zero (which is upper left)
+and the lower right corner, which is one less than the height and width of the grid.
+This is completely un-necessary for clicking because this =mblup= only fires when you're actually inside the grid.
+But we're going to use this routine again later for dragging
+and if you drag off the side it sometimes fires the event even when you're out of bounds.
+
+Okay so now we have the clamped grid coordinates, and this less than sign puts them in a box.
+Now this whole line says to take the number corresponding to the current pen,
+and put it into a copy of the grid at the coordinates we calculated.
 
 * Amend
 
@@ -166,48 +208,6 @@ You can't have an array that contains both numbers and characters:
 But you can have an array with two boxes, regardless of what's inside them.
 
 Anyway, to recap, boxing is also the way to amend an array at particular coordinates, and that's what we're doing in mousedraw. So now, we can click to our heart's content and draw with our pen in the grid.
-* click to draw
-
-Now, when we click the sandpile widget, the same calculation needs to happen.
-
-#+begin_src j
-NB. left click or drag draws on the input
-gpw_img_mblup =: verb define
- boxsize =. (glqwh glsel'img')% |.$ image
- image =: image mousedraw boxsize
-)
-#+end_src
-
-For the palette, the box size was fixed, but for the sandpile,
-we can change the size of the grid, so we have to figure it out dynamically.
-And of course, it's the same calculation as before, where
-we query the width and height of the canvas and divide by the shape of the grid
-with this reverse in the middle because shape gives height and width instead
-of width and height.
-
-Then we call mousedraw:
-
-#+begin_src j
-mousedraw =: dyad define
-  (pen { pal) (<  0>.(<:$x)<.  whichbox y) } x
-)
-#+end_src
-
-Now mousedraw takes the grid on the left (so that's x)
-and the box size on the right. (That's y).
-The box size goes into whichbox,
-which looks at sysdata
-and gives back the y x grid coordinates of the mouse.
-
-This part in the middle clamps those coordinates so they're between zero zero (which is upper left)
-and the lower right corner, which is one less than the height and width of the grid.
-This is completely un-necessary for clicking because this =mblup= only fires when you're actually inside the grid.
-But we're going to use this routine again later for dragging
-and if you drag off the side it sometimes fires the event even when you're out of bounds.
-
-Okay so now we have the clamped grid coordinates, and this less than sign puts them in a box.
-Now this whole line says to take the number corresponding to the current pen,
-and put it into a copy of the grid at the coordinates we calculated.
 
 * drag to draw
 
@@ -241,17 +241,18 @@ Anyway, now we can draw continuously.
 * palette
 
 #+begin_src j
-lo =: 16b000000 16baa0000 16b00aa00 16baa5500 16b0000aa 16baa00aa 16b00aaaa 16baaaaaa
-hi =: 16b555555 16bff5555 16b55ff55 16bffff55 16b5555ff 16bff55ff 16b55ffff 16bffffff
-pal =: lo, hi                      NB. default palette (16-color vga text colors)
-pen =: 15                          NB. fg = white
+NB. default palette (16-color vga text colors)
+pal =:      16b000000 16baa0000 16b00aa00 16baa5500
+pal =: pal, 16b0000aa 16baa00aa 16b00aaaa 16baaaaaa
+pal =: pal, 16b555555 16bff5555 16b55ff55 16bffff55
+pal =: pal, 16b5555ff 16bff55ff 16b55ffff 16bffffff
+pen =: 15                         NB. draw in white
 
 pal_cellsize =: (glqwh glsel'pal') % 1,#pal
 
 
 gpw_pal_paint =: verb define
-  vmcc 'gpw';'pal';,.pal           NB. the ,. makes pal a 2d array
-
+  vmcc 'gpw';'pal';,.pal           NB. ,. makes pal a 2d array
   NB. draw a box around the current pen color:
   glbrush glrgba 0 0 0 0  [ h =. {: cellsize =. pal_cellsize
   glrect 3, (3+pen*h), _5 _5 + cellsize [ glpen 5 [ glrgb 0 0 0
@@ -286,7 +287,6 @@ the wheel even while you're drawing.
 #+begin_src j
 NB. mouse wheel on either control rotates through palette
 gpw_img_mwheel =: gpw_pal_mwheel =: verb define
-  smoutput sysdata
   pen =: (#pal)|pen-*{:".sysdata NB. sign of last item is wheel dir
   glpaint glsel'pal'
 )
@@ -298,8 +298,6 @@ the same verb, and they start working immediately.
 
 Now the way mouse events work is that the coordinates get stuck in this string called sysdata.
 Let's have it print each time I scroll the mouse wheel.
-
-: smoutput sysdata
 
 For every mouse event on an isigraph, sysdata is going to be a string with the position of the mouse cursor,
 the width and height of the viewport, a set of bits representing which of the first three buttons were down,
@@ -326,12 +324,25 @@ So we use the behead operator and that's our new pen, and again we tell the pale
 
 * file menu
 #+begin_src j
-require 'png'
+wd 'psel gpw'
+wd 'menupop "&File"'                      NB. File menu
+wd '  menu new  "&New"  "Ctrl+N"'
+wd '  menu open "&Open" "Ctrl+O"'
+wd '  menu save "&Save" "Ctrl+S"'
+wd 'menupopz'
+#+end_src
 
-wd'menupop "&File"'
-wd'menu open "&Open" "Ctrl+O"'
-wd'menu save "&Save" "Ctrl+S"'
-wd'menupopz'
+* file /new new item
+#+begin_src j
+gpw_new_button =: verb define
+  image =: 0 * image                      NB. set to black
+)
+#+end_src
+
+
+* load / save
+#+begin_src j
+require 'png'
 
 gpw_open_button =: verb define
   path =. wd 'mb open1 "Load a png file" filename "PNG (*.png)"'
@@ -346,12 +357,13 @@ gpw_save_button =: verb define
 
 * custom colors
 #+begin_src j
-  gpw_pal_mbrup =: verb define
-    pen =: {. whichbox {: pal_cellsize
-    if. #rgb =. wd'mb color' do.
-      c =. 256 #:^:_1 ".rgb         NB. turn 'r g b' string into int
-      pal =: c pen } pal
-    end.
-    glpaint glsel 'pal'
-  )
+gpw_pal_mbrup =: verb define
+  pen =: {. whichbox {: pal_cellsize      NB. same as mblup: set pen
+  rgb =: ": 256 256 256 #: pen { pal      NB. get 'r g b' string for old color
+  if. #rgb =. wd'mb color ',rgb do.       NB. show system color picker
+    c =. 256 #:^:_1 ".rgb                 NB. turn new 'r g b' into new
+    pal =: c pen } pal                    NB. update the palette...
+  end.
+  glpaint glsel 'pal'                     NB. ... and redraw it.
+)
 #+end_src
