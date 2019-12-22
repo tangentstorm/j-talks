@@ -2,7 +2,7 @@
 #+property: header-args:j  :tangle "gridpad.ijs" :noweb tangle
 : (require 'ox-org)   <- eval this line to export tangled org with C-c C-e O o (org-org-export-to-org)
 
-* Window setup
+* window setup
 #+begin_src j
 gpw_close =: verb define                  NB. when 'gpw' close button clicked
   wd'psel gpw; pclose; timer 0'
@@ -10,41 +10,67 @@ gpw_close =: verb define                  NB. when 'gpw' close button clicked
 
 gpw_close^:(wdisparent'gpw')''            NB. close old window each time we run.
 
-wd 'pc gpw closebutton; minwh 640 640'    NB. create window 'gpw'
+wd 'pc gpw closebutton; minwh 640 500'    NB. create window 'gpw'
 wd 'pn "gridpad: simple sprite editor"'   NB. add title
 wd 'bin v'                                NB. vertical bin
 wd '  bin h'                              NB.   horizontal bin
-wd '    cc pal isigraph;setwh pal 50 800' NB.     narrow isigraph for palette
+wd '    cc pal isigraph;setwh pal 25 400' NB.     narrow isigraph for palette
 wd '    set pal sizepolicy fixed fixed'   NB.     keep palette from resizing
-wd '    cc img isidraw;setwh img 800 800' NB.     square isigraph for drawing
+wd '    cc img isidraw;setwh img 480 480' NB.     square isigraph for drawing
 wd '  bin z'                              NB.   /bin
 wd '  cc sb statusbar'                    NB.   status bar
 wd '  set sb addlabel text'               NB.   ... with status text
 wd 'bin z'                                NB. /bin
-wd 'pmove 900 100 0 0; ptop; pshow'       NB. position and show window.
+wd 'pmove 40 490 0 0; ptop; pshow'        NB. position and show window.
 #+end_src
 
-* Draw the screen
+Top part is housekeeping for development, so you can run the script many times.
+
+Bottom part lays out the window.
+
+Bins allow you to layout controls.
+
+* viewmat in child control
 #+begin_src j
 require 'viewmat'
 coinsert 'jviewmat jgl2'
 
 vmcc =: verb define                       NB. invoke viewmat in a child control
   'pc cc img' =. y                        NB. usage: vmcc(parent;child;pixels)
-  glsel cc [ wd'psel ',pc                 NB. select window and child control
+  wd 'psel ',pc                           NB. select parent control
   glpaint [ 'rgb' vmcc_jviewmat_ img;cc   NB. blit the pixel data and repaint.
 )
+#+end_src
 
+Now we import viewmat and define vmcc.
+
+I covered this idea in the animation video.
+
+In that video
+we just called this vmcc from jviewmat
+and then called glpaint.
+
+This time, I also pass in the parent control name,
+so we can select the window we're working with.
+
+If you only ever have one window
+you don't need the psel step but it's probably good practice.
+
+In my case, this presentation window
+is also running in J.
+
+Maybe I'll talk about that in another video someday.
+
+But for now, let's call our function.
+
+* render "animation"
+#+begin_src j
 image =: 32 32 $ 0
 
 render =: verb define
   vmcc 'gpw';'img';image
 )
-#+end_src
 
-* Render "animation"
-
-#+begin_src j
 NB. call 'render' 10 times a second.
 step =: render
 sys_timer_z_ =: step_base_
@@ -54,44 +80,42 @@ wd 'timer 100'
 This is a bit wasteful since we're not really animating here, but it's handy for development.
 The alternative is to explicitly call render each time we make a change.
 
-#+begin_example j
-image    =: ? 32 32 $ 2^24                NB. random 24 bit colors
-#+end_example
-
-* G to toggle grid
+* draw a grid
 #+begin_src j
-image    =: 32 32 $ 0
-showgrid =: 0
+showgrid =: 1
 
 render =: verb define
   vmcc 'gpw';'img';image
   if. showgrid do.
     'vw vh' =. glqwh glsel'img' [ 'ih iw' =. $ image
     glpen glrgb 255 255 255
-    gllines (0, ], vw, ])"0 (vh%ih) * i.ih
-    gllines (], 0, vh,~])"0 (vw%iw) * i.iw
+    gllines <. 0.5+ (0, ], vw, ])"0 (vh%ih) * i.ih
+    gllines <. 0.5+ (], 0, vh,~])"0 (vw%iw) * i.iw
   end.
 )
-
-NB. keyboard events are widget-specific, but we want same for img/pal
-gpw_pal_char =: gpw_img_char =: verb define
-  select. {. sysdata
-    case. 'g' do. showgrid =: -. showgrid
-  end.
-)
-
 #+end_src
-
-And of course I'm also drawing the lines for this grid.
 The shape of the grid gives us its height and width.
 And this means query width and height of the viewport.
+
 If we divide the viewport into this many chunks we get the cell size,
 and if we multiply that by this range, we get the y coordinate for each horizontal line.
 So then this part maps each y coordinate to the start and end coordinates,
 and gllines draws the whole array.
 Same thing for the vertical lines.
 
-* Mouse coordinates
+* keyboard shortcuts
+#+begin_src j
+NB. keyboard events are widget-specific, but we want same for img/pal
+gpw_pal_char =: gpw_img_char =: verb define
+  select. {. sysdata
+    case. '0' do. image =: 32 32 $ 0
+    case. 'r' do. image =: ? 32 32 $ 2^24
+    case. 'g' do. showgrid =: -. showgrid
+  end.
+)
+#+end_src
+
+* mouse coordinates
 Let's show the mouse coordinates.
 #+begin_src j
 gpw_img_mmove =: verb define
@@ -99,16 +123,19 @@ gpw_img_mmove =: verb define
 )
 
 #+end_src
-* Grid coordinates
+* grid coordinates
 
 #+begin_src j
-whichbox =: verb define                   NB. which box is the mouse over?
+gpw_img_mmove =: verb define
+  wd 'set sb setlabel text *', ": whichbox cellsize''
+)
+
+whichbox =: verb define                   NB. which cell is the mouse over?
   |. <. y %~ 2 {. ".sysdata               NB. (only works inside mouse events)
 )
 
-gpw_img_mmove =: verb define
-  size =. (glqwh glsel'img')% $ image
-  wd 'set sb setlabel text *', ": whichbox size
+cellsize =: verb define
+  (glqwh glsel'img') % |.$ image
 )
 #+end_src
 * click to draw
@@ -116,10 +143,14 @@ gpw_img_mmove =: verb define
 Now, when we click the sandpile widget, the same calculation needs to happen.
 
 #+begin_src j
-NB. left click or drag draws on the input
 gpw_img_mblup =: verb define
- boxsize =. (glqwh glsel'img')% |.$ image
- image =: image mousedraw boxsize
+  NB. left click to draw on the image
+  mousedraw whichbox cellsize''
+)
+
+mousedraw =: verb define
+  NB. y is the (y,x) coordinates of the pixel to draw
+  image =: 16bffffff (< y) } image
 )
 #+end_src
 
@@ -129,14 +160,6 @@ And of course, it's the same calculation as before, where
 we query the width and height of the canvas and divide by the shape of the grid
 with this reverse in the middle because shape gives height and width instead
 of width and height.
-
-* mousedraw:
-
-#+begin_src j
-mousedraw =: dyad define
-  (pen { pal) (<  0>.(<:$x)<.  whichbox y) } x
-)
-#+end_src
 
 Now mousedraw takes the grid on the left (so that's x)
 and the box size on the right. (That's y).
@@ -153,61 +176,20 @@ and if you drag off the side it sometimes fires the event even when you're out o
 Okay so now we have the clamped grid coordinates, and this less than sign puts them in a box.
 Now this whole line says to take the number corresponding to the current pen,
 and put it into a copy of the grid at the coordinates we calculated.
-
-* Amend
-
-The operation is called amend. The way to remember what's happening is that when
-'from' (left curly) takes something out of an array, it points away.
-Amend puts something into the array and it takes two arguments on the left to tell it what and where.
-So 'from' is a dyadic verb, and 'amend' is an adverb that takes the position and returns a dyadic verb.
-
-Amend is something you'll do all the time, so lets pause a minute and do a simpler example.
-
-Suppose you have a grid like
-** Amend
-#+begin_src j
-  i. 3 5
-#+end_src
-
-Then the coordinates of the seven are one down and two to the right.
-Then we can replace the seven with infinity like this:
-** Amend
-#+begin_src j
-  _ (<1 2) } i. 3 5
-#+end_src
-The reason we box 1 2 is because we can assign multiple positions at once, and we need some way to distinguish pairs of coordinates from pairs of items. The items of a matrix are its rows, so without the box, it replaces the entirety of rows one and two. Likewise, if we want to replace two different individual cells, we can pass in two boxes.
-** Amend
+* bounds checking
 
 #+begin_src j
-  _ (0 0; 1 2) } i. 3 5
+inbounds =: dyad define
+  *./ (x >: 0) *. x < y
+)
+
+mousedraw =: verb define
+  NB. y is the (y,x) coordinates of the pixel to draw
+  if. y inbounds $image do.
+    image =: 16bffffff (< y) } image
+  end.
+)
 #+end_src
-
-Semicolon is called link. Roughly speaking, it boxes its arguments and combines them into an array.
-More precisely, it boxes x and then boxes y unless y is already boxed. That way you can use it as a separator
-and not wind up with nested boxes.
-* boxing
-** boxing
-Why is it called boxing?
-
-Well...
-
-#+begin_src j
- 0 0 ; 1 2
-#+end_src
-
-** boxing
-Partially because J draws it as a box...
-
-#+begin_src j
-  < 0 0 ; 1 2
-#+end_src
-
-And also because every value in an array has to have the same type in J.
-You can't have an array that contains both numbers and characters:
-
-But you can have an array with two boxes, regardless of what's inside them.
-
-Anyway, to recap, boxing is also the way to amend an array at particular coordinates, and that's what we're doing in mousedraw. So now, we can click to our heart's content and draw with our pen in the grid.
 
 * drag to draw
 
@@ -216,29 +198,20 @@ And of course it would be much nicer if we could draw continously by holding the
 So that looks like this:
 
 #+begin_src j
-button  =: verb : 'y { 4 }. ".sysdata'
+lmb =: verb : '4 { ".sysdata'             NB. left mouse button
+
 gpw_img_mmove =: verb define
-  size =. (glqwh glsel'img')% $ image
-  wd 'set sb setlabel text *', ": whichbox size
-  if. button 0 do. gpw_img_mblup _ end.
+  wd 'set sb setlabel text *', ": whichbox cellsize''
+  if. lmb'' do. gpw_img_mblup'' end.
 )
 #+end_src
 
-When the mouse moves over the sandpile in the sandpile window,
+When the mouse moves over the canvas in the image control,
 if button zero is down then just call the click method.
-
-The infinity symbol is just serving as a dummy value to invoke the function.
-It doesn't matter what value you pass in since =mblup= ignores its argument.
-Normally you use the empty string,
-but since this is so short I just stuck the definition on one line,
-replacing the usual 'define' with just a bare colon followed by a string.
-So if I used the empty string here
-I'd have to escape it with two extra apostrophes,
-and that's just silly.
 
 Anyway, now we can draw continuously.
 
-* palette
+* the palette
 
 #+begin_src j
 NB. default palette (16-color vga text colors)
@@ -246,21 +219,9 @@ pal =:      16b000000 16baa0000 16b00aa00 16baa5500
 pal =: pal, 16b0000aa 16baa00aa 16b00aaaa 16baaaaaa
 pal =: pal, 16b555555 16bff5555 16b55ff55 16bffff55
 pal =: pal, 16b5555ff 16bff55ff 16b55ffff 16bffffff
-pen =: 15                         NB. draw in white
-
-pal_cellsize =: (glqwh glsel'pal') % 1,#pal
-
 
 gpw_pal_paint =: verb define
   vmcc 'gpw';'pal';,.pal           NB. ,. makes pal a 2d array
-  NB. draw a box around the current pen color:
-  glbrush glrgba 0 0 0 0  [ h =. {: cellsize =. pal_cellsize
-  glrect 3, (3+pen*h), _5 _5 + cellsize [ glpen 5 [ glrgb 0 0 0
-  glrect 3, (3+pen*h), _5 _5 + cellsize  [ glpen 1 [ glrgb 3 $ 255
-)
-
-gpw_pal_mblup =: verb define     NB. left click palette to set pen color
-  glpaint glsel 'pal' [ pen =: {. whichbox {: pal_cellsize
 )
 #+end_src
 
@@ -281,6 +242,42 @@ in the pal and num arrays.
 You should be able to select a color either by clicking on it,
 or by turning the mouse wheel. And you should be able to turn
 the wheel even while you're drawing.
+
+* pen color
+#+begin_src j
+pen =: <: # pal  NB. start with last color (white)
+
+pal_cellsize =: (glqwh glsel 'pal') % 1,#pal
+
+gpw_pal_mblup =: verb define
+  NB. left click palette to set pen color
+  glpaint glsel 'pal' [ pen =: {. whichbox pal_cellsize
+)
+#+end_src
+
+* draw with the pen
+#+begin_src j
+mousedraw =: verb define
+  NB. y is the (y,x) coordinates of the pixel to draw
+  if. y inbounds $image do.
+    image =: (pen { pal) (< y) } image
+  end.
+)
+#+end_src
+
+* show current color
+#+begin_src j
+gpw_pal_paint =: verb define
+  vmcc 'gpw';'pal';,.pal           NB. ,. makes pal a 2d array
+  NB. draw a box around the current pen color:
+  glbrush glrgba 0 0 0 0  [ h =. {: cellsize =. pal_cellsize
+  glrect 3, (3+pen*h), _5 _5 + cellsize [ glpen 5 [ glrgb 0 0 0
+  glrect 3, (3+pen*h), _5 _5 + cellsize [ glpen 1 [ glrgb 3 $ 255
+
+  NB. black box around everything:
+  glrect 0 0, (glqwh 'pal') [ glpen 1 [ glrgb 0 0 0
+)
+#+end_src
 
 * mouse wheel
 
@@ -321,7 +318,6 @@ the mouse coordinates are x y but for an array the y coordinate comes first.
 So that gives us the y and x coordinates of the box in the grid, but we only have one column so we only need the y.
 So we use the behead operator and that's our new pen, and again we tell the palette to repaint itself.
 
-
 * file menu
 #+begin_src j
 wd 'psel gpw'
@@ -338,7 +334,6 @@ gpw_new_button =: verb define
   image =: 0 * image                      NB. set to black
 )
 #+end_src
-
 
 * load / save
 #+begin_src j
@@ -366,4 +361,13 @@ gpw_pal_mbrup =: verb define
   end.
   glpaint glsel 'pal'                     NB. ... and redraw it.
 )
+#+end_src
+* the end
+#+begin_src j
+
+
+
+
+ thanks for watching!
+
 #+end_src
