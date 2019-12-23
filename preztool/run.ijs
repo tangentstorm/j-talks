@@ -5,6 +5,8 @@ NB. --------------------------------------------
 require'regex'
 require'convert/json'
 
+cocurrent'prez'
+
 smoutput help =: noun define
 This utility opens two windows, both generated from the same *.org file.
 The keyboard controls both windows, and the keys work regardless of
@@ -206,6 +208,15 @@ on_event =: dyad define
        case. '9' do. sho bak''
        case. 'r' do. reload_slides''
        case. 'e' do. run_code''
+       case. 't' do.
+         wd 'sm set term text; sm focus term'           NB. clear terminal
+         wd 'sm set term xywh 0 490 620 554'            NB. bring to front
+       case. 'n' do. smoutput names_base_''
+       case. 'c' do. clear_base_'' [ wd 'timer 0'
      end.
   end.
 )
+
+NB. set up the terminal and editor windows
+NB. wd 'sm set term xywh 0 490 620 554'
+wd 'sm set term text; sm focus term'           NB. clear terminal
