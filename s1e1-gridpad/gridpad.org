@@ -535,6 +535,8 @@ Running this defines a handler for the paint event for the palette,
 but because we don't have the palette hooked up to the timer,
 nothing actually happens until I click on the window.
 
+(click)
+
 But there it is!
 
 
@@ -553,10 +555,13 @@ mousedraw =: verb define
 Okay, so now we're defining a variable called pen to hold our drawing color.
 It's an index into the palette.
 
-I'll pick index 1, which is red.
+Then we just update mousedraw to pull the color from the palette.
 
+So if I run this, we should be drawing in green.
 
-* pen color
+...
+
+* click to set pen color
 #+begin_src j
 pal_cellsize =: (glqwh glsel 'pal') % 1,#pal
 
@@ -566,13 +571,25 @@ gpw_pal_mblup =: verb define
 )
 #+end_src
 
-
+Now let's make the palette clickable.
 
 Clicking the palette sets the color.
 
+This is nothing new. Calculate the cell size for the palette.
 
+Since there's only one column, we only care about the y coordinate.
 
-* show current color
+So if we run this, we should be able to draw in different colors.
+
+...
+
+This last bit calls glpaint to force the control to refresh.
+
+That actually doesn't do anythnig yet, but the point is we want to draw some kind of marker here to indicate the active color.
+
+So let's do that.
+
+* indicate current color
 #+begin_src j
 
 pen =: <: # pal  NB. start with last color (white)
@@ -589,6 +606,21 @@ gpw_pal_paint =: verb define
 )
 #+end_src
 
+There's nothing special going on here. Just calling glrect to draw three boxes.
+I draw both black and white boxes over the current color so you can see the cursor
+no matter what color you click on.
+
+And then just because the white kind of blends in on my monitor,
+I draw a thin black box around the whole thing.
+
+(run)
+
+Again we have to click the window to trigger the repaint.
+
+Okay. Now we can click and see our selection,
+but it's annoying to keep moving the mouse back to the palette,
+so let's let you move this cursor up and down with the mouse wheel.
+
 * mouse wheel
 
 #+begin_src j
@@ -599,34 +631,26 @@ gpw_img_mwheel =: gpw_pal_mwheel =: verb define
 )
 #+end_src
 
-Event handlers are just verbs, and they follow this naming convention of
-parent name, child name, event name. So here I'm just giving two names to
-the same verb, and they start working immediately.
+Hopefully this is starting to make sense. It's just another event handler called mwheel.
 
-Now the way mouse events work is that the coordinates get stuck in this string called sysdata.
-Let's have it print each time I scroll the mouse wheel.
+You get the same array of mouse event numbers as the other mouse events.
+The last one in the list gives you the change in the angle of the mouse wheel.
 
-For every mouse event on an isigraph, sysdata is going to be a string with the position of the mouse cursor,
-the width and height of the viewport, a set of bits representing which of the first three buttons were down,
-two bits for whether shift or control were pressed,
-and the mouse wheel rotation in degrees.
-(These two bits are always zero)
+So the doublequote-colon parses the string, the curly-colon takes the last item.
 
-So here we just convert that string to an array, take the last item.
-For my mouse that seems to always be either fifteen or negative fifteen, but probably it changes with different hardware.
-Anyway, we don't care about the number, just the direction, so asterisk takes the sign of that, giving us -1, 0, or 1.
-We add that to our pen variable, and then take that modulo the length of the palette so it wraps around.
+For my mouse that tends to always be either 15 or negative 15.
 
-Then we just tell the palette control to repaint, which triggers a paint event, which calls =spw_pal_paint=.
+But we only care about the direction, so asterisk gives us the sign.
 
-Now to handle clicking we make another event handler -- =mblup= means mouse button left up.
+So now we have a one or negative one, and we can subtract it from the pen number to move the cursor, because that's just how the directions turn out.
 
-But this time we want to pay attention to the first two numbers to figure out which box got clicked on.
-We divide by the size of the boxes, (which I passed in here) round down and then reverse because
-the mouse coordinates are x y but for an array the y coordinate comes first.
+The pipe character is modulo, so if we hit negative one, it wraps around to the end, and if we go past the end, it wraps around to zero.
 
-So that gives us the y and x coordinates of the box in the grid, but we only have one column so we only need the y.
-So we use the behead operator and that's our new pen, and again we tell the palette to repaint itself.
+Then just repaint.
+
+So run this...
+
+And now the color changes with the mouse wheel.
 
 * file menu
 #+begin_src j
@@ -638,12 +662,43 @@ wd '  menu save "&Save" "Ctrl+S"'
 wd 'menupopz'
 #+end_src
 
+Next up is the file menu.
+
+As soon as we run this, a menu bar will appear in the window.
+It seems like you can add this at any time.
+
+menupop starts a new menu, menupopz ends it.
+You can nest those if you need submenus.
+
+The menu command adds an new item to the menu.
+Each menu item has a name, which will correspond to an event handler.
+So here the names are lowercase new, open, and save.
+
+The next column here is the text that shows up in the menu.
+The Ampersands give you a hotkey you can press when the menu is open.
+
+The last colum is a global hotkey, which you can handle at any point.
+Remember I said the control keys are global to the window rather than a child control?
+Well, here's one way you can set them.
+
+
 * file /new new item
 #+begin_src j
 gpw_new_button =: verb define
-  image =: 0 * image                      NB. set to black
+  image =: ($image) $ 16bffffff                      NB. set to white
 )
 #+end_src
+
+I already used the letter n to make the image black in the keypress handler,
+so here's control-n to make it white.
+
+The rule for naming menu handlers is to treat them as buttons, so it's window name, menu item name, and then the word button.
+
+Run it...
+
+And now it works either from the menu...
+
+Or just by pressing control n.
 
 * load / save
 #+begin_src j
@@ -660,18 +715,53 @@ gpw_save_button =: verb define
 )
 #+end_src
 
+The Open and Save commands both send the mb message to the window driver.
+MB is short for message box, and it just invokes a standard system dialog box.
+
+Let's run this so you can see what it does...
+
+The dialog box is modal, which means you can't do anything else until you pick a path or close the window.
+
+If you close the dialog, you get an empty string back. Otherwise you get a path.
+
+So if the length is zero, we do nothing, otherwise we pass it to these readpng and writepng functions, which I got from this `require 'png'` line.
+
+So now we can load and save files...
+
+Almost done here. The last thing is to right click a box in the palette to change the color.
+
 * custom colors
 #+begin_src j
 gpw_pal_mbrup =: verb define
   pen =: {. whichbox {: pal_cellsize      NB. same as mblup: set pen
   rgb =: ": 256 256 256 #: pen { pal      NB. get 'r g b' string for old color
   if. #rgb =. wd'mb color ',rgb do.       NB. show system color picker
-    c =. 256 #:^:_1 ".rgb                 NB. turn new 'r g b' into new
+    c =. 256 #. ".rgb                     NB. turn new string into new color
     pal =: c pen } pal                    NB. update the palette...
   end.
   glpaint glsel 'pal'                     NB. ... and redraw it.
 )
 #+end_src
+
+Right clicking is just 'mbrup' for mouse button right up.
+
+Let's go ahead and run this, and then explain how it works.
+
+How about we replace this blue with a different shade?
+
+We set the pen just like a left click.
+
+This hash-colon function is very useful. It's called antibase, and it lets you break a number down into digits in a particular base (or even a mix of bases). Well a byte is kind of like a digit in base 256, so this takes our color and breaks it into three bytes representing the red, green, and blue components.
+
+Anyway, doublequote colon formats our three bytes as a space separated string in decimal, and then we pass that string to the color message box.
+
+Again, it pops up the system color picker, and gives back either a new string with three numbers, or you close the window and get an empty string.
+
+So if the result has a length, we do the inverse of what we just did: parse the string back into an array, and apply the base function (hash dot), which is almost but not quite the opposite of antibase, to get the new color.
+
+So then we stick the new color back into the palette slot we originally clicked on, and then repaint the control.
+
+
 * the end
 #+begin_src j
 
@@ -681,3 +771,6 @@ gpw_pal_mbrup =: verb define
  thanks for watching!
 
 #+end_src
+
+And there you have it: a very primitive sprite editor in J.
+
