@@ -209,8 +209,11 @@ on_event =: dyad define
        case. 'r' do. reload_slides''
        case. 'e' do. run_code''
        case. 't' do.
-         wd 'sm set term text; sm focus term'           NB. clear terminal
+         NB. It doesn't put the cursor in the right place, so
+         NB. just press enter after pressing t.
          wd 'sm set term xywh 0 490 620 554'            NB. bring to front
+         wd 'sm set term text *',LF,'  '
+         wd 'sm focus term'
        case. 'n' do. smoutput names_base_''
        case. 'c' do. clear_base_'' [ wd 'timer 0'
      end.
