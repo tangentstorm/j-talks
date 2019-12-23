@@ -2,35 +2,112 @@
 #+property: header-args:j  :tangle "gridpad.ijs" :noweb tangle
 : (require 'ox-org)   <- eval this line to export tangled org with C-c C-e O o (org-org-export-to-org)
 
-* window setup
+* gridpad
 #+begin_src j
+NB. gridpad: a simple sprite editor
+
+#+end_src
+
+Today we're going to build this little sprite editor in J.
+
+It's a pretty rudimentary as far as graphics programs go
+but we will cover everything you need to know to make
+interactive programs that respond to the mouse and keyboard.
+
+So let's get started.
+
+* cleanup
+#+begin_src j
+clear''                                   NB. erase all definitions.
+
 gpw_close =: verb define                  NB. when 'gpw' close button clicked
   wd'psel gpw; pclose; timer 0'
 )
 
 gpw_close^:(wdisparent'gpw')''            NB. close old window each time we run.
 
+#+end_src
+
+One of the first things I do when I start writing a gui program in J
+is to write the close handler for my window, and then invoke
+it to clean up any old versions of the window.
+
+It's mostly just handy while you're developing, otherwise
+you have to manually close the old one
+each time you make a change and re-run your script.
+
+Here my window is named gpw for gridpad window,
+so =gpw_close= is automatically called if I click this close button.
+
+It doesn't actually close the window unless you tell it to.
+That's so you can put an "are you sure" message up, or save state, or whatever.
+In this case, I just select the window, close it,
+and then turn off the system timer.
+
+Then the bottom line calls that verb, but only if the window exists.
+The way it works is that wdisparent returns a 0 or 1
+depending on whether or not the window exists,
+and then the power conjunction uses that number
+to decide how many times to recursively call the function.
+Calling a function zero times is a no-op,
+which means the power conjunction also doubles as a conditional.
+
+Right now we do have a running window named gpw,
+so if I run this code, it'll close that window.
+
+I should explain that I'm doing something new this video.
+This window right here is a little presentation tool I
+made that's also running in J.
+
+I've got a button I can press to run whatever code is on the slide.
+I'm hoping it's going to still feel like a live coding session,
+but without all the typos.
+
+Maybe I'll talk about how it works in another video, but for now,
+let me know in the comments what you think of this format, and
+in the meantime, I'm just going to press the button and run this code.
+
+...
+
+Okay. So the window disappeared.
+and this line at the top erased all the old code that was running,
+so now the only word we have defined is this close handler.
+
+So let's get started building our simple sprite editor in J!
+
+* window setup
+#+begin_src j
 wd 'pc gpw closebutton; minwh 640 500'    NB. create window 'gpw'
 wd 'pn "gridpad: simple sprite editor"'   NB. add title
 wd 'bin v'                                NB. vertical bin
 wd '  bin h'                              NB.   horizontal bin
 wd '    cc pal isigraph;setwh pal 25 400' NB.     narrow isigraph for palette
 wd '    set pal sizepolicy fixed fixed'   NB.     keep palette from resizing
-wd '    cc img isidraw;setwh img 480 480' NB.     square isigraph for drawing
+wd '    cc img isidraw;setwh img 480 480' NB.     square isidraw canvas
 wd '  bin z'                              NB.   /bin
 wd '  cc sb statusbar'                    NB.   status bar
 wd '  set sb addlabel text'               NB.   ... with status text
 wd 'bin z'                                NB. /bin
-wd 'pmove 40 490 0 0; ptop; pshow'        NB. position and show window.
+wd 'pmove 40 480 0 0; ptop; pshow'        NB. position and show window.
 #+end_src
 
-Top part is housekeeping for development, so you can run the script many times.
+Okay so now we have a bunch of window driver calls to set up our window.
 
-Bottom part lays out the window.
+I covered most of this in my basic animation video, so I won't repeat it here.
 
-Bins allow you to layout controls.
+The main thing that's new is that I've got multiple controls on the screen,
+so I'm using the bin command to group them horizontally and vertically.
 
-* viewmat in child control
+So now when I run this...
+
+I get a blank window. There's no menu bar yet,
+just space set aside for the palette and the canvas,
+and then a little status bar you can barely
+see down here at the bottom.
+
+So now we need to tell it what to draw.
+
+* viewmat again
 #+begin_src j
 require 'viewmat'
 coinsert 'jviewmat jgl2'
@@ -44,24 +121,19 @@ vmcc =: verb define                       NB. invoke viewmat in a child control
 
 Now we import viewmat and define vmcc.
 
-I covered this idea in the animation video.
+I did something close to this in the animation video.
 
-In that video
-we just called this vmcc from jviewmat
-and then called glpaint.
-
-This time, I also pass in the parent control name,
+The difference is that now, I also pass in the parent control name,
 so we can select the window we're working with.
 
-If you only ever have one window
-you don't need the psel step but it's probably good practice.
+In my case, this presentation window is also running in J.
 
-In my case, this presentation window
-is also running in J.
+If you only have one window you don't need the psel step
+but it's probably a good habit to get into.
 
-Maybe I'll talk about that in another video someday.
-
-But for now, let's call our function.
+Okay, so when I run this code
+nothing happens on screen.
+We just have some new definitions to work with.
 
 * render "animation"
 #+begin_src j
@@ -77,8 +149,23 @@ sys_timer_z_ =: step_base_
 wd 'timer 100'
 #+end_src
 
-This is a bit wasteful since we're not really animating here, but it's handy for development.
-The alternative is to explicitly call render each time we make a change.
+So now let's actually call it.
+
+gpw is the window name, img is the name of the canvas,
+and image is the matrix we're going to edit.
+
+And now I'm just doing the same thing from the animation video,
+calling the render function every 100 miliseconds.
+
+This is a bit wasteful since we're not really animating here, but I find it kind of convenient.
+
+The alternative is to explicitly repaint each time we make a change.
+That's probably the right way to do things if you're not going to be animating.
+And so we'll do it that way when we draw the palette.
+
+So when I run this...
+
+There's our beautiful artwork!
 
 * draw a grid
 #+begin_src j
@@ -94,35 +181,129 @@ render =: verb define
   end.
 )
 #+end_src
-The shape of the grid gives us its height and width.
-And this means query width and height of the viewport.
+
+Next up, I'm adding these lines to the render function.
+
+The shape of the image gives us its height and width.
+And glqwh means query width and height of the viewport.
 
 If we divide the viewport into this many chunks we get the cell size,
 and if we multiply that by this range, we get the y coordinate for each horizontal line.
+
 So then this part maps each y coordinate to the start and end coordinates,
 and gllines draws the whole array.
-Same thing for the vertical lines.
+
+Then we do the same for vertical lines.
+The only trick we want to put vh last in the list,
+because it's a y coordinate
+but if we want this to be a train,
+the rightmost thing has to be verb.
+
+I could have used zero colon on the right and put vh on the left,
+or used vh doublequote zero to make it a verb, but instead
+I just used the tilde to swap the order. There's no real reason
+to do it one way or the other, as long as it works.
+
+Anyway, if we run this, we get a grid.
+
+...
+
+You'll notice I put a conditional around this.
+So let's add a keyboard shortcut to toggle this showgrid variable.
 
 * keyboard shortcuts
 #+begin_src j
 NB. keyboard events are widget-specific, but we want same for img/pal
 gpw_pal_char =: gpw_img_char =: verb define
   select. {. sysdata
-    case. '0' do. image =: 32 32 $ 0
+    case. 'n' do. image =: 32 32 $ 0
     case. 'r' do. image =: ? 32 32 $ 2^24
     case. 'g' do. showgrid =: -. showgrid
   end.
 )
 #+end_src
 
+Okay so each control has its own keyboard handler.
+
+The naming scheme for all the control-specific event handlers
+is parent name, child name, and then event name.
+
+That's why I'm giving two names to the same verb.
+The first name is the handler for the palette, and the second is for the canvas.
+
+Pretty much every event sends its data to us by
+populating a string named sysdata in the current locale.
+
+So when it's a keyboard event, sysdata is just a string with
+whatever the ascii character is for the key that got pressed.
+
+You might ask what about control and alt and function keys,
+but the answer is you actually can't trap those at the
+child control level. As far as I know, those are handled
+by the window as a whole.
+
+I'm not actually sure how arrow keys are handled.
+I'll have to investigate that at some point, but for now,
+there are plenty of other keys to work with.
+
+Okay, so this code should be pretty self explanatory
+once you know the j primitives. I'll just run it and show each key.
+
+From the bottom, up,
+
+g toggles the grid. That dash and dot is the "not" sign. Or 1 minus y.
+
+r fils the grid with random 24-bit colors (that's 8 bits each for red, green, and blue), which is what pretty much every graphics program uses.
+
+Because we're redrawing 10 times a second, holding down r shows off the basic animation idea from the last video. That's kind of useless in a sprite editor, but it lets me demonstrate the last shortcut, which is that
+
+'n' resets all the pixels back to zero, which is the color black.
+
+It's n for new image.
+
+Anyway, now that we have our grid, we want to be able to draw on it with the mouse.
+
+In particular, we want to use the mouse coordinates to tell us which pixel in the image needs to change.
+
+So the first challenge is to get the mouse coordinates.
+
 * mouse coordinates
 Let's show the mouse coordinates.
 #+begin_src j
 gpw_img_mmove =: verb define
-  wd 'set sb setlabel text *', ":sysdata
+  wd 'set sb setlabel text *', sysdata
 )
 
 #+end_src
+
+Once again, we just define a function with the right name, and we get the event handler.
+
+mmove handles mouse movement, and we only care about the canvas this time.
+
+again, sysdata is a string with information about the event,
+and this line just tells the window driver to set our
+status bar label to whatever's in that string.
+
+sb is just the name i gave to the status bar, and setlabel text is just one of the actions a status bar control can handle.
+
+The asterisk is a special syntax that tells wd that the rest of the input we're sending is an argument to whatever command we just gave. Otherwise we'd have to put double quotes around it, and it would keep looking for more window driver commands afterward.
+
+Anyway, when we run this,
+and move the mouse over the canvas,
+you can see the full string we get for mouse events.
+
+Basically, it's the x y coordinates of the mouse
+the width and height of the child control
+and then a bunch of flags for which buttons
+and modifier keys are pressed.
+
+We'll use the flags a bit later, but for now all we care about are the coordinates.
+
+We want to take these numbers
+which are screen coordinates relative to the upper left corner
+and map them to the array indices of our image.
+
+
 * grid coordinates
 
 #+begin_src j
@@ -130,17 +311,46 @@ gpw_img_mmove =: verb define
   wd 'set sb setlabel text *', ": whichbox cellsize''
 )
 
+cellsize =: verb define
+  (glqwh glsel'img') % |.$ image
+)
+
 whichbox =: verb define                   NB. which cell is the mouse over?
   |. <. y %~ 2 {. ".sysdata               NB. (only works inside mouse events)
 )
 
-cellsize =: verb define
-  (glqwh glsel'img') % |.$ image
-)
 #+end_src
-* click to draw
 
-Now, when we click the sandpile widget, the same calculation needs to happen.
+First in our mouse move handler, we replace sysdata with this expression.
+It says evaluate the cellsize verb, pass the result to whichbox,
+and then convert the result to a string.
+
+cellsize is pretty much the same idea we used when drawing the grid.
+query the width and height of the canvas
+divide it by the shape of the image
+but the shape is height and width, and we want width and height,
+so reverse it first.
+
+so now that becomes the y argument to whichbox,
+which takes the sysdata string,
+evalutes it to get an array of numbers
+takes the first two numbers
+and divides them by the cellsize
+then round down
+and then swap the order
+because we want the answer to be an array index.
+
+so let's run it...
+
+And now you can see
+i get coordinates in terms of grid cells,
+when i move the mouse up and down
+it's the first value that changes, rather than the second.
+
+Okay, so now that we can map a mouse position to an array index,
+we want to update the array whenever you press the mouse button.
+
+* click to draw
 
 #+begin_src j
 gpw_img_mblup =: verb define
@@ -154,28 +364,114 @@ mousedraw =: verb define
 )
 #+end_src
 
-For the palette, the box size was fixed, but for the sandpile,
-we can change the size of the grid, so we have to figure it out dynamically.
-And of course, it's the same calculation as before, where
-we query the width and height of the canvas and divide by the shape of the grid
-with this reverse in the middle because shape gives height and width instead
-of width and height.
+The event handler for mouse clicks is 'mblup'
+for 'mouse button left up'.
 
-Now mousedraw takes the grid on the left (so that's x)
-and the box size on the right. (That's y).
-The box size goes into whichbox,
-which looks at sysdata
-and gives back the y x grid coordinates of the mouse.
+whichbox cellsize'' is the same code from the last slide
+except now instead of showing the array index in the status bar,
+we're calling this mousedraw verb,
 
-This part in the middle clamps those coordinates so they're between zero zero (which is upper left)
-and the lower right corner, which is one less than the height and width of the grid.
-This is completely un-necessary for clicking because this =mblup= only fires when you're actually inside the grid.
-But we're going to use this routine again later for dragging
-and if you drag off the side it sometimes fires the event even when you're out of bounds.
+and mousedraw just amends the image array by placing the value for white at the index we gave it.
 
-Okay so now we have the clamped grid coordinates, and this less than sign puts them in a box.
-Now this whole line says to take the number corresponding to the current pen,
-and put it into a copy of the grid at the coordinates we calculated.
+Amend is this right curly brace.
+It's an adverb, which means it takes an argument on the left,
+and produces a new verb that takes its x argument
+(which is this hex number)
+and sticks it into the right argument
+at the given coordinates.
+
+J is a functional language, so you don't normally edit arrays in place.
+Syntactically, this says make a copy that has this change, and then
+assign the copy back to the original variable.
+
+In practice, J is usually smart enough to know that if the source and destination
+are the some, it's safe to just modify the array in place behind the scenes.
+
+Finally, this less-than sign says to box the coordinates we're passing in.
+I'll talk about that in a minute, but first let's run this code.
+
+
+...
+
+And now when I click somewhere, I draw a white pixel. Hooray!
+
+
+* boxing and amend
+
+#+begin_src j
+image =: 16bff6699 (4 28) } image   NB. Missing the '<'
+#+end_src
+
+Okay so here's the same basic code, without the less than sign to box the coordinates.
+
+4 28 is this pixel here.
+
+But when I run the code...
+
+I get stripes!
+
+Remember in J you're always dealing with entire arrays at once.
+
+In this case, you're passing in an array of indices to modify.
+So it's saying set item 4 and item 28 in the image to this value.
+Well the items of a rank 2 array are its rows.
+So, set all of row 4 and all of row 28 to the value.
+
+Sometimes you actually want to specify multiple indices like this,
+and sometimes you want to specify coordinates.
+
+In J, the amend adverb covers both cases, and if you want to amend at depth
+meaning you want coordinates rather than multiple indices, then the answer is to wrap it in a box.
+
+* boxing and amend - example
+
+#+begin_src j
+image =: 16b6699ff (8 9; 30 30) } image
+#+end_src
+
+By the way, if you want multiple sets of coordinates, you can send an array of boxes.
+
+That's what the semicolon verb is doing here.
+
+(run)
+
+There you go. Two blue pixels.
+
+Okay, let's get back to our program.
+
+Having to click each pixel individually is annoying, so let's make it draw continously as long as the mouse button is held down.
+
+* drag to draw
+
+#+begin_src j
+gpw_img_mmove =: verb define
+  wd 'set sb setlabel text *', ": whichbox cellsize''
+  if. lmb'' do. gpw_img_mblup'' end.
+)
+
+lmb =: verb : '4 { ".sysdata'             NB. left mouse button
+
+#+end_src
+
+Okay so this is the mouse move handler again.
+The first line is what we wrote earlier to draw the coordinates in the status bar.
+
+But now, if the left mouse button is pressed, call the cilck handler.
+
+How do we know? Well, it's just one of those flags that I mentioned in the sysdata array.
+The left mouse button happens to be item four in that array.
+
+Anyway, that's all it takes.
+
+Let's run this...
+
+And now we can draw!
+
+But... There's a small problem, which is what happens when you drag off the side of the screen.
+
+Turns out that when you drag, this control keeps giving you mouse events until you let go,
+even if your mouse is out of bounds.
+
 * bounds checking
 
 #+begin_src j
@@ -191,30 +487,31 @@ mousedraw =: verb define
 )
 #+end_src
 
-* drag to draw
+Pretty easy fix. Just update our mousedraw verb with some bounds checking.
 
-And of course it would be much nicer if we could draw continously by holding the left button down and moving the mouse.
+So the right argument to inbounds is the shape of the image, and the left argument is the index.
 
-So that looks like this:
+Basically, each element in the index has to be less than the size of that dimension
+and greater than or equal to zero.
 
-#+begin_src j
-lmb =: verb : '4 { ".sysdata'             NB. left mouse button
+The asterisk-dot means and.
 
-gpw_img_mmove =: verb define
-  wd 'set sb setlabel text *', ": whichbox cellsize''
-  if. lmb'' do. gpw_img_mblup'' end.
-)
-#+end_src
+So this    (x >: 0 *. x < y)
+gives us a single bounds check result bit for each separate dimension.
+And then this inserts 'ands' them all together.
+So at the end you get one bit that says whether all the coordinates are within bounds.
 
-When the mouse moves over the canvas in the image control,
-if button zero is down then just call the click method.
+And with that change...
 
-Anyway, now we can draw continuously.
+we can see the out of bounds coordinates change in the status bar
+but we no longer get an error.
+
+So now, on to the palette.
 
 * the palette
 
 #+begin_src j
-NB. default palette (16-color vga text colors)
+NB. default palette (16-color vga text-mode palette)
 pal =:      16b000000 16baa0000 16b00aa00 16baa5500
 pal =: pal, 16b0000aa 16baa00aa 16b00aaaa 16baaaaaa
 pal =: pal, 16b555555 16bff5555 16b55ff55 16bffff55
@@ -225,38 +522,26 @@ gpw_pal_paint =: verb define
 )
 #+end_src
 
-Normally viewmat takes the min and max numbers in the matrix you're viewing
-and maps the palette evenly across that range. But that doesn't work so well
-when you have a mix of really small numbers like zero through four,
-and then really big numbers like 2^16.
+The palette is just a rank 1 array of colors.
 
-I'm still using a palette, but I map the numbers on the grid to the numbers in the
-palette up front, and then tell viewmat to just render the numbers as RGB color values
-by passing in the string 'rgb' as the left parameter.
+I happened to pick a default palette that's near and dear to my heart -
+these are the colors you had to work with for ansi art back in the 90's.
 
-I will point out that the the current drawing color
-is stored in a member variable called pen. It's just
-a number betwen 0 and 19 corresponding to an index
-in the pal and num arrays.
+We need a rank 2 array if we want to use viewmat to draw it,
+and the comma-dot verb makes each item in the palette into its own row
+so it renders vertically.
 
-You should be able to select a color either by clicking on it,
-or by turning the mouse wheel. And you should be able to turn
-the wheel even while you're drawing.
+Running this defines a handler for the paint event for the palette,
+but because we don't have the palette hooked up to the timer,
+nothing actually happens until I click on the window.
 
-* pen color
-#+begin_src j
-pen =: <: # pal  NB. start with last color (white)
+But there it is!
 
-pal_cellsize =: (glqwh glsel 'pal') % 1,#pal
-
-gpw_pal_mblup =: verb define
-  NB. left click palette to set pen color
-  glpaint glsel 'pal' [ pen =: {. whichbox pal_cellsize
-)
-#+end_src
 
 * draw with the pen
 #+begin_src j
+pen =: 2  NB. green. just for this slide
+
 mousedraw =: verb define
   NB. y is the (y,x) coordinates of the pixel to draw
   if. y inbounds $image do.
@@ -265,8 +550,33 @@ mousedraw =: verb define
 )
 #+end_src
 
+Okay, so now we're defining a variable called pen to hold our drawing color.
+It's an index into the palette.
+
+I'll pick index 1, which is red.
+
+
+* pen color
+#+begin_src j
+pal_cellsize =: (glqwh glsel 'pal') % 1,#pal
+
+gpw_pal_mblup =: verb define
+  NB. left click palette to set pen color
+  glpaint glsel 'pal' [ pen =: {. whichbox pal_cellsize
+)
+#+end_src
+
+
+
+Clicking the palette sets the color.
+
+
+
 * show current color
 #+begin_src j
+
+pen =: <: # pal  NB. start with last color (white)
+
 gpw_pal_paint =: verb define
   vmcc 'gpw';'pal';,.pal           NB. ,. makes pal a 2d array
   NB. draw a box around the current pen color:
