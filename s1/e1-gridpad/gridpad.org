@@ -711,7 +711,7 @@ gpw_open_button =: verb define
 
 gpw_save_button =: verb define
   path =. wd 'mb save "Save image" filename "PNG (*.png)"'
-  if. #path do. image writepng path end.
+  if. #path do. (image+255*2^24) writepng path end.
 )
 #+end_src
 
@@ -726,7 +726,9 @@ If you close the dialog, you get an empty string back. Otherwise you get a path.
 
 So if the length is zero, we do nothing, otherwise we pass it to these readpng and writepng functions, which I got from this `require 'png'` line.
 
-So now we can load and save files...
+One small trick here is that the png library is expecting four bytes per pixel. The last byte is an alpha channel, which just means you can specify a level of opacity. So when I write the file, I set that value to full opacity. Otherwise, when you open it in other programs, it winds up looking like an empty image.
+
+Anyway, now we can load and save files...
 
 Almost done here. The last thing is to right click a box in the palette to change the color.
 
