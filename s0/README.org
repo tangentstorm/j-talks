@@ -1,0 +1,9 @@
+#+title: j-talks, season 0
+
+There were two older videos before I started this repot. I'll call them season 0:
+
+s0e0: [[https://www.youtube.com/watch?v=LbV5InSDlH8][goldbach conjecture in j]]
+
+s0e1: [[https://www.youtube.com/watch?v=dBC5vnwf6Zw&t=1s][ulam's sprial in j]]
+
+One of these days I should probably collect the code from those videos and put them here.
