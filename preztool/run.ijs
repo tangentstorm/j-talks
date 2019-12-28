@@ -202,6 +202,9 @@ on_event =: dyad define
    case. 'key'  do.
      select. key=. a. {~ {. 'key shf ctl alt ' =. ".YY=:y
        case. '`' do. speed 0
+       case. ',' do.   NB. w in qwerty: reset windows
+         wd'psel jcw; pmove 630 _32 0 0; pshow; ptop;'
+         wd'psel tpw; pmove 0 0 0 0;'
        case. '1' do. speed '-1'
        case. '2' do. speed '+1'
        case. '0' do. sho fwd''
