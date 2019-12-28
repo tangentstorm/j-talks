@@ -142,7 +142,6 @@ wd'set tp html *',freads'~JTalks/preztool/tpw.html'
 wd'pmove 0 0 0 0; pshow;'
 
 
-
 NB. keyboard navigation --------------------------------
 NB. same keys work in both windows so i don't have to think about window focus.
 
@@ -211,6 +210,9 @@ on_event =: dyad define
        case. '2' do. speed '+1'
        case. '0' do. sho fwd''
        case. '9' do. sho bak''
+       fcase. 'R' do. NB. reload html, then fall through to reload slides
+         wd 'psel jcw; set jc html *',freads'~JTalks/preztool/jcw.html'
+         wd 'psel tpw; set tp html *',freads'~JTalks/preztool/tpw.html'
        case. 'r' do. reload_slides''
        case. 'e' do. run_code''
        case. 't' do.
