@@ -8,16 +8,25 @@
     margin: 0; padding:0; height:100%;
     font-family: Calibri; font-size: 24px;
     background:black; color:#fff; }
-  h1 { background: gold; color: black; padding: 2px; padding-left:16px; margin:0;}
-  .prompter { position: relative; height:100%; overflow:hidden; }
-  .txt { position:absolute; height:100%; padding-bottom:200px; overflow: hidden; }
+  .prompter { position: relative; height:10000%; overflow:hidden; }
+  .txt { position:absolute; padding-bottom:200px; overflow: hidden; }
   .txt div { padding: 0; margin:0; margin-bottom: 0.5ex; overflow:hidden; }
   .txt .pad { display:block; height:125%; }
-  .fog { position: absolute; left: 0; width:100%; background: #000; opacity: 0.5; z-index:1; }
-  .fog-a0 { top: 0; height: 30%; border-bottom: solid #666 1px;}
-  .fog-a1 { top: 0; height: 25%; }
-  .fog-z0 { top: 38%; height: 62%; border-top: solid #666 1px; }
-  .fog-z1 { top: 43%; height: 57%; }
+  .fog { position: absolute; left: 0; width:100%; background: #000; opacity: 0.4; z-index:1; }
+  :root {
+    /* the 'highlight' is actually a lack of fog. adjust these first 3 to change its geometry */
+    --focus-y: 64px;
+    --focus-h: 32px;
+    --blend-h: 32px;
+    --fog-a0-y: var(--focus-y);
+    --fog-a1-y: calc(var(--fog-a0-y) - var(--blend-h));
+    --fog-z0-y: calc(var(--fog-a0-y) + var(--focus-h));
+    --fog-z1-y: calc(var(--fog-z0-y) + var(--blend-h));
+  }
+  .fog-a0 { top: 0; height: var(--fog-a0-y); border-bottom: solid #f66 1px;}
+  .fog-a1 { top: 0; height: var(--fog-a1-y); }
+  .fog-z0 { top: var(--fog-z0-y); height: calc(100% - var(--fog-z0-y)); border-top: solid #f66 1px; }
+  .fog-z1 { top: var(--fog-z1-y); height: calc(100% - var(--fog-z1-y)); }
 </style>
 </head>
 <body>
@@ -46,7 +55,7 @@ Vue.component('prompt', {
 });
 
 var
-    y0 = 158,
+    y0 = 64,  // initial position of top of text
     dy = 0,
     paused = true,
     data = {y:y0, txt:["lines","of", "text"]},
