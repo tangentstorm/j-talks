@@ -11,7 +11,11 @@ NB. gridpad: a simple sprite editor
 Today we're going to build this little sprite editor in J.
 
 It's a pretty rudimentary as far as graphics programs go
-but we will cover everything you need to know to make
+but you can load and save files,
+draw in different colors with the mouse,
+and customize your palette as you go.
+
+More importantly, we'll cover everything you need to know to make
 interactive programs that respond to the mouse and keyboard.
 
 So let's get started.
@@ -700,7 +704,7 @@ And now it works either from the menu...
 
 Or just by pressing control n.
 
-* load / save
+* open / save
 #+begin_src j
 require 'png'
 
