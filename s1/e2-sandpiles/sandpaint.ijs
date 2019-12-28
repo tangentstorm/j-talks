@@ -13,7 +13,7 @@ NB. ------------------------------------------------------------
 
 require 'viewmat'
 coinsert 'jviewmat jgl2'
-require '~JTalks/s1e1-sandpiles/sandpiles.ijs'
+require '~JTalks/s1/e2-sandpiles/sandpiles.ijs'
 
 NB. main logic -------------------------------------------------
 
