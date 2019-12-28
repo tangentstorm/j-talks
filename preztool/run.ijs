@@ -56,10 +56,12 @@ isCtrl =: [: #  reCtrl & rxmatches
 isCopula =: [: # '=[.:]' & rxmatches
 isParen =: (1=#) *. [: +./@, '()' -:"0 {.
 isSpace =: [:*./' '=]
+isSpecial =: [: +./ (1=#) *. 'xymnuv'-:"0 _ {.
 
 jtype =: verb define
   NB. classify a j token
   if. 'NB.' -: 3 {. y do. 'comment'
+  elseif. isSpecial y do. 'special'
   elseif. isSpace y  do. 'empty'
   elseif. isCopula y do. 'copula'
   elseif. isCtrl y   do. 'control'
