@@ -2,16 +2,21 @@
 * recording checklist
 ** OBS
 - [ ] studio mode off
+- [ ] make sure (settings -> audio -> devices -> mic ) is set to turtle beach
+      Refresh in device manager if it doesn't show up.
 ** j windows
-- [ ] run screen-setup.ijs to arrange j editor and terminal
-- [ ] close the sidebar!
-- [ ] Set font size to Consolas 18
+- [ ] preztool should take care af most of this
+- [ ] run finished example app
+- [ ] then 'c' to clear environment
 - [ ] have autohotkey scripts running (tools/viewmat.ahk) if necessary
 ** microphone
 - [ ] green setting
 
 
 * editing in blender
+edit -> preferences -> system -> sequencer cache  = 4096
+lower left hand corner in timeline: playback -> top dropdown = av sync
+
 ** usage notes
 - New / Video Editing
 - frame count starts at 1 (not 0)
@@ -20,9 +25,19 @@
 - To batch-edit a property (e.g. volume) on clips later:
   - select them (ctrl-L selects long chains of adjacent clips)
   - set the property on one, then right click the property and "copy to selected"
+- ctrl-home / ctrl-end mark current frame as start/end of render
+
+Blender 2.8 seems to have a bug once you cut out some audio and try to remove gaps - suddenly the video and audio fail to line up even with av sync on, and to fix it you have restart blender.
+
+So: I tend to make my cuts, delete the parts i don't want (ums and errs and whatnot) then position the cursor at the start of the video, select all, and press backspace to remove all the gaps at once for a segment of the video. Then I save and restart blender.
+
+actually: selecting the moved strips and toggling mute/unmute (h / alt-h) fixes the problem.
+there's already a fix for this in the blender repo https://developer.blender.org/D5391
+
+
 
 ** rendering to video
-- output panel in preview pane
+- output panel in the properties / scene / output panel
 - format: ffmpeg
 - container: matroska
 - what i did for s1e0
@@ -32,6 +47,9 @@
     - audio code
   - audio settings:
     - mp3 / bitrate=192
+
+- people complained they couldn't hear the audio, so for s1e1 i used aac with bitrate = 192
+- setting output directory to // puts it in same dir as the current file  (d:/videos/j-talks/xxx)
 - [ ] youtube recommendations https://support.google.com/youtube/answer/1722171?hl=en
     - container: mp4
     - audio codec: aac-lc stereo; sample rate: 96khz or 48khz
