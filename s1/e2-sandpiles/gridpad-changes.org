@@ -41,4 +41,4 @@ to re-use it as a library in the sandpile video, i made the following changes:
 - added a do-nothing ~update~ verb that you can override ~render~ and ~update~ stages separately.
 - the 'new' menu handler sets the image to all 0 instead of 16bffffff
 - consolidated the character handler functions into single ~gpw_char~ so you can override in one place.
-
+- factored out a ~pen_color~ verb for custom mappings between the palette color and data in the grid.

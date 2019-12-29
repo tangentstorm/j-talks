@@ -115,10 +115,17 @@ inbounds =: dyad define
   *./ (x >: 0) *. x < y
 )
 
+pen_color =: verb define
+  NB. this is so you can apply custom mappings between the
+  NB. representation in the palette view and the underlying
+  NB. data in the image.
+  pen { pal
+)
+
 img_draw =: verb define
   NB. y is the (y,x) coordinates of the pixel to draw
   if. y inbounds $img do.
-    img =: (pen { pal) (< y) } img
+    img =: (pen_color'') (< y) } img
   end.
 )
 
