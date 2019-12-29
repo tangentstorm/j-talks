@@ -59,6 +59,9 @@ gpw_init =: verb define
   wd 'ptimer ',":gpw_opt_timer
   wd gpw_opt_menu
   wd 'pshow'
+  NB. store hwnd in the calling locale. This is so we can call psel later.
+  NB. it's one of the few things in wd that doesn't cope with locales.
+  gpw_hwnd =: wd 'qhwndp'
 )
 
 
@@ -74,15 +77,15 @@ gpw_init_controls =: verb define
 )
 
 gpw_close =: verb define                  NB. when 'gpw' close button clicked
-  wd'psel gpw; ptimer 0; pclose'
+  wd'ptimer 0; pclose'
 )
 
 vmcc =: verb define                       NB. invoke viewmat in a child control
   gpw_opt_viewmat vmcc y
 :
-  'pc cc img' =. y                        NB. usage: vmcc(parent;child;pixels)
-  wd 'psel ',pc                           NB. select parent control
-  glpaint [ x vmcc_jviewmat_ img;cc       NB. blit the pixel data and repaint.
+  wd 'psel ',":gpw_hwnd
+  x vmcc_jviewmat_ y                      NB. blit the pixel data
+  glpaint glsel 1 pick y                  NB. pick child control name and repaint
 )
 
 
@@ -91,7 +94,7 @@ NB. -- general routines -------------------------------------
 update =: ]
 
 render =: verb define
-  vmcc 'gpw';'imgv';img
+  vmcc img;'imgv'
   if. gpw_opt_showgrid do.
     'vw vh' =. glqwh glsel'imgv' [ 'ih iw' =. $ img
     glpen glrgb 255 255 255
@@ -169,6 +172,7 @@ gpw_imgv_char =: gpw_palv_char =: verb define
 
 gpw_char =: verb define
   NB. TODO: keyboard handler.
+	return.
 )
 
 NB. mouse wheel on either control rotates through palette
@@ -208,7 +212,7 @@ gpw_palv_mblup =: verb define
 )
 
 gpw_palv_paint =: verb define
-  vmcc 'gpw';'palv';,.pal          NB. ,. makes pal a 2d array
+  vmcc (,.pal);'palv'          NB. ,. makes pal a 2d array
   NB. draw a box around the current pen color:
   glbrush glrgba 0 0 0 0  [ h =. {: cellsize =. palv_cellsize''
   glrect 3, (3+pen*h), _5 _5 + cellsize [ glpen 5 [ glrgb 0 0 0
