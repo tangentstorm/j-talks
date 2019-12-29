@@ -1,0 +1,44 @@
+#+title: gridpad changes
+
+gridpad.ijs was created as an application for the previous j talk video:
+
+  https://www.youtube.com/watch?v=CzK2SazvCxM
+
+a snapshot of the code after that video can hopefully be found here:
+
+  https://github.com/tangentstorm/j-talks/blob/master/s1/e1-gridpad/gridpad-final.ijs
+
+to re-use it as a library in the sandpile video, i made the following changes:
+
+- use the 'gridpad' locale (which you are meant to ~coinsert~)
+
+- renamed some things:
+  - ~img~ control -> ~imgv~
+  - ~pal~ control -> ~palv~
+  - ~image~ -> ~img~
+  - ~lmb~ -> ~mbl~ to match up with the ~wd~ convention
+  - ~pal_cellsize~ -> ~palv_cellsize~  (also it's now a verb since the window creation is delayed)
+  - ~cellsize~ -> ~imgv_cellsize~
+  - ~mousedraw~ -> ~img_draw~
+  - ~showgrid~ -> ~gpw_opt_showgrid~
+
+- factored out a bunch of initialization options which you can override in your calling locale:
+
+| ~gpw_opt_title~     | window title                                |
+| ~gpw_opt_window~    | window options for wd                       |
+| ~gpw_opt_timer~     | speed at which to set the timer             |
+| ~gpw_opt_palv_wh~   | width and height of palette view            |
+| ~gpw_opt_imgv_wh~   | width and height of image view              |
+| ~gpw_opt_statusbar~ | whether to add status bar                   |
+| ~gpw_opt_showgrid~  | whether to show the grid by default         |
+| ~gpw_opt_colorpick~ | whether to allow changing the palette       |
+| ~gpw_opt_viewmat~   | x arguments for viewmat (defaults to 'rgb') |
+| ~gpw_opt_menu~      | a string containing the wd menu definiton   |
+
+- removed all keyboard events
+- added 'view' menu with option to toggle grid
+- timer is now sent through ~wd~'s ~ptimer~ command, so the tick handler is ~gpw_timer~
+- added a do-nothing ~update~ verb that you can override ~render~ and ~update~ stages separately.
+- the 'new' menu handler sets the image to all 0 instead of 16bffffff
+- consolidated the character handler functions into single ~gpw_char~ so you can override in one place.
+
