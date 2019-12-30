@@ -62,6 +62,7 @@ gpw_init =: verb define
   NB. store hwnd in the calling locale. This is so we can call psel later.
   NB. it's one of the few things in wd that doesn't cope with locales.
   gpw_hwnd =: wd 'qhwndp'
+  render''                                 NB. force initial render in case timer is 0
 )
 
 
@@ -83,17 +84,22 @@ gpw_close =: verb define                  NB. when 'gpw' close button clicked
 vmcc =: verb define                       NB. invoke viewmat in a child control
   gpw_opt_viewmat vmcc y
 :
+  'im cc' =. y
   wd 'psel ',":gpw_hwnd
-  x vmcc_jviewmat_ y                      NB. blit the pixel data
-  glpaint glsel 1 pick y                  NB. pick child control name and repaint
+  x vmcc_jviewmat_ (to_rgb im);cc         NB. blit the pixel data
+  glpaint glsel cc                        NB. pick child control name and repaint
 )
+
+to_rgb =: ]                               NB. map img to (a)rgb
 
 
 NB. -- general routines -------------------------------------
 
 update =: ]
 
-render =: verb define
+
+NB. gpw_render is here so you can call it without having to fiddle with locales.
+render =: gpw_render0 =: verb define
   vmcc img;'imgv'
   if. gpw_opt_showgrid do.
     'vw vh' =. glqwh glsel'imgv' [ 'ih iw' =. $ img
@@ -125,7 +131,7 @@ pen_color =: verb define
 img_draw =: verb define
   NB. y is the (y,x) coordinates of the pixel to draw
   if. y inbounds $img do.
-    img =: (pen_color'') (< y) } img
+    render img =: (pen_color'') (< y) } img
   end.
 )
 
@@ -218,7 +224,7 @@ gpw_palv_mblup =: verb define
   glpaint glsel 'palv' [ pen =: {. whichbox palv_cellsize''
 )
 
-gpw_palv_paint =: verb define
+gpw_palv_paint =: gpw_palv_paint0 =: verb define
   vmcc (,.pal);'palv'          NB. ,. makes pal a 2d array
   NB. draw a box around the current pen color:
   glbrush glrgba 0 0 0 0  [ h =. {: cellsize =. palv_cellsize''
@@ -245,12 +251,12 @@ gpw_palv_mbrup =: verb define
 NB. -- menu handlers ----------------------------------------
 
 gpw_new_button =: verb define
-  img =: ($img) $ 0
+  render img =: ($img) $ 0
 )
 
 gpw_open_button =: verb define
   path =. wd 'mb open1 "Load a png file" filename "PNG (*.png)"'
-  if. #path do. img =: readpng path end.
+  if. #path do. render img =: readpng path end.
 )
 
 gpw_save_button =: verb define

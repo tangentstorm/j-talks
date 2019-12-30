@@ -41,4 +41,6 @@ to re-use it as a library in the sandpile video, i made the following changes:
 - added a do-nothing ~update~ verb that you can override ~render~ and ~update~ stages separately.
 - the 'new' menu handler sets the image to all 0 instead of 16bffffff
 - consolidated the character handler functions into single ~gpw_char~ so you can override in one place.
-- factored out a ~pen_color~ verb for custom mappings between the palette color and data in the grid.
+- ~gpw_render0~ and ~gpw_palv_paint0~ are aliases you can call from your own ~render~ and ~gpw_palv_paint~ routines, without having to mess with passing the right locale to vmcc.
+- all routines that assign to ~img~ now explicitly call ~render~ in case the timer is set to 0
+- add an empty ~to_rgb~ function you can call to map the palette to rgb
