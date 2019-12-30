@@ -44,3 +44,5 @@ to re-use it as a library in the sandpile video, i made the following changes:
 - ~gpw_render0~ and ~gpw_palv_paint0~ are aliases you can call from your own ~render~ and ~gpw_palv_paint~ routines, without having to mess with passing the right locale to vmcc.
 - all routines that assign to ~img~ now explicitly call ~render~ in case the timer is set to 0
 - add an empty ~to_rgb~ function you can call to map the palette to rgb
+- add ~gpw_path~ to remember save location and added ~gpw_dir~ verb to get working directory
+- extracted ~to_argb~ verb from the save routine so you can override it.

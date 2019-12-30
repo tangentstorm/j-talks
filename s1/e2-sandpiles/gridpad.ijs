@@ -90,8 +90,8 @@ vmcc =: verb define                       NB. invoke viewmat in a child control
   glpaint glsel cc                        NB. pick child control name and repaint
 )
 
-to_rgb =: ]                               NB. map img to (a)rgb
-
+to_rgb =: ]                               NB. map img to rgb
+to_argb =: (255*2^24) + to_rgb            NB. and to argb for saving png files
 
 NB. -- general routines -------------------------------------
 
@@ -254,14 +254,19 @@ gpw_new_button =: verb define
   render img =: ($img) $ 0
 )
 
+gpw_dir =: verb define
+ if. noun = nc<'gpw_path' do. 0 pick fpathname gpw_path
+ else. jpath'~User' end.
+)
+
 gpw_open_button =: verb define
-  path =. wd 'mb open1 "Load a png file" filename "PNG (*.png)"'
+  path =. wd 'mb open1 "Load a png file" "',(gpw_dir''),'" "PNG (*.png)"'
   if. #path do. render img =: readpng path end.
 )
 
 gpw_save_button =: verb define
-  path =. wd 'mb save "Save image" filename "PNG (*.png)"'
-  if. #path do. (img+255*2^24) writepng path end.
+  path =. wd 'mb save "Save image" "',(gpw_dir''),'" "PNG (*.png)"'
+  if. #path do. (to_argb img) writepng gpw_path =: path end.
 )
 
 gpw_grid_button =: verb define
