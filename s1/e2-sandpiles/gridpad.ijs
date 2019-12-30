@@ -131,9 +131,13 @@ pen_color =: verb define
 
 img_draw =: verb define
   NB. y is the (y,x) coordinates of the pixel to draw
-  if. y inbounds $img do.
-    render img =: (pen_color'') (< y) } img
+  img img_draw y
+:
+  NB. dyadic form uses img as a temp if there are multiple canvases (e.g., sandcalc)
+  if. y inbounds $x do.
+    render img =: (pen_color'') (< y) } x
   end.
+  img
 )
 
 

@@ -47,3 +47,4 @@ to re-use it as a library in the sandpile video, i made the following changes:
 - add an empty ~to_rgb~ verb you can override to map an indexed palette to rgb on render.
 - add an empty ~to_pal~ verb you can override to map (a)rgb back to an indexed palette on load.
 - extracted ~to_argb~ verb from the save routine so you can override it.
+- ~img_draw~ can now take a rank 2 array as the left argument to draw on that array instead of on ~img~
