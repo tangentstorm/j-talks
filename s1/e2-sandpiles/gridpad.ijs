@@ -92,6 +92,7 @@ vmcc =: verb define                       NB. invoke viewmat in a child control
 
 to_rgb =: ]                               NB. map img to rgb
 to_argb =: (255*2^24) + to_rgb            NB. and to argb for saving png files
+to_pal =: ]                               NB. hook for mapping rgb to indexed palette
 
 NB. -- general routines -------------------------------------
 
@@ -261,7 +262,7 @@ gpw_dir =: verb define
 
 gpw_open_button =: verb define
   path =. wd 'mb open1 "Load a png file" "',(gpw_dir''),'" "PNG (*.png)"'
-  if. #path do. render img =: readpng path end.
+  if. #path do. render img =: (to_pal) readpng path end.
 )
 
 gpw_save_button =: verb define
