@@ -28,7 +28,6 @@ gpw_opt_palv_wh =: 50 800
 gpw_opt_imgv_wh =: 800 800
 gpw_opt_colorpick =: 0
 
-to_rgb =: sandcolor
 update =: verb define
   img =: settle img
 )
@@ -54,26 +53,6 @@ gpw_char =: verb define
    case. 'x' do. render 'img copy' =: copy;img   NB. x = swap
    case. '?' do. viewmat copy ~: img             NB. ? = show diff
  end.
-)
-
-NB. palette widget ---------------------------------------------
-
-gpw_palv_paint =: verb define
-  gpw_palv_paint0''                              NB. call original
-
-  NB. draw text labels over the colors:
-  glfont 'consolas 8'
-  glpen 1 [ glbrush glrgb 0 0 0
-  gltextcolor glrgb 255 255 255
-  h =: {: palv_cellsize''
-  for_i. i.20 do.
-    if. i < 16 do. text =. ": i { num else. text =. '2^',":i-2 end.
-    xx =. 25 - -: ww =.(8*#text)   NB. center text horizontally
-    yy =. 15+h*i                   NB. vertically
-    glrect xx, yy, (ww+1), 14
-    gltextxy (2+xx),yy
-    gltext text
-  end.
 )
 
 

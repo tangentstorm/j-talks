@@ -11,12 +11,12 @@ NB. https://en.wikipedia.org/wiki/Abelian_sandpile_model
 NB. https://www.youtube.com/watch?v=1MtEUErz7Gg (numberphile)
 NB. ------------------------------------------------------------
 
-require 'viewmat'
-coinsert 'jviewmat jgl2'
+cocurrent 'sandcalc'
 require '~JTalks/s1/e2-sandpiles/sandpiles.ijs'
+require '~JTalks/s1/e2-sandpiles/gridpad.ijs'
+coinsert 'sandpiles gridpad'
 
-
-NB. main animation logic ---------------------------------------
+NB. -- main animation logic ---------------------------------
 
 stl =: settle^:_
 NxN =: 5 5
@@ -24,113 +24,72 @@ NxN =: 5 5
 NB. "zero": https://hal.archives-ouvertes.fr/hal-00016378
 ZSP =: stl (4 - stl) NxN $ 4
 
+pal =: i.4
 pen =: 0                        NB. color to draw with
 sp0 =: NxN $ 0
 sp1 =: NxN $ 3
 sp2 =: ZSP
 
-update =: verb define
+(update =: verb define)''
   sp3 =: stl sp0 + sp1 + sp2
 )
 
 render =: verb define
-  spcc 'scw';'sp0';sp0
-  spcc 'scw';'sp1';sp1
-  spcc 'scw';'sp2';sp2
-  spcc 'scw';'sp3';sp3
+  vmcc sp0;'sp0v'
+  vmcc sp1;'sp1v'
+  vmcc sp2;'sp2v'
+  vmcc sp3;'sp3v'
 )
 
 
-NB. create the window ------------------------------------------
+NB. -- build the window -------------------------------------
 
-scw_close =: verb define
- wd 'psel scw; pclose;'
- wd 'timer 0'
-)
+gpw_opt_title =: 'sandcalc - sandpile calculator'
+gpw_opt_timer =: 200
+gpw_opt_statusbar =: 0
+gpw_opt_colorpick =: 0
+gpw_opt_menu =: ''
 
-NB. Recycle window if we run multiple times:
-scw_close^:(wdisparent'scw')''
-
-wd (0 : 0)
-pc scw closebutton; pn "sandcalc - a sandpile calculator";
-bin h;
-  minwh 50 200; cc pal isigraph;
-  minwh 200 200; cc sp0 isidraw;
-  cc "+" static;
-  minwh 200 200; cc sp1 isidraw;
-  cc "+" static;
-  minwh 200 200; cc sp2 isidraw;
-  cc "=" static;
-  minwh 200 200; cc sp3 isidraw;
-bin z;
-pcenter;
-rem pmove 250 1000 0 0;
-pshow
+gpw_init_controls =: verb define
+  wd'bin h'
+  wd' minwh  50 200; cc palv isigraph;'
+  wd' minwh 200 200; cc sp0v isidraw;'
+  wd' cc "+" static;'
+  wd' minwh 200 200; cc sp1v isidraw;'
+  wd' cc "+" static;'
+  wd' minwh 200 200; cc sp2v isidraw;'
+  wd' cc "=" static;'
+  wd' minwh 200 200; cc sp3v isidraw;'
+  wd'bin z'
 )
 
 
-NB. palette to show/select drawing color -----------------------
+NB. -- mouse events -----------------------------------------
 
-scw_pal_paint =: verb define
-  'rgb' vmcc (,.lo);'pal'
-  glfont 'consolas 12'
-  glpen 1 [ glbrush glrgb 0 0 0
-  gltextcolor glrgb 255 255 255
-  for_i. i.4 do.
-    yy =. (12+50*i)
-    glrect   18, (yy+1), 15 21
-    gltextxy 20, yy
-    gltext ":i
-  end.
-  NB. highlight current pen:
-  glbrush glrgba 0 0 0 0
-  glrect 3, (3+pen*50), 45 45 [ glpen 5 [ glrgb 0 0 0
-  glrect 3, (3+pen*50), 45 45 [ glpen 1 [ glrgb 3 $ 255
-)
-
-
-NB. mouse events -----------------------------------------------
-
-whichbox =: verb : '|. <. y %~ 2 {. ".sysdata'
-button  =: verb : 'y { 4 }. ".sysdata'
-boxsize =: 200 %{.NxN
-mousedraw =: dyad : 'pen (<0>.(<:$x)<.whichbox y) } x'
-
-NB. click the palette to change current pen
-scw_pal_mblup =: verb define
- glpaint glsel 'pal' [ pen =: {. whichbox 50
-)
-
-NB. mouse wheel on any input pile rotates through palette
-scw_pal_mwheel =: verb define
-  pen =: 4|pen-*{:".sysdata NB. sign of last item is wheel dir
-  glpaint glsel'pal'
-)
-scw_sp0_mwheel=: scw_sp1_mwheel=: scw_sp2_mwheel=: scw_pal_mwheel
+gpw_sp0v_mwheel =: gpw_sp1v_mwheel=: gpw_sp2v_mwheel=: gpw_palv_mwheel
 
 NB. left click draws on the input
-scw_sp0_mblup =: verb : 'sp0 =: sp0 mousedraw boxsize'
-scw_sp1_mblup =: verb : 'sp1 =: sp1 mousedraw boxsize'
-scw_sp2_mblup =: verb : 'sp2 =: sp2 mousedraw boxsize'
+gpw_sp0v_mblup =: verb : 'sp0 =: sp0 img_draw whichbox 40'
+gpw_sp1v_mblup =: verb : 'sp1 =: sp1 img_draw whichbox 40'
+gpw_sp2v_mblup =: verb : 'sp2 =: sp2 img_draw whichbox 40'
 
 NB. left drag does the same
-scw_sp0_mmove =: verb : 'if. button 0 do. scw_sp0_mblup _ end.'
-scw_sp1_mmove =: verb : 'if. button 0 do. scw_sp1_mblup _ end.'
-scw_sp2_mmove =: verb : 'if. button 0 do. scw_sp2_mblup _ end.'
+gpw_sp0v_mmove =: verb : 'if. mbl _ do. gpw_sp0v_mblup _ end.'
+gpw_sp1v_mmove =: verb : 'if. mbl _ do. gpw_sp1v_mblup _ end.'
+gpw_sp2v_mmove =: verb : 'if. mbl _ do. gpw_sp2v_mblup _ end.'
 
 NB. right click to copy the sum to an input
-scw_sp0_mbrup =: verb : 'sp0 =: sp3'
-scw_sp1_mbrup =: verb : 'sp1 =: sp3'
-scw_sp2_mbrup =: verb : 'sp2 =: sp3'
+gpw_sp0v_mbrup =: verb : 'sp0 =: sp3'
+gpw_sp1v_mbrup =: verb : 'sp1 =: sp3'
+gpw_sp2v_mbrup =: verb : 'sp2 =: sp3'
 
 NB. middle click to reset the input
-scw_sp0_mbmup =: verb : 'sp0 =: NxN$0'
-scw_sp1_mbmup =: verb : 'sp1 =: NxN$3'
-scw_sp2_mbmup =: verb : 'sp2 =: ZSP'
+gpw_sp0v_mbmup =: verb : 'sp0 =: NxN$0'
+gpw_sp1v_mbmup =: verb : 'sp1 =: NxN$3'
+gpw_sp2v_mbmup =: verb : 'sp2 =: ZSP'
 
 
-NB. animation engine -------------------------------------------
 
-step =: render @ update         NB. glpaint is in each spcc call
-sys_timer_z_ =: step_base_
-wd 'timer 100'
+NB. -- mouse events -----------------------------------------
+
+gpw_init''
