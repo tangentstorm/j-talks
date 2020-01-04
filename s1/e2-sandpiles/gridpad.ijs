@@ -275,5 +275,5 @@ gpw_save_button =: verb define
 )
 
 gpw_grid_button =: verb define
-  gpw_opt_showgrid =: -. gpw_opt_showgrid
+  render gpw_opt_showgrid =: -. gpw_opt_showgrid
 )
