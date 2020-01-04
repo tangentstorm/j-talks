@@ -45,8 +45,8 @@ gpw_palv_paint =: verb define
   glpen 1 [ glbrush glrgb 0 0 0
   gltextcolor glrgb 255 255 255
   h =. {: palv_cellsize''
-  for_i. i.#pal do.
-    if. i < 16 do. text =. ": i { pal else. text =. '2^',":i-2 end.
+  for_n. pal do. i =. n_index
+    if. i < 16 do. text =. ": n else. text =. '2^',":i-2 end.
     xx =. 25 - -: ww =.(8*#text)   NB. center text horizontally
     yy =. 15+h*i                   NB. vertically
     glrect xx, yy, (ww+1), 14
