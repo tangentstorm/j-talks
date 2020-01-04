@@ -34,9 +34,6 @@ update =: verb define
 
 gpw_char =: verb define
  select. {. sysdata
-   case. 'n' do. gpw_new_button''                NB. n = new image
-   case. 'r' do. render img =:?($img)$4          NB. r = random
-   case. 'g' do. gpw_grid_button''               NB. g = toggle grid lines
    case. ' ' do. gpw_timer [ wd'ptimer 0'        NB. space = step
    case. '1' do. wd'ptimer 1000'                 NB. 1 = pretty slow
    case. '2' do. wd'ptimer 500'                  NB. ...
@@ -59,4 +56,4 @@ gpw_char =: verb define
 NB. create window ----------------------------------------------
 
 gpw_init''
-wd 'pmove 900 100 0 0 ; ptop; pshow;'
+wd 'pmove 900 100 0 0'
