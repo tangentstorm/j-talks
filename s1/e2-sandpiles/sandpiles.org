@@ -1,6 +1,6 @@
-#+title: sandpile cellular automaton
+#+title: sandpiles
 
-* Intro (sandpile demo)
+* Sandpiles
 # on stage: the 512 grain-in-the-center sandpile, copied to buffer.
 # pen =: 1, grid off, timer off, focus in window!
 What you're looking at here is called a sandpile.
@@ -21,7 +21,7 @@ but one of the grains falls off the edge.
 Similarly, if you have a four in the corner, then two grains fall off.
 
 # draw line of 3 at bottom
-If you have a bunch threes in a row,
+If you have a bunch of threes in a row,
 and put a four next to it,
 then when the four topples,
 it adds a grain to the three,
@@ -68,29 +68,66 @@ you might just get a mess.
 
 So that's sandpiles.
 
-So, I've got a few more demos at the end of the video.
-But mostly I want to talk about how to build
-applications like this in J. Including both
-the mouse and keyboard parts and also just how to
-approach coding the rules for this kind of simulation.
-
-
 * sandpaint
-** TODO Recap
-(need to recap up to gridpad video now)
-
-** The colors
-
+** Building the window
 #+begin_src j
-lo =: 16b00000f 16b3f3f9d 16b7878d8 16bacacff   NB. i.4 drawn as shades of blue
-hi =: 16bff0000 + 16b001100 * i._16             NB. 4+i.204 are yellow..red
+spw_close =: verb define
+  wd 'psel spw; pclose'
+  wd 'timer 0'
+)
 
-pal =: lo,hi
-num =: 0 1 2 3, 2^2+i.16                        NB. the actual values to draw
+NB. Recycle window if we run multiple times:
+spw_close^:(wdisparent'spw')''
+
 #+end_src
 
-So the first four colors are just these blueish colors that I picked by hand,
-and this formula calculates the gradient between yellow and red.
+# fake intro
+
+When I go to make something like this in J...
+
+
+** reusing gridpad
+
+#+begin_src j
+cocurrent 'sandpaint'
+coinsert 'sandpiles gridpad'
+
+pen =: 2
+img =: 25 25 $ 0
+
+gpw_opt_title =: 'sandpaint'
+gpw_opt_timer =: 500
+gpw_opt_palv_wh =: 50 800
+gpw_opt_imgv_wh =: 800 800
+gpw_opt_colorpick =: 0
+
+gpw_init''
+wd 'pmove 900 100 0 0'
+#+end_src
+
+: coname'' -> base
+: coname''
+: copath coname''
+
+We're actually going to make two apps. First this sandpaint program.
+Later on, we're going to make a kind of sandpile calculator.
+
+
+** sandpile colors
+
+#+begin_src j
+cocurrent 'sandpiles'
+
+pal =: 0 1 2 3, 2^2+i.16                        NB. the actual values to draw
+
+lo =: 16b00000f 16b3f3f9d 16b7878d8 16bacacff   NB. i.4 drawn as shades of blue
+hi =: 16bff0000 + 16b001100 * i._16             NB. 4+i.204 are yellow..red
+rgb =: lo,hi
+#+end_src
+
+So the 'lo' colors are just these blueish colors that I picked by hand,
+The high colors are a gradient between yellow and red.
+
 This '16b' indicates that the number is hexadecimal,
 (kind of an unusual prefix, but you can specify any base you want)
 then these two digits represent the red byte, (ff is 255, which is the highest value for a byte, so this is pure red),
@@ -98,14 +135,8 @@ the middle two represent green. 11 in hex is 16+1 or 17 so this is a really dark
 Then here we're multiplying that green by the numbers 0 through 15, so it goes from 00 or black to ff or pure green.
 And when you add the red, that gives you these shades of yellow and orange.
 
-
 So pal is the palette, num is the number to actually put in the grid when we draw,
 and then ... sandcolor is a verb that maps any number back to the palette.
-
-#+begin_src j
-NB. map any non-negative integer to the palette
-sandcolor =: pal {~ (<:#pal) <.(2+[:<.2^.])^:(>4:)"0
-#+end_src
 
 It says for each number in the input, if it's less than or equal to four, leave it alone,
 otherwise take the base 2 logarithm, round it down, and add two.
@@ -114,11 +145,42 @@ If that number is bigger than the length of the palette minus one
 then replace it with that number. (This symbol is max.)
 Now we're left with an index, and we just take that item from the palette.
 
-So if we apply this function the values in num, we should see our palette.
+** color mapping
+#+begin_src j
+cocurrent 'sandpiles'
 
-: hfd sandcolor num
+NB. map any non-negative integer to the palette
+to_rgb =: rgb {~ (<:#rgb) <.(2+[:<.2^.])^:(>4:)"0
 
-** drawing the palette
+NB. map rgb colors back to the palette
+shl =:  32 b. ~
+to_pal =: (#pal) | rgb i. (1 shl 24)&|
+#+end_src
+
+** custom palette view
+
+#+begin_src j
+cocurrent 'sandpiles'
+
+gpw_palv_paint =: verb define
+  gpw_palv_paint0''                              NB. call original
+
+  NB. draw text labels over the colors:
+  glfont 'consolas 8'
+  glpen 1 [ glbrush glrgb 0 0 0
+  gltextcolor glrgb 255 255 255
+  h =. {: palv_cellsize''
+  for_n. pal do. i =. n_index
+    if. i < 16 do. text =. ": n else. text =. '2^',":i-2 end.
+    xx =. 25 - -: ww =.(8*#text)   NB. center text horizontally
+    yy =. 15+h*i                   NB. vertically
+    glrect xx, yy, (ww+1), 14
+    gltextxy (2+xx),yy
+    gltext text
+  end.
+)
+#+end_src
+
 
 Notice that up until now, we've never explicitly use a loop.
 Working with arrays just gives us that implicitly.
@@ -136,81 +198,61 @@ In the interest of time I'm not going to say more than that,
 but if you want a better understanding of this,
 the easiest way is to just download the code and experiment.
 
-** keyboard bindings
-
-One more thing before we move onto the simulation part. Let's add some key bindings.
-
-It's just another event handler:
-
+** time control
 #+begin_src j
-spw_pal_char =: spw_sp_char =: verb define
-  smoutput sysdata
+cocurrent 'sandpaint'
+
+gpw_char =: verb define
+  time_keys''
+)
+
+time_keys =: verb define
+  select. {. sysdata
+    case. ' ' do. gpw_timer [ wd'ptimer 0'          NB. space = single step
+    case. '1' do. wd'ptimer 1000'                   NB. 1 = pretty slow
+    case. '2' do. wd'ptimer 500'                    NB. ...
+    case. '3' do. wd'ptimer 100'
+    case. '4' do. wd'ptimer 50'
+    case. '5' do. wd'ptimer 25'                     NB. ...
+    case. '9' do. wd'ptimer 1'                      NB. 9 = fast as possible
+    case. '0' do. wd'ptimer 0'                      NB. 0 = stop
+  end.
 )
 #+end_src
 
-Except now sysdata contains the character you type on the keyboard.
-It's actually a string but with some special handling for arrow keys.
-There's also a separate event for function keys and control key combinations
-because those are global to the whole window, and these are specific to a child control.
-But this is good enough for now. So let's grab the first character and make it do things.
-
-#+begin_src j
- select. {. sysdata
-   case. 'z' do. render grid =: ($grid)$0          NB. z = all zero
-   case. 'r' do. render grid =:?($grid)$4          NB. r = random
-   case. 'g' do. render showgrid =: -. showgrid    NB. g = toggle grid lines
-   case. '1' do. wd'timer 1000'                    NB. 1 = pretty slow
-   case. '2' do. wd'timer 500'                     NB. ...
-   case. '3' do. wd'timer 100'
-   case. '4' do. wd'timer 50'
-   case. '5' do. wd'timer 25'                      NB. ...
-   case. '9' do. wd'timer 1'                       NB. 9 = fast as possible
-   case. '0' do. wd'timer 0'                       NB. 0 = stop
-   case. ' ' do. step [ wd'timer 0'                NB. space = single step
- end.
-#+end_src
-
-As it says, z sets every cell to zero, r makes every cell a random int between 0 and 3.
-g toggles the grid display. (This -. symbol means 'not', or 1 minus.)
 Various number keys run the simulation at different speeds,
 Zero stops the timer completely.
 Space makes sure it's stopped and then takes a single step.
 
-If you recall, step is just the composition of render and update.
-We've already looked at render, so now we need to implement update.
+I like to animation into two steps: update and render.
+And then render draws it. We're getting that for free from gridpad.
+Update changes the scene - that's where we'll put our simulation rules.
 
-All update needs to do is take one step in the sandpile simulation.
-I'm going to call that operation 'settle':
-
-#+begin_src j
-update =: verb define
-  grid =: settle grid
-)
-
-settle =: ] NB. TODO
-#+end_src
-
-Before I fill this in, let's add a few more keyboard shortcuts so we can look at each step in isolation:
 
 ** the rules in j
+#+begin_src j
+cocurrent 'sandpaint'
+
+gpw_char =: verb define
+  time_keys''
+  select. {. sysdata
+    case. '>' do. render img =: img > 3           NB. greater than 3
+    case. 'w' do. render img =: }. img , 0        NB. move up
+    case. 'a' do. render img =: }."1   img ,. 0   NB. move left
+    case. 's' do. render img =: }: 0 , img        NB. move down
+    case. 'd' do. render img =: }:"1 ] 0 ,. img   NB. move right
+  end.
+)
+#+end_src
 
 The first rule is that any cell with 3 grains or fewer is stable,
 and we only need to address the values that are greater than 3.
-
-#+begin_src j
-   case. '>' do. render grid =: grid > 3           NB. > = greater than 3
-#+end_src
 
 The greater than operator has rank 0,
 meaning it operates on each individual number in the input array,
 and returns a result with the same shape as the input,
 with a 1 in each cell where the left argument was greater,
 and ther rest of the cells filled with zeros.
-
-So if we press r to make a random array of numbers less than four,
-sprinkle in some big numbers
-and then press the button
-we reduce the whole thing to ones and zeros.
 
 So these blue cells have at least four grains of sand.
 We need to send one grain in each of the four directions.
@@ -220,26 +262,13 @@ and add them all together.
 
 We know how to add, so let's look at one way we could do shift.
 
-#+begin_src j
-   case. 'w' do. render grid =: }. grid , 0     NB. w = move up
-#+end_src
-
 Right curly dot is 'behead'. So all this does is append a row of zeros to the bottom of the grid,
 and then chop off the first row. So all the values move up, and eventually some fall off the top.
-
-#+begin_src j
-   case. 's' do. render grid =: }: 0 , grid     NB. s = move down
-#+end_src
 
 In the other direction, right curly colon is 'curtail'.
 It drops the last item of its input, so in this case, it drops the last row.
 And prior to that, the zero comma appends a row of zeros to the top.
 So this shifts the whole grid down.
-
-#+begin_src j
-   case. 'a' do. render grid =: }."1   grid ,. 0     NB. a = move left
-   case. 'd' do. render grid =: }:"1 ] 0 ,. grid     NB. d = move right
-#+end_src
 
 Left and right work the exact same way, but you have to tell it to operate at rank 1,
 meaning the rows of values rather than the list of rows.
@@ -253,10 +282,9 @@ More precisely, it's comma rank negative 1, meaning one less than the rank of th
 Since a grid is a rank two array, it has the effect of comma rank 1 and also looks a bit nicer.
 
 ** settle
-
-Okay, so now we can write settle.
-
 #+begin_src j
+cocurrent 'sandpiles'
+
 settle =: monad define          NB. settle sandpiles with entries > 3
   gt =. y > 3
   up =. }.   gt ,  0            NB. shift in each of the 4 directions
@@ -266,19 +294,30 @@ settle =: monad define          NB. settle sandpiles with entries > 3
   cn =. _4 * gt                 NB. the 4 we subtract from the center
   y + up + dn + lf + rt + cn
 )
+
+update =: verb define
+  img =: settle img
+)
 #+end_src
+
+Okay, so now we can write settle.
 
 So now when I press =2= to start the timer at two frames per second,
 I can draw with sand and it topples in real time.
-
-** golfing
 
 That's one way to write this in J.
 
 If you're disappointed that this is too readable and easy to understand
 and you were hoping for something more exotic to impress your friends
-and terrify your enemies
-then I have just the thing for you.
+and terrify your enemies then I have just the thing for you.
+
+** golfing
+#+begin_src j
+load'viewmat'
+f=:_1 1|.!.0"0 _]
+s=:(+[:(+/@(1&|:@f@|:,f)-4&*)3&<)^:_
+viewmat s 4-s 50 50$4
+#+end_src
 
 Here is a complete standalone J program that fills a 50 by 50 grid with the
 number four, runs the sandpile simulation until it stops, and outputs the results.
@@ -288,15 +327,24 @@ number four, runs the sandpile simulation until it stops, and outputs the result
 Sandpiles were introduced in a physics paper in 1987.
 
 #+begin_src j
-   NB. -- original experiment --
-   NB. Sandpiles were originally used as a simulation in the paper
-   NB. "Self-organized criticality: an explanation of 1/f noise"
-   NB. by Per Bak, Chao Tang and Kurt Wiesenfeld
-   case. 'R' do. render grid =: 4 + ? 100 100 $ 4  NB. R = 'big' random
-   case. 'f' do. render grid =: settle^:_ grid     NB. f = fast forward
-   case. 'c' do. copy =: grid                      NB. c = copy
-   case. 'x' do. render 'grid copy' =: copy;grid   NB. x = swap
-   case. '?' do. viewmat copy ~: grid              qNB. ? = show diff
+cocurrent 'sandpaint'
+
+copy =: img
+
+gpw_char =: verb define
+  time_keys''
+  NB. -- original experiment --
+  NB. Sandpiles were originally used as a simulation in the paper
+  NB. "Self-organized criticality: an explanation of 1/f noise"
+  NB. by Per Bak, Chao Tang and Kurt Wiesenfeld
+  select. {. sysdata
+    case. 'r' do. render img =: 4 + ? 100 100 $ 4  NB. r = big random grid
+    case. 'f' do. render img =: settle^:_ img      NB. f = fast forward
+    case. 'c' do. copy =: img                      NB. c = copy
+    case. 'x' do. render 'img copy' =: copy;img    NB. x = swap
+    case. '?' do. viewmat copy ~: img              NB. ? = show diff
+  end.
+)
 #+end_src
 
 As a layman, it was pretty hard for me to follow, but there's a link to in in the video description.
@@ -319,9 +367,124 @@ that explains how for any size grid
 there's a subset of sandpile configurations
 that form a group under addition with settling.
 
+* sandcalc - window
+
+#+begin_src j
+cocurrent 'sandcalc'
+coinsert 'sandpiles gridpad'
+
+gpw_opt_title =: 'sandcalc - sandpile calculator'
+gpw_opt_timer =: 200
+gpw_opt_statusbar =: 0
+gpw_opt_colorpick =: 0
+gpw_opt_menu =: ''
+
+gpw_init_controls =: verb define
+  wd'bin h'
+  wd' minwh  50 200; cc palv isigraph;'
+  wd' minwh 200 200; cc sp0v isidraw;'
+  wd' cc "+" static;'
+  wd' minwh 200 200; cc sp1v isidraw;'
+  wd' cc "+" static;'
+  wd' minwh 200 200; cc sp2v isidraw;'
+  wd' cc "=" static;'
+  wd' minwh 200 200; cc sp3v isidraw;'
+  wd'bin z'
+)
+
+render =: ]  NB. because there's no 'imgv' control
+
+gpw_init''
+
+#+end_src
+
 So to show what that means, here's a little calculator.
 Basically, you can this all-zero sandpile to any sandpile,
 and it acts just like adding zero to an integer.
+
+
+
+* sandcalc - render
+
+#+begin_src j
+cocurrent 'sandcalc'
+
+NxN =: 5 5
+
+pal =: i.4                      NB. limit to stable piles
+pen =: 0                        NB. color to draw with
+
+sp0 =: NxN $ 0
+sp1 =: NxN $ 3
+sp2 =: NxN $ 0
+
+(update =: verb define)''
+  sp3 =: settle^:_ sp0 + sp1 + sp2
+)
+
+render =: verb define
+  vmcc sp0;'sp0v'
+  vmcc sp1;'sp1v'
+  vmcc sp2;'sp2v'
+  vmcc sp3;'sp3v'
+)
+
+#+end_src
+
+
+* sandcalc - mouse
+
+#+begin_src j
+cocurrent 'sandcalc'
+
+gpw_sp0v_mwheel =: gpw_sp1v_mwheel=: gpw_sp2v_mwheel=: gpw_palv_mwheel
+
+NB. left click draws on the input
+gpw_sp0v_mblup =: verb : 'sp0 =: sp0 img_draw whichbox 40'
+gpw_sp1v_mblup =: verb : 'sp1 =: sp1 img_draw whichbox 40'
+gpw_sp2v_mblup =: verb : 'sp2 =: sp2 img_draw whichbox 40'
+
+NB. left drag does the same
+gpw_sp0v_mmove =: verb : 'if. mbl _ do. gpw_sp0v_mblup _ end.'
+gpw_sp1v_mmove =: verb : 'if. mbl _ do. gpw_sp1v_mblup _ end.'
+gpw_sp2v_mmove =: verb : 'if. mbl _ do. gpw_sp2v_mblup _ end.'
+
+NB. right click to copy the sum to an input
+gpw_sp0v_mbrup =: verb : 'sp0 =: sp3'
+gpw_sp1v_mbrup =: verb : 'sp1 =: sp3'
+gpw_sp2v_mbrup =: verb : 'sp2 =: sp3'
+
+NB. middle click to reset the input
+gpw_sp0v_mbmup =: verb : 'sp0 =: NxN$0'
+gpw_sp1v_mbmup =: verb : 'sp1 =: NxN$3'
+gpw_sp2v_mbmup =: verb : 'sp2 =: ZSP'
+
+ZSP =: NxN $ 0 NB. the trivial zero
+#+end_src
+
+
+* the zero sandpile : construction
+
+Make a 5x5 sandpile of all 4s
+
+settle it.
+
+clean up border
+
+reverse it
+
+
+* the zero sandpile in j
+
+#+begin_src j
+cocurrent 'sandcalc'
+
+stl =: settle^:_
+ZSP =: stl (4 - stl) NxN $ 4
+sp2 =: ZSP
+
+#+end_src
+
 
 But you can never add any two other sandpiles together
 to get this one, because you'd always leave some sand on the table.
@@ -351,11 +514,20 @@ studied this already know what it is. But I don't know what it is.
 
 However, I do know what the inverse of this sandpile is, because I found it:
 
-3 1 3 1 3
-1 3 2 3 1
-3 2 1 2 3
-1 3 2 3 1
-3 1 3 1 3
+* inverse of all threes
+#+begin_src j
+cocurrent 'sandcalc'
+
+sp0 =: ".;._2 noun define
+  3 1 3 1 3
+  1 3 2 3 1
+  3 2 1 2 3
+  1 3 2 3 1
+  3 1 3 1 3
+)
+
+wd'psel gpw; ptop'
+#+end_src
 
 It's actually kind of an interesting puzzle to find a group item and then try to figure out the inverse.
 
