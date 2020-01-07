@@ -1,6 +1,17 @@
 #+title: sandpiles
 
-* Sandpiles
+* setup
+#+begin_src j
+erase_sandpaint_ nl_sandpaint_''
+erase_sandpiles_ nl_sandpiles_''
+erase_sandcalc_ nl_sandcalc_''
+erase_gridpad_ nl_gridpad_''
+cocurrent'base'
+
+NB. have inheritance image positioned and minimized.
+#+end_src
+
+* intro
 # on stage: the 512 grain-in-the-center sandpile, copied to buffer.
 # pen =: 1, grid off, timer off, focus in window!
 What you're looking at here is called a sandpile.
@@ -69,49 +80,138 @@ you might just get a mess.
 So that's sandpiles.
 
 * sandpaint
-** Building the window
+** sandpaint
+Now you know the basics of sandpiles,
+I'm going to show you how to build a simulation
+like this in the J programming language.
+
+First we're going to build the drawing tool
+that you just saw.
+
+Then we're going to demonstrate the original
+experiment where sandpiles were first invented.
+
+Finally, we're going to make a sandpile calculator,
+so we can investigate a couple of the neat properties
+mathematicians discovered when they started
+investigating these things.
+
+** gridpad
 #+begin_src j
-spw_close =: verb define
-  wd 'psel spw; pclose'
-  wd 'timer 0'
-)
+load '~JTalks/s1/e2-sandpiles/gridpad.ijs'
 
-NB. Recycle window if we run multiple times:
-spw_close^:(wdisparent'spw')''
+echo names_gridpad_''
 
+gpw_init''
 #+end_src
 
-# fake intro
+# transition slide: sandpaint
+# start with this already running.
 
-When I go to make something like this in J...
+I already made a basic drawing program in my last video,
+so I'm not going to repeat all that here.
 
+If you haven't seen it, don't worry. The important idea
+is that this window is just editing a 2 dimensional array
+variable, and there's a timer that re-renders it every
+few milliseconds.
 
-** reusing gridpad
+If you did see the last video, I have renamed a few things
+and refactored it a bit, but the basic ideas are all the same.
+
+To make it reusable, I extracted variables for a bunch of
+configuration options, indicated by this gpo prefix. It's
+short for gridpad option.
+
+Then gpw indicates an event handler or lifecycle method
+on the window.
+
+And the others are either internals or things you're
+pretty much always going to override.
+
+** inheritance
+
+#+begin_src j
+cocurrent 'sandpiles'
+coinsert 'gridpad'
+
+cocurrent 'sandpaint'
+coinsert 'sandpiles'
+
+cocurrent 'sandcalc'
+coinsert 'sandpiles'
+#+end_src
+
+Now the way overriding and inheritance works in J is that
+your code executes in a namespace called a locale,
+and they're chained together so that if the interpreter
+can't find the word it's looking for in the current locale,
+it'll walk down the lookupe path until it either finds the
+word or gives up.
+
+So here I'm setting up three new locales and creating
+an inheritance hierarchy descending from gridpad, which
+looks like this:
+
+# show image
+
+Normally I'd put each of these pairs of lines at
+the top of its own file, but that's just a convention,
+and you can switch locales at any time.
+
+So =cocurrent= is how you make that switch.
+you're just telling it which locale you want to use.
+
+=coinsert= takes the name of another locale and inserts it
+at the start of the current locale's lookup path.
+
+The 'co' prefix stands for 'class/object' and they're
+the heart of J's object oriented programming setup.
+
+If you want to break your whole application down into
+classes and instantiate them, you can absolutely do that,
+but classes and objects are also just one convention.
+
+For this talk, we're doing something more like prototype
+inheritance, and we'll just treat each application as one
+object.
+
+So gridpad is the prototype we're starting with,
+sandpaint and sandcalc are the applications we're building,
+and sandpiles is just a common place in the middle where
+we can put things like colors and the simulation routine
+that are used by both apps.
+
+We can add stuff in any order, but I like to keep
+something happening on the screen so I can see the effect
+of my code, so let's start with sandpaint.
+
+** sandpaint window
 
 #+begin_src j
 cocurrent 'sandpaint'
-coinsert 'sandpiles gridpad'
 
-pen =: 2
 img =: 25 25 $ 0
 
-gpw_opt_title =: 'sandpaint'
-gpw_opt_timer =: 500
-gpw_opt_palv_wh =: 50 800
-gpw_opt_imgv_wh =: 800 800
-gpw_opt_colorpick =: 0
+gpo_title =: 'sandpaint'
+gpo_timer =: 500
+gpo_palv_wh =: 50 800
+gpo_imgv_wh =: 800 800
+gpo_colorpick =: 0
 
 gpw_init''
 wd 'pmove 900 100 0 0'
 #+end_src
 
-: coname'' -> base
-: coname''
-: copath coname''
+So here's the main code for sandpaint.
+It just sets the window title and timer speed,
+changes the size of the controls,
+and turns off the color picker.
 
-We're actually going to make two apps. First this sandpaint program.
-Later on, we're going to make a kind of sandpile calculator.
-
+That's actually almost it for sandpaint.
+We'll come back and add some keyboard controls,
+but pretty much everything else goes
+in the sandpiles locale.
 
 ** sandpile colors
 
@@ -119,43 +219,69 @@ Later on, we're going to make a kind of sandpile calculator.
 cocurrent 'sandpiles'
 
 pal =: 0 1 2 3, 2^2+i.16                        NB. the actual values to draw
+pen =: 1
 
 lo =: 16b00000f 16b3f3f9d 16b7878d8 16bacacff   NB. i.4 drawn as shades of blue
 hi =: 16bff0000 + 16b001100 * i._16             NB. 4+i.204 are yellow..red
 rgb =: lo,hi
-#+end_src
 
-So the 'lo' colors are just these blueish colors that I picked by hand,
-The high colors are a gradient between yellow and red.
-
-This '16b' indicates that the number is hexadecimal,
-(kind of an unusual prefix, but you can specify any base you want)
-then these two digits represent the red byte, (ff is 255, which is the highest value for a byte, so this is pure red),
-the middle two represent green. 11 in hex is 16+1 or 17 so this is a really dark green.
-Then here we're multiplying that green by the numbers 0 through 15, so it goes from 00 or black to ff or pure green.
-And when you add the red, that gives you these shades of yellow and orange.
-
-So pal is the palette, num is the number to actually put in the grid when we draw,
-and then ... sandcolor is a verb that maps any number back to the palette.
-
-It says for each number in the input, if it's less than or equal to four, leave it alone,
-otherwise take the base 2 logarithm, round it down, and add two.
-If that number is bigger than the length of the palette minus one
-(meaning the last index, since they're numbered at zero),
-then replace it with that number. (This symbol is max.)
-Now we're left with an index, and we just take that item from the palette.
-
-** color mapping
-#+begin_src j
-cocurrent 'sandpiles'
-
-NB. map any non-negative integer to the palette
-to_rgb =: rgb {~ (<:#rgb) <.(2+[:<.2^.])^:(>4:)"0
+NB. map any number of grains to rgb
+to_rgb =: rgb {~ (<:#rgb) <. pal I. ]
 
 NB. map rgb colors back to the palette
 shl =:  32 b. ~
-to_pal =: (#pal) | rgb i. (1 shl 24)&|
+to_pal =: pal {~ (#rgb) | rgb i. (1 shl 24)&|
+
 #+end_src
+
+So the colors are pretty straightforward.
+Lowercase idot generates a range of integers,
+so the palette is just the numbers zero through four
+and then increasing powers of two.
+
+One thing I changed from the last video in gridpad is that
+I added explicit hooks in gridpad for mapping between the
+palette and rgb values. So the palette and the array variable
+contain the raw number of grains of sand for each square,
+and then the =to_rgb= function maps whatever number happens to
+be there to a color, and then if you load a png file
+into the progam, =to_pal= maps these exact colors to the
+corresponding number, and any other colors get mapped to 0.
+
+I won't say too much about this code since you can see what it does.
+I will point out that up here, we're using idot with one argument,
+where it means range.
+
+Then in =to_pal=, we use i. with a noun on the left, where it means
+index of. It's a bit like how the minus sign can mean negative if
+it's in front of a value, and subtraction if it's Pretty much every
+primitive in J has two meanings like this.
+
+So rgb idot some color finds the index of that color in the rgb list.
+The png files are actually saved as argb though, so this bit on the end
+is stripping off the alpha channel.
+
+So it's the index of the color in the rgb list, modulo the length
+of the list. If the thing you're looking for isn't in the list,
+then you get back the length of the list as a not found value,
+so if you take the result modulo the length, it maps unknown
+to zero.
+
+Then =to_rgb= is the same kind of thing, except you can have any amount
+of sand in a square, and the colors represent entire ranges of numbers.
+Capital idot with two arguments is interval index, and it also finds
+the position in a list, but it expects the list to be sorted, and it
+tells you where the thing on the right would go if you were going to
+insert it.
+
+Then we just min that with one less than the length of the list so
+anything too big gets mapped to the last color. You should never
+wind up with a negative number in the array, but if you did, capital
+I dot would map it to zero since it's less than the
+first entry in the palette.
+
+Anyway, if we run this and click the window to make it repaint,
+we have our colors.
 
 ** custom palette view
 
@@ -181,22 +307,142 @@ gpw_palv_paint =: verb define
 )
 #+end_src
 
+This is the paint event handler for the palette view.
+It calls the original and then loops through the palette
+to draw the labels.
 
-Notice that up until now, we've never explicitly use a loop.
-Working with arrays just gives us that implicitly.
+For-underscore-something is how you write an explicit loop.
+Here n is the loop variable, and it gets assigned to each
+item in pal. This also defines a temp variable
+called n-underscore-index, which I alias and
+use for some calculations.
 
-When it came time to draw the labels on the palette,
-I decided to use an actual loop.
+Anyway, run this and click to force a repaint,
+and now we're ready to start coding the sandpile rules.
 
-You could certainly cram all this into one line without a loop,
-but there's a lot going on, and it's not terribly interesting.
+** approaching the rules
+#+begin_src j
+cocurrent 'sandpaint'
+gpw_char =: verb define  NB. key handler for imgv and palv controls.
+  select. {. sysdata     NB. 'wasd' is ',aoe' on a dvorak keyboard :)
+    case. '>' do. render img =: img > 3           NB. greater than 3
+    case. ',' do. render img =: }. img , 0        NB. move up
+    case. 'o' do. render img =: }: 0 , img        NB. move down
+    case. 'a' do. render img =: }."1   img ,. 0   NB. move left
+    case. 'e' do. render img =: }:"1  ]0 ,. img   NB. move right
+  end.
+)
+#+end_src
 
-Basically, to center something, you take half the width of the drawing area
-and subtract half the width of the thing you're drawing.
+Okay, so back in the sandpaint locale, let's define
+some temporary keyboard shortcuts to help us visualize
+the steps of the simulation.
 
-In the interest of time I'm not going to say more than that,
-but if you want a better understanding of this,
-the easiest way is to just download the code and experiment.
+Let's say we have some arbitrary sandpile and we want to decide
+what's going to happen next.
+
+The first rule is that any cell with 3 grains or fewer is stable,
+so we only care about values greater than 3. So in this image,
+all we want are the eyes and mouth and these little antennas
+on top, and this border, which is there so you can see things
+falling off the edge.
+
+To isolate those, we can just compare the whole image to the number three.
+
+The basic comparision operators all have rank 0, so they compare
+each individual item, leaving us with an array of zeros and ones.
+
+We could also say that we now have one grain of sand for each cell that's going to topple.
+So now we just need to make a copy of this array shifted over one cell in each of the four directions.
+
+That's what these other four lines do.
+
+# show it
+
+So remember our image is a list of rows of numbers.
+So to shift the image up, we add a row of zeros at the bottom and then chop off the first row.
+To shift down, we add a row of zeros to the start and cut off the bottom row.
+
+Left and right work the same way, but they operate at the row level, or rank 1.
+Appending at the next to top level is a builtin - that's comma dot, or stitch.
+For behead and curtail, we just expliictly say rank 1, and the right identity
+function here is just acting as a separator so the one and zero don't turn into an array.
+
+We lost some sand along the way here because it fell off the edge. We need to
+make a fresh copy before we nudge in each direction so we don't lose it, but
+then all way have to do is take our four shifted copies and add them to the
+original image, and then subtract four to remove them from the center.
+
+** settle
+#+begin_src j
+cocurrent 'sandpiles'
+
+settle =: monad define          NB. settle sandpiles with entries > 3
+  gt =. y > 3
+  up =. }.   gt ,  0            NB. shift in each of the 4 directions
+  dn =. }:    0 ,  gt           NB. (filling in with 0 rather than wrapping)
+  lf =. }."1 gt ,. 0
+  rt =. }:"1 ]0 ,. gt
+  cn =. _4 * gt                 NB. the 4 we subtract from the center
+  y + up + dn + lf + rt + cn
+)
+
+update =: verb define
+  img =: settle img
+)
+#+end_src
+
+Okay, so now we can write settle.
+
+It's exactly what we just said, where gt is the fresh copy we start with each time,
+and shift up down left and right. Then cn just multiplies by negative four. And the
+result is all of that added back to the original image.
+
+The update method is gridpad's hook to perform our animation, so once I run this,
+I can draw with sand and it topples in real time.
+
+Okay, so that's the beginner way to write this in J.
+
+If you're disappointed that this is too readable and easy to understand
+and you were hoping for something more exotic to impress your friends
+and terrify your enemies then I have just the thing for you.
+
+** golfing
+#+begin_src j
+load'viewmat'
+
+f=:_1 1|.!.0"0 _]
+s=:(+[:(+/@(1&|:@f@|:,f)-4&*)3&<)^:_
+
+viewmat s 50 50$4
+#+end_src
+
+Here is a complete standalone J program that fills a 50 by 50 grid with the
+number four, runs the sandpile simulation until it stops, and outputs the results.
+
+** golfing
+#+begin_src j
+load'viewmat'
+
+f=:_1 1|.!.0"0 _]
+s=:(+[:(+/@(1&|:@f@|:,f)-4&*)3&<)^:_
+
+NB. was:     viewmat s 50 50$4
+'rgb' viewmat to_rgb s 50 50$4
+#+end_src
+
+If you want our color scheme you can borrow =to_rgb=.
+
+I'm leaving deciphering this as an exercise for people who really want to learn J, but I'll give you a couple hints:
+
+f takes the image and turns it into a 3d array with 2 layers, one shifted up and one shifted down.
+Then on the next line, every time you see pipe colon, it's transposing the axes in some way.
+One of the plus signs is adding a bunch of layers together, and the other is adding changes to the original.
+Finally the carat colon at the end is called power, and when it's followed by an underscore, it means either run forever or until things stop changing.
+
+So yeah, if you're learning J and want a good challenge, try looking up these symbols in the j vocabulary page, and playing around with this in the interpreter and see if you can start to piece together how it works.
+
+And now back to our program.
 
 ** time control
 #+begin_src j
@@ -220,112 +466,26 @@ time_keys =: verb define
 )
 #+end_src
 
-Various number keys run the simulation at different speeds,
-Zero stops the timer completely.
-Space makes sure it's stopped and then takes a single step.
+Okay, here's the real keyboard handler.
 
-I like to animation into two steps: update and render.
-And then render draws it. We're getting that for free from gridpad.
-Update changes the scene - that's where we'll put our simulation rules.
+Last video, I used the window driver's timer command.
+It turns out if you use ptimer instead, you can set a timer
+just for one window, and it sends you an event on each tick.
 
+The event handler name is windowname underscore timer so
+setting ptimer 0 and then calling =gpw_timer= lets us fake
+a timer event every time we press space.
 
-** the rules in j
-#+begin_src j
-cocurrent 'sandpaint'
+The rest of these just run the clock at various speeds from
+once a second when you press one, all the way up to once a
+millisecond (or really just as fast as it can go)
+when you press 9, and then zero stops it completely.
 
-gpw_char =: verb define
-  time_keys''
-  select. {. sysdata
-    case. '>' do. render img =: img > 3           NB. greater than 3
-    case. 'w' do. render img =: }. img , 0        NB. move up
-    case. 'a' do. render img =: }."1   img ,. 0   NB. move left
-    case. 's' do. render img =: }: 0 , img        NB. move down
-    case. 'd' do. render img =: }:"1 ] 0 ,. img   NB. move right
-  end.
-)
-#+end_src
-
-The first rule is that any cell with 3 grains or fewer is stable,
-and we only need to address the values that are greater than 3.
-
-The greater than operator has rank 0,
-meaning it operates on each individual number in the input array,
-and returns a result with the same shape as the input,
-with a 1 in each cell where the left argument was greater,
-and ther rest of the cells filled with zeros.
-
-So these blue cells have at least four grains of sand.
-We need to send one grain in each of the four directions.
-
-One way to do that is to make four copies of this grid, shifted up, down, left, and right,
-and add them all together.
-
-We know how to add, so let's look at one way we could do shift.
-
-Right curly dot is 'behead'. So all this does is append a row of zeros to the bottom of the grid,
-and then chop off the first row. So all the values move up, and eventually some fall off the top.
-
-In the other direction, right curly colon is 'curtail'.
-It drops the last item of its input, so in this case, it drops the last row.
-And prior to that, the zero comma appends a row of zeros to the top.
-So this shifts the whole grid down.
-
-Left and right work the exact same way, but you have to tell it to operate at rank 1,
-meaning the rows of values rather than the list of rows.
-
-Double quote is pronounced "rank" so this literally says behead at rank 1, curtail at rank 1.
-The right bracket is just a passthrough function to separate the 1 from the 0 so they don't make an array.
-(We could use parens the same way.)
-
-Comma dot is called stitch. In this particular case it's the same thing as comma rank 1.
-More precisely, it's comma rank negative 1, meaning one less than the rank of the inputs.
-Since a grid is a rank two array, it has the effect of comma rank 1 and also looks a bit nicer.
-
-** settle
-#+begin_src j
-cocurrent 'sandpiles'
-
-settle =: monad define          NB. settle sandpiles with entries > 3
-  gt =. y > 3
-  up =. }.   gt ,  0            NB. shift in each of the 4 directions
-  dn =. }:    0 ,  gt           NB. (filling in with 0 rather than wrapping)
-  lf =. }."1 gt ,. 0
-  rt =. }:"1  0 ,. gt
-  cn =. _4 * gt                 NB. the 4 we subtract from the center
-  y + up + dn + lf + rt + cn
-)
-
-update =: verb define
-  img =: settle img
-)
-#+end_src
-
-Okay, so now we can write settle.
-
-So now when I press =2= to start the timer at two frames per second,
-I can draw with sand and it topples in real time.
-
-That's one way to write this in J.
-
-If you're disappointed that this is too readable and easy to understand
-and you were hoping for something more exotic to impress your friends
-and terrify your enemies then I have just the thing for you.
-
-** golfing
-#+begin_src j
-load'viewmat'
-f=:_1 1|.!.0"0 _]
-s=:(+[:(+/@(1&|:@f@|:,f)-4&*)3&<)^:_
-viewmat s 4-s 50 50$4
-#+end_src
-
-Here is a complete standalone J program that fills a 50 by 50 grid with the
-number four, runs the sandpile simulation until it stops, and outputs the results.
+So we're pretty much done with sandpaint,
+but I did want to add a few more keys to demonstrate
+why these things were invented.
 
 * The Sandpile Paper
-
-Sandpiles were introduced in a physics paper in 1987.
-
 #+begin_src j
 cocurrent 'sandpaint'
 
@@ -338,13 +498,52 @@ gpw_char =: verb define
   NB. "Self-organized criticality: an explanation of 1/f noise"
   NB. by Per Bak, Chao Tang and Kurt Wiesenfeld
   select. {. sysdata
-    case. 'r' do. render img =: 4 + ? 100 100 $ 4  NB. r = big random grid
+    case. 'r' do. render img =: 4 + ? 25 25 $ 4    NB. r = random grid
+    case. 'R' do. render img =: 4 + ? 100 100 $ 4  NB. R = big random grid
     case. 'f' do. render img =: settle^:_ img      NB. f = fast forward
     case. 'c' do. copy =: img                      NB. c = copy
     case. 'x' do. render 'img copy' =: copy;img    NB. x = swap
     case. '?' do. viewmat copy ~: img              NB. ? = show diff
   end.
 )
+#+end_src
+
+Sandpiles were introduced in a physics paper in 1987, this is what they did.
+
+First, they generated a big random grid of sand where every cell had at least four grains.
+
+Then they let it run. I'm doing this at two frames a second so it doesn't start strobing and give someone a seizure,
+but even running at full speed, this takes quite a while to animate.
+
+So the f key uses the power conjunction to let us fast forward to the end, which happens pretty much instantly.
+
+Now once we've got it settled, we're going to store a copy of the image.
+
+Now I'm going to turn the speed back up, and add one grain of sand, by clicking on a cell at random and turning it into a four.
+
+We can do that a few times, and we notice that sometimes we have a big change and sometimes we have a small change.
+
+
+* sandpile experiment
+:  a =. +/+/ {:d
+
+#+begin_src j
+trial =: verb define
+  r =. 4 + ? 50 50 $ 4      NB. random over-full sandpile
+  s =. settle^:_ r          NB. let it settle completely.
+  s =. 4 (<?$s) } s         NB. set random pixel to 4
+  f =. settle^:a: s         NB. fast forward, saving all intermediate steps.
+  d =. s ~:"2 f             NB. diff of changed pixels at each step.
+  a =. +/+/ +./d            NB. area is total count of affected cells.
+  t =. #d                   NB. time is number of steps it took.
+  a;t
+)
+
+result =: trial"0 i.500
+'area time' =: |: result
+
+load 'plot'
+'dot' plot  /:~"1  area,:time
 #+end_src
 
 As a layman, it was pretty hard for me to follow, but there's a link to in in the video description.
@@ -358,7 +557,8 @@ So for their work, they generated big grids full of random big numbers,
 letting everything settle, and then studied how far the cascade extended when
 they set a single cell to four.
 
-* Sandpile Math
+* sandcalc
+** sandcalc
 Since then, sandpiles have caught the attention of mathematicians.
 In fact, I first heard about them on a numberphile video
 (which I've linked in the description)
@@ -367,17 +567,17 @@ that explains how for any size grid
 there's a subset of sandpile configurations
 that form a group under addition with settling.
 
-* sandcalc - window
+** sandcalc - window
 
 #+begin_src j
 cocurrent 'sandcalc'
 coinsert 'sandpiles gridpad'
 
-gpw_opt_title =: 'sandcalc - sandpile calculator'
-gpw_opt_timer =: 200
-gpw_opt_statusbar =: 0
-gpw_opt_colorpick =: 0
-gpw_opt_menu =: ''
+gpo_title =: 'sandcalc - sandpile calculator'
+gpo_timer =: 200
+gpo_statusbar =: 0
+gpo_colorpick =: 0
+gpo_menu =: ''
 
 gpw_init_controls =: verb define
   wd'bin h'
@@ -402,18 +602,15 @@ So to show what that means, here's a little calculator.
 Basically, you can this all-zero sandpile to any sandpile,
 and it acts just like adding zero to an integer.
 
-
-
-* sandcalc - render
+** sandcalc - render
 
 #+begin_src j
 cocurrent 'sandcalc'
 
-NxN =: 5 5
-
 pal =: i.4                      NB. limit to stable piles
 pen =: 0                        NB. color to draw with
 
+NxN =: 5 5
 sp0 =: NxN $ 0
 sp1 =: NxN $ 3
 sp2 =: NxN $ 0
@@ -431,8 +628,7 @@ render =: verb define
 
 #+end_src
 
-
-* sandcalc - mouse
+** sandcalc - mouse
 
 #+begin_src j
 cocurrent 'sandcalc'
@@ -462,8 +658,7 @@ gpw_sp2v_mbmup =: verb : 'sp2 =: ZSP'
 ZSP =: NxN $ 0 NB. the trivial zero
 #+end_src
 
-
-* the zero sandpile : construction
+** the zero sandpile : construction
 
 Make a 5x5 sandpile of all 4s
 
@@ -473,8 +668,7 @@ clean up border
 
 reverse it
 
-
-* the zero sandpile in j
+** the zero sandpile in j
 
 #+begin_src j
 cocurrent 'sandcalc'
@@ -514,7 +708,7 @@ studied this already know what it is. But I don't know what it is.
 
 However, I do know what the inverse of this sandpile is, because I found it:
 
-* inverse of all threes
+** inverse of all threes
 #+begin_src j
 cocurrent 'sandcalc'
 
@@ -526,11 +720,11 @@ sp0 =: ".;._2 noun define
   3 1 3 1 3
 )
 
-wd'psel gpw; ptop'
+wd'psel ',":gpw_hwnd
+wd'ptop'
 #+end_src
 
 It's actually kind of an interesting puzzle to find a group item and then try to figure out the inverse.
-
 
 * Video Description and Links
 
