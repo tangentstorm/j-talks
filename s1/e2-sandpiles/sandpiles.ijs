@@ -28,7 +28,7 @@ hi =: 16bff0000 + 16b001100 * i._16             NB. 4+i.204 are yellow..red
 rgb =: lo,hi
 
 NB. map any non-negative integer to the palette
-to_rgb =: rgb {~ (<:#rgb) <.(2+[:<.2^.])^:(>4:)"0
+to_rgb =: rgb {~ (>./pal) | pal I. ]
 
 NB. map rgb colors back to the palette
 shl =:  32 b. ~

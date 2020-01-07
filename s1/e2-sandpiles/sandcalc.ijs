@@ -44,11 +44,11 @@ render =: verb define
 
 NB. -- build the window -------------------------------------
 
-gpw_opt_title =: 'sandcalc - sandpile calculator'
-gpw_opt_timer =: 200
-gpw_opt_statusbar =: 0
-gpw_opt_colorpick =: 0
-gpw_opt_menu =: ''
+gpo_title =: 'sandcalc - sandpile calculator'
+gpo_timer =: 200
+gpo_statusbar =: 0
+gpo_colorpick =: 0
+gpo_menu =: ''
 
 gpw_init_controls =: verb define
   wd'bin h'

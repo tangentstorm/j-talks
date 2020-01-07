@@ -14,16 +14,16 @@ NB. -- config -----------------------------------------------
 NB. override these in your own locale.
 
 NB. startup options: override these before calling gpw_init
-gpw_opt_title =: 'gridpad'
-gpw_opt_window =: 'nosize'
-gpw_opt_timer =: 100
-gpw_opt_palv_wh =: 25 400
-gpw_opt_imgv_wh =: 480 480
-gpw_opt_statusbar =: 1                  NB. show status bar?
-gpw_opt_showgrid =: 1                   NB. show the grid by default? (can toggle at runtime)
-gpw_opt_colorpick =: 1                  NB. allow color picker
-gpw_opt_viewmat =: 'rgb'                NB. viewmat options (x arg to vmcc)
-gpw_opt_menu =: noun define
+gpo_title =: 'gridpad'
+gpo_window =: 'nosize'
+gpo_timer =: 100
+gpo_palv_wh =: 25 400
+gpo_imgv_wh =: 480 480
+gpo_statusbar =: 1                  NB. show status bar?
+gpo_showgrid =: 1                   NB. show the grid by default? (can toggle at runtime)
+gpo_colorpick =: 1                  NB. allow color picker
+gpo_viewmat =: 'rgb'                NB. viewmat options (x arg to vmcc)
+gpo_menu =: noun define
   menupop "&File";
     menu new  "&New"  "Ctrl+N";
     menu open "&Open" "Ctrl+O";
@@ -49,15 +49,15 @@ NB. -- initialization ---------------------------------------
 
 gpw_init =: verb define
   NB. TODO: take above configuration arguments as params
-  wd'pc gpw closebutton ',gpw_opt_window   NB. create window 'gpw'
-  wd'pn *',gpw_opt_title                   NB. add title
+  wd'pc gpw closebutton ',gpo_window   NB. create window 'gpw'
+  wd'pn *',gpo_title                   NB. add title
   gpw_init_controls''
-  if. gpw_opt_statusbar do.
+  if. gpo_statusbar do.
     wd' cc sb statusbar'                   NB.   optional status bar
     wd' set sb addlabel text'              NB.   ... with status text
   end.
-  wd 'ptimer ',":gpw_opt_timer
-  wd gpw_opt_menu
+  wd 'ptimer ',":gpo_timer
+  wd gpo_menu
   wd 'pshow'
   NB. store hwnd in the calling locale. This is so we can call psel later.
   NB. it's one of the few things in wd that doesn't cope with locales.
@@ -70,10 +70,10 @@ gpw_init_controls =: verb define
   wd'bin v'                                NB. vertical bin
   wd' bin h'                               NB.   horizontal bin
   wd'  cc palv isigraph'                   NB.     isigraph for palette
-  wd'     setwh palv ',":gpw_opt_palv_wh
+  wd'     setwh palv ',":gpo_palv_wh
   wd'     set palv sizepolicy fixed fixed' NB.     keep palette from resizing
   wd'  cc imgv isidraw'                    NB.     square isidraw canvas
-  wd'     setwh imgv ',":gpw_opt_imgv_wh
+  wd'     setwh imgv ',":gpo_imgv_wh
   wd' bin z'                               NB.   /bin
 )
 
@@ -82,7 +82,7 @@ gpw_close =: verb define                  NB. when 'gpw' close button clicked
 )
 
 vmcc =: verb define                       NB. invoke viewmat in a child control
-  gpw_opt_viewmat vmcc y
+  gpo_viewmat vmcc y
 :
   'im cc' =. y
   wd 'psel ',":gpw_hwnd
@@ -102,7 +102,7 @@ update =: ]
 NB. gpw_render is here so you can call it without having to fiddle with locales.
 render =: gpw_render0 =: verb define
   vmcc img;'imgv'
-  if. gpw_opt_showgrid do.
+  if. gpo_showgrid do.
     'vw vh' =. glqwh glsel'imgv' [ 'ih iw' =. $ img
     glpen glrgb 255 255 255
     gllines <. 0.5+ (0, ], vw, ])"0 (vh%ih) * i.ih
@@ -208,7 +208,7 @@ gpw_imgv_mblup =: verb define
 )
 
 gpw_imgv_mmove =: verb define
-  if. gpw_opt_statusbar do. wd 'set sb setlabel text *', ": whichbox imgv_cellsize'' end.
+  if. gpo_statusbar do. wd 'set sb setlabel text *', ": whichbox imgv_cellsize'' end.
   if. mbl'' do. gpw_imgv_mblup'' end.
 )
 
@@ -241,7 +241,7 @@ gpw_palv_paint =: gpw_palv_paint0 =: verb define
 )
 
 gpw_palv_mbrup =: verb define
-  if. gpw_opt_colorpick do.
+  if. gpo_colorpick do.
     pen =: {. whichbox {: palv_cellsize''   NB. same as mblup: set pen
     rgb =: ": 256 256 256 #: pen { pal      NB. get 'r g b' string for old color
     if. #rgb =. wd'mb color ',rgb do.       NB. show system color picker
@@ -275,5 +275,5 @@ gpw_save_button =: verb define
 )
 
 gpw_grid_button =: verb define
-  render gpw_opt_showgrid =: -. gpw_opt_showgrid
+  render gpo_showgrid =: -. gpo_showgrid
 )

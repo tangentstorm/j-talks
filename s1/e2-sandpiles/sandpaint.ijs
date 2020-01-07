@@ -22,11 +22,11 @@ pen =: 2
 img =: 25 25 $ 0
 copy =: img
 
-gpw_opt_title =: 'sandpaint'
-gpw_opt_timer =: 500
-gpw_opt_palv_wh =: 50 800
-gpw_opt_imgv_wh =: 800 800
-gpw_opt_colorpick =: 0
+gpo_title =: 'sandpaint'
+gpo_timer =: 500
+gpo_palv_wh =: 50 800
+gpo_imgv_wh =: 800 800
+gpo_colorpick =: 0
 
 update =: verb define
   img =: settle img
