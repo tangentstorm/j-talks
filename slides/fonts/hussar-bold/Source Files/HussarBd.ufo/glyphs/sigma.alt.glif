@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="sigma.alt" format="1">
+  <advance width="621"/>
+  <unicode hex="E01B"/>
+  <outline>
+    <contour>
+      <point x="548" y="286" type="line"/>
+      <point x="558" y="1.2002" type="line"/>
+      <point x="63" y="67.7998" type="line"/>
+      <point x="63" y="247.8" type="line"/>
+      <point x="220.6" y="412.5" type="line"/>
+      <point x="63" y="577.2" type="line"/>
+      <point x="63" y="757.2" type="line"/>
+      <point x="558" y="823.8" type="line"/>
+      <point x="548" y="539" type="line"/>
+      <point x="458" y="530" type="line"/>
+      <point x="438.811" y="640.341" type="line"/>
+      <point x="264.6" y="619.5" type="line"/>
+      <point x="264.6" y="615" type="line"/>
+      <point x="427" y="462.9" type="line"/>
+      <point x="427" y="362.1" type="line"/>
+      <point x="264.6" y="210" type="line"/>
+      <point x="264.6" y="205.5" type="line"/>
+      <point x="438.811" y="184.659" type="line"/>
+      <point x="458" y="295" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>vhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>458</integer>
+            <key>width</key>
+            <integer>90</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

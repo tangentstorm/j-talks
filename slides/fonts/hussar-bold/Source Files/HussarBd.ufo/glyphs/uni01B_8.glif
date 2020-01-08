@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="uni01B8" format="1">
+  <advance width="720"/>
+  <unicode hex="01B8"/>
+  <outline>
+    <contour>
+      <point x="361" y="147" type="curve" smooth="yes"/>
+      <point x="485" y="147"/>
+      <point x="496" y="273"/>
+      <point x="496" y="273" type="curve"/>
+      <point x="670" y="188" type="line"/>
+      <point x="670" y="188"/>
+      <point x="614" y="-15"/>
+      <point x="360" y="-15" type="curve" smooth="yes"/>
+      <point x="183" y="-15"/>
+      <point x="54" y="98"/>
+      <point x="54" y="256" type="curve" smooth="yes"/>
+      <point x="54" y="343"/>
+      <point x="95" y="406"/>
+      <point x="159" y="445" type="curve"/>
+      <point x="114" y="480"/>
+      <point x="86" y="532"/>
+      <point x="86" y="600" type="curve" smooth="yes"/>
+      <point x="86" y="867"/>
+      <point x="200" y="840"/>
+      <point x="357" y="840" type="curve" smooth="yes"/>
+      <point x="630" y="840" type="line"/>
+      <point x="512" y="689" type="line"/>
+      <point x="359" y="689" type="line" smooth="yes"/>
+      <point x="236.966" y="689"/>
+      <point x="190" y="494"/>
+      <point x="397" y="494" type="curve"/>
+      <point x="397" y="371" type="line"/>
+      <point x="140" y="379"/>
+      <point x="186.477" y="147"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>-15</integer>
+            <key>width</key>
+            <integer>162</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>371</integer>
+            <key>width</key>
+            <integer>123</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>689</integer>
+            <key>width</key>
+            <integer>151</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

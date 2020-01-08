@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="wgrave" format="1">
+  <advance width="1151"/>
+  <unicode hex="1E81"/>
+  <outline>
+    <contour>
+      <point x="489" y="810" type="line"/>
+      <point x="692" y="634" type="line"/>
+      <point x="636" y="557" type="line"/>
+      <point x="398" y="695" type="line"/>
+    </contour>
+    <contour>
+      <point x="457" y="0" type="line"/>
+      <point x="337" y="0" type="line"/>
+      <point x="62" y="513" type="line"/>
+      <point x="266" y="513" type="line"/>
+      <point x="391" y="236" type="line"/>
+      <point x="514" y="513" type="line"/>
+      <point x="636" y="513" type="line"/>
+      <point x="759" y="236" type="line"/>
+      <point x="884" y="513" type="line"/>
+      <point x="1088" y="513" type="line"/>
+      <point x="813" y="0" type="line"/>
+      <point x="693" y="0" type="line"/>
+      <point x="575" y="265" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>493</integer>
+            <key>width</key>
+            <integer>20</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="uni1D17" format="1">
+  <advance width="736"/>
+  <unicode hex="1D17"/>
+  <outline>
+    <contour>
+      <point x="100.665" y="272" type="curve" smooth="yes"/>
+      <point x="100.961" y="274"/>
+      <point x="288.961" y="274"/>
+      <point x="288.665" y="272" type="curve" smooth="yes"/>
+      <point x="278.181" y="201"/>
+      <point x="323.798" y="151"/>
+      <point x="389.798" y="151" type="curve" smooth="yes"/>
+      <point x="456.798" y="151"/>
+      <point x="517.181" y="201"/>
+      <point x="527.665" y="272" type="curve" smooth="yes"/>
+      <point x="527.961" y="274"/>
+      <point x="715.813" y="273"/>
+      <point x="715.665" y="272" type="curve" smooth="yes"/>
+      <point x="692.039" y="112"/>
+      <point x="539.5" y="0"/>
+      <point x="366.5" y="0" type="curve" smooth="yes"/>
+      <point x="196.5" y="0"/>
+      <point x="77.0391" y="112"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>151</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="uni21BE" format="1">
+  <advance width="515"/>
+  <unicode hex="21BE"/>
+  <outline>
+    <contour>
+      <point x="79.9717" y="98" type="line"/>
+      <point x="206.817" y="957" type="line"/>
+      <point x="316.644" y="1010" type="line"/>
+      <point x="563.942" y="775" type="line"/>
+      <point x="539.577" y="610" type="line"/>
+      <point x="365.432" y="758" type="line"/>
+      <point x="267.972" y="98" type="line"/>
+    </contour>
+  </outline>
+</glyph>

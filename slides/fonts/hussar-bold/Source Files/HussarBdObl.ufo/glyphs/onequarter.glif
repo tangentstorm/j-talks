@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="onequarter" format="1">
+  <advance width="819"/>
+  <unicode hex="00BC"/>
+  <outline>
+    <contour>
+      <point x="660.321" y="334" type="line"/>
+      <point x="659.321" y="334" type="line"/>
+      <point x="554.091" y="197" type="line"/>
+      <point x="640.091" y="197" type="line"/>
+    </contour>
+    <contour>
+      <point x="743.091" y="197" type="line"/>
+      <point x="798.091" y="197" type="line"/>
+      <point x="783.914" y="101" type="line"/>
+      <point x="728.914" y="101" type="line"/>
+      <point x="714" y="0" type="line"/>
+      <point x="611" y="0" type="line"/>
+      <point x="625.914" y="101" type="line"/>
+      <point x="389.914" y="101" type="line"/>
+      <point x="394.787" y="134" type="line"/>
+      <point x="676.88" y="480" type="line"/>
+      <point x="784.88" y="480" type="line"/>
+    </contour>
+    <contour>
+      <point x="811.825" y="825" type="line"/>
+      <point x="210" y="0" type="line"/>
+      <point x="92" y="0" type="line"/>
+      <point x="693.825" y="825" type="line"/>
+    </contour>
+    <contour>
+      <point x="143.735" y="628" type="line"/>
+      <point x="159.831" y="737" type="line"/>
+      <point x="308.825" y="825" type="line"/>
+      <point x="360.825" y="825" type="line"/>
+      <point x="289.945" y="345" type="line"/>
+      <point x="180.945" y="345" type="line"/>
+      <point x="230.414" y="680" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>101</integer>
+            <key>width</key>
+            <integer>96</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>805</integer>
+            <key>width</key>
+            <integer>20</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="Iotatonos" format="1">
+  <advance width="521"/>
+  <unicode hex="038A"/>
+  <outline>
+    <contour>
+      <point x="583.742" y="825" type="line"/>
+      <point x="461.917" y="0" type="line"/>
+      <point x="273.917" y="0" type="line"/>
+      <point x="395.742" y="825" type="line"/>
+    </contour>
+    <contour>
+      <point x="168.109" y="738.326" type="line"/>
+      <point x="316.487" y="982.387" type="line"/>
+      <point x="436.89" y="915.157" type="line"/>
+      <point x="243.935" y="691.278" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>805</integer>
+            <key>width</key>
+            <integer>20</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

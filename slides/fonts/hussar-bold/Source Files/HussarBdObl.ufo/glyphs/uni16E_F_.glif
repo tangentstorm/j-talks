@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="uni16EF" format="1">
+  <advance width="861"/>
+  <unicode hex="16EF"/>
+  <outline>
+    <contour>
+      <point x="570.618" y="485" type="curve"/>
+      <point x="554.481" y="375.719" type="line"/>
+      <point x="667.963" y="263.064"/>
+      <point x="767.63" y="144.357"/>
+      <point x="808.762" y="0" type="curve"/>
+      <point x="660.762" y="0" type="line"/>
+      <point x="653.01" y="95.3896"/>
+      <point x="595.087" y="156.829"/>
+      <point x="530.411" y="212.719" type="curve"/>
+      <point x="499" y="0" type="line"/>
+      <point x="362" y="0" type="line"/>
+      <point x="393.411" y="212.719" type="line"/>
+      <point x="316.301" y="155.017"/>
+      <point x="246.716" y="89.502"/>
+      <point x="200.238" y="0" type="curve"/>
+      <point x="52.2383" y="0" type="line"/>
+      <point x="147.68" y="158.702"/>
+      <point x="278.415" y="272.509"/>
+      <point x="417.481" y="375.719" type="curve"/>
+      <point x="433.618" y="485" type="line"/>
+      <point x="325.034" y="588.21"/>
+      <point x="227.909" y="702.017"/>
+      <point x="179.338" y="860.719" type="curve"/>
+      <point x="327.338" y="860.719" type="line"/>
+      <point x="347.383" y="771.217"/>
+      <point x="397.619" y="705.702"/>
+      <point x="457.688" y="648" type="curve"/>
+      <point x="489.1" y="860.719" type="line"/>
+      <point x="626.1" y="860.719" type="line"/>
+      <point x="594.688" y="648" type="line"/>
+      <point x="675.87" y="703.89"/>
+      <point x="751.938" y="765.329"/>
+      <point x="787.861" y="860.719" type="curve"/>
+      <point x="935.861" y="860.719" type="line"/>
+      <point x="852.097" y="716.361"/>
+      <point x="717.371" y="597.654"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

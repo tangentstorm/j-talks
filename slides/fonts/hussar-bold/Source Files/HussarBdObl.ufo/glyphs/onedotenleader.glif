@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="onedotenleader" format="1">
+  <advance width="349"/>
+  <unicode hex="2024"/>
+  <outline>
+    <contour>
+      <point x="205.601" y="214" type="curve" smooth="yes"/>
+      <point x="269.601" y="214"/>
+      <point x="313.069" y="163"/>
+      <point x="303.619" y="99" type="curve" smooth="yes"/>
+      <point x="294.316" y="36"/>
+      <point x="235.785" y="-15"/>
+      <point x="171.785" y="-15" type="curve" smooth="yes"/>
+      <point x="108.785" y="-15"/>
+      <point x="65.3164" y="36"/>
+      <point x="74.6191" y="99" type="curve" smooth="yes"/>
+      <point x="84.0693" y="163"/>
+      <point x="142.601" y="214"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>-15</integer>
+            <key>width</key>
+            <integer>229</integer>
+          </dict>
+        </array>
+        <key>vhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>75</integer>
+            <key>width</key>
+            <integer>229</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

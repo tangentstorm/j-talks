@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="upsilontonos" format="1">
+  <advance width="675"/>
+  <unicode hex="03CD"/>
+  <outline>
+    <contour>
+      <point x="513.577" y="587.5" type="line"/>
+      <point x="606.652" y="262.8" type="line" smooth="yes"/>
+      <point x="653.725" y="98.5811"/>
+      <point x="511.452" y="1"/>
+      <point x="332.952" y="1" type="curve" smooth="yes"/>
+      <point x="154.452" y="1"/>
+      <point x="59.252" y="89.4004"/>
+      <point x="59.252" y="262.8" type="curve" smooth="yes"/>
+      <point x="59.252" y="715" type="line"/>
+      <point x="219.052" y="715" type="line"/>
+      <point x="219.052" y="309.55" type="line" smooth="yes"/>
+      <point x="219.052" y="192.25"/>
+      <point x="254.752" y="158.25"/>
+      <point x="332.952" y="158.25" type="curve" smooth="yes"/>
+      <point x="411.152" y="158.25"/>
+      <point x="483.384" y="200.454"/>
+      <point x="446.852" y="309.55" type="curve" smooth="yes"/>
+      <point x="353.777" y="587.5" type="line"/>
+    </contour>
+    <contour>
+      <point x="246.728" y="791.048" type="line"/>
+      <point x="359.065" y="1035.11" type="line"/>
+      <point x="489.396" y="967.879" type="line"/>
+      <point x="329.5" y="744" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>1</integer>
+            <key>width</key>
+            <integer>157</integer>
+          </dict>
+        </array>
+        <key>vhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>59</integer>
+            <key>width</key>
+            <integer>160</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

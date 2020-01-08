@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="Kappa" format="1">
+  <advance width="866"/>
+  <unicode hex="039A"/>
+  <outline>
+    <contour>
+      <point x="808.5" y="0" type="line"/>
+      <point x="549.5" y="0" type="line"/>
+      <point x="297.184" y="350" type="line"/>
+      <point x="245.5" y="0" type="line"/>
+      <point x="57.5" y="0" type="line"/>
+      <point x="179.325" y="825" type="line"/>
+      <point x="367.325" y="825" type="line"/>
+      <point x="317.562" y="488" type="line"/>
+      <point x="650.325" y="825" type="line"/>
+      <point x="878.325" y="825" type="line"/>
+      <point x="488.588" y="434" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>805</integer>
+            <key>width</key>
+            <integer>20</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

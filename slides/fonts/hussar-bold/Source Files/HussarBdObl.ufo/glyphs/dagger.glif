@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="dagger" format="1">
+  <advance width="514"/>
+  <unicode hex="2020"/>
+  <outline>
+    <contour>
+      <point x="151.983" y="650" type="line"/>
+      <point x="275.983" y="650" type="line"/>
+      <point x="306.994" y="860" type="line"/>
+      <point x="459.994" y="860" type="line"/>
+      <point x="428.983" y="650" type="line"/>
+      <point x="553.983" y="650" type="line"/>
+      <point x="533.901" y="514" type="line"/>
+      <point x="408.901" y="514" type="line"/>
+      <point x="333" y="0" type="line"/>
+      <point x="180" y="0" type="line"/>
+      <point x="255.901" y="514" type="line"/>
+      <point x="131.901" y="514" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>514</integer>
+            <key>width</key>
+            <integer>136</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

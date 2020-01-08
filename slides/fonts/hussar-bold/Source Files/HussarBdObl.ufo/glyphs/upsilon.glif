@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="upsilon" format="1">
+  <advance width="676"/>
+  <unicode hex="03C5"/>
+  <outline>
+    <contour>
+      <point x="600.832" y="587.5" type="line"/>
+      <point x="645.959" y="262.8" type="line" smooth="yes"/>
+      <point x="668.782" y="98.5811"/>
+      <point x="512.1" y="1"/>
+      <point x="333.6" y="1" type="curve" smooth="yes"/>
+      <point x="155.1" y="1"/>
+      <point x="72.9531" y="89.4004"/>
+      <point x="98.5586" y="262.8" type="curve" smooth="yes"/>
+      <point x="165.334" y="715" type="line"/>
+      <point x="325.134" y="715" type="line"/>
+      <point x="265.262" y="309.55" type="line" smooth="yes"/>
+      <point x="247.94" y="192.25"/>
+      <point x="278.62" y="158.25"/>
+      <point x="356.82" y="158.25" type="curve" smooth="yes"/>
+      <point x="435.021" y="158.25"/>
+      <point x="513.484" y="200.454"/>
+      <point x="493.062" y="309.55" type="curve" smooth="yes"/>
+      <point x="441.032" y="587.5" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>1</integer>
+            <key>width</key>
+            <integer>157</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="Omega" format="1">
+  <advance width="1085"/>
+  <unicode hex="2126"/>
+  <outline>
+    <contour>
+      <point x="666.777" y="2.0498" type="line"/>
+      <point x="723.228" y="66.0498"/>
+      <point x="808.031" y="199.5"/>
+      <point x="822.207" y="295.5" type="curve" smooth="yes"/>
+      <point x="850.116" y="484.5"/>
+      <point x="743.841" y="602.5"/>
+      <point x="640.757" y="602.5" type="curve" smooth="yes"/>
+      <point x="536.737" y="602.5"/>
+      <point x="395.611" y="484.5"/>
+      <point x="367.702" y="295.5" type="curve" smooth="yes"/>
+      <point x="353.526" y="199.5"/>
+      <point x="390.325" y="58.0498"/>
+      <point x="418.056" y="2.0498" type="curve"/>
+      <point x="53.79" y="2.0498" type="line"/>
+      <point x="71.0527" y="118.95" type="line"/>
+      <point x="205.035" y="118.95" type="line"/>
+      <point x="193.551" y="164.317"/>
+      <point x="185.114" y="233.057"/>
+      <point x="198.617" y="324.5" type="curve" smooth="yes"/>
+      <point x="233.023" y="557.5"/>
+      <point x="442.678" y="771.5"/>
+      <point x="663.838" y="771.5" type="curve" smooth="yes"/>
+      <point x="885.938" y="771.5"/>
+      <point x="1034.41" y="558.5"/>
+      <point x="999.858" y="324.5" type="curve" smooth="yes"/>
+      <point x="986.355" y="233.057"/>
+      <point x="957.618" y="164.317"/>
+      <point x="932.735" y="118.95" type="curve"/>
+      <point x="1049.08" y="118.95" type="line"/>
+      <point x="1031.04" y="2.0498" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>2</integer>
+            <key>width</key>
+            <integer>117</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>602</integer>
+            <key>width</key>
+            <integer>169</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

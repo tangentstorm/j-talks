@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="Polish_Zloty.Alt_sign" format="1">
+  <advance width="1490"/>
+  <unicode hex="E005"/>
+  <outline>
+    <contour>
+      <point x="655.917" y="250" type="line"/>
+      <point x="678.51" y="403" type="line"/>
+      <point x="763.223" y="462" type="line"/>
+      <point x="796.333" y="686.223" type="line"/>
+      <point x="396.365" y="165" type="line"/>
+      <point x="719.365" y="165" type="line"/>
+      <point x="740.629" y="309" type="line"/>
+    </contour>
+    <contour>
+      <point x="1167" y="0" type="line"/>
+      <point x="44" y="0" type="line"/>
+      <point x="549.46" y="660" type="line"/>
+      <point x="248.46" y="660" type="line"/>
+      <point x="223.825" y="825" type="line"/>
+      <point x="1004.83" y="825" type="line"/>
+      <point x="973.077" y="610" type="line"/>
+      <point x="1090.33" y="693" type="line"/>
+      <point x="1067.74" y="540" type="line"/>
+      <point x="950.484" y="457" type="line"/>
+      <point x="907.365" y="165" type="line"/>
+      <point x="1191.37" y="165" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>165</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>660</integer>
+            <key>width</key>
+            <integer>165</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

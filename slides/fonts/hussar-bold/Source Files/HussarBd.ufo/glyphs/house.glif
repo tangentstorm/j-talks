@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="house" format="1">
+  <advance width="444"/>
+  <unicode hex="2302"/>
+  <outline>
+    <contour>
+      <point x="370" y="275" type="line"/>
+      <point x="370" y="0" type="line"/>
+      <point x="259" y="0" type="line"/>
+      <point x="259" y="116" type="line"/>
+      <point x="184" y="116" type="line"/>
+      <point x="184" y="0" type="line"/>
+      <point x="74" y="0" type="line"/>
+      <point x="74" y="275" type="line"/>
+      <point x="223" y="373" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+        </array>
+        <key>vhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>74</integer>
+            <key>width</key>
+            <integer>110</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>259</integer>
+            <key>width</key>
+            <integer>111</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

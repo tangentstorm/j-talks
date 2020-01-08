@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="logicalor" format="1">
+  <advance width="815"/>
+  <unicode hex="2228"/>
+  <outline>
+    <contour>
+      <point x="408.35" y="216.7" type="line"/>
+      <point x="410.05" y="217.55" type="line"/>
+      <point x="594.5" y="702.05" type="line"/>
+      <point x="764.5" y="701.2" type="line"/>
+      <point x="481.45" y="-0.0498047" type="line"/>
+      <point x="333.55" y="-0.0498047" type="line"/>
+      <point x="50.5" y="701.2" type="line"/>
+      <point x="223.9" y="701.2" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

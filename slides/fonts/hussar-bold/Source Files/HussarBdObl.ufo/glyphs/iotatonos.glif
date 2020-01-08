@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="iotatonos" format="1">
+  <advance width="398"/>
+  <unicode hex="03AF"/>
+  <outline>
+    <contour>
+      <point x="196.952" y="881.169" type="line"/>
+      <point x="345.329" y="1125.23" type="line"/>
+      <point x="465.731" y="1058" type="line"/>
+      <point x="272.776" y="834.121" type="line"/>
+    </contour>
+    <contour>
+      <point x="87.3867" y="199" type="curve" smooth="yes"/>
+      <point x="167.193" y="753" type="line"/>
+      <point x="344.193" y="753" type="line"/>
+      <point x="261.204" y="191" type="line" smooth="yes"/>
+      <point x="254.763" y="140.153"/>
+      <point x="343.52" y="113.05"/>
+      <point x="358.687" y="113" type="curve"/>
+      <point x="358.687" y="113"/>
+      <point x="323.979" y="21.2881"/>
+      <point x="292.054" y="0" type="curve"/>
+      <point x="208" y="0"/>
+      <point x="168.4" y="-4.29688"/>
+      <point x="150.443" y="3" type="curve" smooth="yes"/>
+      <point x="86.6895" y="28.9053"/>
+      <point x="77.5332" y="108.527"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>733</integer>
+            <key>width</key>
+            <integer>20</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>834</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

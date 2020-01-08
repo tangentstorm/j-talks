@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="arrowup" format="1">
+  <advance width="695"/>
+  <unicode hex="2191"/>
+  <outline>
+    <contour>
+      <point x="57.5" y="512" type="line"/>
+      <point x="57.5" y="677" type="line"/>
+      <point x="355.5" y="912" type="line"/>
+      <point x="637.5" y="677" type="line"/>
+      <point x="637.5" y="512" type="line"/>
+      <point x="441.5" y="660" type="line"/>
+      <point x="441.5" y="0" type="line"/>
+      <point x="253.5" y="0" type="line"/>
+      <point x="253.5" y="660" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+        </array>
+        <key>vhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>254</integer>
+            <key>width</key>
+            <integer>188</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

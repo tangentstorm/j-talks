@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="Edotaccent" format="1">
+  <advance width="613"/>
+  <unicode hex="0116"/>
+  <outline>
+    <contour>
+      <point x="664.325" y="825" type="line"/>
+      <point x="639.96" y="660" type="line"/>
+      <point x="355.96" y="660" type="line"/>
+      <point x="331.743" y="496" type="line"/>
+      <point x="603.743" y="496" type="line"/>
+      <point x="579.378" y="331" type="line"/>
+      <point x="307.378" y="331" type="line"/>
+      <point x="282.865" y="165" type="line"/>
+      <point x="566.865" y="165" type="line"/>
+      <point x="542.5" y="0" type="line"/>
+      <point x="70.5" y="0" type="line"/>
+      <point x="192.325" y="825" type="line"/>
+    </contour>
+    <contour>
+      <point x="463.377" y="1103" type="curve" smooth="yes"/>
+      <point x="514.377" y="1103"/>
+      <point x="549.322" y="1062"/>
+      <point x="541.791" y="1011" type="curve" smooth="yes"/>
+      <point x="534.261" y="960"/>
+      <point x="487.206" y="919"/>
+      <point x="436.206" y="919" type="curve" smooth="yes"/>
+      <point x="385.206" y="919"/>
+      <point x="350.261" y="960"/>
+      <point x="357.791" y="1011" type="curve" smooth="yes"/>
+      <point x="365.322" y="1062"/>
+      <point x="412.377" y="1103"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>165</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>331</integer>
+            <key>width</key>
+            <integer>165</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>660</integer>
+            <key>width</key>
+            <integer>165</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>919</integer>
+            <key>width</key>
+            <integer>184</integer>
+          </dict>
+        </array>
+        <key>vhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>358</integer>
+            <key>width</key>
+            <integer>184</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

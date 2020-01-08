@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="arrowupdn" format="1">
+  <advance width="708"/>
+  <unicode hex="2195"/>
+  <outline>
+    <contour>
+      <point x="644" y="274.5" type="line"/>
+      <point x="644" y="109.5" type="line"/>
+      <point x="346" y="-125.5" type="line"/>
+      <point x="64" y="109.5" type="line"/>
+      <point x="64" y="274.5" type="line"/>
+      <point x="260" y="126.5" type="line"/>
+      <point x="260" y="785.5" type="line"/>
+      <point x="64" y="637.5" type="line"/>
+      <point x="64" y="802.5" type="line"/>
+      <point x="362" y="1037.5" type="line"/>
+      <point x="644" y="802.5" type="line"/>
+      <point x="644" y="637.5" type="line"/>
+      <point x="448" y="785.5" type="line"/>
+      <point x="448" y="126.5" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>vhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>260</integer>
+            <key>width</key>
+            <integer>188</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

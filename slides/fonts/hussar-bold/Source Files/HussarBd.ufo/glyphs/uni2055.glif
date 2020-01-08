@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="uni2055" format="1">
+  <advance width="685"/>
+  <unicode hex="2055"/>
+  <outline>
+    <contour>
+      <point x="407.525" y="131.067" type="line"/>
+      <point x="277.475" y="131.067" type="line"/>
+      <point x="277.475" y="257.516" type="line"/>
+      <point x="188.062" y="168.103" type="line"/>
+      <point x="96.1025" y="260.062" type="line"/>
+      <point x="185.516" y="349.475" type="line"/>
+      <point x="59.0674" y="349.475" type="line"/>
+      <point x="59.0674" y="479.525" type="line"/>
+      <point x="185.516" y="479.525" type="line"/>
+      <point x="96.1025" y="568.938" type="line"/>
+      <point x="188.062" y="660.897" type="line"/>
+      <point x="277.475" y="571.484" type="line"/>
+      <point x="277.475" y="697.933" type="line"/>
+      <point x="407.525" y="697.933" type="line"/>
+      <point x="407.525" y="571.484" type="line"/>
+      <point x="496.938" y="660.897" type="line"/>
+      <point x="588.897" y="568.938" type="line"/>
+      <point x="499.484" y="479.525" type="line"/>
+      <point x="625.933" y="479.525" type="line"/>
+      <point x="625.933" y="349.475" type="line"/>
+      <point x="499.484" y="349.475" type="line"/>
+      <point x="588.897" y="260.062" type="line"/>
+      <point x="496.938" y="168.103" type="line"/>
+      <point x="407.525" y="257.516" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>349</integer>
+            <key>width</key>
+            <integer>130</integer>
+          </dict>
+        </array>
+        <key>vhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>277</integer>
+            <key>width</key>
+            <integer>130</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

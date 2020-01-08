@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="arrowdown" format="1">
+  <advance width="698"/>
+  <unicode hex="2193"/>
+  <outline>
+    <contour>
+      <point x="698.066" y="400" type="line"/>
+      <point x="673.702" y="235" type="line"/>
+      <point x="341" y="0" type="line"/>
+      <point x="93.7021" y="235" type="line"/>
+      <point x="118.066" y="400" type="line"/>
+      <point x="292.212" y="252" type="line"/>
+      <point x="389.673" y="912" type="line"/>
+      <point x="577.673" y="912" type="line"/>
+      <point x="480.212" y="252" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

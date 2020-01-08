@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="gradient" format="1">
+  <advance width="934"/>
+  <unicode hex="2207"/>
+  <outline>
+    <contour>
+      <point x="729.051" y="664" type="line"/>
+      <point x="403.608" y="661" type="line"/>
+      <point x="500.554" y="234" type="line"/>
+    </contour>
+    <contour>
+      <point x="1008.83" y="825" type="line"/>
+      <point x="554" y="0" type="line"/>
+      <point x="380" y="0" type="line"/>
+      <point x="168.825" y="825" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>664</integer>
+            <key>width</key>
+            <integer>161</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

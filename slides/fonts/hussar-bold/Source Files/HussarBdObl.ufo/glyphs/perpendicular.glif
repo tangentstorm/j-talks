@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="perpendicular" format="1">
+  <advance width="604"/>
+  <unicode hex="22A5"/>
+  <outline>
+    <contour>
+      <point x="569.487" y="142.125" type="line"/>
+      <point x="548.777" y="1.875" type="line"/>
+      <point x="55.7773" y="1.875" type="line"/>
+      <point x="76.4873" y="142.125" type="line"/>
+      <point x="243.087" y="142.125" type="line"/>
+      <point x="325.928" y="703.125" type="line"/>
+      <point x="485.729" y="703.125" type="line"/>
+      <point x="402.888" y="142.125" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>2</integer>
+            <key>width</key>
+            <integer>140</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

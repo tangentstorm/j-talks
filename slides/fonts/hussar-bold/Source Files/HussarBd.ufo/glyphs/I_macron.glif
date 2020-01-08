@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="Imacron" format="1">
+  <advance width="486"/>
+  <unicode hex="012A"/>
+  <outline>
+    <contour>
+      <point x="337" y="825" type="line"/>
+      <point x="337" y="0" type="line"/>
+      <point x="149" y="0" type="line"/>
+      <point x="149" y="825" type="line"/>
+    </contour>
+    <contour>
+      <point x="39" y="1066" type="line"/>
+      <point x="447" y="1066" type="line"/>
+      <point x="447" y="946" type="line"/>
+      <point x="39" y="946" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>805</integer>
+            <key>width</key>
+            <integer>20</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>946</integer>
+            <key>width</key>
+            <integer>120</integer>
+          </dict>
+        </array>
+        <key>vhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>149</integer>
+            <key>width</key>
+            <integer>188</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="Upsilontonos" format="1">
+  <advance width="1084"/>
+  <unicode hex="038E"/>
+  <outline>
+    <contour>
+      <point x="245.667" y="825" type="line"/>
+      <point x="471.667" y="825" type="line"/>
+      <point x="643.667" y="561" type="line"/>
+      <point x="815.667" y="825" type="line"/>
+      <point x="1041.67" y="825" type="line"/>
+      <point x="737.667" y="370" type="line"/>
+      <point x="737.667" y="0" type="line"/>
+      <point x="549.667" y="0" type="line"/>
+      <point x="549.667" y="370" type="line"/>
+    </contour>
+    <contour>
+      <point x="42.333" y="738.326" type="line"/>
+      <point x="154.671" y="982.387" type="line"/>
+      <point x="285.001" y="915.157" type="line"/>
+      <point x="125.105" y="691.278" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>805</integer>
+            <key>width</key>
+            <integer>20</integer>
+          </dict>
+        </array>
+        <key>vhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>550</integer>
+            <key>width</key>
+            <integer>188</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

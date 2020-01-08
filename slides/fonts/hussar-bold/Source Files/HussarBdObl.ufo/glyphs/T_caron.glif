@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="Tcaron" format="1">
+  <advance width="885"/>
+  <unicode hex="0164"/>
+  <outline>
+    <contour>
+      <point x="145.46" y="660" type="line"/>
+      <point x="169.825" y="825" type="line"/>
+      <point x="749.825" y="825" type="line"/>
+      <point x="725.46" y="660" type="line"/>
+      <point x="529.46" y="660" type="line"/>
+      <point x="432" y="0" type="line"/>
+      <point x="244" y="0" type="line"/>
+      <point x="341.46" y="660" type="line"/>
+    </contour>
+    <contour>
+      <point x="885.512" y="938" type="curve" smooth="yes"/>
+      <point x="935.512" y="938"/>
+      <point x="969.605" y="898"/>
+      <point x="962.222" y="848" type="curve" smooth="yes"/>
+      <point x="948.488" y="755"/>
+      <point x="870.266" y="679"/>
+      <point x="799.587" y="627" type="curve"/>
+      <point x="764.165" y="658" type="line"/>
+      <point x="764.165" y="658"/>
+      <point x="817.81" y="703"/>
+      <point x="839.408" y="768" type="curve"/>
+      <point x="802.737" y="777"/>
+      <point x="778.315" y="808"/>
+      <point x="784.222" y="848" type="curve" smooth="yes"/>
+      <point x="791.605" y="898"/>
+      <point x="837.512" y="938"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>660</integer>
+            <key>width</key>
+            <integer>165</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

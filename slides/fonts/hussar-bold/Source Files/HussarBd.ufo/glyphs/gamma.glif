@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="gamma" format="1">
+  <advance width="808"/>
+  <unicode hex="03B3"/>
+  <outline>
+    <contour>
+      <point x="554.608" y="513" type="line"/>
+      <point x="758.608" y="513" type="line"/>
+      <point x="355.608" y="-260" type="line"/>
+      <point x="151.608" y="-260" type="line"/>
+      <point x="328.608" y="80" type="line"/>
+      <point x="190.003" y="382" type="line"/>
+      <point x="49.3916" y="394" type="line"/>
+      <point x="85.6084" y="513" type="line"/>
+      <point x="289.608" y="513" type="line"/>
+      <point x="432.608" y="250" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>-260</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>493</integer>
+            <key>width</key>
+            <integer>20</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="Epsilontonos" format="1">
+  <advance width="799"/>
+  <unicode hex="0388"/>
+  <outline>
+    <contour>
+      <point x="864.742" y="825" type="line"/>
+      <point x="840.377" y="660" type="line"/>
+      <point x="556.377" y="660" type="line"/>
+      <point x="532.16" y="496" type="line"/>
+      <point x="804.16" y="496" type="line"/>
+      <point x="779.795" y="331" type="line"/>
+      <point x="507.795" y="331" type="line"/>
+      <point x="483.282" y="165" type="line"/>
+      <point x="767.282" y="165" type="line"/>
+      <point x="742.917" y="0" type="line"/>
+      <point x="270.917" y="0" type="line"/>
+      <point x="392.742" y="825" type="line"/>
+    </contour>
+    <contour>
+      <point x="165.109" y="738.326" type="line"/>
+      <point x="313.487" y="982.387" type="line"/>
+      <point x="433.89" y="915.157" type="line"/>
+      <point x="240.935" y="691.278" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>165</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>331</integer>
+            <key>width</key>
+            <integer>165</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>660</integer>
+            <key>width</key>
+            <integer>165</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

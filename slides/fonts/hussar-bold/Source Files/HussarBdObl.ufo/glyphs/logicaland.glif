@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="logicaland" format="1">
+  <advance width="811"/>
+  <unicode hex="2227"/>
+  <outline>
+    <contour>
+      <point x="476.313" y="485.3" type="line"/>
+      <point x="474.487" y="484.45" type="line"/>
+      <point x="218.492" y="-0.0498047" type="line"/>
+      <point x="48.6182" y="0.799805" type="line"/>
+      <point x="435.22" y="702.05" type="line"/>
+      <point x="583.12" y="702.05" type="line"/>
+      <point x="762.618" y="0.799805" type="line"/>
+      <point x="589.218" y="0.799805" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

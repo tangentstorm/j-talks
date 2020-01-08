@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="imacron" format="1">
+  <advance width="509"/>
+  <unicode hex="012B"/>
+  <outline>
+    <contour>
+      <point x="241.253" y="513" type="line"/>
+      <point x="418.253" y="513" type="line"/>
+      <point x="342.5" y="0" type="line"/>
+      <point x="165.5" y="0" type="line"/>
+    </contour>
+    <contour>
+      <point x="161.841" y="754" type="line"/>
+      <point x="569.841" y="754" type="line"/>
+      <point x="552.121" y="634" type="line"/>
+      <point x="144.121" y="634" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>493</integer>
+            <key>width</key>
+            <integer>20</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>634</integer>
+            <key>width</key>
+            <integer>120</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

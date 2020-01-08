@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="etatonos" format="1">
+  <advance width="685"/>
+  <unicode hex="03AE"/>
+  <outline>
+    <contour>
+      <point x="604.749" y="-171" type="line"/>
+      <point x="427.749" y="-171" type="line"/>
+      <point x="497.152" y="299"/>
+      <point x="509.704" y="384"/>
+      <point x="409.704" y="384" type="curve" smooth="yes"/>
+      <point x="335.704" y="384"/>
+      <point x="301.945" y="345"/>
+      <point x="287.031" y="244" type="curve" smooth="yes"/>
+      <point x="251" y="0" type="line"/>
+      <point x="67" y="0" type="line"/>
+      <point x="143.787" y="520" type="line"/>
+      <point x="283.787" y="520" type="line"/>
+      <point x="279.505" y="491" type="line"/>
+      <point x="316.901" y="514"/>
+      <point x="365.968" y="528"/>
+      <point x="430.968" y="528" type="curve" smooth="yes"/>
+      <point x="622.968" y="528"/>
+      <point x="697.779" y="459"/>
+      <point x="672.381" y="287" type="curve" smooth="yes"/>
+    </contour>
+    <contour>
+      <point x="325.14" y="605.939" type="line"/>
+      <point x="473.517" y="850" type="line"/>
+      <point x="593.92" y="782.771" type="line"/>
+      <point x="400.965" y="558.892" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>384</integer>
+            <key>width</key>
+            <integer>144</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>500</integer>
+            <key>width</key>
+            <integer>20</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

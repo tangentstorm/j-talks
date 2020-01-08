@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="uni16E5" format="1">
+  <advance width="824"/>
+  <unicode hex="16E5"/>
+  <outline>
+    <contour>
+      <point x="695.026" y="561.551" type="line"/>
+      <point x="726.034" y="771.534" type="line"/>
+      <point x="587.786" y="666.543" type="line"/>
+    </contour>
+    <contour>
+      <point x="629.408" y="117.185" type="line"/>
+      <point x="660.415" y="327.168" type="line"/>
+      <point x="522.167" y="222.176" type="line"/>
+    </contour>
+    <contour>
+      <point x="260.537" y="329.396" type="line"/>
+      <point x="228.874" y="114.97" type="line"/>
+      <point x="372.464" y="222.184" type="line"/>
+    </contour>
+    <contour>
+      <point x="326.153" y="773.749" type="line"/>
+      <point x="294.49" y="559.322" type="line"/>
+      <point x="438.08" y="666.535" type="line"/>
+    </contour>
+    <contour>
+      <point x="347.98" y="888.719" type="line"/>
+      <point x="526.742" y="760.101" type="line"/>
+      <point x="738.488" y="888.719" type="line"/>
+      <point x="880.338" y="888.719" type="line"/>
+      <point x="749.104" y="0" type="line"/>
+      <point x="607.254" y="0" type="line"/>
+      <point x="433.493" y="128.618" type="line"/>
+      <point x="211.896" y="0" type="line"/>
+      <point x="74.8965" y="0" type="line"/>
+      <point x="206.131" y="888.719" type="line"/>
+    </contour>
+    <contour>
+      <point x="499.116" y="572.978" type="line"/>
+      <point x="282.369" y="444.359" type="line"/>
+      <point x="461.131" y="315.741" type="line"/>
+      <point x="672.877" y="444.359" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

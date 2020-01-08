@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="minus" format="1">
+  <advance width="649"/>
+  <unicode hex="2212"/>
+  <outline>
+    <contour>
+      <point x="140.505" y="491" type="line"/>
+      <point x="653.505" y="491" type="line"/>
+      <point x="630.911" y="338" type="line"/>
+      <point x="117.911" y="338" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>338</integer>
+            <key>width</key>
+            <integer>153</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

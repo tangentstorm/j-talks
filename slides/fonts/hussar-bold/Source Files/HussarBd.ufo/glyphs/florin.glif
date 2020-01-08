@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="florin" format="1">
+  <advance width="667"/>
+  <unicode hex="0192"/>
+  <outline>
+    <contour>
+      <point x="423.5" y="296" type="line"/>
+      <point x="448.583" y="124.551"/>
+      <point x="112.444" y="-130.995"/>
+      <point x="43.5" y="-151" type="curve"/>
+      <point x="68.5" y="8" type="line"/>
+      <point x="138.938" y="56.3008"/>
+      <point x="252.235" y="204.206"/>
+      <point x="241.5" y="296" type="curve"/>
+      <point x="168.5" y="296" type="line"/>
+      <point x="209.5" y="446" type="line"/>
+      <point x="265.5" y="446" type="line"/>
+      <point x="265.403" y="548.434"/>
+      <point x="479.43" y="767.91"/>
+      <point x="623.5" y="755" type="curve"/>
+      <point x="598.5" y="596" type="line"/>
+      <point x="577.046" y="642.298"/>
+      <point x="437.144" y="514.746"/>
+      <point x="447.5" y="446" type="curve"/>
+      <point x="591.5" y="446" type="line"/>
+      <point x="550.5" y="296" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>296</integer>
+            <key>width</key>
+            <integer>150</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

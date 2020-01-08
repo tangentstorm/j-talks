@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="uni028A" format="1">
+  <advance width="926"/>
+  <unicode hex="028A"/>
+  <outline>
+    <contour>
+      <point x="665.07" y="654.791" type="curve"/>
+      <point x="974.696" y="654.791" type="line"/>
+      <point x="960.68" y="555.426" type="line"/>
+      <point x="861.788" y="555.426" type="line"/>
+      <point x="871.55" y="516.864"/>
+      <point x="878.721" y="458.436"/>
+      <point x="867.242" y="380.709" type="curve" smooth="yes"/>
+      <point x="837.871" y="181.809"/>
+      <point x="658.198" y="0.758789"/>
+      <point x="469.413" y="0.758789" type="curve" smooth="yes"/>
+      <point x="281.428" y="0.758789"/>
+      <point x="156.942" y="182.658"/>
+      <point x="186.188" y="380.709" type="curve" smooth="yes"/>
+      <point x="197.666" y="458.436"/>
+      <point x="222.093" y="516.864"/>
+      <point x="243.243" y="555.426" type="curve"/>
+      <point x="129.357" y="555.426" type="line"/>
+      <point x="144.03" y="654.791" type="line"/>
+      <point x="453.656" y="654.791" type="line"/>
+      <point x="416.027" y="607.191"/>
+      <point x="349.239" y="486.959"/>
+      <point x="337.189" y="405.358" type="curve" smooth="yes"/>
+      <point x="313.467" y="244.709"/>
+      <point x="403.802" y="144.408"/>
+      <point x="492.219" y="144.408" type="curve" smooth="yes"/>
+      <point x="579.84" y="144.408"/>
+      <point x="699.796" y="244.709"/>
+      <point x="723.519" y="405.358" type="curve" smooth="yes"/>
+      <point x="735.568" y="486.959"/>
+      <point x="696.986" y="600.392"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>1</integer>
+            <key>width</key>
+            <integer>144</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>555</integer>
+            <key>width</key>
+            <integer>99</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

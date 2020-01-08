@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="uniE045" format="1">
+  <advance width="372"/>
+  <unicode hex="E045"/>
+  <outline>
+    <contour>
+      <point x="329.177" y="114.259" type="line"/>
+      <point x="123.192" y="430" type="line"/>
+      <point x="422.426" y="745.741" type="line"/>
+      <point x="394.788" y="558.618" type="line"/>
+      <point x="265.042" y="430" type="line"/>
+      <point x="356.803" y="301.382" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>vhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>123</integer>
+            <key>width</key>
+            <integer>299</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

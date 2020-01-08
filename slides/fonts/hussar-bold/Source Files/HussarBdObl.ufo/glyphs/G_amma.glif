@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="Gamma" format="1">
+  <advance width="600"/>
+  <unicode hex="0393"/>
+  <outline>
+    <contour>
+      <point x="349.46" y="660" type="line"/>
+      <point x="253" y="0" type="line"/>
+      <point x="64" y="0" type="line"/>
+      <point x="185.825" y="825" type="line"/>
+      <point x="657.825" y="825" type="line"/>
+      <point x="633.46" y="660" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>660</integer>
+            <key>width</key>
+            <integer>165</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

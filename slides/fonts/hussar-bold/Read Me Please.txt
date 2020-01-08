@@ -1,0 +1,35 @@
+﻿This Package contains the newest version of Hussar Preview Edition. (Hussar Version 2.21)
+
+Changes Since Last Release (Hussar Preview Version 2.19 Release):
+
+Added more Latin extended character support
+
+New Alternate characters added to PUA
+
+Re-designed Percent Sign
+
+New symbol characters added
+
+New Fraction characters added
+
+New Punctuation marks added
+
+Tweaked uppercase G, plus use of new uppercase G in Latin extended sets.
+
+New lowercase A, plus use of new lowercase A in Latin Extended and Cyrillic sets.
+
+New lowercase B, D, P, & Q, plus use of new designs in Latin Extended sets.
+
+New Left and Right curly Brackets
+
+New Math and Technical symbols added.
+
+A few Fixes of various issues
+
+And Much More
+
+Re-designs and tweaks by:
+
+Robert Jablonski, Mew Too and Jasper (New Designer) @ Cannot Into Space Fonts
+
+"Crazy Dave" @  PlusOne Fonts

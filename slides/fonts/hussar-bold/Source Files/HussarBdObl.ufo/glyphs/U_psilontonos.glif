@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="Upsilontonos" format="1">
+  <advance width="1084"/>
+  <unicode hex="038E"/>
+  <outline>
+    <contour>
+      <point x="367.492" y="825" type="line"/>
+      <point x="593.492" y="825" type="line"/>
+      <point x="726.508" y="561" type="line"/>
+      <point x="937.492" y="825" type="line"/>
+      <point x="1163.49" y="825" type="line"/>
+      <point x="792.304" y="370" type="line"/>
+      <point x="737.667" y="0" type="line"/>
+      <point x="549.667" y="0" type="line"/>
+      <point x="604.304" y="370" type="line"/>
+    </contour>
+    <contour>
+      <point x="151.359" y="738.326" type="line"/>
+      <point x="299.737" y="982.387" type="line"/>
+      <point x="420.14" y="915.157" type="line"/>
+      <point x="227.185" y="691.278" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>805</integer>
+            <key>width</key>
+            <integer>20</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

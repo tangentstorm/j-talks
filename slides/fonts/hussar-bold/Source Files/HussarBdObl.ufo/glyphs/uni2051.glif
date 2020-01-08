@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="uni2051" format="1">
+  <advance width="476"/>
+  <unicode hex="2051"/>
+  <outline>
+    <contour>
+      <point x="510.885" y="778" type="line"/>
+      <point x="525.071" y="698" type="line"/>
+      <point x="405.018" y="657" type="line"/>
+      <point x="456.398" y="558" type="line"/>
+      <point x="383.753" y="513" type="line"/>
+      <point x="327.191" y="604" type="line"/>
+      <point x="243.753" y="513" type="line"/>
+      <point x="184.398" y="558" type="line"/>
+      <point x="265.018" y="657" type="line"/>
+      <point x="157.071" y="698" type="line"/>
+      <point x="194.885" y="778" type="line"/>
+      <point x="303.717" y="743" type="line"/>
+      <point x="321.994" y="860" type="line"/>
+      <point x="407.994" y="860" type="line"/>
+      <point x="391.717" y="743" type="line"/>
+    </contour>
+    <contour>
+      <point x="435.132" y="265" type="line"/>
+      <point x="449.318" y="185" type="line"/>
+      <point x="329.264" y="144" type="line"/>
+      <point x="380.646" y="45" type="line"/>
+      <point x="308" y="0" type="line"/>
+      <point x="251.438" y="91" type="line"/>
+      <point x="168" y="0" type="line"/>
+      <point x="108.646" y="45" type="line"/>
+      <point x="189.264" y="144" type="line"/>
+      <point x="81.3184" y="185" type="line"/>
+      <point x="119.132" y="265" type="line"/>
+      <point x="227.964" y="230" type="line"/>
+      <point x="246.24" y="347" type="line"/>
+      <point x="332.24" y="347" type="line"/>
+      <point x="315.964" y="230" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>513</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

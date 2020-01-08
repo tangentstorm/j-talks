@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="Racute" format="1">
+  <advance width="794"/>
+  <unicode hex="0154"/>
+  <outline>
+    <contour>
+      <point x="179.325" y="825" type="line"/>
+      <point x="480.325" y="825" type="line"/>
+      <point x="678.516" y="820.372"/>
+      <point x="742.769" y="697.943"/>
+      <point x="723.818" y="571" type="curve" smooth="yes"/>
+      <point x="705.138" y="445.868"/>
+      <point x="626.663" y="379.893"/>
+      <point x="538.463" y="345.067" type="curve"/>
+      <point x="714.5" y="0" type="line"/>
+      <point x="507.5" y="0" type="line"/>
+      <point x="351.326" y="307.823" type="line"/>
+      <point x="328.226" y="306.469"/>
+      <point x="307.548" y="306.12"/>
+      <point x="290.687" y="306" type="curve"/>
+      <point x="245.5" y="0" type="line"/>
+      <point x="57.5" y="0" type="line"/>
+    </contour>
+    <contour>
+      <point x="312.836" y="456" type="line"/>
+      <point x="404.632" y="458"/>
+      <point x="510.302" y="468.167"/>
+      <point x="524.932" y="565" type="curve" smooth="yes"/>
+      <point x="538.682" y="656"/>
+      <point x="454.176" y="675"/>
+      <point x="345.176" y="675" type="curve"/>
+    </contour>
+    <contour>
+      <point x="352.623" y="976" type="line"/>
+      <point x="581.612" y="1152" type="line"/>
+      <point x="655.631" y="1037" type="line"/>
+      <point x="397.253" y="899" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>21</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>675</integer>
+            <key>width</key>
+            <integer>150</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

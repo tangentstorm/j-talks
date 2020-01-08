@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="uni29FA" format="1">
+  <advance width="1217"/>
+  <unicode hex="29FA"/>
+  <outline>
+    <contour>
+      <point x="430.331" y="158" type="line"/>
+      <point x="277.331" y="158" type="line"/>
+      <point x="303.911" y="338" type="line"/>
+      <point x="123.911" y="338" type="line"/>
+      <point x="146.505" y="491" type="line"/>
+      <point x="326.505" y="491" type="line"/>
+      <point x="353.085" y="671" type="line"/>
+      <point x="506.085" y="671" type="line"/>
+      <point x="479.505" y="491" type="line"/>
+      <point x="659.505" y="491" type="line"/>
+      <point x="636.911" y="338" type="line"/>
+      <point x="456.911" y="338" type="line"/>
+    </contour>
+    <contour>
+      <point x="986.331" y="158" type="line"/>
+      <point x="833.331" y="158" type="line"/>
+      <point x="859.911" y="338" type="line"/>
+      <point x="679.911" y="338" type="line"/>
+      <point x="702.505" y="491" type="line"/>
+      <point x="882.505" y="491" type="line"/>
+      <point x="909.085" y="671" type="line"/>
+      <point x="1062.08" y="671" type="line"/>
+      <point x="1035.5" y="491" type="line"/>
+      <point x="1215.5" y="491" type="line"/>
+      <point x="1192.91" y="338" type="line"/>
+      <point x="1012.91" y="338" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>338</integer>
+            <key>width</key>
+            <integer>153</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

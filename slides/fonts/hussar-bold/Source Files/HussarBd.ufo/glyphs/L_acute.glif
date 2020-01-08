@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="Lacute" format="1">
+  <advance width="603"/>
+  <unicode hex="0139"/>
+  <outline>
+    <contour>
+      <point x="253.5" y="825" type="line"/>
+      <point x="253.5" y="165" type="line"/>
+      <point x="537.5" y="165" type="line"/>
+      <point x="537.5" y="0" type="line"/>
+      <point x="65.5" y="0" type="line"/>
+      <point x="65.5" y="825" type="line"/>
+    </contour>
+    <contour>
+      <point x="141.5" y="976" type="line"/>
+      <point x="344.5" y="1152" type="line"/>
+      <point x="435.5" y="1037" type="line"/>
+      <point x="197.5" y="899" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>0</integer>
+            <key>width</key>
+            <integer>165</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>805</integer>
+            <key>width</key>
+            <integer>20</integer>
+          </dict>
+        </array>
+        <key>vhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>66</integer>
+            <key>width</key>
+            <integer>188</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>

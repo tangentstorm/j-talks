@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="uni03F8" format="1">
+  <advance width="626"/>
+  <unicode hex="03F8"/>
+  <outline>
+    <contour>
+      <point x="263.334" y="259.425" type="line"/>
+      <point x="308.384" y="259.425" type="line" smooth="yes"/>
+      <point x="371.283" y="259.425"/>
+      <point x="429.797" y="281.525"/>
+      <point x="440.215" y="352.075" type="curve" smooth="yes"/>
+      <point x="450.758" y="423.475"/>
+      <point x="398.771" y="445.575"/>
+      <point x="335.872" y="445.575" type="curve" smooth="yes"/>
+      <point x="290.822" y="445.575" type="line"/>
+    </contour>
+    <contour>
+      <point x="328.854" y="703.125" type="line"/>
+      <point x="309.649" y="573.075" type="line"/>
+      <point x="405.699" y="573.075" type="line" smooth="yes"/>
+      <point x="542.549" y="573.075"/>
+      <point x="634.981" y="502.525"/>
+      <point x="613.519" y="357.175" type="curve" smooth="yes"/>
+      <point x="592.181" y="212.675"/>
+      <point x="477.406" y="131.925"/>
+      <point x="340.557" y="131.925" type="curve" smooth="yes"/>
+      <point x="244.507" y="131.925" type="line"/>
+      <point x="225.303" y="1.875" type="line"/>
+      <point x="65.502" y="1.875" type="line"/>
+      <point x="169.053" y="703.125" type="line"/>
+    </contour>
+  </outline>
+  <lib>
+    <dict>
+      <key>com.fontlab.hintData</key>
+      <dict>
+        <key>hhints</key>
+        <array>
+          <dict>
+            <key>position</key>
+            <integer>132</integer>
+            <key>width</key>
+            <integer>128</integer>
+          </dict>
+          <dict>
+            <key>position</key>
+            <integer>446</integer>
+            <key>width</key>
+            <integer>128</integer>
+          </dict>
+        </array>
+      </dict>
+    </dict>
+  </lib>
+</glyph>
