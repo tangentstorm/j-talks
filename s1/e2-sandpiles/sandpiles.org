@@ -1,11 +1,10 @@
 #+title: sandpiles
 
-* TODO items
+* TODO [0/0] tasks
 - make sandpaint 32x32
 - adjust the size and width and centering of the palette for sandpaint.
 - segue to sandpile paper
 - key to position terminal above the editor and size the editor
-- rename file to sandpaper
 - plot sizing
 - double check normalize verb in sandpaper
 - come with a good 5-10 second summary of 1/f noise
@@ -13,8 +12,7 @@
 - see if i can disable shaking a window to clear the other windows
 - cool script for the end
 
-
-* setup
+* TODO setup                                                    :stage:
 #+begin_src j
 erase_sandpaint_ nl_sandpaint_''
 erase_sandpiles_ nl_sandpiles_''
@@ -25,7 +23,7 @@ cocurrent'base'
 NB. have inheritance image positioned and minimized.
 #+end_src
 
-* intro
+* TODO 0. demo
 # on stage: the 512 grain-in-the-center sandpile, copied to buffer.
 # pen =: 1, grid off, timer off, focus in window!
 What you're looking at here is called a sandpile.
@@ -93,36 +91,38 @@ you might just get a mess.
 
 So that's sandpiles.
 
-* Sandpaint
-** TODO title card: sandpaint
+* TODO 1. sandpiles
 #+begin_src j
 
-sandpaint
+NB. (title card: sandpiles)
 
 #+end_src
-
-** TODO segue from intro
-
+** TODO overview
 #+begin_src j
-(segue to talking about sandpiles)
-
-
+Note 'topics'
+  - sandpaint
+  - original paper
+  - sandcalc
+)
 #+end_src
 
-Now you know the basics of sandpiles,
+Now that you know the basics of sandpiles,
 I'm going to show you how to build a simulation
 like this in the J programming language.
 
-First we're going to build the drawing tool
-that you just saw.
+We're going to build the drawing tool you just saw.
 
 Then we're going to demonstrate the original
 experiment where sandpiles were first invented.
 
-Finally, we're going to make a sandpile calculator,
-so we can investigate a couple of the neat properties
-mathematicians discovered when they started
-investigating these things.
+Finally, we're going to turn all this into
+a cross between a calculator and a puzzle game
+that shows off some of the mathematical
+properties of sandpiles.
+
+...
+
+So let's get started.
 
 ** TODO gridpad
 #+begin_src j
@@ -130,11 +130,10 @@ load '~JTalks/s1/e2-sandpiles/gridpad.ijs'
 
 echo names_gridpad_''
 
-gpw_init''
+gpw_init_gridpad_''
 #+end_src
 
 cover code review
-
 
 # transition slide: sandpaint
 # start with this already running.
@@ -143,14 +142,13 @@ I already made a basic drawing program in my last video,
 so I'm not going to repeat all that here.
 
 If you haven't seen it, don't worry. The important idea
-is that this window is just editing a 2 dimensional array
-variable, and there's a timer that re-renders it every
-few milliseconds.
+is that this window is just editing a 2 dimensional array,
+and there's a timer that repaints it every few milliseconds.
 
-If you did see the last video, I have renamed a few things
+If you did see the last video, I've renamed a few things
 and refactored it a bit, but the basic ideas are all the same.
 
-To make it reusable, I extracted variables for a bunch of
+Now, to make it reusable, I extracted variables for a bunch of
 configuration options, indicated by this gpo prefix. It's
 short for gridpad option.
 
@@ -160,8 +158,7 @@ on the window.
 And the others are either internals or things you're
 pretty much always going to override.
 
-** inheritance
-
+** TODO inheritance
 #+begin_src j
 cocurrent 'sandpiles'
 coinsert 'gridpad'
@@ -173,21 +170,41 @@ cocurrent 'sandcalc'
 coinsert 'sandpiles'
 #+end_src
 
-we're going to reuse gridpad in a way that looks like this.
+These lines set up our inheritance hierarchy.
 
-** sandpiles window
+And usually they'd be scattered across different files.
 
+The word cocurrent switches the current locale, which is J's term for a namespace,
+creating it if it doesn't already exist.
+
+And coinsert adds an entry to the lookup path,
+which is what enables the inheritance mechanism.
+
+All of our sandpile-specific logic will go into the sandpiles application.
+And these other two applications are going to override and modify that in different ways.
+
+** note                                                        :stage:
+#+begin_src j
+NB. hide terminal, run next window, bring to lower left quadrant.
+
+#+end_src
+** TODO sandpiles window
 #+begin_src j
 
 cocurrent'sandpiles'
 gpo_title =: 'sandpiles'
-gpo_palv_wh =: 50 800
+gpo_colorpick =: 0
+gpo_palv_wh =: 50 480
 gpw_init''
 
 #+end_src
 
-** sandpile colors
+So we'll start by overriding the title and the width of the palette.
+So there's room to draw some labels in there.
 
+And then =gpw_init= fires up our modified gridpad.
+
+** TODO sandpile colors
 #+begin_src j
 cocurrent 'sandpiles'
 
@@ -202,62 +219,44 @@ NB. map any number of grains to rgb
 to_rgb =: rgb {~ (<:#pal) <. pal I. ]
 
 NB. map rgb colors back to the palette
-shl =:  32 b. ~
+shl =: 32 b. ~
 to_pal =: pal {~ (#rgb) | rgb i. (1 shl 24)&|
 
 #+end_src
 
-So the colors are pretty straightforward.
-Lowercase idot generates a range of integers,
-so the palette is just the numbers zero through four
-and then increasing powers of two.
+This code sets up our colors.
+: (run)
+The palette isn't hooked up to the timer
+so we click the window to make it repaint.
 
-One thing I changed from the last video in gridpad is that
-I added explicit hooks in gridpad for mapping between the
-palette and rgb values. So the palette and the array variable
-contain the raw number of grains of sand for each square,
-and then the =to_rgb= function maps whatever number happens to
-be there to a color, and then if you load a png file
-into the progam, =to_pal= maps these exact colors to the
-corresponding number, and any other colors get mapped to 0.
+One thing I changed from the last video
+is I added hooks in for mapping between the palette and rgb.
 
-I won't say too much about this code since you can see what it does.
-I will point out that up here, we're using idot with one argument,
-where it means range.
+So the palette is just the raw numbers zero through four and then 8 16 32 and so on.
 
-Then in =to_pal=, we use i. with a noun on the left, where it means
-index of. It's a bit like how the minus sign can mean negative if
-it's in front of a value, and subtraction if it's Pretty much every
-primitive in J has two meanings like this.
+And the verb =to_rgb= maps numbers in the image to the matching interval.
+For example, 11 falls between 8 and 16, so we color it like an 8.
 
-So rgb idot some color finds the index of that color in the rgb list.
-The png files are actually saved as argb though, so this bit on the end
-is stripping off the alpha channel.
+This part in the middle says that if the number is out of range, just
+map it to the last entry.
 
-So it's the index of the color in the rgb list, modulo the length
-of the list. If the thing you're looking for isn't in the list,
-then you get back the length of the list as a not found value,
-so if you take the result modulo the length, it maps unknown
-to zero.
+Then also, if you open a PNG file in here, =to_pal=
+strips out the alpha channel
+then maps these exact colors to those exact numbers.
 
-Then =to_rgb= is the same kind of thing, except you can have any amount
-of sand in a square, and the colors represent entire ranges of numbers.
-Capital idot with two arguments is interval index, and it also finds
-the position in a list, but it expects the list to be sorted, and it
-tells you where the thing on the right would go if you were going to
-insert it.
+And here, the part in the middle says treat any other color as zero.
 
-Then we just min that with one less than the length of the list so
-anything too big gets mapped to the last color. You should never
-wind up with a negative number in the array, but if you did, capital
-I dot would map it to zero since it's less than the
-first entry in the palette.
+Now in the interest of keeping this video short I'm not going
+to explain how this works in detail.
 
-Anyway, if we run this and click the window to make it repaint,
-we have our colors.
+For those of you who are actually interested in learning J,
+I'm going to post a separate "code review" video for each one
+of these applications, where I walk through the code line by line
+and really explain what each symbol does.
 
-** TODO custom palette view - fix the centering so we can use a small palette
+But for now, we have our colors, so let's move on.
 
+** TODO palette labels
 #+begin_src j
 cocurrent 'sandpiles'
 
@@ -272,7 +271,7 @@ gpw_palv_paint =: verb define
   for_n. pal do. i =. n_index
     if. i < 16 do. text =. ": n else. text =. '2^',":i-2 end.
     xx =. 25 - -: ww =.(8*#text)   NB. center text horizontally
-    yy =. 15+h*i                   NB. vertically
+    yy =. <.h*i+0.275              NB. vertically
     glrect xx, yy, (ww+1), 14
     gltextxy (2+xx),yy
     gltext text
@@ -281,19 +280,15 @@ gpw_palv_paint =: verb define
 #+end_src
 
 This is the paint event handler for the palette view.
-It calls the original and then loops through the palette
-to draw the labels.
 
-For-underscore-something is how you write an explicit loop.
-Here n is the loop variable, and it gets assigned to each
-item in pal. This also defines a temp variable
-called n-underscore-index, which I alias and
-use for some calculations.
+: run and click
 
-Anyway, run this and click to force a repaint,
-and now we're ready to start coding the sandpile rules.
+It calls the original handler from gridpad,
+and then does an expliict loop through the palette to draw labels.
 
-** approaching the rules
+This is just minor cosmetic stuff, so if you want details, see the code review.
+
+** TODO approaching the rules
 #+begin_src j
 cocurrent 'sandpiles'
 
@@ -308,11 +303,15 @@ gpw_char =: verb define  NB. key handler for imgv and palv controls.
 )
 #+end_src
 
-Okay, so back in the sandpaint locale, let's define
-some temporary keyboard shortcuts to help us visualize
-the steps of the simulation.
+So this is the keyboard handler. Let's define
+some temporary keyboard shortcuts
+to help us visualize the steps of the sandpile simulation.
 
-Let's say we have some arbitrary sandpile and we want to decide
+Let's say we have some arbitrary sandpile
+
+: open face
+
+ and we want to decide
 what's going to happen next.
 
 The first rule is that any cell with 3 grains or fewer is stable,
@@ -346,7 +345,7 @@ make a fresh copy before we nudge in each direction so we don't lose it, but
 then all way have to do is take our four shifted copies and add them to the
 original image, and then subtract four to remove them from the center.
 
-** settle
+** TODO settle
 #+begin_src j
 cocurrent 'sandpiles'
 
@@ -380,7 +379,7 @@ If you're disappointed that this is too readable and easy to understand
 and you were hoping for something more exotic to impress your friends
 and terrify your enemies then I have just the thing for you.
 
-** golfing
+** TODO golfed
 #+begin_src j
 load'viewmat'
 
@@ -393,7 +392,7 @@ viewmat s 50 50$4
 Here is a complete standalone J program that fills a 50 by 50 grid with the
 number four, runs the sandpile simulation until it stops, and outputs the results.
 
-** golfing
+** TODO golfed (with color)
 #+begin_src j
 load'viewmat'
 
@@ -417,8 +416,13 @@ So yeah, if you're learning J and want a good challenge, try looking up these sy
 
 And now back to our program.
 
-** sandpaint window
+* TODO 2. sandpaint
+#+begin_src j
 
+NB. (title card: sandpaint)
+
+#+end_src
+** TODO sandpaint window
 #+begin_src j
 cocurrent 'sandpaint'
 
@@ -428,9 +432,10 @@ gpo_title =: 'sandpaint'
 gpo_timer =: 500
 gpo_palv_wh =: 50 800
 gpo_imgv_wh =: 800 800
-gpo_colorpick =: 0
 
 gpw_init''
+
+NB. move it on-camera:
 wd 'pmove 900 100 0 0'
 #+end_src
 
@@ -439,12 +444,7 @@ It just sets the window title and timer speed,
 changes the size of the controls,
 and turns off the color picker.
 
-That's actually almost it for sandpaint.
-We'll come back and add some keyboard controls,
-but pretty much everything else goes
-in the sandpiles locale.
-
-** time control
+** TODO time control
 #+begin_src j
 cocurrent 'sandpaint'
 
@@ -485,15 +485,16 @@ So we're pretty much done with sandpaint,
 but I did want to add a few more keys to demonstrate
 why these things were invented.
 
-
-* setup for sandpile
+* TODO 3. sandpaper
 #+begin_src j
+
+NB. (title card: sandpaper)
+
 cocurrent 'sandpaint'
 wd'psel ',(":gpw_hwnd),'; ptimer 0'
 pen =: 4
 #+end_src
-
-* The Sandpile Paper
+** TODO The Sandpile Paper
 #+begin_src j
 cocurrent 'sandpaint'
 
@@ -531,29 +532,16 @@ Now I'm going to turn the speed back up, and add one grain of sand, by clicking 
 
 We can do that a few times, and we notice that sometimes we have a big change and sometimes we have a small change.
 
-* sandpile experiment
-:  a =. +/+/ {:d
-
+** sandpaper demo
 #+begin_src j
-trial =: verb define
-  r =. 4 + ? 50 50 $ 4      NB. random over-full sandpile
-  s =. settle^:_ r          NB. let it settle completely.
-  s =. 4 (<?$s) } s         NB. set random pixel to 4
-  f =. settle^:a: s         NB. fast forward, saving all intermediate steps.
-  d =. s ~:"2 f             NB. diff of changed pixels at each step.
-  a =. +/+/ +./d            NB. area is total count of affected cells.
-  t =. #d                   NB. time is number of steps it took.
-  a;t
+Note 'sandpaper setup'
+  - full screen term window
+  - 'desktop only' in obs
+  - session font to consolas/24
 )
-
-result =: trial"0 i.500
-'area time' =: |: result
-
-load 'plot'
-'dot' plot  /:~"1  area,:time
+open'~JTalks/s1/e2-sandpiles/sandpaper.ijs'
 #+end_src
 
-As a layman, it was pretty hard for me to follow, but there's a link to in in the video description.
 
 As far as I could tell, though, they were trying to model the idea that certain systems
 tend to naturally settle into a critical point that's just barely stable,
@@ -564,8 +552,13 @@ So for their work, they generated big grids full of random big numbers,
 letting everything settle, and then studied how far the cascade extended when
 they set a single cell to four.
 
-* sandcalc
-** sandcalc
+* TODO 4. sandcalc
+#+begin_src j
+
+NB. (title card: sandcalc)
+
+#+end_src
+** TODO sandcalc
 Since then, sandpiles have caught the attention of mathematicians.
 In fact, I first heard about them on a numberphile video
 (which I've linked in the description)
@@ -574,8 +567,7 @@ that explains how for any size grid
 there's a subset of sandpile configurations
 that form a group under addition with settling.
 
-** sandcalc - window
-
+** TODO sandcalc - window
 #+begin_src j
 cocurrent 'sandcalc'
 coinsert 'sandpiles gridpad'
@@ -609,8 +601,7 @@ So to show what that means, here's a little calculator.
 Basically, you can add this all-zero sandpile to any sandpile,
 and it acts just like adding zero to an integer.
 
-** sandcalc - render
-
+** TODO sandcalc - render
 #+begin_src j
 cocurrent 'sandcalc'
 
@@ -635,8 +626,7 @@ render =: verb define
 
 #+end_src
 
-** sandcalc - mouse
-
+** TODO sandcalc - mouse
 #+begin_src j
 cocurrent 'sandcalc'
 
@@ -665,7 +655,7 @@ gpw_sp2v_mbmup =: verb : 'sp2 =: ZSP'
 ZSP =: NxN $ 0 NB. the trivial zero
 #+end_src
 
-** the zero sandpile : construction
+** TODO the zero sandpile : construction
 
 Make a 5x5 sandpile of all 4s
 
@@ -675,7 +665,7 @@ clean up border
 
 reverse it
 
-** the zero sandpile in j
+** TODO the zero sandpile in j
 
 #+begin_src j
 cocurrent 'sandcalc'
@@ -715,7 +705,7 @@ studied this already know what it is. But I don't know what it is.
 
 However, I do know what the inverse of this sandpile is, because I found it:
 
-** inverse of all threes
+** TODO inverse of all threes
 #+begin_src j
 cocurrent 'sandcalc'
 
@@ -738,10 +728,11 @@ wd'ptop'
 
 It's actually kind of an interesting puzzle to find a group item and then try to figure out the inverse.
 
-* Video Description and Links
+* TODO _. outro
+* TODO Video Description and Links
 
 Code for this episode:
-https://github.com/tangentstorm/j-talks/tree/master/s1e1-sandpiles
+https://github.com/tangentstorm/j-talks/tree/master/s1/e2-sandpiles
 
 Numberphile video on sandpiles with Dr Luis David Garcia-Puente:
 https://www.youtube.com/watch?v=1MtEUErz7Gg
