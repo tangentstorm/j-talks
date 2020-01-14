@@ -24,16 +24,17 @@ to re-use it as a library in the sandpile video, i made the following changes:
 
 - factored out a bunch of initialization options which you can override in your calling locale:
 
-| ~gpw_opt_title~     | window title                                |
-| ~gpw_opt_window~    | window options for wd                       |
-| ~gpw_opt_timer~     | speed at which to set the timer             |
-| ~gpw_opt_palv_wh~   | width and height of palette view            |
-| ~gpw_opt_imgv_wh~   | width and height of image view              |
-| ~gpw_opt_statusbar~ | whether to add status bar                   |
-| ~gpw_opt_showgrid~  | whether to show the grid by default         |
-| ~gpw_opt_colorpick~ | whether to allow changing the palette       |
-| ~gpw_opt_viewmat~   | x arguments for viewmat (defaults to 'rgb') |
-| ~gpw_opt_menu~      | a string containing the wd menu definiton   |
+| ~gpo_title~     | window title                                |
+| ~gpo_window~    | window options for wd  (eg 'nosize')        |
+| ~gpo_init_xy~   | initial window position                     |
+| ~gpo_timer~     | speed at which to set the timer             |
+| ~gpo_palv_wh~   | width and height of palette view            |
+| ~gpo_imgv_wh~   | width and height of image view              |
+| ~gpo_statusbar~ | whether to add status bar                   |
+| ~gpo_showgrid~  | whether to show the grid by default         |
+| ~gpo_colorpick~ | whether to allow changing the palette       |
+| ~gpo_viewmat~   | x arguments for viewmat (defaults to 'rgb') |
+| ~gpo_menu~      | a string containing the wd menu definiton   |
 
 - removed all keyboard events
 - added 'view' menu with option to toggle grid

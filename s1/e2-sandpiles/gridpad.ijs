@@ -16,6 +16,7 @@ NB. override these in your own locale.
 NB. startup options: override these before calling gpw_init
 gpo_title =: 'gridpad'
 gpo_window =: 'nosize'
+gpo_init_xy =: 10 500
 gpo_timer =: 100
 gpo_palv_wh =: 25 400
 gpo_imgv_wh =: 480 480
@@ -59,6 +60,7 @@ gpw_init =: verb define
   wd 'ptimer ',":gpo_timer
   wd gpo_menu
   wd 'pshow'
+  wd 'pmove ',":gpo_init_xy,0 0
   NB. store hwnd in the calling locale. This is so we can call psel later.
   NB. it's one of the few things in wd that doesn't cope with locales.
   gpw_hwnd =: wd 'qhwndp'
