@@ -158,6 +158,29 @@ on the window.
 And the others are either internals or things you're
 pretty much always going to override.
 
+So starting from what we have here,
+I'm going to show you every line of code as I go along,
+but in this video, I'm not going to stop and explain
+exactly what every symbol means.
+
+J is a really concise and expressive language, and I could
+easily spend fifteen minutes explaining each line of code.
+
+What I really want to get across in this video is just
+the flow of ideas - how to think with the building
+blocks J gives us.
+
+Now if you're actually interested in learning the notation,
+you should still watch this video first for context, but I'm
+also going to post a second code review video,
+where I walk through everything I've done here line by line
+and really explain what each symbol does.
+
+So if you want to see that, or you just want to see more
+videos like this, now's a great time to hit the subscribe button.
+
+Meanwhile, on with the show.
+
 ** TODO inheritance
 #+begin_src j
 cocurrent 'sandpiles'
@@ -181,28 +204,31 @@ And coinsert adds an entry to the lookup path,
 which is what enables the inheritance mechanism.
 
 All of our sandpile-specific logic will go into the sandpiles application.
+
 And these other two applications are going to override and modify that in different ways.
 
-** note                                                        :stage:
+** setup for next slide                                        :stage:
 #+begin_src j
 NB. hide terminal, run next window, bring to lower left quadrant.
 
 #+end_src
 ** TODO sandpiles window
 #+begin_src j
-
 cocurrent'sandpiles'
+
 gpo_title =: 'sandpiles'
 gpo_colorpick =: 0
 gpo_palv_wh =: 50 480
-gpw_init''
 
+gpw_init''
 #+end_src
 
-So we'll start by overriding the title and the width of the palette.
-So there's room to draw some labels in there.
+So we'll start by overriding the title,
+turn off the ability to pick new colors,
+and make the palette view a bit wider
+so there's room to draw some labels.
 
-And then =gpw_init= fires up our modified gridpad.
+Then =gpw_init= fires up our modified gridpad.
 
 ** TODO sandpile colors
 #+begin_src j
@@ -229,30 +255,26 @@ This code sets up our colors.
 The palette isn't hooked up to the timer
 so we click the window to make it repaint.
 
-One thing I changed from the last video
-is I added hooks in for mapping between the palette and rgb.
+One thing I added since the last video
+were some hooks in for mapping between
+the palette and rgb.
 
-So the palette is just the raw numbers zero through four and then 8 16 32 and so on.
+So now the palette is just the raw numbers zero through four
+and then 8, 16, 32, and so on.
 
-And the verb =to_rgb= maps numbers in the image to the matching interval.
-For example, 11 falls between 8 and 16, so we color it like an 8.
+The verb =to_rgb= maps numbers in the image
+to one of those intervals.
+For example, 11 falls between 8 and 16,
+so we color it like an 8.
 
 This part in the middle says that if the number is out of range, just
 map it to the last entry.
 
-Then also, if you open a PNG file in here, =to_pal=
-strips out the alpha channel
-then maps these exact colors to those exact numbers.
+Also, if you open a PNG file in here, =to_pal=
+strips out the alpha channel then maps these exact colors
+to those exact numbers.
 
-And here, the part in the middle says treat any other color as zero.
-
-Now in the interest of keeping this video short I'm not going
-to explain how this works in detail.
-
-For those of you who are actually interested in learning J,
-I'm going to post a separate "code review" video for each one
-of these applications, where I walk through the code line by line
-and really explain what each symbol does.
+And here, the part in the middle says map any other color to zero.
 
 But for now, we have our colors, so let's move on.
 
@@ -379,7 +401,11 @@ If you're disappointed that this is too readable and easy to understand
 and you were hoping for something more exotic to impress your friends
 and terrify your enemies then I have just the thing for you.
 
-** TODO golfed
+* TODO 1a. code golf
+#+begin_src j
+NB. (title card: code golf)
+#+end_src
+** TODO golfed sandpile sim
 #+begin_src j
 load'viewmat'
 
@@ -389,10 +415,12 @@ s=:(++/@(_4&*,f,f&.(|:"2))@(3&<))^:_
 viewmat s 50 50$4
 #+end_src
 
-Here is a complete standalone J program that fills a 50 by 50 grid with the
-number four, runs the sandpile simulation until it stops, and outputs the results.
+Here is a complete standalone J program
+that fills a 50 by 50 grid with the number four,
+runs the sandpile simulation until it stops,
+and outputs the results.
 
-** TODO golfed (with color)
+** TODO golfed sandpile sim (with color)
 #+begin_src j
 load'viewmat'
 
@@ -405,16 +433,26 @@ NB. was:     viewmat s 50 50$4
 
 If you want our color scheme you can borrow =to_rgb=.
 
-I'm leaving deciphering this as an exercise for people who really want to learn J, but I'll give you a couple hints:
+# run it
 
-f takes the image and turns it into a 3d array with 2 layers, one shifted up and one shifted down.
-Then on the next line, every time you see pipe colon, it's transposing the axes in some way.
-One of the plus signs is adding a bunch of layers together, and the other is adding changes to the original.
-Finally the carat colon at the end is called power, and when it's followed by an underscore, it means either run forever or until things stop changing.
+So if you want to know what that means,
+stay tuned for the code review.
 
-So yeah, if you're learning J and want a good challenge, try looking up these symbols in the j vocabulary page, and playing around with this in the interpreter and see if you can start to piece together how it works.
+Btw, the title here says "golfed"...
+Code golf is a game programmers play where you try to
+express an idea in as few characters as possible, and
+J is a favorite language among code golfers.
 
-And now back to our program.
+Actually, this is the shortest version of the sandpile
+simulation I could think of, but it's also pretty much
+the natural way to write it in J - at least for me.
+
+The only thing I did to golf it was to remove
+all the extra spaces If you're realy brave, maybe
+you can come up with I encourage you to download
+J and try it yourself.
+
+Meanwhile back to our program.
 
 * TODO 2. sandpaint
 #+begin_src j
