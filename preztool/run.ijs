@@ -126,7 +126,7 @@ NB. j code window (the "slides") ------------------------
 wd'pc jcw closebutton;'
 wd'pn "J-Talks by tangentstorm";'
 
-wd'minwh 1280 1080; cc jc webview flush;'
+wd'minwh 1284 1080; cc jc webview flush;'
 wd'set jc html *',freads'~JTalks/preztool/jcw.html'
 wd'pmove 630 _32 0 0; pshow; ptop;'
 
@@ -204,7 +204,7 @@ on_event =: dyad define
      select. key=. a. {~ {. 'key shf ctl alt ' =. ".YY=:y
        case. '`' do. speed 0
        case. ',' do.   NB. w in qwerty: reset windows
-         wd'psel jcw; pmove 630 _32 0 0; pshow; ptop;'
+         wd'psel jcw; pmove 640 _32 0 0; pshow; ptop;'
          wd'psel tpw; pmove 0 0 0 0;'
        case. '1' do. speed '-1'
        case. '2' do. speed '+1'
@@ -213,19 +213,25 @@ on_event =: dyad define
        fcase. 'R' do. NB. reload html, then fall through to reload slides
          wd 'psel jcw; set jc html *',freads'~JTalks/preztool/jcw.html'
          wd 'psel tpw; set tp html *',freads'~JTalks/preztool/tpw.html'
+         position_jterm''
        case. 'r' do. reload_slides''
        case. 'e' do. run_code''
        case. 't' do.
-         NB. It doesn't put the cursor in the right place, so
-         NB. just press enter after pressing t.
-         wd 'sm set term xywh 0 490 620 554'            NB. bring to front
-         wd 'sm set term text *',LF,'  '
-         wd 'sm focus term'
+         position_jterm''
        case. 'n' do. smoutput names_base_''
        case. 'c' do. clear_base_'' [ wd 'timer 0'
      end.
   end.
 )
+
+(position_jterm =: verb define)''
+  NB. This doesn't put the cursor in the right place, so
+  NB. just press enter after pressing t.
+  wd 'sm set term xywh 0 490 624 554'            NB. bring to front
+  wd 'sm set term text *',LF,'  '
+  wd 'sm focus term'
+)
+
 
 NB. set up the terminal and editor windows
 NB. wd 'sm set term xywh 0 490 620 554'
