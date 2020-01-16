@@ -534,36 +534,52 @@ pen =: 4
 #+end_src
 ** why sandpiles?
 
-What's the point of these things?
+There have actually been a number of papers written about sandpiles,
+bacause, as we'll see later, they have some interesting mathematical
+properties.
 
-Well, there's this whole class of phenomena in physics
-where you're measuring something at regular intervals
-maybe the water level of a river over time,
-or the elevation along a mountain range,
-or the amount of static in a radio transmission,
-and your numbers seem to jump around randomly,
-but it isn't completely random.
+But actually, the paper that introduced sandpiles to the world
+appeared in the July 1987 issue of Physical Review Letters. It was
+called Self Organized Criticality: An Explanation of 1/f Noise.
 
+So 1/f noise (or pink noise) is the name for a particular phenomenon
+that crops up in all sorts of seemingly unrelated fields,
+from the level of rivers, to heart rates,
+to fluctuations in electrical components.
 
+Full disclaimer: I'm pretty much a beginner when it comes to
+data analysis and statistics, but as near as I can understand,
+# show mountain slide
+the idea of 1/f noise is that when you plot these things out,
+you don't get a bell shaped curve,
+but rather a huge spike on one side,
+and this long tail,
+where the bigger a value is,
+the rarer it is.
 
+We see stuff like this everywhere in nature,
+but nobody really has a good explanation of
+how or why the world should behave this way.
 
+So these guys invented sandpiles as a simple model of
+an interconnected system, where each component affects
+its neighbors, and they said okay, let's just fill
+the grid with random numbers that are too big to be
+stable, run the simulation, let it run, and see what
+happens when it settles down. So that's the self organizing
+part.
 
-Critical configuration:
-  earthquakes
-  avalanches or landslides
-  "self-organized criticality"
+Then they assert that this results in what they call a critical
+state, where adding a single grain of sand (or just setting
+one of the cells to four) is going to kick off a chain reaction
+and if you look at distribution of the sizes of those reactions,
+you're going to see this 1/f behavior, and then presumably this
+might give science a clue about where to look for mechanisms
+that cause this 1/f noise in nature.
 
-  small changes can cause huge effects
-  mostly nothing happens, but every once in a while, you have an earthquake
-
-stock prices
-level of the nile river
-errors in transmission signals
-electronic vacuum tubes in 1925
-human heart rates or brainwaves
-decade = factor of 10
-
-
+Okay well I don't know anything about that, but I like this idea
+of running experiments on a computer simulation, so let's give
+it a shot.
 
 ** TODO the sandpaper
 #+begin_src j
@@ -585,9 +601,57 @@ gpw_char =: verb define
   end.
 )
 #+end_src
+*** TODO (merge these drafts)
+**** a
 
-Sandpiles were introduced in a physics paper in 1987, this is what they did.
+There have actually been a number of papers written about sandpiles,
+bacause, as we'll see later, they have some interesting mathematical
+properties.
 
+But actually, the paper that introduced sandpiles to the world
+appeared in the July 1987 issue of Physical Review Letters. It was
+called Self Organized Criticality: An Explanation of 1/f Noise.
+
+So 1/f noise (or pink noise) is the name for a particular phenomenon
+that crops up in all sorts of seemingly unrelated fields,
+from the level of rivers, to heart rates,
+to fluctuations in electrical components.
+
+Full disclaimer: I'm pretty much a beginner when it comes to
+data analysis and statistics, but as near as I can understand,
+# show mountain slide
+the idea of 1/f noise is that when you plot these things out,
+you don't get a bell shaped curve,
+but rather a huge spike on one side,
+and this long tail,
+where the bigger a value is,
+the rarer it is.
+
+We see stuff like this everywhere in nature,
+but nobody really has a good explanation of
+how or why the world should behave this way.
+
+So these guys invented sandpiles as a simple model of
+an interconnected system, where each component affects
+its neighbors, and they said okay, let's just fill
+the grid with random numbers that are too big to be
+stable, run the simulation, let it run, and see what
+happens when it settles down. So that's the self organizing
+part.
+
+Then they assert that this results in what they call a critical
+state, where adding a single grain of sand (or just setting
+one of the cells to four) is going to kick off a chain reaction
+and if you look at distribution of the sizes of those reactions,
+you're going to see this 1/f behavior, and then presumably this
+might give science a clue about where to look for mechanisms
+that cause this 1/f noise in nature.
+
+Okay well I don't know anything about that, but I like this idea
+of running experiments on a computer simulation, so let's give
+it a shot.
+
+**** b
 First, they generated a big random grid of sand where every cell had at least four grains.
 
 Then they let it run. I'm doing this at two frames a second so it doesn't start strobing and give someone a seizure,
@@ -601,7 +665,7 @@ Now I'm going to turn the speed back up, and add one grain of sand, by clicking 
 
 We can do that a few times, and we notice that sometimes we have a big change and sometimes we have a small change.
 
-** sandpaper demo
+**** c
 #+begin_src j
 Note 'sandpaper setup'
   - full screen term window
