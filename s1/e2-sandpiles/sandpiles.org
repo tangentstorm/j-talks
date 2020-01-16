@@ -532,7 +532,40 @@ cocurrent 'sandpaint'
 wd'psel ',(":gpw_hwnd),'; ptimer 0'
 pen =: 4
 #+end_src
-** TODO The Sandpile Paper
+** why sandpiles?
+
+What's the point of these things?
+
+Well, there's this whole class of phenomena in physics
+where you're measuring something at regular intervals
+maybe the water level of a river over time,
+or the elevation along a mountain range,
+or the amount of static in a radio transmission,
+and your numbers seem to jump around randomly,
+but it isn't completely random.
+
+
+
+
+
+Critical configuration:
+  earthquakes
+  avalanches or landslides
+  "self-organized criticality"
+
+  small changes can cause huge effects
+  mostly nothing happens, but every once in a while, you have an earthquake
+
+stock prices
+level of the nile river
+errors in transmission signals
+electronic vacuum tubes in 1925
+human heart rates or brainwaves
+decade = factor of 10
+
+
+
+** TODO the sandpaper
 #+begin_src j
 cocurrent 'sandpaint'
 
@@ -540,10 +573,8 @@ copy =: img
 
 gpw_char =: verb define
   time_keys''
-  NB. -- original experiment --
-  NB. Sandpiles were originally used as a simulation in the paper
   NB. "Self-organized criticality: an explanation of 1/f noise"
-  NB. by Per Bak, Chao Tang and Kurt Wiesenfeld
+  NB. Per Bak, Chao Tang, and Kurt Wiesenfeld
   select. {. sysdata
     case. 'r' do. render img =: 4 + ? 32 32 $ 4    NB. r = random grid
     case. 'R' do. render img =: 4 + ? 100 100 $ 4  NB. R = big random grid
@@ -589,7 +620,7 @@ something like an avalanches and earthquakes.
 So for their work, they generated big grids full of random big numbers,
 letting everything settle, and then studied how far the cascade extended when
 they set a single cell to four.
-
+ 
 * TODO 4. sandcalc
 #+begin_src j
 
