@@ -1,0 +1,125 @@
+#+title: code review: sandpiles
+
+* TODO 0. intro
+This is where all the tricks are revealed.
+If you just want a magic show, see the other video.
+
+* TODO 1. sandpiles
+** TODO overview
+** TODO changes to gridpad
+** TODO inheritance in j
+Now the way overriding and inheritance works in J is that
+your code executes in a namespace called a locale,
+and they're chained together so that if the interpreter
+can't find the word it's looking for in the current locale,
+it'll walk down the lookupe path until it either finds the
+word or gives up.
+
+So here I'm setting up three new locales and creating
+an inheritance hierarchy descending from gridpad, which
+looks like this:
+
+# show image
+
+Normally I'd put each of these pairs of lines at
+the top of its own file, but that's just a convention,
+and you can switch locales at any time.
+
+So =cocurrent= is how you make that switch.
+you're just telling it which locale you want to use.
+
+=coinsert= takes the name of another locale and inserts it
+at the start of the current locale's lookup path.
+
+The 'co' prefix stands for 'class/object' and they're
+the heart of J's object oriented programming setup.
+
+If you want to break your whole application down into
+classes and instantiate them, you can absolutely do that,
+but classes and objects are also just one convention.
+
+For this talk, we're doing something more like prototype
+inheritance, and we'll just treat each application as one
+object.
+
+So gridpad is the prototype we're starting with,
+sandpaint and sandcalc are the applications we're building,
+and sandpiles is just a common place in the middle where
+we can put things like colors and the simulation routine
+that are used by both apps.
+
+We can add stuff in any order, but I like to keep
+something happening on the screen so I can see the effect
+of my code, so let's start with sandpaint.
+** TODO sandpiles window
+** TODO sandpile colors
+
+the numbers in the palette
+
+contain the raw number of grains of sand for each square,
+and then the =to_rgb= function maps whatever number happens to
+be there to a color, and then if you load a png file
+into the progam, =to_pal= maps these exact colors to the
+corresponding number, and any other colors get mapped to 0.
+
+I won't say too much about this code since you can see what it does.
+I will point out that up here, we're using idot with one argument,
+where it means range.
+
+Then in =to_pal=, we use i. with a noun on the left, where it means
+index of. It's a bit like how the minus sign can mean negative if
+it's in front of a value, and subtraction if it's Pretty much every
+primitive in J has two meanings like this.
+
+So rgb idot some color finds the index of that color in the rgb list.
+The png files are actually saved as argb though, so this bit on the end
+is stripping off the alpha channel.
+
+So it's the index of the color in the rgb list, modulo the length
+of the list. If the thing you're looking for isn't in the list,
+then you get back the length of the list as a not found value,
+so if you take the result modulo the length, it maps unknown
+to zero.
+
+Then =to_rgb= is the same kind of thing, except you can have any amount
+of sand in a square, and the colors represent entire ranges of numbers.
+Capital idot with two arguments is interval index, and it also finds
+the position in a list, but it expects the list to be sorted, and it
+tells you where the thing on the right would go if you were going to
+insert it.
+
+Then we just min that with one less than the length of the list so
+anything too big gets mapped to the last color. You should never
+wind up with a negative number in the array, but if you did, capital
+I dot would map it to zero since it's less than the
+first entry in the palette.
+
+Anyway, if we run this and click the window to make it repaint,
+we have our colors.
+
+** TODO palette labels
+
+For-underscore-something is how you write an explicit loop.
+Here n is the loop variable, and it gets assigned to each
+item in pal. This also defines a temp variable
+called n-underscore-index, which I alias and
+use for some calculations.
+
+Anyway, run this and click to force a repaint,
+and now we're ready to start coding the sandpile rules.
+** TODO approaching the rules
+** TODO settle
+** TODO golfed version
+#+begin_src j
+
+NB. my original golfed version
+s=:(+[:(+/@(1&|:@f@|:,f)-4&*)3&<)^:_
+
+#+end_src
+
+* TODO 2. sandpaint
+** TODO 
+
+* TODO 3. sandpaper
+
+* TODO 4. sandcalc
