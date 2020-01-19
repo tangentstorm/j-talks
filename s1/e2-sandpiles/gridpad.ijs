@@ -22,6 +22,7 @@ gpo_palv_wh =: 25 400
 gpo_imgv_wh =: 480 480
 gpo_statusbar =: 1                  NB. show status bar?
 gpo_showgrid =: 1                   NB. show the grid by default? (can toggle at runtime)
+gpo_gridrgb =: 255 255 255          NB. grid color
 gpo_colorpick =: 1                  NB. allow color picker
 gpo_viewmat =: 'rgb'                NB. viewmat options (x arg to vmcc)
 gpo_menu =: noun define
@@ -106,7 +107,7 @@ render =: gpw_render0 =: verb define
   vmcc img;'imgv'
   if. gpo_showgrid do.
     'vw vh' =. glqwh glsel'imgv' [ 'ih iw' =. $ img
-    glpen glrgb 255 255 255
+    glpen glrgb gpo_gridrgb
     gllines <. 0.5+ (0, ], vw, ])"0 (vh%ih) * i.ih
     gllines <. 0.5+ (], 0, vh,~])"0 (vw%iw) * i.iw
   end.

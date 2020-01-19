@@ -32,6 +32,7 @@ to re-use it as a library in the sandpile video, i made the following changes:
 | ~gpo_imgv_wh~   | width and height of image view              |
 | ~gpo_statusbar~ | whether to add status bar                   |
 | ~gpo_showgrid~  | whether to show the grid by default         |
+| ~gpo_gridrgb~   | color of the gridlines                      |
 | ~gpo_colorpick~ | whether to allow changing the palette       |
 | ~gpo_viewmat~   | x arguments for viewmat (defaults to 'rgb') |
 | ~gpo_menu~      | a string containing the wd menu definiton   |
