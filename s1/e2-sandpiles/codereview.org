@@ -108,6 +108,12 @@ use for some calculations.
 Anyway, run this and click to force a repaint,
 and now we're ready to start coding the sandpile rules.
 ** TODO approaching the rules
+
+Appending at the next to top level is a builtin - that's comma dot, or stitch.
+For behead and curtail, we just expliictly say rank 1, and the right identity
+function here is just acting as a separator so the one and zero don't turn
+into an array.
+
 ** TODO settle
 ** TODO golfed version
 #+begin_src j
@@ -118,7 +124,12 @@ s=:(+[:(+/@(1&|:@f@|:,f)-4&*)3&<)^:_
 #+end_src
 
 * TODO 2. sandpaint
-** TODO 
+** sandpaint window
+** DONE time control
+
+In the basic animation videos, I used the window driver's timer command.
+It turns out if you use ptimer instead, you can set a timer
+just for one window, and it sends you an event on each tick.
 
 * TODO 3. sandpaper
 
