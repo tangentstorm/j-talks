@@ -392,9 +392,8 @@ If you're disappointed that this is too readable and easy to understand
 and you were hoping for something more exotic to impress your friends
 and terrify your enemies then I have just the thing for you.
 
-* TODO 1a. code golf
+* DONE 1a. code golf
 #+begin_src j
-NB. scary music
 NB. (title card: code golf)
 #+end_src
 ** DONE golfed sandpile sim
@@ -451,11 +450,9 @@ character in the code review.
 
 Meanwhile, back to our program.
 
-* TODO 2. sandpaint
+* DONE 2. sandpaint
 #+begin_src j
-
 NB. (title card: sandpaint)
-
 #+end_src
 ** DONE sandpaint window
 #+begin_src j
@@ -527,79 +524,83 @@ pen =: 4
 #+end_src
 ** intro text (talking head cam)
 
-There have actually been a number of  papers written about
+There have been a number of papers written about
 the mathematical properties of sandpiles,
-but it was actually a physics paper that introduced them
-to the world.
+but it was actually a physics paper that introduced
+them to the world.
 
 # show the paper
-It appeared in the July 1987 issue of Physical Review Letters,
-and was called _Self Organized Criticality: An Explanation of 1/f Noise_.
-
+It was called _Self Organized Criticality: An Explanation of 1/f Noise_,
+and appeared in the July 1987 issue of Physical Review Letters.
 
 # show scholarpedia charts
-So 1/f noise (or pink noise) is the name for a particular phenomenon
+So 1/f noise (or pink noise) is the name for a phenomenon
 that crops up in all sorts of seemingly unrelated fields,
 from the level of rivers, to heart rates,
 to fluctuations in electrical components.
 
-# show the white/pink/brown charts
-Full disclaimer: I'm pretty much a beginner when it comes to
-data analysis and statistics,
-so all of these charts are from scholarpedia.org,
-and if I'm screwing this part up, please let me
-know in the comments, because I really struggled
-to understand this part.
+1/f noise was first identified in vaccuum tubes in 1925.
+But, it was Benoit Mandelbrot who pointed out how widespread
+it was in nature, and his book, _The Fractal Geometry of Nature_,
+which was published five years before the sandpile paper,
+seems to have helped popularize the concept.
 
-But as near as I can understand,
-the idea of 1/f noise is that
-it's halfway between purely random values
-and a random walk.
+This best explanation I could find for what makes
+1/f noise interesting actually comes from Mandelbrot
+by way of Martin Gardner:
 
-So with white noise, every value is
-completely random, and if you look at
-the change in value between any two points,
-it's just as likely to be zero
-as the maximum distance.
+#+begin_quote text
+These deep notions [of spectral density and
+autocorrelation]... are technical and hard
+to understand.
 
-So when you run white noise through
-spectral analysis, you get a flat line.
+[... Mandelbrot] has suggested a way of avoiding them here:
 
-Brown noise is when you have a random walk,
-so at each step you flip a coin and either
-move one step up or one step down. So if you
-look at any two points in time, the distance
-follows a binomial distribution.
+Let the tape of a sound be played faster or slower
+than normal. One expects the character of the sound
+to change considerably. A violin, for example,
+no longer sounds like a violin. There is a
+special class of sounds, however, that behave
+quite differently. If you play a recording of
+such a sound at a different speed, you only have
+to adjust the volume to make it sound exactly
+as before. Mandelbrot calls such sounds
+"scaling noises".
+#+end_quote
 
+# show white/pink/brown chart
+Gardner goes on to give three examples of such scaling noises:
+white noise, where each value is completely random,
+brown noise, where the value simply moves up or down at each tick,
+and pink noise, is somewhere in between.
 
+In particular, the spectral density of the noise is what
+you'd see on your stereo's graphic equalizer if you tried
+playing these patterns as sound waves.
 
+Well, assuming your graphic equalizer made log-log plots.
+Otherwise they look like this:
 
+#+begin_src j
+load'plot'
+'keypos top right;key 1/f^0 1/f^1 1/f^2' plot % (0 1 2) ^~/ 1+i.10
+#+end_src
 
+If you look at these exponents, it's clear that in some sense,
+1/f noise is halfway between white and brown noise.
 
+The mystery is why would this somewhat random but self-similiar
+scaling pattern crop up in so many places in nature?
+What sort of physical mechanism would cause that?
 
-So these guys invented sandpiles
-as a simple model of an interconnected system,
-where each component affects its neighbors,
-and they said okay, let's just fill the grid with random numbers
-that are too big to be stable, let the simulation run,
-and observe what happens when it settles down.
+And that's where sandpiles come in.
 
-Their observation is that it self organizes
-into a critical state, where adding a single
-grain of sand (or just setting one of the cells to four)
-is going to kick off a chain reaction
-and if you look at distribution
-of the sizes of those reactions,
-you're going to see this 1/f behavior.
-And then presumably this might give science a clue
-about where to look for mechanisms
-that cause this 1/f noise in nature.
+Now, I'm not going to pretend to fully understand this paper.
+To be honest, I don't have a terribly advanced background in
+math and science, and it was a difficult read for me, so
+I can't guarantee that everything I say here is accurate,
+but I'll do my best.
 
-Okay, well, I'm not sure that science is any closer
-to understanding 1/f noise today, but I like this
-idea of running experiments
-on a computer simulation,
-so let's see if we can reproduce their work.
 
 ** TODO the sandpaper experiment
 #+begin_src j
@@ -612,6 +613,9 @@ gpw_char =: verb define
   NB. "Self-organized criticality: an explanation of 1/f noise"
   NB. Per Bak, Chao Tang, and Kurt Wiesenfeld
   select. {. sysdata
+    case. '@' do. render img =: ? 32 32 $ 3        NB. @ = all 2
+    case. '#' do. render img =: ? 32 32 $ 3        NB. # = all 3
+    case. '$' do. render img =: ? 32 32 $ 4        NB. $ = all 4
     case. 'r' do. render img =: 4 + ? 32 32 $ 4    NB. r = random grid
     case. 'R' do. render img =: 4 + ? 100 100 $ 4  NB. R = big random grid
     case. 'f' do. render img =: settle^:_ img      NB. f = fast forward
@@ -622,59 +626,23 @@ gpw_char =: verb define
 )
 #+end_src
 
+minimally stable state
 
+# show "all 3" configuration
+
+Their observation is that it self organizes
+into a critical state, where adding a single
+grain of sand (or just setting one of the cells to four)
+is going to kick off a chain reaction
+and if you look at distribution
+of the sizes of those reactions,
+you're going to see this 1/f behavior.
+And then presumably this might give science a clue
+about where to look for mechanisms
+that cause this 1/f noise in nature.
 
 
 ** TODO (merge these drafts)
-**** a
-
-There have actually been a number of papers written about sandpiles,
-bacause, as we'll see later, they have some interesting mathematical
-properties.
-
-But actually, the paper that introduced sandpiles to the world
-appeared in the July 1987 issue of Physical Review Letters. It was
-called Self Organized Criticality: An Explanation of 1/f Noise.
-
-So 1/f noise (or pink noise) is the name for a particular phenomenon
-that crops up in all sorts of seemingly unrelated fields,
-from the level of rivers, to heart rates,
-to fluctuations in electrical components.
-
-Full disclaimer: I'm pretty much a beginner when it comes to
-data analysis and statistics, but as near as I can understand,
-# show mountain slide
-the idea of 1/f noise is that when you plot these things out,
-you don't get a bell shaped curve,
-but rather a huge spike on one side,
-and this long tail,
-where the bigger a value is,
-the rarer it is.
-
-We see stuff like this everywhere in nature,
-but nobody really has a good explanation of
-how or why the world should behave this way.
-
-So these guys invented sandpiles as a simple model of
-an interconnected system, where each component affects
-its neighbors, and they said okay, let's just fill
-the grid with random numbers that are too big to be
-stable, run the simulation, let it run, and see what
-happens when it settles down. So that's the self organizing
-part.
-
-Then they assert that this results in what they call a critical
-state, where adding a single grain of sand (or just setting
-one of the cells to four) is going to kick off a chain reaction
-and if you look at distribution of the sizes of those reactions,
-you're going to see this 1/f behavior, and then presumably this
-might give science a clue about where to look for mechanisms
-that cause this 1/f noise in nature.
-
-Okay well I don't know anything about that, but I like this idea
-of running experiments on a computer simulation, so let's give
-it a shot.
-
 **** b
 First, they generated a big random grid of sand where every cell had at least four grains.
 
@@ -708,7 +676,7 @@ something like an avalanches and earthquakes.
 So for their work, they generated big grids full of random big numbers,
 letting everything settle, and then studied how far the cascade extended when
 they set a single cell to four.
- 
+
 * TODO 4. sandcalc
 #+begin_src j
 
