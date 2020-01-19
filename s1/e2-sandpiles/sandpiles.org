@@ -12,7 +12,7 @@
 - see if i can disable shaking a window to clear the other windows
 - cool script for the end
 
-* TODO setup                                                    :stage:
+* DONE setup                                                    :stage:
 #+begin_src j
 erase_sandpaint_ nl_sandpaint_''
 erase_sandpiles_ nl_sandpiles_''
@@ -23,7 +23,7 @@ cocurrent'base'
 NB. have inheritance image positioned and minimized.
 #+end_src
 
-* TODO 0. demo
+* DONE 0. demo
 # on stage: the 512 grain-in-the-center sandpile, copied to buffer.
 # pen =: 1, grid off, timer off, focus in window!
 What you're looking at here is called a sandpile.
@@ -91,40 +91,37 @@ you might just get a mess.
 
 So that's sandpiles.
 
-* TODO 1. sandpiles
-#+begin_src j
-
-NB. (title card: sandpiles)
-
-#+end_src
-** TODO overview
+* DONE 0a. preview
 #+begin_src j
 Note 'topics'
   - sandpaint
-  - original paper
+  - sandpile paper
   - sandcalc
 )
 #+end_src
 
 Now that you know the basics of sandpiles,
-I'm going to show you how to build a simulation
-like this in the J programming language.
+we're going to take a look at how to implement
+the rules on a computer, by looking at the
+drawing program you just saw.
 
-We're going to build the drawing tool you just saw.
+We're also going to take a look at the original
+paper to see why these were first invented.
 
-Then we're going to demonstrate the original
-experiment where sandpiles were first invented.
+Finally, we're going to look at a kind of
+addition you can do with sandpiles. It also
+makes kind of a neat puzzle game,
+so stay tuned for that.
 
-Finally, we're going to turn all this into
-a cross between a calculator and a puzzle game
-that shows off some of the mathematical
-properties of sandpiles.
+Let's get started.
 
-...
+* [8/8] 1. sandpiles
+#+begin_src j
 
-So let's get started.
+NB. (title card: sandpiles)
 
-** TODO gridpad
+#+end_src
+** DONE gridpad
 #+begin_src j
 load '~JTalks/s1/e2-sandpiles/gridpad.ijs'
 
@@ -133,55 +130,46 @@ echo names_gridpad_''
 gpw_init_gridpad_''
 #+end_src
 
-cover code review
+I made this little drawing program in a previous video,
+and I'm going to reuse it here just so we have a nice
+way to view and edit our sandpiles.
 
-# transition slide: sandpaint
-# start with this already running.
+You don't need to have seen that video to understand
+this one, but if you did see it, the basic ideas haven't
+changed, but you might notice I've renamed some things
+and refactored a bit, mostly breaking out configuration
+variables. There's a link to a full changelog on github
+in the video description.
 
-I already made a basic drawing program in my last video,
-so I'm not going to repeat all that here.
+Anyway, starting from what we have here, you're going to
+see every line of code. And fair warning: most of you won't
+be able to read it. I'm using J, and J is very terse and
+it uses a lot of punctuation, but don't worry about that.
 
-If you haven't seen it, don't worry. The important idea
-is that this window is just editing a 2 dimensional array,
-and there's a timer that repaints it every few milliseconds.
-
-If you did see the last video, I've renamed a few things
-and refactored it a bit, but the basic ideas are all the same.
-
-Now, to make it reusable, I extracted variables for a bunch of
-configuration options, indicated by this gpo prefix. It's
-short for gridpad option.
-
-Then gpw indicates an event handler or lifecycle method
-on the window.
-
-And the others are either internals or things you're
-pretty much always going to override.
-
-So starting from what we have here,
-I'm going to show you every line of code as I go along,
-but in this video, I'm not going to stop and explain
-exactly what every symbol means.
-
-J is a really concise and expressive language, and I could
-easily spend fifteen minutes explaining each line of code.
+If you don't care about J or think it looks like a cat
+walked over my keyboard, that's okay. I'm not going to
+stop and explain the notation in this video, but I will
+explain what it's doing.
 
 What I really want to get across in this video is just
 the flow of ideas - how to think with the building
 blocks J gives us.
 
-Now if you're actually interested in learning the notation,
-you should still watch this video first for context, but I'm
-also going to post a second code review video,
-where I walk through everything I've done here line by line
-and really explain what each symbol does.
+If this inspires you to implement something in your own
+favorite language, I'd love to hear about it. Send me
+a link in the comments!
+
+But if you are learning J, or you're just convinced the
+code I'm showing is an elaborate joke and want me to prove
+it isn't, I am going to post a separate code review video
+where I walk through each line.
 
 So if you want to see that, or you just want to see more
 videos like this, now's a great time to hit the subscribe button.
 
 Meanwhile, on with the show.
 
-** TODO inheritance
+** DONE inheritance
 #+begin_src j
 cocurrent 'sandpiles'
 coinsert 'gridpad'
@@ -193,26 +181,31 @@ cocurrent 'sandcalc'
 coinsert 'sandpiles'
 #+end_src
 
-These lines set up our inheritance hierarchy.
+This set up an inheritance hierarchy.
 
-And usually they'd be scattered across different files.
+Normally these lines would be scattered across different files,
+but I'm executing code directly off the slides so I'm just setting
+things up from the start.
 
-The word cocurrent switches the current locale, which is J's term for a namespace,
-creating it if it doesn't already exist.
+The word cocurrent switches the current locale, which is J's
+term for a namespace, creating it if it doesn't already exist.
 
-And coinsert adds an entry to the lookup path,
-which is what enables the inheritance mechanism.
+Then coinsert modifes the lookup path for names in a current locale.
+It's kind of a freeform inheritance mechanism, and here I'm inheriting
+entire applications and just overriding the parts I want to change.
 
-All of our sandpile-specific logic will go into the sandpiles application.
+So we'll put all the colors and the simulation logic into
+this sandpiles application.
 
-And these other two applications are going to override and modify that in different ways.
+And these other two applications are going
+to override and modify that in different ways.
 
 ** setup for next slide                                        :stage:
 #+begin_src j
 NB. hide terminal, run next window, bring to lower left quadrant.
 
 #+end_src
-** TODO sandpiles window
+** DONE sandpiles window
 #+begin_src j
 cocurrent'sandpiles'
 
@@ -230,7 +223,7 @@ so there's room to draw some labels.
 
 Then =gpw_init= fires up our modified gridpad.
 
-** TODO sandpile colors
+** DONE sandpile colors
 #+begin_src j
 cocurrent 'sandpiles'
 
@@ -255,11 +248,7 @@ This code sets up our colors.
 The palette isn't hooked up to the timer
 so we click the window to make it repaint.
 
-One thing I added since the last video
-were some hooks in for mapping between
-the palette and rgb.
-
-So now the palette is just the raw numbers zero through four
+So the palette is just the raw numbers zero through four
 and then 8, 16, 32, and so on.
 
 The verb =to_rgb= maps numbers in the image
@@ -272,13 +261,14 @@ map it to the last entry.
 
 Also, if you open a PNG file in here, =to_pal=
 strips out the alpha channel then maps these exact colors
-to those exact numbers.
+to those exact numbers. The part in the middle on this one
+says map any other color to zero.
 
-And here, the part in the middle says map any other color to zero.
+Again, if you want to know what all the symbols mean check
+out the code review video. But for now, we have our colors,
+so let's move on.
 
-But for now, we have our colors, so let's move on.
-
-** TODO palette labels
+** DONE palette labels
 #+begin_src j
 cocurrent 'sandpiles'
 
@@ -308,9 +298,7 @@ This is the paint event handler for the palette view.
 It calls the original handler from gridpad,
 and then does an expliict loop through the palette to draw labels.
 
-This is just minor cosmetic stuff, so if you want details, see the code review.
-
-** TODO approaching the rules
+** DONE approaching the rules
 #+begin_src j
 cocurrent 'sandpiles'
 
@@ -320,54 +308,53 @@ gpw_char =: verb define  NB. key handler for imgv and palv controls.
     case. ',' do. render img =: }. img , 0        NB. move up
     case. 'o' do. render img =: }: 0 , img        NB. move down
     case. 'a' do. render img =: }."1   img ,. 0   NB. move left
-    case. 'e' do. render img =: }:"1  ]0 ,. img   NB. move right
+    case. 'e' do. render img =: }:"1 ] 0 ,. img   NB. move right
   end.
 )
 #+end_src
 
-So this is the keyboard handler. Let's define
-some temporary keyboard shortcuts
-to help us visualize the steps of the sandpile simulation.
+And now we get to the fun stuff.
+
+So this is the keyboard handler. I'm using it to define
+some keyboard shortcuts to help you visualize the steps
+of the sandpile simulation.
 
 Let's say we have some arbitrary sandpile
 
-: open face
+: open face.png
 
- and we want to decide
-what's going to happen next.
+... and we need to decide what's going to happen next in our simulation.
 
-The first rule is that any cell with 3 grains or fewer is stable,
+The rule is that any cell with 3 grains or fewer is stable,
 so we only care about values greater than 3. So in this image,
 all we want are the eyes and mouth and these little antennas
-on top, and this border, which is there so you can see things
-falling off the edge.
+on top, and this border.
 
 To isolate those, we can just compare the whole image to the number three.
-The basic comparision operators all have rank 0, so they compare
-each individual item, leaving us with an array of zeros and ones.
+The basic comparision operators in J work on individual items, so
+we wind up with a rank 2 array of zeros and ones.
 
-We could also say that we now have one grain of sand for each cell that's going to topple.
-So now we just need to make a copy of this array shifted over one cell in each of the four directions.
+So now this image represents one grain of sand for each cell that's going to topple.
+We just need to make a copy of this array shifted over one cell in each of the four directions.
 
 That's what these other four lines do.
 
 # show it
 
-So remember our image is a list of rows of numbers.
+So a rank two array is basically a list of rows.
 So to shift the image up, we add a row of zeros at the bottom and then chop off the first row.
+
 To shift down, we add a row of zeros to the start and cut off the bottom row.
 
 Left and right work the same way, but they operate at the row level, or rank 1.
-Appending at the next to top level is a builtin - that's comma dot, or stitch.
-For behead and curtail, we just expliictly say rank 1, and the right identity
-function here is just acting as a separator so the one and zero don't turn into an array.
 
 We lost some sand along the way here because it fell off the edge. We need to
-make a fresh copy before we nudge in each direction so we don't lose it, but
-then all way have to do is take our four shifted copies and add them to the
+make a fresh copy before we nudge in each direction so we don't lose it.
+
+But then all way have to do is take our four shifted copies and add them to the
 original image, and then subtract four to remove them from the center.
 
-** TODO settle
+** DONE settle
 #+begin_src j
 cocurrent 'sandpiles'
 
@@ -386,13 +373,17 @@ update =: verb define
 )
 #+end_src
 
-Okay, so now we can write settle.
+So here's what that looks like.
 
-It's exactly what we just said, where gt is the fresh copy we start with each time,
-and shift up down left and right. Then cn just multiplies by negative four. And the
-result is all of that added back to the original image.
+It's exactly what we just said, where y is the original image,
+gt is the fresh copy we start with each time,
+and we shift it up down left and right.
+Then cn just multiplies it negative four.
 
-The update method is gridpad's hook to perform our animation, so once I run this,
+Then result is all of that added back to the original image.
+
+Then this update method is gridpad's hook to perform our animation,
+so once I run this,
 I can draw with sand and it topples in real time.
 
 Okay, so that's the beginner way to write this in J.
@@ -403,9 +394,10 @@ and terrify your enemies then I have just the thing for you.
 
 * TODO 1a. code golf
 #+begin_src j
+NB. scary music
 NB. (title card: code golf)
 #+end_src
-** TODO golfed sandpile sim
+** DONE golfed sandpile sim
 #+begin_src j
 load'viewmat'
 
@@ -420,7 +412,7 @@ that fills a 50 by 50 grid with the number four,
 runs the sandpile simulation until it stops,
 and outputs the results.
 
-** TODO golfed sandpile sim (with color)
+** DONE golfed sandpile sim (with color)
 #+begin_src j
 load'viewmat'
 
@@ -435,9 +427,6 @@ If you want our color scheme you can borrow =to_rgb=.
 
 # run it
 
-So if you want to know what that means,
-stay tuned for the code review.
-
 Btw, the title here says "golfed"...
 Code golf is a game programmers play where you try to
 express an idea in as few characters as possible, and
@@ -448,11 +437,19 @@ simulation I could think of, but it's also pretty much
 the natural way to write it in J - at least for me.
 
 The only thing I did to golf it was to remove
-all the extra spaces If you're realy brave, maybe
-you can come up with I encourage you to download
-J and try it yourself.
+all the extra spaces.
 
-Meanwhile back to our program.
+Now if you have any interest at all in J, I encourage
+you to download J and try this for yourself, and then
+see if you can figure out how it works.
+
+If you're realy brave, maybe you can come up with an
+even shorter way to write it.
+
+And again, I'll explain the entire line character by
+character in the code review.
+
+Meanwhile, back to our program.
 
 * TODO 2. sandpaint
 #+begin_src j
@@ -460,16 +457,17 @@ Meanwhile back to our program.
 NB. (title card: sandpaint)
 
 #+end_src
-** TODO sandpaint window
+** DONE sandpaint window
 #+begin_src j
 cocurrent 'sandpaint'
 
-img =: 25 25 $ 0
+img =: 32 32 $ 0
 
 gpo_title =: 'sandpaint'
 gpo_timer =: 500
 gpo_palv_wh =: 50 800
 gpo_imgv_wh =: 800 800
+gpo_gridrgb =: 0 0 0
 
 gpw_init''
 
@@ -479,10 +477,9 @@ wd 'pmove 900 100 0 0'
 
 So here's the main code for sandpaint.
 It just sets the window title and timer speed,
-changes the size of the controls,
-and turns off the color picker.
+changes the size of the controls.
 
-** TODO time control
+** DONE time control
 #+begin_src j
 cocurrent 'sandpaint'
 
@@ -504,11 +501,7 @@ time_keys =: verb define
 )
 #+end_src
 
-Okay, here's the real keyboard handler.
-
-Last video, I used the window driver's timer command.
-It turns out if you use ptimer instead, you can set a timer
-just for one window, and it sends you an event on each tick.
+Here's a first pass at the keyboard handler.
 
 The event handler name is windowname underscore timer so
 setting ptimer 0 and then calling =gpw_timer= lets us fake
@@ -519,9 +512,9 @@ once a second when you press one, all the way up to once a
 millisecond (or really just as fast as it can go)
 when you press 9, and then zero stops it completely.
 
-So we're pretty much done with sandpaint,
-but I did want to add a few more keys to demonstrate
-why these things were invented.
+That's almost it for sandpaint. All that's left is to add a
+few more shortcuts when we look at the original sandpile
+paper. So let's do some science.
 
 * TODO 3. sandpaper
 #+begin_src j
@@ -532,56 +525,83 @@ cocurrent 'sandpaint'
 wd'psel ',(":gpw_hwnd),'; ptimer 0'
 pen =: 4
 #+end_src
-** why sandpiles?
+** intro text (talking head cam)
 
-There have actually been a number of papers written about sandpiles,
-bacause, as we'll see later, they have some interesting mathematical
-properties.
+There have actually been a number of  papers written about
+the mathematical properties of sandpiles,
+but it was actually a physics paper that introduced them
+to the world.
 
-But actually, the paper that introduced sandpiles to the world
-appeared in the July 1987 issue of Physical Review Letters. It was
-called Self Organized Criticality: An Explanation of 1/f Noise.
+# show the paper
+It appeared in the July 1987 issue of Physical Review Letters,
+and was called _Self Organized Criticality: An Explanation of 1/f Noise_.
 
+
+# show scholarpedia charts
 So 1/f noise (or pink noise) is the name for a particular phenomenon
 that crops up in all sorts of seemingly unrelated fields,
 from the level of rivers, to heart rates,
 to fluctuations in electrical components.
 
+# show the white/pink/brown charts
 Full disclaimer: I'm pretty much a beginner when it comes to
-data analysis and statistics, but as near as I can understand,
-# show mountain slide
-the idea of 1/f noise is that when you plot these things out,
-you don't get a bell shaped curve,
-but rather a huge spike on one side,
-and this long tail,
-where the bigger a value is,
-the rarer it is.
+data analysis and statistics,
+so all of these charts are from scholarpedia.org,
+and if I'm screwing this part up, please let me
+know in the comments, because I really struggled
+to understand this part.
 
-We see stuff like this everywhere in nature,
-but nobody really has a good explanation of
-how or why the world should behave this way.
+But as near as I can understand,
+the idea of 1/f noise is that
+it's halfway between purely random values
+and a random walk.
 
-So these guys invented sandpiles as a simple model of
-an interconnected system, where each component affects
-its neighbors, and they said okay, let's just fill
-the grid with random numbers that are too big to be
-stable, run the simulation, let it run, and see what
-happens when it settles down. So that's the self organizing
-part.
+So with white noise, every value is
+completely random, and if you look at
+the change in value between any two points,
+it's just as likely to be zero
+as the maximum distance.
 
-Then they assert that this results in what they call a critical
-state, where adding a single grain of sand (or just setting
-one of the cells to four) is going to kick off a chain reaction
-and if you look at distribution of the sizes of those reactions,
-you're going to see this 1/f behavior, and then presumably this
-might give science a clue about where to look for mechanisms
+So when you run white noise through
+spectral analysis, you get a flat line.
+
+Brown noise is when you have a random walk,
+so at each step you flip a coin and either
+move one step up or one step down. So if you
+look at any two points in time, the distance
+follows a binomial distribution.
+
+
+
+
+
+
+
+So these guys invented sandpiles
+as a simple model of an interconnected system,
+where each component affects its neighbors,
+and they said okay, let's just fill the grid with random numbers
+that are too big to be stable, let the simulation run,
+and observe what happens when it settles down.
+
+Their observation is that it self organizes
+into a critical state, where adding a single
+grain of sand (or just setting one of the cells to four)
+is going to kick off a chain reaction
+and if you look at distribution
+of the sizes of those reactions,
+you're going to see this 1/f behavior.
+And then presumably this might give science a clue
+about where to look for mechanisms
 that cause this 1/f noise in nature.
 
-Okay well I don't know anything about that, but I like this idea
-of running experiments on a computer simulation, so let's give
-it a shot.
+Okay, well, I'm not sure that science is any closer
+to understanding 1/f noise today, but I like this
+idea of running experiments
+on a computer simulation,
+so let's see if we can reproduce their work.
 
-** TODO the sandpaper
+** TODO the sandpaper experiment
 #+begin_src j
 cocurrent 'sandpaint'
 
@@ -601,7 +621,11 @@ gpw_char =: verb define
   end.
 )
 #+end_src
-*** TODO (merge these drafts)
+
+
+
+
+** TODO (merge these drafts)
 **** a
 
 There have actually been a number of papers written about sandpiles,
@@ -890,3 +914,7 @@ https://code.jsoftware.com/wiki/NuVoc
 
 Download J from:
 https://code.jsoftware.com/wiki/Guides/Getting_Started
+
+
+Earthquake chart by Gavin Hayes
+https://web.archive.org/web/20190530181052/https://earthquake.usgs.gov/learn/topics/mag-intensity/
