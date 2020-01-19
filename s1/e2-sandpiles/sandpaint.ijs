@@ -19,13 +19,14 @@ coinsert 'sandpiles gridpad'
 NB. main logic -------------------------------------------------
 
 pen =: 2
-img =: 25 25 $ 0
+img =: 32 32 $ 0
 copy =: img
 
 gpo_title =: 'sandpaint'
 gpo_timer =: 500
 gpo_palv_wh =: 50 800
 gpo_imgv_wh =: 800 800
+gpo_gridrgb =: 0 0 0
 gpo_colorpick =: 0
 
 update =: verb define
@@ -42,6 +43,13 @@ gpw_char =: verb define
    case. '5' do. wd'ptimer 25'                   NB. ...
    case. '9' do. wd'ptimer 1'                    NB. 9 = fast as possible
    case. '0' do. wd'ptimer 0'                    NB. 0 = stop
+
+   case. ')' do. render img =: 33 33 $ 0         NB. all 0 (same as ^N)
+   case. '!' do. render img =: 33 33 $ 1         NB. all 1
+   case. '@' do. render img =: 33 33 $ 2         NB. all 2
+   case. '#' do. render img =: 33 33 $ 3         NB. all 3
+   case. '$' do. render img =: 33 33 $ 4         NB. all 4
+   case. '*' do. render img =: 33 33 $ 8         NB. all 8
 
    NB. -- original experiment --
    case. 'R' do. render img =: 4 + ? 100 100 $ 4 NB. R = 'big' random
