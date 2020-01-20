@@ -143,6 +143,17 @@ img_draw =: verb define
   img
 )
 
+gpw =: verb define
+  NB. set img to y and bring gpw window to front.
+  NB. optional x argument is window position
+  0 0 gpw y
+:
+  render img =: y
+  wd'psel ',":gpw_hwnd
+  wd'pmove ',(":x),' 0 0'
+  wd'ptop'
+)
+
 
 NB. -- parent event handler ---------------------------------
 
