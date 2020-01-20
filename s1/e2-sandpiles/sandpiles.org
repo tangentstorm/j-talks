@@ -1,17 +1,5 @@
 #+title: sandpiles
 
-* TODO [0/0] tasks
-- make sandpaint 32x32
-- adjust the size and width and centering of the palette for sandpaint.
-- segue to sandpile paper
-- key to position terminal above the editor and size the editor
-- plot sizing
-- double check normalize verb in sandpaper
-- come with a good 5-10 second summary of 1/f noise
-- tie into windows dll to manipulate windows from j
-- see if i can disable shaking a window to clear the other windows
-- cool script for the end
-
 * DONE setup                                                    :stage:
 #+begin_src j
 erase_sandpaint_ nl_sandpaint_''
@@ -787,7 +775,7 @@ then by all means, please set me straight in the comments.
 Meanwhile, let's shift gears from science to math,
 and take a look at sandpile addition.
 
-* TODO 4. sandcalc
+* DONE 4. sandcalc
 #+begin_src j
 
 NB. (title card: sandcalc)
@@ -925,7 +913,7 @@ sandpile that acts like a zero.
 
 Let's take a look.
 
-** TODO the zero sandpile
+** DONE the zero sandpile
 #+begin_src j
 cocurrent 'sandpaint'
 
@@ -998,8 +986,7 @@ stable configuration.
 
 And there we go. All threes plus this zero is all threes.
 
-
-** TODO the zero sandpile in j
+** DONE the zero sandpile in j
 
 #+begin_src j
 cocurrent 'sandcalc'
@@ -1024,87 +1011,158 @@ And by the way, that's not a commonly accepted name or anything.
 It's just what I called it.
 
 I actually first learned about Sandpiles from a Numberphile video.
+I first heard about them on a numberphile video (which I've linked
+in the description) Dr. Luis David Garcia-Puente does a pretty
+deep dive into the math of these zeros.
 
+According to him, the set of sandpiles for which this zero works
+is precisely the set you get by adding something to the array of
+all threes. So that's why I put all threes in the middle.
 
+So it turns out that if you take the set of sandpiles you get
+from adding anything to the array of all threes, that set forms
+a group. I don't know if it has a name, but given the original
+paper, I'm just going to call it the critical group.
 
-
-
-Since then, sandpiles have caught the attention of mathematicians.
-In fact, I first heard about them on a numberphile video
-(which I've linked in the description)
-that explains how for any size grid
-(or even arbitrary connected graph)
-there's a subset of sandpile configurations
-that form a group under addition with settling.
-
-
-
-So to show what that means, here's a little calculator.
-Basically, you can add this all-zero sandpile to any sandpile,
-and it acts just like adding zero to an integer.
-
-
-
-
-But you can never add any two other sandpiles together
-to get this one, because you'd always leave some sand on the table.
-
-But it turns out that for any size grid you can come up with,
-there's always a subset of configurations for which you can define
-a second zero, and for any sandpile in this subset, there's always
-an inverse sandpile that brings it back to zero.
-
-So this number in the middle is the group zero, and
-according to this calculator, adding it to the grid of all
-threes produces the grid of all threes.
-
-If I understood everything correctly, then you can test whether
-a particular configuration is in the group just by adding this
-middle zero to it. If it comes out the same, then it ought
-to have an inverse.
-
-So for example, this grid of all threes has an inverse,
-but any time you put two zeros next to each other,
-you get something different. Same thing with any square of ones.
-There's nothing you can add to this to get back to zero.
-
-Well, okay, but how do we actually know this block of solid threes has an inverse?
-I suspect there's an algorithm that comes up with it, and that people who have
-studied this already know what it is. But I don't know what it is.
-
-However, I do know what the inverse of this sandpile is, because I found it:
-
-** TODO inverse of all threes
+** DONE sandpiles under addition form an abelian group
 #+begin_src j
 cocurrent 'sandcalc'
 
-sp0 =: ".;._2 noun define
-  3 1 3 1 3
-  1 3 2 3 1
-  3 2 1 2 3
-  1 3 2 3 1
-  3 1 3 1 3
+O =: stl @: +
+
+Note 'Definition of Group G with operation O'
+
+ NB. Closure
+ (*./(a,b) e. G) <: ((a O b) e. G)
+
+ NB. Associativity
+ (*./(a,b,c) e. G) <: ((a O b) O c) -: a O b O c
+
+ NB. Identity element (e) (ZSP in our case)
+ (a e. G) <: ((e O a) -: (a O e)) *. (a -: a O e)
+
+ NB. Inverse elements  (I)
+ (a e. G) <: (a O I a) -: e
+
 )
 
-NB. there are actually at least two
+Note 'Abelian Group'
 
-sp0 =: 5 5 $ 1 1 3 1 1 1 1 1 1 1 3 1 1 1 3 1 1 1 1 1 1 1 3 1 1
-sp0 =: 5 5 $ 3 1 3 1 3 1 3 2 3 1 3 2 1 2 3 1 3 2 3 1 3 1 3 1 3
+  NB. Commutativity
+  (*./(a,b) e. G) <: (a O b) -: (b O a)
 
-wd'psel ',":gpw_hwnd
-wd'ptop'
+)
+
 #+end_src
+
+When I say group, I mean a group in the mathematical sense,
+which just means it follows these rules.
+
+- the sum of two group members is a member
+- it doesn't matter which order you add things in
+- there's some identity element
+- and for every element, there's an inverse element you can add to it to get the identity.
+
+As it happens, it's also an Abelian group, so a plus b = b + a.
+
+By the way, this is actual J syntax. If we collected all the critical sandpiles into rank 3 array called G and we had a definition for this inverse function, then we could turn this into a verb and actually run it as a test case.
+
+Now building G might take a lot of RAM, but it's just enumerating every possible sandpile and adding all threes to it.
+
+What about the inverse function?
+
+Well, I was going to say I had no idea,
+but pretty much the first algorithm I tried work.
+
+** DONE finding an inverse
+#+begin_src j
+cocurrent 'sandcalc'
+
+gpw_sp0v_char =: gpw_sp1v_char =:gpw_sp2v_char =: verb define
+  select. {. sysdata
+    case. 'i' do. render sp0 =: e - sp1     NB. left = "inverse" of middle
+    case. 'a' do. render sp0 =: e O sp0     NB. add ZSP to left
+    case. 'p' do. echo <sp0                 NB. print sp0
+  end.
+)
+#+end_src
+
+: demo with arbitrary sandpile in the middle
+
+Except of course it doesn't actually work
+because this is showing all zeros and
+we know this should add up to three.
+
+Of course it's just a display bug.
+We have negative numbers in the grid
+and that's not supposed to happen so
+the coloring function doesn't account for it.
+
+But it turns out if we just keep adding the zero
+sandpile until the holes fill up, this approach
+actually does work after all.
+
+Again, I don't have a formal proof of that
+statement, but as far as I can tell,
+it always works.
+
+
+** DONE actual inverse
+#+begin_src j
+cocurrent 'sandcalc'
+
+I =: [: e&O^:_ e - ]
+
+gpw_sp0v_char =: gpw_sp1v_char =:gpw_sp2v_char =: verb define
+  select. {. sysdata
+    case. 'i' do. render sp0 =: I sp1          NB. left = inverse of middle
+    case. 'a' do. render sp0 =: e O sp0        NB. add ZSP to left
+    case. 'p' do. render sp1 =: 3 O ? NxN $ 4  NB. middle = random puzzle
+  end.
+)
+#+end_src
+
+So even though it's easy to generate the inverse with a program, it's not easy to guess what it's going to look like, even if you know the algorithm.
+
+
 
 It's actually kind of an interesting puzzle to find a group item and then try to figure out the inverse.
 
-* TODO _. outro
-* TODO Video Description and Links
+And so I'll leave you with what may be the most important equation of sandpile addition.
+
+All threes.
+
+All threes.
+
+All threes.
+
+And that, boys and girls, is where the plus sign really comes from.
+
+* DONE _. outro
+
+Thank you so much you for watching my video.
+
+I hope you enjoyed it as much as I enjoyed making it.
+
+If you did, and you'd like to encourage me to make more of these, I'd really really appreciate it you shared the link with someone else who might like it.
+
+And for the last time, if you want to know what all those squiggly marks were about subscribe to this channel and click the little bell icon to get notified when the code review comes out.
+
+If you don't care about the code but liked this kind of video, let me know in the comments. The next one I'm planning is on the Mandelbrot set, and whether or not I split it into a general presentation and a code review is probably going to depend on what people think of this video.
+
+Anyway, thanks again for watching, and I hope to see you again.
+
+
+* DONE Video Description and Links
 
 Code for this episode:
 https://github.com/tangentstorm/j-talks/tree/master/s1/e2-sandpiles
 
 Numberphile video on sandpiles with Dr Luis David Garcia-Puente:
 https://www.youtube.com/watch?v=1MtEUErz7Gg
+
+(The note about adding all 3's is at the 8:00 mark.)
+
 
 Professor David Perkinson has a textbook on sandpile math, as well as interactive software:
 http://people.reed.edu/~davidp/
