@@ -513,7 +513,7 @@ That's almost it for sandpaint. All that's left is to add a
 few more shortcuts when we look at the original sandpile
 paper. So let's do some science.
 
-* TODO 3. sandpaper
+* DONE 3. sandpaper
 #+begin_src j
 
 NB. (title card: sandpaper)
@@ -522,7 +522,7 @@ cocurrent 'sandpaint'
 wd'psel ',(":gpw_hwnd),'; ptimer 0'
 pen =: 4
 #+end_src
-** intro text (talking head cam)
+** DONE intro text (talking head cam)
 
 There have been a number of papers written about
 the mathematical properties of sandpiles,
@@ -530,8 +530,9 @@ but it was actually a physics paper that introduced
 them to the world.
 
 # show the paper
-It was called _Self Organized Criticality: An Explanation of 1/f Noise_,
-and appeared in the July 1987 issue of Physical Review Letters.
+The paper was _Self Organized Criticality: An Explanation of 1/f Noise_,
+by Per Bak, Chao Tang, and Kurt Wiesenfeld, and it  appeared
+in the July 1987 issue of Physical Review Letters.
 
 # show scholarpedia charts
 So 1/f noise (or pink noise) is the name for a phenomenon
@@ -601,8 +602,7 @@ math and science, and it was a difficult read for me, so
 I can't guarantee that everything I say here is accurate,
 but I'll do my best.
 
-
-** TODO the sandpaper experiment
+** DONE the sandpaper experiment
 #+begin_src j
 cocurrent 'sandpaint'
 
@@ -613,10 +613,12 @@ gpw_char =: verb define
   NB. "Self-organized criticality: an explanation of 1/f noise"
   NB. Per Bak, Chao Tang, and Kurt Wiesenfeld
   select. {. sysdata
-    case. '@' do. render img =: ? 32 32 $ 3        NB. @ = all 2
-    case. '#' do. render img =: ? 32 32 $ 3        NB. # = all 3
-    case. '$' do. render img =: ? 32 32 $ 4        NB. $ = all 4
-    case. 'r' do. render img =: 4 + ? 32 32 $ 4    NB. r = random grid
+    case. 'u' do. render img =: 1 1 $ 0            NB. unit sandpile
+    case. '7' do. render img =: 1 1 $ 7 + 4*20     NB. four score and 7
+    case. '@' do. render img =: 32 32 $ 2          NB. @ = all 2
+    case. '#' do. render img =: 32 32 $ 3          NB. # = all 3
+    case. '$' do. render img =: 63 63 $ 4          NB. $ = all 4
+    case. 'r' do. render img =: ? 32 32 $ 4        NB. r = random grid
     case. 'R' do. render img =: 4 + ? 100 100 $ 4  NB. R = big random grid
     case. 'f' do. render img =: settle^:_ img      NB. f = fast forward
     case. 'c' do. copy =: img                      NB. c = copy
@@ -626,38 +628,112 @@ gpw_char =: verb define
 )
 #+end_src
 
-minimally stable state
+The first part of the paper is an argument about connected systems in general. They give the example of how forces propagate through an array of pendula connected by springs. But the one dimensional case isn't
+terribly interesting - the energy just moves down the line.
+
+I made a couple attempts to illustrate the point they were making
+with a 2d array of pendula, but I didn't really have the right set of dimensions to work with in a 2d physics program, and even when I
+replaced the pendula balls on springs and turned off gravity it's just really hard to tell what's going on in a physics simulation.
+
+Their point isn't tied to any particular system, though, and they
+introduce sandpiles as an abstract model that's easy to simulate.
+
+So let me attempt to make their point, as I understand it,
+using the sandpile simulation.
+
+The first concept is a minimally stable state.
+Suppose you have the unit sandpile. ('u')
+This is a 1x1 array with a single cell.
+
+We can put any value we  like in here, but there's only four values that make it stable. Of course all the unstable values in our palette are multiples of four, so if we put any of those in there, it's going to wind down to zero.
+
+But if we put a number like 87 in there, it settles down to 3.
+Three is the minimally stable state for a sandpile in the sense that
+you can be more stable, but you can't be less stable without actually toppling.
+
+When we look at the system as a whole, especially a real system out in nature, we would be very surprised to find all the units in a minimally stable state.
+
+Why not?
 
 # show "all 3" configuration
 
-Their observation is that it self organizes
-into a critical state, where adding a single
-grain of sand (or just setting one of the cells to four)
-is going to kick off a chain reaction
-and if you look at distribution
-of the sizes of those reactions,
-you're going to see this 1/f behavior.
-And then presumably this might give science a clue
-about where to look for mechanisms
-that cause this 1/f noise in nature.
+Why? Well, the slightest disturbance at the edge sends a cascade of changes out through the system, and every single cell gets affected. Since nature is messy and complicated, we'd expect lots of small disturbances to happen, and so a uniform minimally stable state probably wouldn't last very long.
 
+But as we encounter more and more disturbances, these areas of more stable cells start to build up, and they stop the noise from propagating. But every once in a while, a signal still gets through into one of these big areas.
 
-** TODO (merge these drafts)
-**** b
-First, they generated a big random grid of sand where every cell had at least four grains.
+And that's the key idea. As they write in the paper:
 
-Then they let it run. I'm doing this at two frames a second so it doesn't start strobing and give someone a seizure,
-but even running at full speed, this takes quite a while to animate.
+#+begin_src quote
+The system will become stable precisely at the point when the network of minimally stable states has been broken down to the level where the noise signal cannot be communicated through infinite distances. At this point there will be no length scale in the problem so that one might expect the formation of a scale-invariant structure of minimally stable states.
+#+end_src
 
-So the f key uses the power conjunction to let us fast forward to the end, which happens pretty much instantly.
+In other words, since nothing we've discussed depends on the size of the system, there's no particular constraint on how big your connected island of threes is, so it shouldn't be a surprise that we get patches of all different sizes.
 
-Now once we've got it settled, we're going to store a copy of the image.
+On the other hand, and this is just my interpretation, maybe the bigger patches near the outside are more likely to get hit, and therefore more likely to get broken down themselves, whereas big islands towards the center would be more protected, and so maybe something like this is what leads to the 1/f distribution of effects in nature.
 
-Now I'm going to turn the speed back up, and add one grain of sand, by clicking on a cell at random and turning it into a four.
+Of course the argument is a lot less credible if it only works when everything starts in the minimally stable configuration, because then you have to explain why things start out that way.
 
-We can do that a few times, and we notice that sometimes we have a big change and sometimes we have a small change.
+# show "all 2", demonstrate that clicking does nothing.
 
-**** c
+Now if we started with all twos, it's already incredibly stable. You can nudge it all you want and it barely makes a dent.
+
+And if we start with a stable configuration at random, it's also likely to remain stable. In a purely random configuration, there's no particular incentive for large areas of threes to form.
+
+# press 0 $
+
+The trick is to start with an unstable system. For example, here's a 63 by 63 grid of fours. (And by the way this is going to start strobing a bit so if you're sensitive to flashing lights you might want to look away for a moment.)
+
+# press 9 and wait
+
+Okay it's done... And you can see already that there are a bunch of different sizes of islands all around the edge.
+
+So this is an example of what the authors call a critical state. It's stable, but large portions are only minimally stable. And the hypothesis put forth in the paper is that an interconnected system that starts out completely unstable will naturally wind down into one of these critical states, rather than one of the more stable configurations we saw earlier. Hence the phrase "self-organizing criticality."
+
+So the next step was to test this hypothesis, and they did that on the computer, using the sandpile simulation.
+
+Basically, they started with a big random grid of numbers slightly greater than three.
+
+# press R
+
+This takes forever to animate, and it's not especially interesting to look at, so let's fast forward.
+
+So hopefully this is a sandpile in a critical state, but with everything so mixed up, it's not obvious how to tell.
+
+It does look different from the random piles we saw before.
+
+I press 'c' to copy this for a second, and then press 'r' to see a random stable grid. 'x' swaps back and forth.
+
+Notice that almost all the black squares are isolated by themselves, and there seem to be way more twos and threes overall.
+
+In fact, lets can look at it numerically.
+
+: 'bar' plot >([: +/@|: (i.4)=/]) each img ;&, copy
+
+So actually way more threes. Here are the counts from when we started with all fours for comparison.
+
+: 'bar' plot 481 136 764 2588,~ >([: +/@|: (i.4)=/]) each img ;&, copy
+
+Maybe there's something worth exploring in measurements like these, but getting back to the paper, the experiment went something like this.
+
+- Generate a big unstable grid
+- let it settle
+- take a snapshot so we know the original state
+- then set any one of the cells to four and let it play out.
+- then compare the before and after images, record the size of the change
+
+: +/+/ copy ~: img
+
+Then they did this a bunch of times and recorded the results.
+
+Now they're a little unclear on the details here. Did they keep hitting the same spot every time, and observe a progression, or was it different spots? And if it was different spots, did they reset the array each time?
+
+Also notice there's some dark areas inside the perimiter, where cells might have been affected during the run but then settled back to their original values. They did include a graphic which shows them filled in, which makes me think they count.
+
+So anyway, let's reproduce their experiment as best we can and see what happens.
+
+Of course, rather than do that by hand, we'll let J do the work for us.
+
+** DONE the experiment
 #+begin_src j
 Note 'sandpaper setup'
   - full screen term window
@@ -667,15 +743,49 @@ Note 'sandpaper setup'
 open'~JTalks/s1/e2-sandpiles/sandpaper.ijs'
 #+end_src
 
+: work through the code there
+: (splice in the animplot stuff)
 
-As far as I could tell, though, they were trying to model the idea that certain systems
-tend to naturally settle into a critical point that's just barely stable,
-where a slight disturbance triggers a huge change -
-something like an avalanches and earthquakes.
+: show final result vs their log-log plot.
 
-So for their work, they generated big grids full of random big numbers,
-letting everything settle, and then studied how far the cascade extended when
-they set a single cell to four.
+So here's their results. Note that their graph only goes up to 1000,
+so they're only looking at the central part anyway. They say this part
+of the graph keeps smoothing out as you make the arrays bigger and bigger.
+
+Even looking only at the middle,
+I don't really understand what they did to get
+a graph that smooth and close to the line.
+
+Certainly my own plotting skills need some work,
+especially in J, but it does look like the general
+idea checks out.
+
+Not only do unstable sandpiles settle down into critical
+states that give rise to lots of different reaction sizes,
+but those sizes tend to follow something close to a 1/f
+distribution.
+
+By the way, the bottom chart is for running the same
+kind of simulation in 3 dimensions. Presumably they
+used cubes and distribute changes to six neighbors
+instead of four. Maybe someone out there can make a
+3d version in minecraft. If so, I'd love to see it. :)
+
+Also, these charts on the right plot the distribution of
+reaction lengths - as in the number of steps the reaction
+took before settling down.
+
+So they are addressing a 1/f distribution in time dimension,
+although it's still not clear to me how any of this maps
+to one over f noise in a frequency spectrum.
+
+Anyway, that's my take on the sandpaper. Like I said before,
+it was kind of a stretch for me to get my head around all
+that, so if I got anything wrong or just wasn't clear,
+then by all means, please set me straight in the comments.
+
+Meanwhile, let's shift gears from science to math,
+and take a look at sandpile addition.
 
 * TODO 4. sandcalc
 #+begin_src j
@@ -683,16 +793,7 @@ they set a single cell to four.
 NB. (title card: sandcalc)
 
 #+end_src
-** TODO sandcalc
-Since then, sandpiles have caught the attention of mathematicians.
-In fact, I first heard about them on a numberphile video
-(which I've linked in the description)
-that explains how for any size grid
-(or even arbitrary connected graph)
-there's a subset of sandpile configurations
-that form a group under addition with settling.
-
-** TODO sandcalc - window
+** DONE sandcalc
 #+begin_src j
 cocurrent 'sandcalc'
 coinsert 'sandpiles gridpad'
@@ -722,11 +823,9 @@ gpw_init''
 
 #+end_src
 
-So to show what that means, here's a little calculator.
-Basically, you can add this all-zero sandpile to any sandpile,
-and it acts just like adding zero to an integer.
+Okay so here's a new window with four little sandpiles.
 
-** TODO sandcalc - render
+** DONE sandcalc - render
 #+begin_src j
 cocurrent 'sandcalc'
 
@@ -751,7 +850,12 @@ render =: verb define
 
 #+end_src
 
-** TODO sandcalc - mouse
+The animation here is just like before except we're going to
+limit the palette to our four stable values, and on every
+tick we're going to add the first three sandpiles together
+let it settle, and show the result on the right.
+
+** DONE sandcalc - mouse
 #+begin_src j
 cocurrent 'sandcalc'
 
@@ -780,15 +884,120 @@ gpw_sp2v_mbmup =: verb : 'sp2 =: ZSP'
 ZSP =: NxN $ 0 NB. the trivial zero
 #+end_src
 
-** TODO the zero sandpile : construction
+We can draw in each of the first three just like
+before.
 
-Make a 5x5 sandpile of all 4s
+Right clicking one of the inputs causes it to copy
+the sum over, and middle clicking resets the input.
 
-settle it.
+So for example,
 
-clean up border
+: set middle to single square, leave others at 0
 
-reverse it
+one plus one is two
+
+right click to copy the two
+
+one plus two is three
+
+copy the three
+
+one plus three is four
+
+and of course the pile of four topples over.
+
+One more time...
+
+And that's how the plus sign was invented. :)
+
+Once again, I'll explain all this code in the code review, but I do want to point out these last few lines.
+
+The middle click handler on sp0 (this left one) sets it to an array of all zeros.
+Then sp1 is all threes, and sp2 is ZSP, which stands for zero sandpile.
+And on the next line I've temporarily defined it as all zeros.
+
+The reason I made a variable for this one
+is that it's just a placeholder.
+
+It turns out that when you add sandpiles
+together, there's always at least one other
+sandpile that acts like a zero.
+
+Let's take a look.
+
+** TODO the zero sandpile
+#+begin_src j
+cocurrent 'sandpaint'
+
+gpo_showgrid =: 1
+gpo_gridrgb =: 3 $ 255
+
+wd'psel ',(":gpw_hwnd)
+wd'pmove 970 100 0 0; ptop; ptimer 0'
+
+render img =: ((0,0,~])&.|:)@(0,0,~])^:8 ]  5 5 $ 4
+
+#+end_src
+
+So there's actually an algorithm for finding the zero.
+
+You start with an array of fours in the shape you want.
+
+So here it's a five by five array of fours.
+(This part just adds an a border of eight zeros around it.)
+
+Then step through until it settles.
+
+We can ignore the sand that fell off.
+
+And now we're going to subtract each of these values from four.
+
+The zeros become fours.
+
+If we had any ones, we'd turn them into threes, but we don't.
+And the twos stay the same.
+
+And the threes turn into ones because four minus three is one.
+
+Settle this one more time, and whatever's left is your zero.
+
+...
+
+Now before we try it out, let's set our expectations.
+
+There's no way we could ever start from this zero and get
+back to our simple plus sign, or even to the array of all zeros.
+
+We can set any particular square to zero by figuring out what
+you need to add to it to make four and letting it topple, but
+every time you send a grain of sand off the edge, you're also
+sending at least two grains back inward.
+
+In fact if you think back to our random settled sandpile,
+remember we noticed that all the zeros were isolated?
+
+The evidence seems to suggest that it's just
+plain impossible to get two empty squares next
+to each other by adding sand. You have to create
+them directly.
+
+It seems like it ought to be possible to
+prove that statement, and there are a bunch of math
+papers about sandpiles, so maybe it's already been done,
+but let's just call it a conjecture.
+
+The point is there's nothing we're ever going to
+add to this zero sandpile that's going to give us back
+a completely empty sandpile.
+
+So this new zero only works for some numbers. But
+let's see what happens when we add it to our minimally
+stable configuration.
+
+: (draw it by hand)
+
+And there we go. All threes plus this zero is all threes.
+
 
 ** TODO the zero sandpile in j
 
@@ -797,9 +1006,44 @@ cocurrent 'sandcalc'
 
 stl =: settle^:_
 ZSP =: stl (4 - stl) NxN $ 4
-sp2 =: ZSP
 
 #+end_src
+
+Okay so before we get too carried away, here's a restatement
+of the algorithm to construct this thing in J.
+
+Now we can draw whatever we want in the third slot
+and middle click to bring back the ZSP.
+
+And if we set the other two sandpiles to all zeros,
+it's obvious that adding these three together should
+gives us ZSP. But also if we add three copies of ZSP
+together, we get ZSP.
+
+And by the way, that's not a commonly accepted name or anything.
+It's just what I called it.
+
+I actually first learned about Sandpiles from a Numberphile video.
+
+
+
+
+
+Since then, sandpiles have caught the attention of mathematicians.
+In fact, I first heard about them on a numberphile video
+(which I've linked in the description)
+that explains how for any size grid
+(or even arbitrary connected graph)
+there's a subset of sandpile configurations
+that form a group under addition with settling.
+
+
+
+So to show what that means, here's a little calculator.
+Basically, you can add this all-zero sandpile to any sandpile,
+and it acts just like adding zero to an integer.
+
+
 
 
 But you can never add any two other sandpiles together
@@ -884,5 +1128,14 @@ Download J from:
 https://code.jsoftware.com/wiki/Guides/Getting_Started
 
 
+* TODO credits (if I use these images)
+
 Earthquake chart by Gavin Hayes
 https://web.archive.org/web/20190530181052/https://earthquake.usgs.gov/learn/topics/mag-intensity/
+
+
+Mandelbrot photo by Steve Jurvetson - https://www.flickr.com/photos/jurvetson/4770047266/
+
+
+Martin Gardner photo by Konrad Jacobs
+https://opc.mfo.de/detail?photo_id=1292
