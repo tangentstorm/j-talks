@@ -1,6 +1,6 @@
 #+title: sandpiles
 
-* DONE setup                                                    :stage:
+* setup                                                         :stage:
 #+begin_src j
 erase_sandpaint_ nl_sandpaint_''
 erase_sandpiles_ nl_sandpiles_''
@@ -11,7 +11,7 @@ cocurrent'base'
 NB. have inheritance image positioned and minimized.
 #+end_src
 
-* DONE 0. demo
+* demo
 # on stage: the 512 grain-in-the-center sandpile, copied to buffer.
 # pen =: 1, grid off, timer off, focus in window!
 What you're looking at here is called a sandpile.
@@ -79,41 +79,42 @@ you might just get a mess.
 
 So that's sandpiles.
 
-* DONE 0a. preview
+* DONE intro
 #+begin_src j
-Note 'topics'
-  - sandpaint
-  - sandpile paper
-  - sandcalc
-)
+NB. (full screen cam)
 #+end_src
 
+Hi there.
+
+My name's Michal, and this is my video about sandpiles.
+
 Now that you know the basics of sandpiles,
-we're going to take a look at how to implement
-the rules on a computer, by looking at the
-drawing program you just saw.
+we're going to take a quick look at how to
+implement the rules on a computer.
 
 We're also going to take a look at the original
 paper to see why these were first invented.
 
-Finally, we're going to look at a kind of
-addition you can do with sandpiles. It also
-makes kind of a neat puzzle game,
-so stay tuned for that.
+Finally, we're going to look at some of the
+interesting mathematics related to sandpiles,
+while building this calculator program,
+which also turns out to make a pretty good
+puzzle game.
+
+So I hope you stick around to the end because
+I think I we're going to have a lot of fun.
 
 Let's get started.
 
-* [8/8] 1. sandpiles
+* sandpiles
 #+begin_src j
 
 NB. (title card: sandpiles)
 
 #+end_src
-** DONE gridpad
+** gridpad
 #+begin_src j
 load '~JTalks/s1/e2-sandpiles/gridpad.ijs'
-
-echo names_gridpad_''
 
 gpw_init_gridpad_''
 #+end_src
@@ -157,7 +158,7 @@ videos like this, now's a great time to hit the subscribe button.
 
 Meanwhile, on with the show.
 
-** DONE inheritance
+** inheritance
 #+begin_src j
 cocurrent 'sandpiles'
 coinsert 'gridpad'
@@ -193,7 +194,7 @@ to override and modify that in different ways.
 NB. hide terminal, run next window, bring to lower left quadrant.
 
 #+end_src
-** DONE sandpiles window
+** sandpiles window
 #+begin_src j
 cocurrent'sandpiles'
 
@@ -209,9 +210,9 @@ turn off the ability to pick new colors,
 and make the palette view a bit wider
 so there's room to draw some labels.
 
-Then =gpw_init= fires up our modified gridpad.
+Then =gpw_init= fires up our modified gridpad window.
 
-** DONE sandpile colors
+** sandpile colors
 #+begin_src j
 cocurrent 'sandpiles'
 
@@ -256,7 +257,7 @@ Again, if you want to know what all the symbols mean check
 out the code review video. But for now, we have our colors,
 so let's move on.
 
-** DONE palette labels
+** palette labels
 #+begin_src j
 cocurrent 'sandpiles'
 
@@ -286,7 +287,7 @@ This is the paint event handler for the palette view.
 It calls the original handler from gridpad,
 and then does an expliict loop through the palette to draw labels.
 
-** DONE approaching the rules
+** approaching the rules
 #+begin_src j
 cocurrent 'sandpiles'
 
@@ -303,8 +304,8 @@ gpw_char =: verb define  NB. key handler for imgv and palv controls.
 
 And now we get to the fun stuff.
 
-So this is the keyboard handler. I'm using it to define
-some keyboard shortcuts to help you visualize the steps
+This is the keyboard handler. I'm using it to define
+some shortcuts to help us visualize the steps
 of the sandpile simulation.
 
 Let's say we have some arbitrary sandpile
@@ -319,11 +320,15 @@ all we want are the eyes and mouth and these little antennas
 on top, and this border.
 
 To isolate those, we can just compare the whole image to the number three.
+
+: >
+
 The basic comparision operators in J work on individual items, so
 we wind up with a rank 2 array of zeros and ones.
 
 So now this image represents one grain of sand for each cell that's going to topple.
-We just need to make a copy of this array shifted over one cell in each of the four directions.
+And we just need to shift it over one slot
+in each of the four directions.
 
 That's what these other four lines do.
 
@@ -332,17 +337,21 @@ That's what these other four lines do.
 So a rank two array is basically a list of rows.
 So to shift the image up, we add a row of zeros at the bottom and then chop off the first row.
 
-To shift down, we add a row of zeros to the start and cut off the bottom row.
+To shift down, we add a row of zeros to the top
+and chop off the bottom.
 
-Left and right work the same way, but they operate at the row level, or rank 1.
+Then left and right work the same way, but they operate at the row level,
+or rank 1.
 
-We lost some sand along the way here because it fell off the edge. We need to
-make a fresh copy before we nudge in each direction so we don't lose it.
+We lost some sand along the way here because it fell off the edge.
+To make sure we don't lose that information,
+We just need to make a fresh copy before we nudge
+in each direction.
 
-But then all way have to do is take our four shifted copies and add them to the
-original image, and then subtract four to remove them from the center.
+Then all we have to do is take our four shifted copies and add them to the
+original image, and then subtract to remove the four grains from the center.
 
-** DONE settle
+** settle
 #+begin_src j
 cocurrent 'sandpiles'
 
@@ -380,11 +389,11 @@ If you're disappointed that this is too readable and easy to understand
 and you were hoping for something more exotic to impress your friends
 and terrify your enemies then I have just the thing for you.
 
-* DONE 1a. code golf
+* code golf
 #+begin_src j
 NB. (title card: code golf)
 #+end_src
-** DONE golfed sandpile sim
+* golfed sandpile sim
 #+begin_src j
 load'viewmat'
 
@@ -399,7 +408,7 @@ that fills a 50 by 50 grid with the number four,
 runs the sandpile simulation until it stops,
 and outputs the results.
 
-** DONE golfed sandpile sim (with color)
+** golfed sandpile sim (with color)
 #+begin_src j
 load'viewmat'
 
@@ -436,13 +445,13 @@ even shorter way to write it.
 And again, I'll explain the entire line character by
 character in the code review.
 
-Meanwhile, back to our program.
+But now, back to our program.
 
-* DONE 2. sandpaint
+* sandpaint
 #+begin_src j
 NB. (title card: sandpaint)
 #+end_src
-** DONE sandpaint window
+** sandpaint window
 #+begin_src j
 cocurrent 'sandpaint'
 
@@ -464,7 +473,7 @@ So here's the main code for sandpaint.
 It just sets the window title and timer speed,
 changes the size of the controls.
 
-** DONE time control
+** time control
 #+begin_src j
 cocurrent 'sandpaint'
 
@@ -488,7 +497,8 @@ time_keys =: verb define
 
 Here's a first pass at the keyboard handler.
 
-The event handler name is windowname underscore timer so
+The event handler name for the timer
+is windowname underscore timer so
 setting ptimer 0 and then calling =gpw_timer= lets us fake
 a timer event every time we press space.
 
@@ -501,7 +511,7 @@ That's almost it for sandpaint. All that's left is to add a
 few more shortcuts when we look at the original sandpile
 paper. So let's do some science.
 
-* DONE 3. sandpaper
+* sandpaper
 #+begin_src j
 
 NB. (title card: sandpaper)
@@ -510,7 +520,7 @@ cocurrent 'sandpaint'
 wd'psel ',(":gpw_hwnd),'; ptimer 0'
 pen =: 4
 #+end_src
-** DONE intro text (talking head cam)
+** DONE intro (anchorcam)
 
 There have been a number of papers written about
 the mathematical properties of sandpiles,
@@ -518,23 +528,25 @@ but it was actually a physics paper that introduced
 them to the world.
 
 # show the paper
-The paper was _Self Organized Criticality: An Explanation of 1/f Noise_,
-by Per Bak, Chao Tang, and Kurt Wiesenfeld, and it  appeared
-in the July 1987 issue of Physical Review Letters.
+It was called
+_Self Organized Criticality: An Explanation of 1/f Noise_,
 
 # show scholarpedia charts
-So 1/f noise (or pink noise) is the name for a phenomenon
+Now 1/f noise (or pink noise) is the name for a phenomenon
 that crops up in all sorts of seemingly unrelated fields,
 from the level of rivers, to heart rates,
 to fluctuations in electrical components.
 
-1/f noise was first identified in vaccuum tubes in 1925.
-But, it was Benoit Mandelbrot who pointed out how widespread
-it was in nature, and his book, _The Fractal Geometry of Nature_,
+It happened to be first identified
+in vaccuum tubes in 1925.
+But it was Benoit Mandelbrot
+who pointed out how widespread
+it was across different areas of science,
+and his book, _The Fractal Geometry of Nature_,
 which was published five years before the sandpile paper,
 seems to have helped popularize the concept.
 
-This best explanation I could find for what makes
+The best explanation I could find for what makes
 1/f noise interesting actually comes from Mandelbrot
 by way of Martin Gardner:
 
@@ -545,29 +557,40 @@ to understand.
 
 [... Mandelbrot] has suggested a way of avoiding them here:
 
-Let the tape of a sound be played faster or slower
-than normal. One expects the character of the sound
-to change considerably. A violin, for example,
-no longer sounds like a violin. There is a
-special class of sounds, however, that behave
-quite differently. If you play a recording of
-such a sound at a different speed, you only have
+Let the tape of a sound be played
+faster or slower than normal.
+One expects the character of the sound
+to change considerably.
+
+A violin, for example,
+no longer sounds like a violin.
+
+There is a special class of sounds, however,
+that behave quite differently.
+
+If you play a recording of such a sound
+at a different speed, you only have
 to adjust the volume to make it sound exactly
 as before. Mandelbrot calls such sounds
 "scaling noises".
 #+end_quote
 
 # show white/pink/brown chart
-Gardner goes on to give three examples of such scaling noises:
+Gardner goes on to give three examples
+of scaling noises:
+
 white noise, where each value is completely random,
-brown noise, where the value simply moves up or down at each tick,
-and pink noise, is somewhere in between.
 
-In particular, the spectral density of the noise is what
-you'd see on your stereo's graphic equalizer if you tried
-playing these patterns as sound waves.
+brown noise, where the value simply moves up or down at each step,
 
-Well, assuming your graphic equalizer made log-log plots.
+and pink noise, which is somewhere in between.
+
+In particular, the spectral density plot of these noises
+which is the bar chart what you'd see on your stereo's graphic
+equalizer if you tried playing these patterns
+as sound waves, each has a very distinct look.
+
+This is what you'd see if you graphic equalizer made log-log plots.
 Otherwise they look like this:
 
 #+begin_src j
@@ -585,12 +608,26 @@ What sort of physical mechanism would cause that?
 And that's where sandpiles come in.
 
 Now, I'm not going to pretend to fully understand this paper.
-To be honest, I don't have a terribly advanced background in
-math and science, and it was a difficult read for me, so
-I can't guarantee that everything I say here is accurate,
-but I'll do my best.
+To be honest, even though its short
+I think I understand the basic concepts,
+some of the details were a little difficult
+for me, I can't guarantee that everything
+I say here is accurate, but I'll do my best.
 
-** DONE the sandpaper experiment
+** TODO physics simulation voiceover
+The first part of the paper is an argument about connected systems in general. They give the example of how forces propagate through an array of pendula connected by springs. But the one dimensional case isn't terribly interesting - the energy just moves down the line.
+
+I made a couple attempts to illustrate the point they were making
+with a 2d array of pendula, but I didn't really have the right set of dimensions to work with in a 2d physics program, and even when I
+replaced the pendula balls on springs and turned off gravity it's just really hard to tell what's going on in a physics simulation.
+
+Thankfully the point the authors are making isn't tied to any particular system,
+and they introduce sandpiles as an abstract model that's easy to simulate.
+
+So let me attempt to make their point, as I understand it,
+using the sandpile simulation.
+
+** the sandpaper experiment
 #+begin_src j
 cocurrent 'sandpaint'
 
@@ -616,18 +653,6 @@ gpw_char =: verb define
 )
 #+end_src
 
-The first part of the paper is an argument about connected systems in general. They give the example of how forces propagate through an array of pendula connected by springs. But the one dimensional case isn't
-terribly interesting - the energy just moves down the line.
-
-I made a couple attempts to illustrate the point they were making
-with a 2d array of pendula, but I didn't really have the right set of dimensions to work with in a 2d physics program, and even when I
-replaced the pendula balls on springs and turned off gravity it's just really hard to tell what's going on in a physics simulation.
-
-Their point isn't tied to any particular system, though, and they
-introduce sandpiles as an abstract model that's easy to simulate.
-
-So let me attempt to make their point, as I understand it,
-using the sandpile simulation.
 
 The first concept is a minimally stable state.
 Suppose you have the unit sandpile. ('u')
@@ -721,7 +746,7 @@ So anyway, let's reproduce their experiment as best we can and see what happens.
 
 Of course, rather than do that by hand, we'll let J do the work for us.
 
-** DONE the experiment
+** the experiment
 #+begin_src j
 Note 'sandpaper setup'
   - full screen term window
@@ -775,13 +800,13 @@ then by all means, please set me straight in the comments.
 Meanwhile, let's shift gears from science to math,
 and take a look at sandpile addition.
 
-* DONE 4. sandcalc
+* sandcalc
 #+begin_src j
 
 NB. (title card: sandcalc)
 
 #+end_src
-** DONE sandcalc
+** sandcalc
 #+begin_src j
 cocurrent 'sandcalc'
 coinsert 'sandpiles gridpad'
@@ -813,7 +838,7 @@ gpw_init''
 
 Okay so here's a new window with four little sandpiles.
 
-** DONE sandcalc - render
+** sandcalc - render
 #+begin_src j
 cocurrent 'sandcalc'
 
@@ -843,7 +868,7 @@ limit the palette to our four stable values, and on every
 tick we're going to add the first three sandpiles together
 let it settle, and show the result on the right.
 
-** DONE sandcalc - mouse
+** sandcalc - mouse
 #+begin_src j
 cocurrent 'sandcalc'
 
@@ -898,7 +923,8 @@ One more time...
 
 And that's how the plus sign was invented. :)
 
-Once again, I'll explain all this code in the code review, but I do want to point out these last few lines.
+Once again, I'll explain all of this in the code review,
+but I do want to point out these last few lines.
 
 The middle click handler on sp0 (this left one) sets it to an array of all zeros.
 Then sp1 is all threes, and sp2 is ZSP, which stands for zero sandpile.
@@ -913,7 +939,7 @@ sandpile that acts like a zero.
 
 Let's take a look.
 
-** DONE the zero sandpile
+** the zero sandpile
 #+begin_src j
 cocurrent 'sandpaint'
 
@@ -927,7 +953,7 @@ render img =: ((0,0,~])&.|:)@(0,0,~])^:8 ]  5 5 $ 4
 
 #+end_src
 
-So there's actually an algorithm for finding the zero.
+I'm going to show you an algorithm for finding the other zero.
 
 You start with an array of fours in the shape you want.
 
@@ -986,7 +1012,7 @@ stable configuration.
 
 And there we go. All threes plus this zero is all threes.
 
-** DONE the zero sandpile in j
+** the zero sandpile in j
 
 #+begin_src j
 cocurrent 'sandcalc'
@@ -1000,9 +1026,9 @@ Okay so before we get too carried away, here's a restatement
 of the algorithm to construct this thing in J.
 
 Now we can draw whatever we want in the third slot
-and middle click to bring back the ZSP.
+and middle click to set it back to ZSP.
 
-And if we set the other two sandpiles to all zeros,
+If we set the other two sandpiles to all zeros,
 it's obvious that adding these three together should
 gives us ZSP. But also if we add three copies of ZSP
 together, we get ZSP.
@@ -1010,9 +1036,9 @@ together, we get ZSP.
 And by the way, that's not a commonly accepted name or anything.
 It's just what I called it.
 
-I actually first learned about Sandpiles from a Numberphile video.
-I first heard about them on a numberphile video (which I've linked
-in the description) Dr. Luis David Garcia-Puente does a pretty
+I actually first learned about Sandpiles from a really great
+Numberphile video (which I've linked in the description),
+and in which Dr. Luis David Garcia-Puente does a pretty
 deep dive into the math of these zeros.
 
 According to him, the set of sandpiles for which this zero works
@@ -1021,10 +1047,12 @@ all threes. So that's why I put all threes in the middle.
 
 So it turns out that if you take the set of sandpiles you get
 from adding anything to the array of all threes, that set forms
-a group. I don't know if it has a name, but given the original
-paper, I'm just going to call it the critical group.
+a group under sandpile addition.
 
-** DONE sandpiles under addition form an abelian group
+I don't know if it has a name, but given the original
+paper, I think of it as the critical group.
+
+** sandpiles under addition form an abelian group
 #+begin_src j
 cocurrent 'sandcalc'
 
@@ -1063,20 +1091,46 @@ which just means it follows these rules.
 - there's some identity element
 - and for every element, there's an inverse element you can add to it to get the identity.
 
-As it happens, it's also an Abelian group, so a plus b = b + a.
+As it happens, it's also an Abelian group, so a + b is the same as b + a.
 
-By the way, this is actual J syntax. If we collected all the critical sandpiles into rank 3 array called G and we had a definition for this inverse function, then we could turn this into a verb and actually run it as a test case.
+By the way, this slide is basically a docstring, but it is actual J syntax.
 
-Now building G might take a lot of RAM, but it's just enumerating every possible sandpile and adding all threes to it.
+If we collected all the critical sandpiles into rank 3 array called G and we had a definition for this inverse function, then we could turn this into a verb and actually run it as a test case.
 
-What about the inverse function?
+Generating G isn't that hard. You just list out all the five digit numbers in base four.
 
-Well, I was going to say I had no idea,
-but pretty much the first algorithm I tried work.
+Of course the problem is that 4 to the 25th a huge number
+so even if we packed them down to seven bytes each,
+it would be like eight petabytes to store them all.
 
-** DONE finding an inverse
+** all 2x2 stable sandpiles
+#+begin_src j
+cocurrent 'sandpaint'
+800 160 gpw ,./^:2>16 16$([:<[:|:0,0,~[:|:0,0,~2 2$])"1](4$4)#:i.4^4
+
+#+end_src
+
+Just as an example, this line generates every possible two by two sandpile.
+Again, it's just counting to 4 to the fourth power in base four and then
+arranging them nicely.
+
+So other than being completely impractical for bigger numbers,
+it's not hard to generate all the sandpiles.
+
+: go back one screen
+
+But What about the inverse function?
+
+Well, I was going to say I had no idea to do that,
+but then I tried it and because I'm a super genius,
+pretty much the first algorithm I though of worked.
+
+** finding an inverse
 #+begin_src j
 cocurrent 'sandcalc'
+
+e =: ZSP
+O =: stl @: +
 
 gpw_sp0v_char =: gpw_sp1v_char =:gpw_sp2v_char =: verb define
   select. {. sysdata
@@ -1087,11 +1141,9 @@ gpw_sp0v_char =: gpw_sp1v_char =:gpw_sp2v_char =: verb define
 )
 #+end_src
 
-: demo with arbitrary sandpile in the middle
-
 Except of course it doesn't actually work
 because this is showing all zeros and
-we know this should add up to three.
+we know this should add up to all threes.
 
 Of course it's just a display bug.
 We have negative numbers in the grid
@@ -1106,8 +1158,7 @@ Again, I don't have a formal proof of that
 statement, but as far as I can tell,
 it always works.
 
-
-** DONE actual inverse
+** actual inverse
 #+begin_src j
 cocurrent 'sandcalc'
 
@@ -1122,13 +1173,27 @@ gpw_sp0v_char =: gpw_sp1v_char =:gpw_sp2v_char =: verb define
 )
 #+end_src
 
-So even though it's easy to generate the inverse with a program, it's not easy to guess what it's going to look like, even if you know the algorithm.
+However...
+
+Even though it's easy to generate the inverse with a program,
+it's not easy to guess what it's going to look like,
+even if you know the algorithm.
+
+That's why I said way back at the beginning
+that this calculator doubles as puzzle game.
+
+: reset all
+
+For example, we just saw the inverse for all threes, but could you draw it from memory? I can't.
+
+: just solve it live
+
+So anyway, the random ones you get now by pressing p aren't nice and symmetric, which I think makes them quite a bit harder. Give it a shot yourself and let me know what you think.
 
 
+Meanwhile, that's pretty much everything I have to say about sandpiles.
 
-It's actually kind of an interesting puzzle to find a group item and then try to figure out the inverse.
-
-And so I'll leave you with what may be the most important equation of sandpile addition.
+But I'll leave you now with what may be the most beautiful and profound equation in all of sandpile mathematics.
 
 All threes.
 
@@ -1138,19 +1203,62 @@ All threes.
 
 And that, boys and girls, is where the plus sign really comes from.
 
-* DONE _. outro
+* TODO closing
 
-Thank you so much you for watching my video.
+Thank you so much for watching my video.
 
-I hope you enjoyed it as much as I enjoyed making it.
+If you enjoyed it,
+and you'd like to encourage me
+to make more of these,
+I'd really appreciate it you
+shared the link with a friend.
 
-If you did, and you'd like to encourage me to make more of these, I'd really really appreciate it you shared the link with someone else who might like it.
+And just a reminder,
+if you want to learn what all those squiggly marks were about,
+subscribe to this channel
+and click the little bell icon
+to get notified when the
+code review comes out,
 
-And for the last time, if you want to know what all those squiggly marks were about subscribe to this channel and click the little bell icon to get notified when the code review comes out.
+or if you prefer,
+click here to join my mailing list
+and I'll send you an email
+whenever a new video comes out.
 
-If you don't care about the code but liked this kind of video, let me know in the comments. The next one I'm planning is on the Mandelbrot set, and whether or not I split it into a general presentation and a code review is probably going to depend on what people think of this video.
+And by the way, if you don't want to wait,
+all the code's already up on github
+and there's a link to it down below,
+along with links to the sandpile paper and
+a bunch of other things related to
+sandpiles that you might want to check out.
 
-Anyway, thanks again for watching, and I hope to see you again.
+Finally, if you watched this video,
+and you're not a programmer,
+or you are a programmer
+but have no interest whatsoever in learning J
+then I'd really like to hear what you thought
+of this video,
+and in particular the style,
+where you're seeing all the code but
+not necessarily expected to understand it.
+
+The next video I'm planning is on the Mandelbrot set,
+and whether I split it into a general presentation
+followed by a code review
+or just do it all together
+is probably going to depend on the response
+I get to this one.
+
+So please share your thoughts in the comments.
+Let  me know what I could do to improve,
+and feel free to ask questions
+or if you make something related to sandpiles,
+post a link.
+
+I'd really love to hear from you.
+
+Anyway, thanks again for watching,
+and I hope to see you again.
 
 
 * DONE Video Description and Links
