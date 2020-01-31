@@ -20,66 +20,70 @@ It's a two dimensional grid.
 Each square contains zero or more grains of sand, indicated by the color.
 
 # start drawing
-If you have 0, 1, 2 or 3 grains, the pile is stable.
+If you have 0, or 1, 2 or 3 grains of sand, the pile is stable.
 But as soon as you get to four grains, the sand topples over
-sending one grain to each of the four neighboring cells.
+sending one grain to each of its four neighboring cells.
 
 # draw by the edge
-If you have a four next to the edge of the board,
+Now if you have a four next to the edge of the board,
 the same thing happens,
 but one of the grains falls off the edge.
 # .. and corner
-Similarly, if you have a four in the corner, then two grains fall off.
+Similarly, if you have a four over in the corner, then two grains fall off.
 
 # draw line of 3 at bottom
-If you have a bunch of threes in a row,
+If you have a line of threes,
 and put a four next to it,
-then when the four topples,
+then when that four topples,
 it adds a grain to the three,
 giving you a new four
 and then that one topples,
-and you get a chain reaction.
+you get a chain reaction.
+
 # put mouse in center and press z to clear screen
-And if you start with a bigger number number, (say 256),
-then it will just keep pumping out four grains at each step.
+And if you clear all this out and start with a bigger number,
+(say 256),
+then it will just keep pumping out four grains of sand at each step.
 
 # space a few times until zthe four neighbors pile up
 So after four ticks, we have four piles of four, plus 240 grains left in the center.
-All four of these topple,
-and then the center keeps pumping out more.
+and all five of these are about to topple.
+and the center just keeps pumping out more
+and more
+and more
+
 # step until we get the diagonals
-Now we have four cells with with one grain in them,
+Now at this point we have four cells with with one grain each in them,
 but each one has three neighbors that are about to topple.
-So each of these ones will turn into fours.
+So each of these ones will turn into a four.
 # step
-And each time the four surrounding the center topple,
-the center sends out four,
-but they simultaneously send four back
-so for that particular step in the process,
+Also each time these four around the center topple,
+the center is sending out four,
+but each one of those is sending one back
+so for that particular step in the process
 the number in the center doesn't change.
 # press 4
 
-Anyway it goes on like that, and there's a little bit of back and forth
+Anyway it goes on like that,
 but before long the whole thing always winds down and comes to a stop.
 # (fast forward)
 
-The picture we started with was the same thing with 512 grains.
+If we did the same thing with 512 grains of sand
+in the middle,
+or we added another 256 grains here,
+we'd get the picture that was
+on the screen at the start.
 
 So as you can see, with just this one simple rule,
 you start generating really intricate patterns rather quickly.
-and it's kind of fun to just draw a pattern,
-let it run, and see what comes out.
+and depending on how you start,
+you might get a nice pretty picture like this one,
+or
+if you just start pouring sand
+and fast forward
+you might get a complete mess.
 
-Depending on how you start you might get a nice pretty picture like this,
-or if you just start pouring sand
-# speed 3, then draw with pen 64
-.. fast forward a bit...
-# (fast forward)
-you might just get a mess.
-
-So that's sandpiles.
-
-* DONE intro
+* intro
 #+begin_src j
 NB. (full screen cam)
 #+end_src
@@ -551,12 +555,6 @@ The best explanation I could find for what makes
 by way of Martin Gardner:
 
 #+begin_quote text
-These deep notions [of spectral density and
-autocorrelation]... are technical and hard
-to understand.
-
-[... Mandelbrot] has suggested a way of avoiding them here:
-
 Let the tape of a sound be played
 faster or slower than normal.
 One expects the character of the sound
@@ -614,7 +612,7 @@ some of the details were a little difficult
 for me, I can't guarantee that everything
 I say here is accurate, but I'll do my best.
 
-** TODO physics simulation voiceover
+** DONE physics simulation voiceover
 The first part of the paper is an argument about connected systems in general. They give the example of how forces propagate through an array of pendula connected by springs. But the one dimensional case isn't terribly interesting - the energy just moves down the line.
 
 I made a couple attempts to illustrate the point they were making
@@ -778,7 +776,8 @@ states that give rise to lots of different reaction sizes,
 but those sizes tend to follow something close to a 1/f
 distribution.
 
-By the way, the bottom chart is for running the same
+By the way, the bottom chart in the paper
+came from running the same
 kind of simulation in 3 dimensions. Presumably they
 used cubes and distribute changes to six neighbors
 instead of four. Maybe someone out there can make a
@@ -788,7 +787,7 @@ Also, these charts on the right plot the distribution of
 reaction lengths - as in the number of steps the reaction
 took before settling down.
 
-So they are addressing a 1/f distribution in time dimension,
+So they do address a 1/f distribution in the time dimension,
 although it's still not clear to me how any of this maps
 to one over f noise in a frequency spectrum.
 
@@ -1203,7 +1202,7 @@ All threes.
 
 And that, boys and girls, is where the plus sign really comes from.
 
-* TODO closing
+* closing
 
 Thank you so much for watching my video.
 
@@ -1260,8 +1259,7 @@ I'd really love to hear from you.
 Anyway, thanks again for watching,
 and I hope to see you again.
 
-
-* DONE Video Description and Links
+* Video Description and Links
 
 Code for this episode:
 https://github.com/tangentstorm/j-talks/tree/master/s1/e2-sandpiles
@@ -1293,15 +1291,3 @@ https://code.jsoftware.com/wiki/NuVoc
 Download J from:
 https://code.jsoftware.com/wiki/Guides/Getting_Started
 
-
-* TODO credits (if I use these images)
-
-Earthquake chart by Gavin Hayes
-https://web.archive.org/web/20190530181052/https://earthquake.usgs.gov/learn/topics/mag-intensity/
-
-
-Mandelbrot photo by Steve Jurvetson - https://www.flickr.com/photos/jurvetson/4770047266/
-
-
-Martin Gardner photo by Konrad Jacobs
-https://opc.mfo.de/detail?photo_id=1292
