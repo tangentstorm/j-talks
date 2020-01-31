@@ -69,11 +69,11 @@ xtp =: ":I.mxt                                  NB. x tick positions
 
 opts =: 'qt 1920 300; xlabel ',xtl,'; xticpos ',xtp
 
-opts plot (log a                                NB. not exactly log log scale
+log =: 10 ^. (0.0001"0)^:(0&=)"0@]              NB. log but strip out zeros
+
+opts plot (log a)                               NB. not exactly log log scale
 
 c =: _0.90^~1+i.#a                              NB. their claim: Dist(x) = x^-0.98
 
 opts plot (log a),:log c                        NB. actual vs claim
 opts plot (log a),:_1 + log c                   NB. adjust y intercept... seems to fit.
-
-log =: 10 ^. (0.0001"0)^:(0&=)"0@]              NB. log but strip out zeros
