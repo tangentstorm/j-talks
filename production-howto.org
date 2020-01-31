@@ -1,4 +1,6 @@
 
+* TODO next time try recording at 30fps in obs.
+
 * recording checklist
 ** OBS
 - [ ] studio mode off
@@ -36,6 +38,11 @@ there's already a fix for this in the blender repo https://developer.blender.org
 
 
 
+** converting from phone video
+- convert footage to "youtube for hd" avi at 60fps
+- make sure render output in blender is 60fps
+- and also frame step = 1 (else it'll drop frames)
+
 ** rendering to video
 - output panel in the properties / scene / output panel
 - format: ffmpeg
@@ -67,7 +74,9 @@ there's already a fix for this in the blender repo https://developer.blender.org
 
 * hardware used
 logitech hd 1080p camera
-turtle beach streaming mic - green setting
+turtle beach streaming mic
+  - green setting (cardiod - usually best for streaming)
+  - orange setting (hypercardioid - better for noisier room)
 
 https://support.turtlebeach.com/hc/en-us/articles/227345727-Stream-Mic-User-Guide-and-Quick-Start-Guide
 
@@ -78,3 +87,9 @@ not sure about model numbers
 - OBS Studio
 - J
 - Blender
+
+
+* color scheme
+
+desktop background: #001824
+background colors: 122c3d 003a61 00538a 0071bd 3c90c8
