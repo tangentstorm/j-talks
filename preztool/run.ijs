@@ -216,8 +216,10 @@ on_event =: dyad define
          position_jterm''
        case. 'r' do. reload_slides''
        case. 'e' do. run_code''
-       case. 't' do.
-         position_jterm''
+       case. 't' do. position_jterm''
+       case. 'T' do.
+         NB. full screen terminal in 1080p (leaving room for menu/window top)
+         wd 'sm set term xywh -8 0 1920 1046' [ position_jterm''
        case. 'n' do. smoutput names_base_''
        case. 'c' do. clear_base_'' [ wd 'timer 0'
      end.
