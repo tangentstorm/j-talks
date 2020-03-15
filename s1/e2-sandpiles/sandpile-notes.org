@@ -1,0 +1,51 @@
+* DONE 0-demo 2:15
+- [X] drawing the first four is a bit out of sync
+- [X] line of threes a bit weird
+- [X] add some annotations when discussing the behavior in the middle
+
+
+* TODO 1-intro 
+
+
+
+* TODO 2-code      0:25
+  cut the talk about changes to gridpad
+  cut the talk about the palette
+  draw a nicer picture in gridpad
+  show the sand falling off!
+* TODO 3-golf:      0:51
+   "number four" (long pause) "runs the sandpile..."
+   cut "title here says golfed"
+* TODO 4-paint:     0:54
+  time control slide has some stuttering early on
+  "do some science" fades out
+* TODO 5-paper:    12:00
+   "scaling noises" fades out
+   "um" in the graphic equalizer part
+   "self similar" fades out
+   need a better cut to the sandpaper experiment.
+     (maybe black screen with white text)
+   "out in nature" sounds like "not in nature"
+   speed up animation for "still gets through"
+   "infinite distances" drops the s
+  - fake the window title color
+   the trick is to start with a _____ ?? (fades out)
+  need music for the all-fours, and also speed up.
+  "less ones and twos"
+   fix the labels for the bar charts in post
+  show the graphic from the paper with the dark areas filled in
+  "let j do the wuh" (fades out)
+   show the error message
+   show the plots
+   charts on the bottom -> "3 dimension__" (fades out)
+   highlight the charts
+* TODO 6-calc:      8:00
+    0:45 or so: "is two" still sounds terrible
+    0:50 plus sign was invented
+    you start "with an array of four"
+    "zeroes become four"
+    show a screenshot of the critical sandpile
+    all i have to say about sandpile_
+* TODO 7-close:     1:12
+   "so please share your thoughts in the comments" repeated twice
+   video is out of sync on last 5 seconds.
