@@ -16,10 +16,10 @@ __meta__ = {
 }
 
 [node name="legend" type="ColorRect" parent="."]
-margin_left = 55.4235
-margin_top = 198.785
-margin_right = 211.424
-margin_bottom = 480.785
+margin_left = 1737.43
+margin_top = 39.7848
+margin_right = 1893.43
+margin_bottom = 321.785
 color = Color( 0.266667, 0.360784, 0.454902, 1 )
 
 [node name="noun" parent="legend" instance=ExtResource( 1 )]
@@ -34,7 +34,7 @@ type = 1
 
 [node name="adv" parent="legend" instance=ExtResource( 1 )]
 position = Vector2( 19.9267, 157.002 )
-text = "Adv"
+text = "Adv "
 type = 2
 
 [node name="conj" parent="legend" instance=ExtResource( 1 )]
@@ -68,64 +68,95 @@ type = 7
 
 [node name="nb" parent="legend" instance=ExtResource( 1 )]
 position = Vector2( 18.2558, 247.002 )
-text = "NB."
+text = "None"
 type = 8
 
-[node name="statement" type="ColorRect" parent="."]
-editor/display_folded = true
+[node name="inputArea" type="ColorRect" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = 372.37
-margin_top = 632.887
-margin_right = 1178.37
-margin_bottom = 709.887
-color = Color( 0.266667, 0.360784, 0.454902, 1 )
+margin_left = 318.2
+margin_top = 713.25
+margin_right = 1242.2
+margin_bottom = 755.25
+rect_min_size = Vector2( 0, 42 )
+color = Color( 0.4, 0.4, 0.4, 1 )
 
-[node name="none4" parent="statement" instance=ExtResource( 1 )]
-position = Vector2( 245.696, 25.1745 )
+[node name="none4" parent="inputArea" instance=ExtResource( 1 )]
+position = Vector2( 12.7497, 5 )
+text = " "
 
-[node name="n2" parent="statement" instance=ExtResource( 1 )]
-position = Vector2( 376.208, 24.8936 )
+[node name="n2" parent="inputArea" instance=ExtResource( 1 )]
+position = Vector2( 100.118, 4.99994 )
 text = "2"
 type = 0
 
-[node name="cop2" parent="statement" instance=ExtResource( 1 )]
-position = Vector2( 311.513, 24.0909 )
+[node name="cop2" parent="inputArea" instance=ExtResource( 1 )]
+position = Vector2( 62.2235, 7.10522 )
 text = "=."
 type = 7
 
-[node name="iden2" parent="statement" instance=ExtResource( 1 )]
-position = Vector2( 269.014, 23.1521 )
+[node name="iden2" parent="inputArea" instance=ExtResource( 1 )]
+position = Vector2( 38.0129, 3.94733 )
 text = "a"
 type = 6
+
+[node name="stackArea" type="ColorRect" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 1288.2
+margin_top = 710.25
+margin_right = 1451.2
+margin_bottom = 752.25
+rect_min_size = Vector2( 0, 42 )
+color = Color( 0.266667, 0.360784, 0.454902, 1 )
 
 [node name="stack" type="VBoxContainer" parent="."]
 
 [node name="vplus" parent="stack" instance=ExtResource( 1 )]
-position = Vector2( 1240.45, 631.168 )
+position = Vector2( 1295.65, 715.418 )
 text = "+"
 type = 1
 
 [node name="noun2" parent="stack" instance=ExtResource( 1 )]
-position = Vector2( 1241.47, 701.62 )
+position = Vector2( 1365.67, 714.87 )
 text = "5 2 7"
 type = 0
 
 [node name="adv2" parent="stack" instance=ExtResource( 1 )]
-position = Vector2( 1239.22, 656.184 )
+position = Vector2( 1330.42, 717.434 )
 text = "/"
 type = 2
 
+[node name="StackLabel" type="Label" parent="."]
+margin_left = 1396.41
+margin_top = 679.558
+margin_right = 1452.41
+margin_bottom = 720.558
+rect_min_size = Vector2( 0, 24 )
+custom_fonts/font = SubResource( 2 )
+text = "Stack
+"
+
+[node name="InputLabel" type="Label" parent="."]
+margin_left = 319.897
+margin_top = 680.403
+margin_right = 375.897
+margin_bottom = 721.403
+rect_min_size = Vector2( 0, 24 )
+custom_fonts/font = SubResource( 2 )
+text = "Input"
+
 [node name="Rules" type="Node2D" parent="."]
-position = Vector2( 310.807, 47.701 )
+position = Vector2( 370.596, 836.439 )
 __meta__ = {
 "_edit_group_": true
 }
 
 [node name="RulesHBox" type="HBoxContainer" parent="Rules"]
-editor/display_folded = true
 anchor_top = 1.0
 anchor_bottom = 1.0
 margin_right = 995.0
@@ -133,6 +164,7 @@ margin_bottom = 182.0
 custom_constants/separation = 15
 
 [node name="Rule0Monad" type="VBoxContainer" parent="Rules/RulesHBox"]
+editor/display_folded = true
 margin_right = 107.0
 margin_bottom = 192.0
 rect_min_size = Vector2( 107, 0 )
@@ -192,6 +224,7 @@ margin_bottom = 192.0
 pattern = "*"
 
 [node name="Rule1Monad" type="VBoxContainer" parent="Rules/RulesHBox"]
+editor/display_folded = true
 margin_left = 122.0
 margin_right = 229.0
 margin_bottom = 192.0
@@ -251,6 +284,7 @@ color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "N"
 
 [node name="Rule2Dyad" type="VBoxContainer" parent="Rules/RulesHBox"]
+editor/display_folded = true
 margin_left = 244.0
 margin_right = 351.0
 margin_bottom = 192.0
@@ -311,6 +345,7 @@ color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "N"
 
 [node name="Rule3Adverb" type="VBoxContainer" parent="Rules/RulesHBox"]
+editor/display_folded = true
 margin_left = 366.0
 margin_right = 473.0
 margin_bottom = 192.0
@@ -370,6 +405,7 @@ margin_bottom = 192.0
 pattern = "*"
 
 [node name="Rule4Conj" type="VBoxContainer" parent="Rules/RulesHBox"]
+editor/display_folded = true
 margin_left = 488.0
 margin_right = 595.0
 margin_bottom = 192.0
@@ -430,6 +466,7 @@ color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "VN"
 
 [node name="Rule5Fork" type="VBoxContainer" parent="Rules/RulesHBox"]
+editor/display_folded = true
 margin_left = 610.0
 margin_right = 717.0
 margin_bottom = 192.0
@@ -490,6 +527,7 @@ color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "V"
 
 [node name="Rule6Bident" type="VBoxContainer" parent="Rules/RulesHBox"]
+editor/display_folded = true
 margin_left = 732.0
 margin_right = 839.0
 margin_bottom = 192.0
@@ -550,6 +588,7 @@ margin_bottom = 192.0
 pattern = "*"
 
 [node name="Rule7Is" type="VBoxContainer" parent="Rules/RulesHBox"]
+editor/display_folded = true
 margin_left = 854.0
 margin_right = 961.0
 margin_bottom = 192.0
@@ -611,6 +650,7 @@ margin_bottom = 192.0
 pattern = "*"
 
 [node name="Rule8Paren" type="VBoxContainer" parent="Rules/RulesHBox"]
+editor/display_folded = true
 margin_left = 976.0
 margin_right = 1083.0
 margin_bottom = 192.0
@@ -670,3 +710,84 @@ margin_top = 150.0
 margin_right = 107.0
 margin_bottom = 192.0
 pattern = "*"
+
+[node name="MatchSlider" type="Node2D" parent="."]
+position = Vector2( 4.75, 0.949951 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Fog" type="Node2D" parent="MatchSlider"]
+position = Vector2( 460.8, 824.7 )
+
+[node name="LeftFog" type="ColorRect" parent="MatchSlider/Fog"]
+margin_left = -1089.0
+margin_top = 3.0
+margin_right = -104.0
+margin_bottom = 226.0
+color = Color( 0.180392, 0.25098, 0.34902, 0.843137 )
+
+[node name="RightFog" type="ColorRect" parent="MatchSlider/Fog"]
+margin_left = 23.0
+margin_top = 5.0
+margin_right = 1039.0
+margin_bottom = 229.0
+color = Color( 0.180392, 0.25098, 0.34902, 0.843137 )
+
+[node name="StackPattern" type="VBoxContainer" parent="MatchSlider"]
+margin_left = 319.45
+margin_top = 859.0
+margin_right = 351.45
+margin_bottom = 1027.0
+custom_constants/separation = 0
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Stack0" parent="MatchSlider/StackPattern" instance=ExtResource( 2 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 0.0
+margin_top = 0.0
+margin_right = 32.0
+margin_bottom = 42.0
+color = Color( 0.266667, 0.360784, 0.454902, 1 )
+pattern = "V"
+
+[node name="Stack1" parent="MatchSlider/StackPattern" instance=ExtResource( 2 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 0.0
+margin_top = 42.0
+margin_right = 32.0
+margin_bottom = 84.0
+color = Color( 0.266667, 0.360784, 0.454902, 1 )
+pattern = "A"
+
+[node name="Stack2" parent="MatchSlider/StackPattern" instance=ExtResource( 2 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 0.0
+margin_top = 84.0
+margin_right = 32.0
+margin_bottom = 126.0
+color = Color( 0.266667, 0.360784, 0.454902, 1 )
+pattern = "N"
+
+[node name="Stack3" parent="MatchSlider/StackPattern" instance=ExtResource( 2 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 0.0
+margin_top = 126.0
+margin_right = 32.0
+margin_bottom = 168.0
+color = Color( 0.266667, 0.360784, 0.454902, 1 )
+pattern = ""

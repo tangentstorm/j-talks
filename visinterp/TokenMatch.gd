@@ -6,7 +6,7 @@ const JTYPE = preload("res://JTYPE.gd").JTYPE
 export var pattern : String = "" setget set_pattern
 
 const hints = {
-	"E": JTYPE.none,
+	"E": JTYPE.edge,
 	"(": JTYPE.lpar,
 	"=": JTYPE.cop,
 	")": JTYPE.rpar,
@@ -15,6 +15,7 @@ const hints = {
 	"A": JTYPE.adv,
 	"V": JTYPE.verb,
 	"N": JTYPE.noun,
+	"*": JTYPE.any,
 	"#": JTYPE.nb
 }
 
@@ -33,7 +34,7 @@ func set_pattern(p):
 		t.position.x = tx
 		t.position.y = ty
 		t.text = c
-		t.type = hints.get(c, JTYPE.none)
+		t.type = hints.get(c, JTYPE.any)
 		tx += max(24, t.get_node("bg").rect_size.x)
 		print("c: ",c," tx:",tx)
 
