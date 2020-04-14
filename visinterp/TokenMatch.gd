@@ -31,10 +31,10 @@ func set_pattern(p):
 	for c in pattern:
 		var t = Token.instance()
 		add_child(t)
-		t.position.x = tx
-		t.position.y = ty
+		t.rect_position.x = tx
+		t.rect_position.y = ty
 		t.text = c
 		t.type = hints.get(c, JTYPE.any)
-		tx += max(24, t.get_node("bg").rect_size.x)
+		tx += max(24, t.rect_size.x)
 		print("c: ",c," tx:",tx)
 

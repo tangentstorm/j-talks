@@ -9,17 +9,12 @@ font_path = "res://DroidSansMono.ttf"
 size = 24
 font_data = SubResource( 1 )
 
-[node name="Token" type="Node2D"]
+[node name="Token" type="ColorRect"]
+margin_right = 10.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 10, 32 )
+color = Color( 0.4, 0.4, 0.4, 1 )
 script = ExtResource( 1 )
-
-[node name="bg" type="ColorRect" parent="."]
-margin_left = -1.19998
-margin_top = -0.250015
-margin_right = 8.80002
-margin_bottom = 31.75
-rect_min_size = Vector2( 0, 32 )
-rect_pivot_offset = Vector2( 43, 59 )
-color = Color( 0, 0, 0, 1 )
 
 [node name="text" type="Label" parent="."]
 margin_left = 5.0

@@ -1,4 +1,4 @@
-tool extends Node2D
+tool extends ColorRect
 const JTYPE = preload("res://JTYPE.gd").JTYPE
 
 export (String) var text = ""  setget set_text
@@ -9,8 +9,7 @@ func set_text(t):
 	if ($text != null):
 		$text.rect_size.x = 0   # reset to 0 width
 		$text.text = t          # this changes the size, too
-		if ($bg != null):
-			$bg.rect_size.x = $text.rect_size.x + 10
+		self.rect_size.x = $text.rect_size.x + 10
 
 func _ready():
 	set("text", text)
@@ -41,7 +40,7 @@ func set_type(t):
 		JTYPE.any, _:
 			bg = Color("#445c74")
 			fg = Color.black
-			
-	if ($bg != null and $text != null):
-		$bg.color = bg
+
+	self.color = bg
+	if $text != null:
 		$text.set("custom_colors/font_color", fg)
