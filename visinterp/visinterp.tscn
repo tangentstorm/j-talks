@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Token.tscn" type="PackedScene" id=1]
 [ext_resource path="res://TokenMatch.tscn" type="PackedScene" id=2]
@@ -7,19 +7,61 @@
 font_path = "res://DroidSansMono.ttf"
 
 [sub_resource type="DynamicFont" id=2]
+size = 24
 font_data = SubResource( 1 )
 
 [sub_resource type="DynamicFont" id=3]
 size = 32
 font_data = SubResource( 1 )
 
+[sub_resource type="Animation" id=4]
+resource_name = "Init"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("MatchSlider/Root:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 340, 842 ) ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "SlideUp"
+length = 0.25
+tracks/0/type = "value"
+tracks/0/path = NodePath("MatchSlider/Root:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 0.420448 ),
+"update": 0,
+"values": [ Vector2( 340, 842 ), Vector2( 340, 593 ) ]
+}
+
+[sub_resource type="GDScript" id=6]
+script/source = "extends Node2D
+
+func slide():
+	# TODO: add a Tween here.
+	position.x = position.x
+"
+
 [node name="Node2D" type="Node2D"]
 __meta__ = {
-"_edit_horizontal_guides_": [  ],
-"_edit_vertical_guides_": [  ]
+"_edit_horizontal_guides_": [ 843.0, 1040.0, 710.0 ],
+"_edit_vertical_guides_": [ 1512.0, 379.146, 380.0 ]
 }
 
 [node name="legend" type="ColorRect" parent="."]
+editor/display_folded = true
 margin_left = 1632.9
 margin_top = 22.1
 margin_right = 1893.9
@@ -89,9 +131,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = 374.0
+margin_left = 380.0
 margin_top = 717.0
-margin_right = 512.0
+margin_right = 518.0
 margin_bottom = 759.0
 rect_min_size = Vector2( 0, 42 )
 color = Color( 0.4, 0.4, 0.4, 1 )
@@ -116,6 +158,7 @@ text = "a"
 type = 6
 
 [node name="stackArea" type="ColorRect" parent="."]
+editor/display_folded = true
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -125,7 +168,7 @@ margin_top = 716.0
 margin_right = 707.0
 margin_bottom = 758.0
 rect_min_size = Vector2( 0, 42 )
-color = Color( 0.505882, 0.588235, 0.666667, 1 )
+color = Color( 0.266667, 0.360784, 0.454902, 1 )
 
 [node name="vplus" parent="stackArea" instance=ExtResource( 1 )]
 position = Vector2( 18.85, 5.16797 )
@@ -149,20 +192,21 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = 706.0
 margin_top = 716.0
-margin_right = 1502.0
+margin_right = 1510.0
 margin_bottom = 758.0
 rect_min_size = Vector2( 0, 42 )
-color = Color( 0.266667, 0.360784, 0.454902, 1 )
+color = Color( 0.4, 0.4, 0.4, 1 )
 
 [node name="stack" type="VBoxContainer" parent="."]
 
 [node name="StackLabel" type="Label" parent="."]
-margin_left = 1450.31
-margin_top = 693.758
-margin_right = 1506.31
-margin_bottom = 734.758
+margin_left = 1440.41
+margin_top = 681.103
+margin_right = 1510.41
+margin_bottom = 742.103
 rect_min_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.266667, 0.360784, 0.454902, 1 )
 text = "Stack
 "
 
@@ -176,12 +220,13 @@ custom_fonts/font = SubResource( 3 )
 text = "J Parsing and Evaluation Rules"
 
 [node name="InputLabel" type="Label" parent="."]
-margin_left = 372.847
-margin_top = 688.703
-margin_right = 428.847
-margin_bottom = 729.703
+margin_left = 379.847
+margin_top = 681.103
+margin_right = 449.847
+margin_bottom = 722.103
 rect_min_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.266667, 0.360784, 0.454902, 1 )
 text = "Input"
 
 [node name="Rules" type="Node2D" parent="."]
@@ -199,13 +244,13 @@ custom_constants/separation = 20
 
 [node name="Rule0Monad" type="VBoxContainer" parent="Rules/RulesHBox"]
 margin_right = 107.0
-margin_bottom = 192.0
+margin_bottom = 197.0
 rect_min_size = Vector2( 107, 0 )
 custom_constants/separation = 0
 
 [node name="Label" type="Label" parent="Rules/RulesHBox/Rule0Monad"]
 margin_right = 107.0
-margin_bottom = 24.0
+margin_bottom = 29.0
 rect_min_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 2 )
 text = "0 Monad"
@@ -216,9 +261,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 24.0
+margin_top = 29.0
 margin_right = 107.0
-margin_bottom = 66.0
+margin_bottom = 71.0
 pattern = "E"
 
 [node name="TokenMatch26" parent="Rules/RulesHBox/Rule0Monad" instance=ExtResource( 2 )]
@@ -227,9 +272,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 66.0
+margin_top = 71.0
 margin_right = 107.0
-margin_bottom = 108.0
+margin_bottom = 113.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "V"
 
@@ -239,9 +284,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 108.0
+margin_top = 113.0
 margin_right = 107.0
-margin_bottom = 150.0
+margin_bottom = 155.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "N"
 
@@ -251,22 +296,22 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 150.0
+margin_top = 155.0
 margin_right = 107.0
-margin_bottom = 192.0
+margin_bottom = 197.0
 pattern = "*"
 
 [node name="Rule1Monad" type="VBoxContainer" parent="Rules/RulesHBox"]
 editor/display_folded = true
 margin_left = 127.0
 margin_right = 234.0
-margin_bottom = 192.0
+margin_bottom = 197.0
 rect_min_size = Vector2( 107, 0 )
 custom_constants/separation = 0
 
 [node name="Label2" type="Label" parent="Rules/RulesHBox/Rule1Monad"]
 margin_right = 107.0
-margin_bottom = 24.0
+margin_bottom = 29.0
 rect_min_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 2 )
 text = "1 Monad"
@@ -277,9 +322,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 24.0
+margin_top = 29.0
 margin_right = 107.0
-margin_bottom = 66.0
+margin_bottom = 71.0
 
 [node name="TokenMatch25" parent="Rules/RulesHBox/Rule1Monad" instance=ExtResource( 2 )]
 anchor_left = 0.0
@@ -287,9 +332,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 66.0
+margin_top = 71.0
 margin_right = 107.0
-margin_bottom = 108.0
+margin_bottom = 113.0
 pattern = "V"
 
 [node name="TokenMatch27" parent="Rules/RulesHBox/Rule1Monad" instance=ExtResource( 2 )]
@@ -298,9 +343,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 108.0
+margin_top = 113.0
 margin_right = 107.0
-margin_bottom = 150.0
+margin_bottom = 155.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "V"
 
@@ -310,9 +355,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 150.0
+margin_top = 155.0
 margin_right = 107.0
-margin_bottom = 192.0
+margin_bottom = 197.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "N"
 
@@ -320,13 +365,13 @@ pattern = "N"
 editor/display_folded = true
 margin_left = 254.0
 margin_right = 361.0
-margin_bottom = 192.0
+margin_bottom = 197.0
 rect_min_size = Vector2( 107, 0 )
 custom_constants/separation = 0
 
 [node name="Label3" type="Label" parent="Rules/RulesHBox/Rule2Dyad"]
 margin_right = 107.0
-margin_bottom = 24.0
+margin_bottom = 29.0
 rect_min_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 2 )
 text = "2 Dyad"
@@ -337,9 +382,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 24.0
+margin_top = 29.0
 margin_right = 107.0
-margin_bottom = 66.0
+margin_bottom = 71.0
 
 [node name="TokenMatch30" parent="Rules/RulesHBox/Rule2Dyad" instance=ExtResource( 2 )]
 anchor_left = 0.0
@@ -347,9 +392,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 66.0
+margin_top = 71.0
 margin_right = 107.0
-margin_bottom = 108.0
+margin_bottom = 113.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "N"
 
@@ -359,9 +404,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 108.0
+margin_top = 113.0
 margin_right = 107.0
-margin_bottom = 150.0
+margin_bottom = 155.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "V"
 
@@ -371,22 +416,22 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 150.0
+margin_top = 155.0
 margin_right = 107.0
-margin_bottom = 192.0
+margin_bottom = 197.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "N"
 
 [node name="Rule3Adverb" type="VBoxContainer" parent="Rules/RulesHBox"]
 margin_left = 381.0
-margin_right = 488.0
-margin_bottom = 192.0
+margin_right = 493.0
+margin_bottom = 197.0
 rect_min_size = Vector2( 107, 0 )
 custom_constants/separation = 0
 
 [node name="Label4" type="Label" parent="Rules/RulesHBox/Rule3Adverb"]
-margin_right = 107.0
-margin_bottom = 24.0
+margin_right = 112.0
+margin_bottom = 29.0
 rect_min_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 2 )
 text = "3 Adverb"
@@ -397,9 +442,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 24.0
-margin_right = 107.0
-margin_bottom = 66.0
+margin_top = 29.0
+margin_right = 112.0
+margin_bottom = 71.0
 
 [node name="TokenMatch19" parent="Rules/RulesHBox/Rule3Adverb" instance=ExtResource( 2 )]
 anchor_left = 0.0
@@ -407,9 +452,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 66.0
-margin_right = 107.0
-margin_bottom = 108.0
+margin_top = 71.0
+margin_right = 112.0
+margin_bottom = 113.0
 color = Color( 0.505882, 0.588235, 0.666667, 1 )
 pattern = "VN"
 
@@ -419,9 +464,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 108.0
-margin_right = 107.0
-margin_bottom = 150.0
+margin_top = 113.0
+margin_right = 112.0
+margin_bottom = 155.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "A"
 
@@ -431,22 +476,22 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 150.0
-margin_right = 107.0
-margin_bottom = 192.0
+margin_top = 155.0
+margin_right = 112.0
+margin_bottom = 197.0
 pattern = "*"
 
 [node name="Rule4Conj" type="VBoxContainer" parent="Rules/RulesHBox"]
 editor/display_folded = true
-margin_left = 508.0
-margin_right = 615.0
-margin_bottom = 192.0
+margin_left = 513.0
+margin_right = 620.0
+margin_bottom = 197.0
 rect_min_size = Vector2( 107, 0 )
 custom_constants/separation = 0
 
 [node name="Label5" type="Label" parent="Rules/RulesHBox/Rule4Conj"]
 margin_right = 107.0
-margin_bottom = 24.0
+margin_bottom = 29.0
 rect_min_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 2 )
 text = "4 Conj"
@@ -457,9 +502,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 24.0
+margin_top = 29.0
 margin_right = 107.0
-margin_bottom = 66.0
+margin_bottom = 71.0
 
 [node name="TokenMatch17" parent="Rules/RulesHBox/Rule4Conj" instance=ExtResource( 2 )]
 anchor_left = 0.0
@@ -467,9 +512,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 66.0
+margin_top = 71.0
 margin_right = 107.0
-margin_bottom = 108.0
+margin_bottom = 113.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "VN"
 
@@ -479,9 +524,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 108.0
+margin_top = 113.0
 margin_right = 107.0
-margin_bottom = 150.0
+margin_bottom = 155.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "C"
 
@@ -491,23 +536,23 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 150.0
+margin_top = 155.0
 margin_right = 107.0
-margin_bottom = 192.0
+margin_bottom = 197.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "VN"
 
 [node name="Rule5Fork" type="VBoxContainer" parent="Rules/RulesHBox"]
 editor/display_folded = true
-margin_left = 635.0
-margin_right = 742.0
-margin_bottom = 192.0
+margin_left = 640.0
+margin_right = 747.0
+margin_bottom = 197.0
 rect_min_size = Vector2( 107, 0 )
 custom_constants/separation = 0
 
 [node name="Label6" type="Label" parent="Rules/RulesHBox/Rule5Fork"]
 margin_right = 107.0
-margin_bottom = 24.0
+margin_bottom = 29.0
 rect_min_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 2 )
 text = "5 Fork"
@@ -518,9 +563,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 24.0
+margin_top = 29.0
 margin_right = 107.0
-margin_bottom = 66.0
+margin_bottom = 71.0
 
 [node name="TokenMatch16" parent="Rules/RulesHBox/Rule5Fork" instance=ExtResource( 2 )]
 anchor_left = 0.0
@@ -528,9 +573,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 66.0
+margin_top = 71.0
 margin_right = 107.0
-margin_bottom = 108.0
+margin_bottom = 113.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "VN"
 
@@ -540,9 +585,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 108.0
+margin_top = 113.0
 margin_right = 107.0
-margin_bottom = 150.0
+margin_bottom = 155.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "V"
 
@@ -552,23 +597,23 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 150.0
+margin_top = 155.0
 margin_right = 107.0
-margin_bottom = 192.0
+margin_bottom = 197.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "V"
 
 [node name="Rule6Bident" type="VBoxContainer" parent="Rules/RulesHBox"]
 editor/display_folded = true
-margin_left = 762.0
-margin_right = 869.0
-margin_bottom = 192.0
+margin_left = 767.0
+margin_right = 879.0
+margin_bottom = 197.0
 rect_min_size = Vector2( 107, 0 )
 custom_constants/separation = 0
 
 [node name="Label7" type="Label" parent="Rules/RulesHBox/Rule6Bident"]
-margin_right = 107.0
-margin_bottom = 24.0
+margin_right = 112.0
+margin_bottom = 29.0
 rect_min_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 2 )
 text = "6 Bident"
@@ -579,9 +624,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 24.0
-margin_right = 107.0
-margin_bottom = 66.0
+margin_top = 29.0
+margin_right = 112.0
+margin_bottom = 71.0
 pattern = "E"
 
 [node name="TokenMatch8" parent="Rules/RulesHBox/Rule6Bident" instance=ExtResource( 2 )]
@@ -590,9 +635,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 66.0
-margin_right = 107.0
-margin_bottom = 108.0
+margin_top = 71.0
+margin_right = 112.0
+margin_bottom = 113.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "CAVN"
 
@@ -602,9 +647,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 108.0
-margin_right = 107.0
-margin_bottom = 150.0
+margin_top = 113.0
+margin_right = 112.0
+margin_bottom = 155.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "CAVN"
 
@@ -614,22 +659,22 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 150.0
-margin_right = 107.0
-margin_bottom = 192.0
+margin_top = 155.0
+margin_right = 112.0
+margin_bottom = 197.0
 pattern = "*"
 
 [node name="Rule7Is" type="VBoxContainer" parent="Rules/RulesHBox"]
 editor/display_folded = true
-margin_left = 889.0
-margin_right = 996.0
-margin_bottom = 192.0
+margin_left = 899.0
+margin_right = 1006.0
+margin_bottom = 197.0
 rect_min_size = Vector2( 107, 0 )
 custom_constants/separation = 0
 
 [node name="Label8" type="Label" parent="Rules/RulesHBox/Rule7Is"]
 margin_right = 107.0
-margin_bottom = 24.0
+margin_bottom = 29.0
 rect_min_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 2 )
 text = "7 Is"
@@ -640,9 +685,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 24.0
+margin_top = 29.0
 margin_right = 107.0
-margin_bottom = 66.0
+margin_bottom = 71.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "IN"
 
@@ -652,9 +697,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 66.0
+margin_top = 71.0
 margin_right = 107.0
-margin_bottom = 108.0
+margin_bottom = 113.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "="
 
@@ -664,9 +709,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 108.0
+margin_top = 113.0
 margin_right = 107.0
-margin_bottom = 150.0
+margin_bottom = 155.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "CAVN"
 
@@ -676,22 +721,22 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 150.0
+margin_top = 155.0
 margin_right = 107.0
-margin_bottom = 192.0
+margin_bottom = 197.0
 pattern = "*"
 
 [node name="Rule8Paren" type="VBoxContainer" parent="Rules/RulesHBox"]
 editor/display_folded = true
-margin_left = 1016.0
-margin_right = 1123.0
-margin_bottom = 192.0
+margin_left = 1026.0
+margin_right = 1133.0
+margin_bottom = 197.0
 rect_min_size = Vector2( 107, 0 )
 custom_constants/separation = 0
 
 [node name="Label9" type="Label" parent="Rules/RulesHBox/Rule8Paren"]
 margin_right = 107.0
-margin_bottom = 24.0
+margin_bottom = 29.0
 rect_min_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 2 )
 text = "8 Paren"
@@ -702,9 +747,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 24.0
+margin_top = 29.0
 margin_right = 107.0
-margin_bottom = 66.0
+margin_bottom = 71.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "("
 
@@ -714,9 +759,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 66.0
+margin_top = 71.0
 margin_right = 107.0
-margin_bottom = 108.0
+margin_bottom = 113.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "CAVN"
 
@@ -726,9 +771,9 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 108.0
+margin_top = 113.0
 margin_right = 107.0
-margin_bottom = 150.0
+margin_bottom = 155.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = ")"
 
@@ -738,45 +783,48 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 0.0
-margin_top = 150.0
+margin_top = 155.0
 margin_right = 107.0
-margin_bottom = 192.0
+margin_bottom = 197.0
 pattern = "*"
 
-[node name="MatchSlider" type="Node2D" parent="."]
-position = Vector2( 12.85, 251.65 )
-__meta__ = {
-"_edit_group_": true
-}
+[node name="MatchSlider" type="AnimationPlayer" parent="."]
+autoplay = "Init"
+anims/Init = SubResource( 4 )
+anims/SlideUp = SubResource( 5 )
 
-[node name="Fog" type="Node2D" parent="MatchSlider"]
-position = Vector2( 460.8, 824.7 )
+[node name="Root" type="Node2D" parent="MatchSlider"]
+position = Vector2( 340, 842 )
+script = SubResource( 6 )
 
-[node name="LeftFog" type="ColorRect" parent="MatchSlider/Fog"]
-margin_left = -1627.0
-margin_top = 3.0
-margin_right = -104.0
-margin_bottom = 320.0
+[node name="Fog" type="Node2D" parent="MatchSlider/Root"]
+position = Vector2( -1492.2, 241.982 )
+
+[node name="LeftFog" type="ColorRect" parent="MatchSlider/Root/Fog"]
+margin_left = -3.82178
+margin_top = -5.6333
+margin_right = 1519.17
+margin_bottom = 311.367
 color = Color( 0.360784, 0.403922, 0.462745, 0.94902 )
 
-[node name="RightFog" type="ColorRect" parent="MatchSlider/Fog"]
-margin_left = 23.0
-margin_top = 5.0
-margin_right = 1659.0
-margin_bottom = 331.0
+[node name="RightFog" type="ColorRect" parent="MatchSlider/Root/Fog"]
+margin_left = 1646.17
+margin_top = -3.6333
+margin_right = 3282.18
+margin_bottom = 322.367
 color = Color( 0.360784, 0.403922, 0.462745, 0.94902 )
 
-[node name="StackPattern" type="VBoxContainer" parent="MatchSlider"]
-margin_left = 319.45
-margin_top = 859.0
-margin_right = 351.45
-margin_bottom = 1027.0
+[node name="StackPattern" type="VBoxContainer" parent="MatchSlider/Root"]
+margin_left = -11.8402
+margin_top = 270.432
+margin_right = 20.1598
+margin_bottom = 438.432
 custom_constants/separation = 0
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Stack0" parent="MatchSlider/StackPattern" instance=ExtResource( 2 )]
+[node name="Stack0" parent="MatchSlider/Root/StackPattern" instance=ExtResource( 2 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -785,10 +833,9 @@ margin_left = 0.0
 margin_top = 0.0
 margin_right = 32.0
 margin_bottom = 42.0
-color = Color( 0.266667, 0.360784, 0.454902, 1 )
 pattern = "V"
 
-[node name="Stack1" parent="MatchSlider/StackPattern" instance=ExtResource( 2 )]
+[node name="Stack1" parent="MatchSlider/Root/StackPattern" instance=ExtResource( 2 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -797,10 +844,9 @@ margin_left = 0.0
 margin_top = 42.0
 margin_right = 32.0
 margin_bottom = 84.0
-color = Color( 0.266667, 0.360784, 0.454902, 1 )
 pattern = "A"
 
-[node name="Stack2" parent="MatchSlider/StackPattern" instance=ExtResource( 2 )]
+[node name="Stack2" parent="MatchSlider/Root/StackPattern" instance=ExtResource( 2 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -809,10 +855,9 @@ margin_left = 0.0
 margin_top = 84.0
 margin_right = 32.0
 margin_bottom = 126.0
-color = Color( 0.266667, 0.360784, 0.454902, 1 )
 pattern = "N"
 
-[node name="Stack3" parent="MatchSlider/StackPattern" instance=ExtResource( 2 )]
+[node name="Stack3" parent="MatchSlider/Root/StackPattern" instance=ExtResource( 2 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -821,5 +866,4 @@ margin_left = 0.0
 margin_top = 126.0
 margin_right = 32.0
 margin_bottom = 168.0
-color = Color( 0.266667, 0.360784, 0.454902, 1 )
 pattern = ""
