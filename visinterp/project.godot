@@ -1,0 +1,36 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[  ]
+_global_script_class_icons={
+
+}
+
+[application]
+
+config/name="visinterp"
+run/main_scene="res://visinterp.tscn"
+config/icon="res://icon.png"
+
+[display]
+
+window/size/width=1920
+window/size/height=1080
+window/size/resizable=false
+window/size/borderless=true
+
+[global]
+
+color=false
+
+[rendering]
+
+environment/default_clear_color=Color( 0.176471, 0.247059, 0.34902, 1 )
+environment/default_environment="res://default_env.tres"

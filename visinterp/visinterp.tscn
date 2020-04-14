@@ -1,0 +1,551 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Token.tscn" type="PackedScene" id=1]
+
+[node name="Node2D" type="Node2D"]
+__meta__ = {
+"_edit_horizontal_guides_": [ 148.267 ],
+"_edit_vertical_guides_": [  ]
+}
+
+[node name="legend" type="ColorRect" parent="."]
+margin_left = 55.4235
+margin_top = 198.785
+margin_right = 211.424
+margin_bottom = 480.785
+color = Color( 0.266667, 0.360784, 0.454902, 1 )
+
+[node name="noun" parent="legend" instance=ExtResource( 1 )]
+position = Vector2( 18.6652, 97.0019 )
+text = "Noun"
+type = 0
+
+[node name="verb" parent="legend" instance=ExtResource( 1 )]
+position = Vector2( 15.8558, 61.752 )
+text = "Verb"
+type = 1
+
+[node name="adv" parent="legend" instance=ExtResource( 1 )]
+position = Vector2( 19.9267, 157.002 )
+text = "Adv"
+type = 2
+
+[node name="conj" parent="legend" instance=ExtResource( 1 )]
+position = Vector2( 18.7267, 127.002 )
+text = "Conj"
+type = 3
+
+[node name="lpar" parent="legend" instance=ExtResource( 1 )]
+position = Vector2( 19.4557, 17.9439 )
+text = "("
+type = 4
+
+[node name="rpar" parent="legend" instance=ExtResource( 1 )]
+position = Vector2( 88.501, 17.0019 )
+text = ")"
+type = 5
+
+[node name="iden" parent="legend" instance=ExtResource( 1 )]
+position = Vector2( 19.639, 216.752 )
+text = "Iden"
+type = 6
+
+[node name="none" parent="legend" instance=ExtResource( 1 )]
+position = Vector2( 17.0558, 186.502 )
+text = "Edge"
+
+[node name="cop" parent="legend" instance=ExtResource( 1 )]
+position = Vector2( 51.1421, 18.2829 )
+text = "=."
+type = 7
+
+[node name="nb" parent="legend" instance=ExtResource( 1 )]
+position = Vector2( 18.2558, 247.002 )
+text = "NB."
+type = 8
+
+[node name="statement" type="ColorRect" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 506.742
+margin_top = 320.754
+margin_right = 1312.74
+margin_bottom = 397.754
+color = Color( 0.266667, 0.360784, 0.454902, 1 )
+
+[node name="none4" parent="statement" instance=ExtResource( 1 )]
+position = Vector2( 653.619, 16.7534 )
+
+[node name="n2" parent="statement" instance=ExtResource( 1 )]
+position = Vector2( 720.419, 16.4725 )
+text = "2"
+type = 0
+
+[node name="cop2" parent="statement" instance=ExtResource( 1 )]
+position = Vector2( 693.619, 16.7225 )
+text = "=."
+type = 7
+
+[node name="iden2" parent="statement" instance=ExtResource( 1 )]
+position = Vector2( 671.286, 17.8889 )
+text = "a"
+type = 6
+
+[node name="stack" type="Node2D" parent="."]
+
+[node name="vplus" parent="stack" instance=ExtResource( 1 )]
+position = Vector2( 1393.9, 327.087 )
+text = "+"
+type = 1
+
+[node name="noun2" parent="stack" instance=ExtResource( 1 )]
+position = Vector2( 1400.46, 407.511 )
+text = "5 2 7"
+type = 0
+
+[node name="adv2" parent="stack" instance=ExtResource( 1 )]
+position = Vector2( 1398.21, 362.075 )
+text = "/"
+type = 2
+
+[node name="Rules" type="Node2D" parent="."]
+
+[node name="Rule0" type="Node2D" parent="Rules"]
+
+[node name="noun2" parent="Rules/Rule0" instance=ExtResource( 1 )]
+position = Vector2( 573.673, 88.0779 )
+text = "N"
+type = 0
+
+[node name="verb2" parent="Rules/Rule0" instance=ExtResource( 1 )]
+position = Vector2( 573.673, 67.5779 )
+text = "V"
+type = 1
+
+[node name="none2" parent="Rules/Rule0" instance=ExtResource( 1 )]
+position = Vector2( 573.673, 44.3279 )
+
+[node name="Label" type="Label" parent="Rules/Rule0"]
+margin_left = 571.787
+margin_top = 23.8279
+margin_right = 626.787
+margin_bottom = 37.8279
+text = "0 Monad"
+
+[node name="ColorRect" type="ColorRect" parent="Rules/Rule0"]
+margin_left = 558.0
+margin_top = 71.0
+margin_right = 569.0
+margin_bottom = 110.0
+
+[node name="Rule1" type="Node2D" parent="Rules"]
+
+[node name="noun4" parent="Rules/Rule1" instance=ExtResource( 1 )]
+position = Vector2( 722.987, 114.578 )
+text = "N"
+type = 0
+
+[node name="noun3" parent="Rules/Rule1" instance=ExtResource( 1 )]
+position = Vector2( 797.587, 43.8279 )
+text = "N"
+type = 0
+
+[node name="verb4" parent="Rules/Rule1" instance=ExtResource( 1 )]
+position = Vector2( 722.987, 67.0779 )
+text = "V"
+type = 1
+
+[node name="verb5" parent="Rules/Rule1" instance=ExtResource( 1 )]
+position = Vector2( 722.987, 90.8279 )
+text = "V"
+type = 1
+
+[node name="verb3" parent="Rules/Rule1" instance=ExtResource( 1 )]
+position = Vector2( 770.787, 44.0779 )
+text = "V"
+type = 1
+
+[node name="adv2" parent="Rules/Rule1" instance=ExtResource( 1 )]
+position = Vector2( 742.987, 44.0779 )
+text = "A"
+type = 2
+
+[node name="none3" parent="Rules/Rule1" instance=ExtResource( 1 )]
+position = Vector2( 722.987, 44.0779 )
+text = "E"
+
+[node name="Label2" type="Label" parent="Rules/Rule1"]
+margin_left = 721.787
+margin_top = 23.8279
+margin_right = 776.787
+margin_bottom = 37.8279
+text = "1 Monad"
+
+[node name="ColorRect2" type="ColorRect" parent="Rules/Rule1"]
+margin_left = 707.0
+margin_top = 94.0
+margin_right = 716.0
+margin_bottom = 137.0
+
+[node name="Rule2" type="Node2D" parent="Rules"]
+
+[node name="noun5" parent="Rules/Rule2" instance=ExtResource( 1 )]
+position = Vector2( 872.987, 114.828 )
+text = "N"
+type = 0
+
+[node name="noun6" parent="Rules/Rule2" instance=ExtResource( 1 )]
+position = Vector2( 947.587, 44.0779 )
+text = "N"
+type = 0
+
+[node name="noun7" parent="Rules/Rule2" instance=ExtResource( 1 )]
+position = Vector2( 871.787, 66.8279 )
+text = "N"
+type = 0
+
+[node name="verb8" parent="Rules/Rule2" instance=ExtResource( 1 )]
+position = Vector2( 872.987, 91.0779 )
+text = "V"
+type = 1
+
+[node name="verb7" parent="Rules/Rule2" instance=ExtResource( 1 )]
+position = Vector2( 920.787, 44.3279 )
+text = "V"
+type = 1
+
+[node name="adv3" parent="Rules/Rule2" instance=ExtResource( 1 )]
+position = Vector2( 892.987, 44.3279 )
+text = "A"
+type = 2
+
+[node name="none4" parent="Rules/Rule2" instance=ExtResource( 1 )]
+position = Vector2( 872.987, 44.3279 )
+
+[node name="Label3" type="Label" parent="Rules/Rule2"]
+margin_left = 872.787
+margin_top = 23.8279
+margin_right = 927.787
+margin_bottom = 37.8279
+text = "2 Dyad"
+
+[node name="ColorRect3" type="ColorRect" parent="Rules/Rule2"]
+margin_left = 855.0
+margin_top = 69.0
+margin_right = 865.0
+margin_bottom = 136.0
+
+[node name="Rule3" type="Node2D" parent="Rules"]
+
+[node name="noun9" parent="Rules/Rule3" instance=ExtResource( 1 )]
+position = Vector2( 1101.3, 47.7858 )
+text = "N"
+type = 0
+
+[node name="noun8" parent="Rules/Rule3" instance=ExtResource( 1 )]
+position = Vector2( 1055.5, 72.5358 )
+text = "N"
+type = 0
+
+[node name="verb10" parent="Rules/Rule3" instance=ExtResource( 1 )]
+position = Vector2( 1026.7, 74.0358 )
+text = "V"
+type = 1
+
+[node name="verb9" parent="Rules/Rule3" instance=ExtResource( 1 )]
+position = Vector2( 1074.5, 48.0358 )
+text = "V"
+type = 1
+
+[node name="adv4" parent="Rules/Rule3" instance=ExtResource( 1 )]
+position = Vector2( 1046.7, 48.0358 )
+text = "A"
+type = 2
+
+[node name="adv5" parent="Rules/Rule3" instance=ExtResource( 1 )]
+position = Vector2( 1026.7, 93.5358 )
+text = "A"
+type = 2
+
+[node name="none5" parent="Rules/Rule3" instance=ExtResource( 1 )]
+position = Vector2( 1026.7, 48.0358 )
+
+[node name="Label4" type="Label" parent="Rules/Rule3"]
+margin_left = 1025.5
+margin_top = 27.2858
+margin_right = 1082.5
+margin_bottom = 41.2858
+text = "3 Adverb"
+
+[node name="ColorRect4" type="ColorRect" parent="Rules/Rule3"]
+margin_left = 1008.22
+margin_top = 73.9373
+margin_right = 1019.22
+margin_bottom = 112.937
+
+[node name="Rule4" type="Node2D" parent="Rules"]
+
+[node name="noun11" parent="Rules/Rule4" instance=ExtResource( 1 )]
+position = Vector2( 1250.1, 49.2858 )
+text = "N"
+type = 0
+
+[node name="noun10" parent="Rules/Rule4" instance=ExtResource( 1 )]
+position = Vector2( 1204.3, 74.0358 )
+text = "N"
+type = 0
+
+[node name="noun12" parent="Rules/Rule4" instance=ExtResource( 1 )]
+position = Vector2( 1204.3, 120.536 )
+text = "N"
+type = 0
+
+[node name="verb12" parent="Rules/Rule4" instance=ExtResource( 1 )]
+position = Vector2( 1175.5, 75.5358 )
+text = "V"
+type = 1
+
+[node name="verb13" parent="Rules/Rule4" instance=ExtResource( 1 )]
+position = Vector2( 1175.5, 122.036 )
+text = "V"
+type = 1
+
+[node name="verb11" parent="Rules/Rule4" instance=ExtResource( 1 )]
+position = Vector2( 1223.3, 49.5358 )
+text = "V"
+type = 1
+
+[node name="adv6" parent="Rules/Rule4" instance=ExtResource( 1 )]
+position = Vector2( 1195.5, 49.5358 )
+text = "A"
+type = 2
+
+[node name="conj2" parent="Rules/Rule4" instance=ExtResource( 1 )]
+position = Vector2( 1175.5, 99.2858 )
+text = "C"
+type = 3
+
+[node name="none6" parent="Rules/Rule4" instance=ExtResource( 1 )]
+position = Vector2( 1175.5, 49.5358 )
+
+[node name="Label5" type="Label" parent="Rules/Rule4"]
+margin_left = 1178.3
+margin_top = 27.2858
+margin_right = 1233.3
+margin_bottom = 41.2858
+text = "4 Conj"
+
+[node name="ColorRect5" type="ColorRect" parent="Rules/Rule4"]
+margin_left = 1162.71
+margin_top = 78.2078
+margin_right = 1170.71
+margin_bottom = 144.208
+
+[node name="Rule5" type="Node2D" parent="Rules"]
+editor/display_folded = true
+
+[node name="noun15" parent="Rules/Rule5" instance=ExtResource( 1 )]
+position = Vector2( 1398.5, 49.5358 )
+text = "N"
+type = 0
+
+[node name="noun13" parent="Rules/Rule5" instance=ExtResource( 1 )]
+position = Vector2( 1352.7, 74.2858 )
+text = "N"
+type = 0
+
+[node name="verb16" parent="Rules/Rule5" instance=ExtResource( 1 )]
+position = Vector2( 1323.9, 75.7858 )
+text = "V"
+type = 1
+
+[node name="verb17" parent="Rules/Rule5" instance=ExtResource( 1 )]
+position = Vector2( 1323.9, 95.7858 )
+text = "V"
+type = 1
+
+[node name="verb15" parent="Rules/Rule5" instance=ExtResource( 1 )]
+position = Vector2( 1323.9, 122.286 )
+text = "V"
+type = 1
+
+[node name="verb14" parent="Rules/Rule5" instance=ExtResource( 1 )]
+position = Vector2( 1371.7, 49.7858 )
+text = "V"
+type = 1
+
+[node name="adv7" parent="Rules/Rule5" instance=ExtResource( 1 )]
+position = Vector2( 1343.9, 49.7858 )
+text = "A"
+type = 2
+
+[node name="none7" parent="Rules/Rule5" instance=ExtResource( 1 )]
+position = Vector2( 1323.9, 49.7858 )
+
+[node name="Label6" type="Label" parent="Rules/Rule5"]
+margin_left = 1323.9
+margin_top = 27.2858
+margin_right = 1378.9
+margin_bottom = 41.2858
+text = "5 Fork"
+
+[node name="ColorRect6" type="ColorRect" parent="Rules/Rule5"]
+margin_left = 1309.71
+margin_top = 79.2078
+margin_right = 1317.71
+margin_bottom = 146.208
+
+[node name="Rule6" type="Node2D" parent="Rules"]
+
+[node name="noun18" parent="Rules/Rule6" instance=ExtResource( 1 )]
+position = Vector2( 1550.95, 70.7455 )
+text = "N"
+type = 0
+
+[node name="noun19" parent="Rules/Rule6" instance=ExtResource( 1 )]
+position = Vector2( 1550.95, 95.2749 )
+text = "N"
+type = 0
+
+[node name="verb18" parent="Rules/Rule6" instance=ExtResource( 1 )]
+position = Vector2( 1524.15, 70.9955 )
+text = "V"
+type = 1
+
+[node name="verb21" parent="Rules/Rule6" instance=ExtResource( 1 )]
+position = Vector2( 1524.8, 95.5543 )
+text = "V"
+type = 1
+
+[node name="adv8" parent="Rules/Rule6" instance=ExtResource( 1 )]
+position = Vector2( 1496.35, 70.9955 )
+text = "A"
+type = 2
+
+[node name="adv9" parent="Rules/Rule6" instance=ExtResource( 1 )]
+position = Vector2( 1497.55, 95.9955 )
+text = "A"
+type = 2
+
+[node name="conj3" parent="Rules/Rule6" instance=ExtResource( 1 )]
+position = Vector2( 1471.04, 70.9955 )
+text = "C"
+type = 3
+
+[node name="conj4" parent="Rules/Rule6" instance=ExtResource( 1 )]
+position = Vector2( 1471.04, 95.7455 )
+text = "C"
+type = 3
+
+[node name="none8" parent="Rules/Rule6" instance=ExtResource( 1 )]
+position = Vector2( 1474.13, 47.2455 )
+
+[node name="Label7" type="Label" parent="Rules/Rule6"]
+margin_left = 1474.93
+margin_top = 27.4955
+margin_right = 1529.93
+margin_bottom = 41.4955
+text = "6 Bident"
+
+[node name="ColorRect7" type="ColorRect" parent="Rules/Rule6"]
+margin_left = 1455.26
+margin_top = 72.4175
+margin_right = 1466.26
+margin_bottom = 118.418
+
+[node name="Rule7" type="Node2D" parent="Rules"]
+
+[node name="noun16" parent="Rules/Rule7" instance=ExtResource( 1 )]
+position = Vector2( 1650.78, 53.7455 )
+text = "N"
+type = 0
+
+[node name="noun21" parent="Rules/Rule7" instance=ExtResource( 1 )]
+position = Vector2( 1711.98, 100.995 )
+text = "N"
+type = 0
+
+[node name="verb19" parent="Rules/Rule7" instance=ExtResource( 1 )]
+position = Vector2( 1685.18, 101.245 )
+text = "V"
+type = 1
+
+[node name="adv10" parent="Rules/Rule7" instance=ExtResource( 1 )]
+position = Vector2( 1657.38, 101.245 )
+text = "A"
+type = 2
+
+[node name="conj5" parent="Rules/Rule7" instance=ExtResource( 1 )]
+position = Vector2( 1629.18, 100.745 )
+text = "C"
+type = 3
+
+[node name="iden3" parent="Rules/Rule7" instance=ExtResource( 1 )]
+position = Vector2( 1627.98, 53.4955 )
+text = "I"
+type = 6
+
+[node name="cop2" parent="Rules/Rule7" instance=ExtResource( 1 )]
+position = Vector2( 1629.18, 77.7455 )
+text = "=:"
+type = 7
+
+[node name="Label8" type="Label" parent="Rules/Rule7"]
+margin_left = 1626.78
+margin_top = 27.4955
+margin_right = 1681.78
+margin_bottom = 41.4955
+text = "7 Is"
+
+[node name="ColorRect8" type="ColorRect" parent="Rules/Rule7"]
+margin_left = 1616.26
+margin_top = 53.4175
+margin_right = 1624.26
+margin_bottom = 123.418
+
+[node name="Rule8" type="Node2D" parent="Rules"]
+
+[node name="noun22" parent="Rules/Rule8" instance=ExtResource( 1 )]
+position = Vector2( 1858.53, 71.9955 )
+text = "N"
+type = 0
+
+[node name="verb20" parent="Rules/Rule8" instance=ExtResource( 1 )]
+position = Vector2( 1831.73, 72.2455 )
+text = "V"
+type = 1
+
+[node name="adv11" parent="Rules/Rule8" instance=ExtResource( 1 )]
+position = Vector2( 1803.93, 72.2455 )
+text = "A"
+type = 2
+
+[node name="conj6" parent="Rules/Rule8" instance=ExtResource( 1 )]
+position = Vector2( 1775.73, 71.7455 )
+text = "C"
+type = 3
+
+[node name="lpar2" parent="Rules/Rule8" instance=ExtResource( 1 )]
+position = Vector2( 1775.73, 47.4955 )
+text = "("
+type = 4
+
+[node name="rpar2" parent="Rules/Rule8" instance=ExtResource( 1 )]
+position = Vector2( 1775.73, 98.2455 )
+text = ")"
+type = 5
+
+[node name="Label9" type="Label" parent="Rules/Rule8"]
+margin_left = 1769.98
+margin_top = 27.4955
+margin_right = 1824.98
+margin_bottom = 41.4955
+text = "8 Paren"
+
+[node name="ColorRect9" type="ColorRect" parent="Rules/Rule8"]
+margin_left = 1760.12
+margin_top = 49.2275
+margin_right = 1768.12
+margin_bottom = 119.227
