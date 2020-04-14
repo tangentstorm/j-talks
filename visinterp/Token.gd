@@ -1,6 +1,5 @@
 tool extends Node2D
-
-enum JTYPE { noun, verb, adv, conj, lpar, rpar, iden, cop, nb, any, none }
+const JTYPE = preload("res://JTYPE.gd").JTYPE
 
 export (String) var text = ""  setget set_text
 export (JTYPE) var type = JTYPE.none setget set_type
@@ -11,7 +10,7 @@ func set_text(t):
 		$text.rect_size.x = 0   # reset to 0 width
 		$text.text = t          # this changes the size, too
 		if ($bg != null):
-			$bg.rect_size.x = $text.rect_size.x + 20 # resize box, plus margin
+			$bg.rect_size.x = $text.rect_size.x + 10
 
 func _ready():
 	set("text", text)
