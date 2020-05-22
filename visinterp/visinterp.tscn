@@ -169,6 +169,7 @@ margin_right = 88.0
 margin_bottom = 104.0
 color = Color( 0, 0, 0, 1 )
 text = "Edge"
+type = 10
 
 [node name="nb" parent="legend/VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource( 1 )]
 margin_top = 108.0
@@ -196,6 +197,7 @@ margin_right = 30.0
 margin_bottom = 37.0
 color = Color( 0, 0, 0, 1 )
 text = " "
+type = 10
 
 [node name="n2" parent="inputArea" instance=ExtResource( 1 )]
 margin_left = 96.0
@@ -380,7 +382,6 @@ margin_bottom = 197.0
 pattern = "*"
 
 [node name="Rule1Monad" type="VBoxContainer" parent="Rules/RulesHBox"]
-editor/display_folded = true
 margin_left = 127.0
 margin_right = 234.0
 margin_bottom = 197.0
@@ -440,7 +441,6 @@ color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "N"
 
 [node name="Rule2Dyad" type="VBoxContainer" parent="Rules/RulesHBox"]
-editor/display_folded = true
 margin_left = 254.0
 margin_right = 361.0
 margin_bottom = 197.0
@@ -560,7 +560,6 @@ margin_bottom = 197.0
 pattern = "*"
 
 [node name="Rule4Conj" type="VBoxContainer" parent="Rules/RulesHBox"]
-editor/display_folded = true
 margin_left = 513.0
 margin_right = 620.0
 margin_bottom = 197.0
@@ -621,7 +620,6 @@ color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "VN"
 
 [node name="Rule5Fork" type="VBoxContainer" parent="Rules/RulesHBox"]
-editor/display_folded = true
 margin_left = 640.0
 margin_right = 747.0
 margin_bottom = 197.0
@@ -682,7 +680,6 @@ color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "V"
 
 [node name="Rule6Bident" type="VBoxContainer" parent="Rules/RulesHBox"]
-editor/display_folded = true
 margin_left = 767.0
 margin_right = 879.0
 margin_bottom = 197.0
@@ -743,7 +740,6 @@ margin_bottom = 197.0
 pattern = "*"
 
 [node name="Rule7Is" type="VBoxContainer" parent="Rules/RulesHBox"]
-editor/display_folded = true
 margin_left = 899.0
 margin_right = 1006.0
 margin_bottom = 197.0
@@ -805,7 +801,6 @@ margin_bottom = 197.0
 pattern = "*"
 
 [node name="Rule8Paren" type="VBoxContainer" parent="Rules/RulesHBox"]
-editor/display_folded = true
 margin_left = 1026.0
 margin_right = 1133.0
 margin_bottom = 197.0

@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://TokenMatch.gd" type="Script" id=1]
+
+[node name="TokenRow" type="ColorRect"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 392.0
+margin_top = 623.0
+margin_right = 497.0
+margin_bottom = 665.0
+rect_min_size = Vector2( 0, 42 )
+color = Color( 0.266667, 0.360784, 0.454902, 1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+pattern = "EAVN"

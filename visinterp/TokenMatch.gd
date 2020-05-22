@@ -1,7 +1,4 @@
-tool extends ColorRect
-
-const Token = preload("res://Token.tscn")
-const JTYPE = preload("res://JTYPE.gd").JTYPE
+tool extends "AbstractTokenRow.gd"
 
 export var pattern : String = "" setget set_pattern
 
@@ -22,19 +19,7 @@ const hints = {
 
 func set_pattern(p):
 	pattern = p
-	for node in get_children():
-		remove_child(node)
-		node.queue_free()
-		
-	var ty = 5
-	var tx = ty
+	clear_tokens()
 	for c in pattern:
-		var t = Token.instance()
-		add_child(t)
-		t.rect_position.x = tx
-		t.rect_position.y = ty
-		t.text = c
-		t.type = hints.get(c, JTYPE.any)
-		tx += max(24, t.rect_size.x)
-		print("c: ",c," tx:",tx)
+		add_token(c, hints.get(c, JTYPE.any))
 
