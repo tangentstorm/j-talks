@@ -22,3 +22,5 @@ func add_token(text, type):
 	t.text = text
 	t.type = type
 	tx += max(24, t.rect_size.x)
+	if is_inside_tree():
+		t.set_owner(get_tree().edited_scene_root)
