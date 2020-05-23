@@ -6,10 +6,11 @@ export (JTYPE) var type = JTYPE.edge setget set_type
 
 func set_text(t):
 	text = t
-	if ($text != null):
+	if $text != null:
 		$text.rect_size.x = 0   # reset to 0 width
 		$text.text = t          # this changes the size, too
-		self.rect_size.x = $text.rect_size.x + 10
+		var font: Font = $text.get("custom_fonts/font")
+		self.rect_size.x = font.get_string_size(t).x + 10
 
 func _ready():
 	set("text", text)

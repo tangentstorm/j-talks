@@ -10,11 +10,15 @@ size = 24
 font_data = SubResource( 1 )
 
 [node name="Token" type="ColorRect"]
-margin_right = 10.0
+margin_right = 24.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 10, 32 )
-color = Color( 0.4, 0.4, 0.4, 1 )
+color = Color( 0, 0, 0, 1 )
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+text = " "
 
 [node name="text" type="Label" parent="."]
 margin_left = 5.0
@@ -24,3 +28,7 @@ margin_bottom = 31.0
 rect_pivot_offset = Vector2( 35, 52 )
 custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = " "
+__meta__ = {
+"_edit_use_anchors_": false
+}
