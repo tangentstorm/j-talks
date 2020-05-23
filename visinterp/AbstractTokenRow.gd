@@ -5,6 +5,7 @@ extends ColorRect
 const Token = preload("res://Token.tscn")
 const JTYPE = preload("res://JTYPE.gd").JTYPE
 
+var gw = 0
 var ty = 5
 var tx = ty
 
@@ -21,6 +22,6 @@ func add_token(text, type):
 	t.rect_position.y = ty
 	t.text = text
 	t.type = type
-	tx += max(24, t.rect_size.x)
+	tx += max(24, t.rect_size.x) + gw
 	if is_inside_tree():
 		t.set_owner(get_tree().edited_scene_root)
