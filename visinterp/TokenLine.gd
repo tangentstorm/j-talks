@@ -26,6 +26,7 @@ var alen = 0.25
 var tok
 
 func grab_next_token():
+	if tween.is_active(): return
 	var ntoks = $inputArea.get_child_count()
 	if ntoks == 0: return
 	
@@ -59,15 +60,10 @@ func grab_next_token():
 	yield(tween, "tween_all_completed")
 
 	$"../pageLabel".text = "ALL DONE!"
-
-func _process(dt: float):
+	
+func move_right():
 	if tween.is_active(): return
-	if Input.is_action_just_pressed("ui_cancel"):
-		get_tree().reload_current_scene()
-	if Input.is_key_pressed(KEY_RIGHT):
-		ip($stackArea, "rect_size", Vector2(-25,0), alen)
-		ip($stackArea, "rect_position", Vector2(50,0), alen)
-		tween.start()
-	if Input.is_key_pressed(KEY_LEFT):
-		grab_next_token()
+	ip($stackArea, "rect_size", Vector2(-25,0), alen)
+	ip($stackArea, "rect_position", Vector2(50,0), alen)
+	tween.start()
 	
