@@ -1,0 +1,88 @@
+#+title: reading j (sandpiles code review)
+
+* quick reframe
+- was going to do line by line code review
+- can easily spend 15 minutes talking about one line in depth
+- instead, focus on reading j with a couple examples
+
+
+* sandpiles code golf
+** my version
+#+begin_src j
+load'viewmat'
+
+f=:_1 1|.!.0"0 _]
+s=:(++/@(_4&*,f,f&.(|:"2))@(3&<))^:_
+
+viewmat s 50 50$4
+#+end_src
+
+*** (parse f)
+f is just some function. probably could have named it v for verb. :)
+
+: ] right identity.
+: 0 _ noun but then " makes it part of rank
+:    two args so this is probably a dyad
+: then 0 another noun, which goes with !.
+: !. is a generic modifier it means different things depending on the verb.
+: |. is the main verb it means rotate
+: but with !. means fill with 0 instead of wrapping
+: then the "0 _ makes it apply to each left arg and all of right arg
+
+so this winds up making two copies of y:
+one shifted backwards, one shifted forwards.
+since y is rank 2 array in our case, that means shifted up and down.
+
+*** (parse s)
+: (v)^:_ just means repeat until it stops changing
+  (so it's possible to create an infinite loop)
+
+: (3&<) just means greater than 3
+
+: @ composes that with the next verb
+
+: next verb: everything in parens
+:   (|:"2), &., f form one verb
+:   comma
+:   f
+:   comma
+:   _4&* is just multiplication
+
+: @ compose with +/
+
+: +
+
+** jitwit's version
+#+begin_src j
+s=:(+[:(_4&*+[:+/((,-)(,:|.)0 1)|.!.0])3&<)^:_
+#+end_src
+
+: same power conjunction
+: v =: +[:(_4&*+[:+/((,-)(,:|.)0 1)|.!.0])3&<
+: s =: v^:_
+
+
+: u =: (_4&*+[:+/((,-)(,:|.)0 1)|.!.0])
+: v =: + [: u 3&<
+: s =: v^:_
+
+
+: x =: (,-)(,:|.)0 1
+: u =: _4&* + [: +/ x |.!.0 ]
+: v =: + [: u 3&<
+: s =: v^:_
+
+
+
+
+
+* histogram code from wiki
+
+: histogram=: <: @ (#/.~) @ (i.@#@[ , I.)
+https://code.jsoftware.com/wiki/Essays/Histogram
+
+
+* animated lexer
+* vs math notation?
+* explicit definitions
+* conames
