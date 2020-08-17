@@ -93,3 +93,13 @@ not sure about model numbers
 
 desktop background: #001824
 background colors: 122c3d 003a61 00538a 0071bd 3c90c8
+
+
+* TODO blender color management:
+: output -> color management -> transform -> default
+prevents blender from changing the colors!
+
+
+* blender notes
+blender: apply transform to bake transforms into the actual geometry
+set orign from object -> set origin -> orgin to geometry
