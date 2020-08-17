@@ -19,13 +19,13 @@ coinsert 'sandpiles gridpad'
 NB. main logic -------------------------------------------------
 
 pen =: 2
-img =: 32 32 $ 0
+img =: 108 192 $ 0
 copy =: img
 
 gpo_title =: 'sandpaint'
 gpo_timer =: 500
-gpo_palv_wh =: 50 800
-gpo_imgv_wh =: 800 800
+gpo_palv_wh =: 50 1080
+gpo_imgv_wh =: 1920 1080
 gpo_gridrgb =: 0 0 0
 gpo_colorpick =: 0
 

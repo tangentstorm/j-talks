@@ -23,7 +23,7 @@ text = " "
 [node name="text" type="Label" parent="."]
 margin_left = 5.0
 margin_top = 2.0
-margin_right = 5.0
+margin_right = 19.0
 margin_bottom = 31.0
 rect_pivot_offset = Vector2( 35, 52 )
 custom_fonts/font = SubResource( 2 )

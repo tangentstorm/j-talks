@@ -134,3 +134,13 @@ just for one window, and it sends you an event on each tick.
 * TODO 3. sandpaper
 
 * TODO 4. sandcalc
+
+
+
+* jitwit's version:
+
+: s=:(+[:(_4&*+[:+/((,-)(,:|.)0 1)|.!.0])3&<)^:_
+
+: NB. my version:
+: f=:_1 1|.!.0"0 _]
+: s=:(++/@(_4&*,f,f&.(|:"2))@(3&<))^:_

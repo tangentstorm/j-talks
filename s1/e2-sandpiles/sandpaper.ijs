@@ -1,4 +1,4 @@
-NB. attempt to recreate the experiment.
+0NB. attempt to recreate the experiment.
 cocurrent'sandpaper'
 
 NB. here's our golfed sandpile verb

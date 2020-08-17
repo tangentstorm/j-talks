@@ -1,51 +1,111 @@
-* DONE 0-demo 2:15
+#+TITLE: notes for the sandpile episode
+
+* file locations
+
+- d:/video/j-talks/sandpiles/
+  - (top level contains master blend file)
+  - raw/ -> raw footage and materials
+  - cut/ -> cut footage
+  - tmp/ -> output files
+    naming convention is =sp-0a-cut-demo=
+  - dub/ -> audacity files
+  - old/ -> older blend file (no good)
+
+
+* [9/9] scene progress
+** DONE 2:15 0a-demo
 - [X] drawing the first four is a bit out of sync
 - [X] line of threes a bit weird
 - [X] add some annotations when discussing the behavior in the middle
 
+** DONE 0:22 0b-intro
+** DONE 2:30 1-sandpiles
+- [X] draw a nicer picture in gridpad
+- [X] re-edit to show the sand falling off!
+- [X] cut the talk about changes to gridpad
+- [X] cut the talk about the palette
+*** DONE record voice-over
 
-* TODO 1-intro 
+Okay so we're going to make several sandpile
+programs today and they're all extensions of
+gridpad, the sprite editor I made in my last video.
 
+Most of my videos focus on this rather unusual
+programming language called J, and I tend to
+explain every single line as I go along.
 
+But, I thought with all pretty graphics,
+/this/ video might be interesting to people
+who don't necessarily care about J,
+so I'm only going to explain the lines
+that are specifically about sandpiles,
+and I'll move everything else to a
+separate code review episode for really
+want to understand how it works.
 
-* TODO 2-code      0:25
-  cut the talk about changes to gridpad
-  cut the talk about the palette
-  draw a nicer picture in gridpad
-  show the sand falling off!
-* TODO 3-golf:      0:51
+So in that video, I'll explain how you can
+inherit behavior between applications in J,
+how I'm mapping the sandpile numbers back and forth to colors,
+how to draw the fancy palette on the side,
+and I'll also go into a lot more detail
+on all the other code that you'll see on
+your screen in the rest of this video.
+
+** DONE 00:48 2-codegolf
    "number four" (long pause) "runs the sandpile..."
    cut "title here says golfed"
-* TODO 4-paint:     0:54
-  time control slide has some stuttering early on
-  "do some science" fades out
-* TODO 5-paper:    12:00
-   "scaling noises" fades out
-   "um" in the graphic equalizer part
-   "self similar" fades out
-   need a better cut to the sandpaper experiment.
+** DONE 00:36 3-sandpaint
+*** DONE summarize the paint program
+Sandpaint is the same as the modified gridpad
+I was showing earlier,
+but with a slightly bigger drawing area,
+and some keyboard shortcuts for controlling the speed.
+
+*** DONE cut out stuttering early in animation
+*** DONE dub last line ("do some science")
+** DONE 4a-sandpaper-intro
+*** DONE move myself left to crop out my hand in the scene
+*** DONE 10s: show sandpile paper graphic
+*** DONE show benoit mandelbrot
+*** DONE show quote from martin-gardner as text while i read
+*** DONE cut mention of non-log spectral density charts
+*** DONE actually play the noises, and cut out "if you played as a sound"
+*** DONE show the spectral density charts
+** DONE 4b-sandpaper
+*** [12/12] hypothesis
+**** DONE skip the keyboard handling stuff.. go directly to "the first concept"
+**** DONE "out in nature" sounds like "not in nature"
+**** DONE speed up animation for "still gets through"
+**** DONE "infinite distances" drops the "S"
+**** DONE say the name of the paper correctly. (introduction vs explanation. d'oh.)
+**** DONE re-record the quote from the paper
+**** DONE the trick is to start with a _____ ?? (fades out... now it fades in. ugh)
+**** DONE "i'm melting" doesn't show up
+**** DONE need music for the all-fours
+**** DONE "less ones and twos"
+**** DONE show the graphic from the paper with the dark areas filled in
+**** DONE "let j do the wuh" (fades out)
+*** [3/3] experiment
+**** DONE add a "don't panic" message :)
+**** DONE need a better cut to the sandpaper experiment.
      (maybe black screen with white text)
-   "out in nature" sounds like "not in nature"
-   speed up animation for "still gets through"
-   "infinite distances" drops the s
-  - fake the window title color
-   the trick is to start with a _____ ?? (fades out)
-  need music for the all-fours, and also speed up.
-  "less ones and twos"
-   fix the labels for the bar charts in post
-  show the graphic from the paper with the dark areas filled in
-  "let j do the wuh" (fades out)
-   show the error message
-   show the plots
-   charts on the bottom -> "3 dimension__" (fades out)
-   highlight the charts
-* TODO 6-calc:      8:00
-    0:45 or so: "is two" still sounds terrible
-    0:50 plus sign was invented
-    you start "with an array of four"
-    "zeroes become four"
-    show a screenshot of the critical sandpile
-    all i have to say about sandpile_
-* TODO 7-close:     1:12
-   "so please share your thoughts in the comments" repeated twice
-   video is out of sync on last 5 seconds.
+**** DONE show the plots
+*** [2/2] results
+**** DONE charts on the bottom -> "3 dimension__" (fades out)
+**** DONE highlight the charts
+** DONE 5-sandcalc:      8:00   mostly good. just a couple minor edits:
+*** DONE 0:45 or so: "is two" still sounds terrible (now it's bad in the other direction)
+*** DONE you start "with an array of four"
+*** DONE "zeroes become fours"
+*** DONE 0:50 plus sign was invented
+*** DONE show a screenshot of the critical sandpile
+*** DONE all i have to say about sandpile_
+** DONE 6-close:     1:12
+cover up my hand with background since it's getting keyed out
+0:23
+
+* DONE title cards
+* DONE ending animation with links to other videos
+* TODO credit all music
+sandpaaper section: waterfall by aakash ghandi
+
