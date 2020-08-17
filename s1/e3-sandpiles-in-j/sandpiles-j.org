@@ -53,14 +53,14 @@ J is easier and allows me to check my work as I go along.
 So, for row, I will use J's built-in lexer to tokenize
 this code without having to write a lexer myself:
 
-   [ gtoks =: ~.,;;:&.> golf NB. unique tokens for program 'golf'
-┌────┬─────────┬─┬──┬────┬──┬──┬─┬─┬───┬─┬─┬─┬─┬─┬─┬──┬─┬─┬─┬──┬──┬─┬─┬─┬─┬──┬─┬───────┬─────┬─┬─┐
-│load│'viewmat'│f│=:│_1 1│|.│!.│0│"│0 _│]│s│(│+│/│@│_4│&│*│,│&.│|:│2│)│3│<│^:│_│viewmat│50 50│$│4│
-└────┴─────────┴─┴──┴────┴──┴──┴─┴─┴───┴─┴─┴─┴─┴─┴─┴──┴─┴─┴─┴──┴──┴─┴─┴─┴─┴──┴─┴───────┴─────┴─┴─┘
+:    [ gtoks =: ~.,;;:&.> golf NB. unique tokens for program 'golf'
+: ┌────┬─────────┬─┬──┬────┬──┬──┬─┬─┬───┬─┬─┬─┬─┬─┬─┬──┬─┬─┬─┬──┬──┬─┬─┬─┬─┬──┬─┬───────┬─────┬─┬─┐
+: │load│'viewmat'│f│=:│_1 1│|.│!.│0│"│0 _│]│s│(│+│/│@│_4│&│*│,│&.│|:│2│)│3│<│^:│_│viewmat│50 50│$│4│
+: └────┴─────────┴─┴──┴────┴──┴──┴─┴─┴───┴─┴─┴─┴─┴─┴─┴──┴─┴─┴─┴──┴──┴─┴─┴─┴─┴──┴─┴───────┴─────┴─┴─┘
 
 Probably in my video I want to start at this version of the code,
 and show how the two are equivalent.
-)
+
 
 * original 'settle'
 #+begin_src j
@@ -79,8 +79,20 @@ settle =: monad define          NB. settle sandpiles with entries > 3
 
 * extract monads
 
-NB. the lines in the middle all make nouns
-NB. but they could be functions on 'gt'
+The lines in the middle all make nouns, but they could be functions on 'gt'.
+
+The main idea here is that a noun phrase that depends on a single variable
+can be replaced with a monad applied to that variable.
+
+We wrap the noun phrase in single quotes (escaping appropriately), put
+the tokens ~monad :~ on the left, and then invoke the monad we just created
+on the variable in question.
+
+Now since we're getting the value as the first argument, we can replace
+all instances of the variable with ~y~ inside the single quotes.
+
+All five of these noun phrases can become monads acting on gt in this way.
+
 #+begin_src j
 settle1 =: monad define
   gt =. y > 3
@@ -95,8 +107,9 @@ settle1 =: monad define
 #+end_src
 
 * extract fork
+Now we can use a fork train to shorten:
+
 #+begin_src j
-NB. now we can use a fork train to shorten:
 settle2 =: monad define
   gt =. y > 3
   up =. monad : '}.   y ,  0 '
