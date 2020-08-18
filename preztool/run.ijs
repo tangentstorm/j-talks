@@ -222,6 +222,9 @@ on_event =: dyad define
          wd 'sm set term xywh -8 0 1920 1046' [ position_jterm''
        case. 'n' do. smoutput names_base_''
        case. 'c' do. clear_base_'' [ wd 'timer 0'
+       case. 'd' do.
+         NB. dump tokens: one json list per line
+         (; LF,~ L:0 <@jsn@code"0 i.#slides) fwrites <'~JTalks/tokens.json'
      end.
   end.
 )
