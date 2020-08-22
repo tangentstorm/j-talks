@@ -1,5 +1,6 @@
 <html>
 <head>
+<meta charset="UTF-8"/>
 <title>J Code Window</title>
 <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -89,7 +90,19 @@ document.body.addEventListener('keypress', function(e) {
 <script id="scratch">
   let slides = [
 [[["name","lines"],["empty"," "],["copula","=:"],["empty"," "],["name","LF"],["empty"," "],["conjunction","&"],["empty"," "],["name","cut"]],[["empty",[]]],[["name","golf"],["empty"," "],["copula","=:"],["empty"," "],["name","lines"],["empty"," "],["paren","("],["boolean","0"],["empty"," "],["conjunction",":"],["empty"," "],["boolean","0"],["paren",")"]],[["name","load"],["empty"," "],["literal","'viewmat'"]],[["verb","f"],["empty"," "],["copula","=:"],["empty"," "],["integer","_1 1"],["empty"," "],["verb","|."],["conjunction","!."],["boolean","0"],["conjunction","\""],["floating","0 _"],["empty"," "],["verb","]"]],[["verb","s"],["empty"," "],["copula","=:"],["empty"," "],["paren","("],["verb","+"],["verb","+"],["adverb","\/"],["conjunction","@"],["paren","("],["integer","_4"],["conjunction","&"],["verb","*"],["verb",","],["verb","f"],["verb",","],["verb","f"],["conjunction","&."],["paren","("],["verb","|:"],["conjunction","\""],["integer","2"],["paren",")"],["paren",")"],["conjunction","@"],["paren","("],["integer","3"],["conjunction","&"],["verb","<"],["paren",")"],["paren",")"],["conjunction","^:"],["floating","_"]],[["name","viewmat"],["empty"," "],["verb","s"],["empty"," "],["integer","50 50"],["empty"," "],["verb","$"],["empty"," "],["integer","4"]],[["paren",")"]],[["empty",[]]],[["name","run"],["empty"," "],["copula","=:"],["empty"," "],["integer","3"],["empty"," "],["conjunction",":"],["empty"," "],["boolean","0"]],[["empty","  "],["comment","NB. this command runs a list of boxed J sentences in sequence"]],[["empty","  "],["control","for_i."],["empty"," "],["verb","i."],["verb","#"],["special","y"],["empty"," "],["control","do."]],[["empty","   "],["name","line"],["empty"," "],["copula","=."],["empty"," "],["verb",">"],["verb","i"],["verb","{"],["special","y"]],[["empty","   "],["name","smoutput"],["empty"," "],["name","line"]],[["empty","   "],["verb","\"."],["empty"," "],["name","line"]],[["empty","  "],["control","end."]],[["paren",")"]],[["name","run"],["empty"," "],["name","golf"]]],
-[[["name","settle"],["empty"," "],["copula","=:"],["empty"," "],["name","monad"],["empty"," "],["name","define"],["empty","          "],["comment","NB. settle sandpiles with entries > 3"]],[["empty","  "],["name","gt"],["empty"," "],["copula","=."],["empty"," "],["special","y"],["empty"," "],["verb",">"],["empty"," "],["integer","3"]],[["empty","  "],["name","up"],["empty"," "],["copula","=."],["empty"," "],["verb","}."],["empty","   "],["name","gt"],["empty"," "],["verb",","],["empty","  "],["boolean","0"],["empty","            "],["comment","NB. shift in each of the 4 directions"]],[["empty","  "],["name","dn"],["empty"," "],["copula","=."],["empty"," "],["verb","}:"],["empty","    "],["boolean","0"],["empty"," "],["verb",","],["empty","  "],["name","gt"],["empty","           "],["comment","NB. (filling in with 0 rather than wrapping)"]],[["empty","  "],["name","lf"],["empty"," "],["copula","=."],["empty"," "],["verb","}."],["conjunction","\""],["boolean","1"],["empty"," "],["name","gt"],["empty"," "],["verb",",."],["empty"," "],["boolean","0"]],[["empty","  "],["name","rt"],["empty"," "],["copula","=."],["empty"," "],["verb","}:"],["conjunction","\""],["boolean","1"],["empty"," "],["verb","]"],["boolean","0"],["empty"," "],["verb",",."],["empty"," "],["name","gt"]],[["empty","  "],["name","cn"],["empty"," "],["copula","=."],["empty"," "],["integer","_4"],["empty"," "],["verb","*"],["empty"," "],["name","gt"],["empty","                 "],["comment","NB. the 4 we subtract from the center"]],[["empty","  "],["special","y"],["empty"," "],["verb","+"],["empty"," "],["name","up"],["empty"," "],["verb","+"],["empty"," "],["name","dn"],["empty"," "],["verb","+"],["empty"," "],["name","lf"],["empty"," "],["verb","+"],["empty"," "],["name","rt"],["empty"," "],["verb","+"],["empty"," "],["name","cn"]],[["paren",")"]],[["empty",[]]],[["paren","("],["verb","s"],["empty"," "],["verb","-:"],["empty"," "],["name","settle"],["conjunction","^:"],["floating","_"],["paren",")"],["empty"," "],["integer","50 50"],["empty"," "],["verb","$"],["empty"," "],["integer","4"],["empty","      "],["comment","NB. result 1 means the two have the same output."]]],
+
+[[["name","settle"],["empty"," "],["copula","=:"],["empty"," "],["name","monad"],["empty"," "],["name","define"],["empty","          "],["comment","NB. settle sandpiles with entries > 3"]],
+ [["empty","  "],["name","gt"],["empty"," "],["copula","=."],["empty"," "],["special","y"],["empty"," "],["verb",">"],["empty"," "],["integer","3"]],
+ [["empty","  "],["name","up"],["empty"," "],["copula","=."],["empty"," "],["verb","}."],["empty","   "],["name","gt"],["empty"," "],["verb",","],["empty","  "],["boolean","0"],["empty","            "],["comment","NB. shift in each of the 4 directions"]],
+ [["empty","  "],["name","dn"],["empty"," "],["copula","=."],["empty"," "],["verb","}:"],["empty","    "],["boolean","0"],["empty"," "],["verb",","],["empty","  "],["name","gt"],["empty","           "],["comment","NB. (filling in with 0 rather than wrapping)"]],
+ [["empty","  "],["name","lf"],["empty"," "],["copula","=."],["empty"," "],["verb","}."],["conjunction","\""],["boolean","1"],["empty"," "],["name","gt"],["empty"," "],["verb",",."],["empty"," "],["boolean","0"]],
+ [["empty","  "],["name","rt"],["empty"," "],["copula","=."],["empty"," "],["verb","}:"],["conjunction","\""],["boolean","1"],["empty"," "],["verb","]"],["boolean","0"],["empty"," "],["verb",",."],["empty"," "],["name","gt"]],
+ [["empty","  "],["name","cn"],["empty"," "],["copula","=."],["empty"," "],["integer","_4"],["empty"," "],["verb","*"],["empty"," "],["name","gt"],["empty","                 "],["comment","NB. the 4 we subtract from the center"]],
+ [["empty","  "],["special","y"],["empty"," "],["verb","+"],["empty"," "],["name","up"],["empty"," "],["verb","+"],["empty"," "],["name","dn"],["empty"," "],["verb","+"],["empty"," "],["name","lf"],["empty"," "],["verb","+"],["empty"," "],["name","rt"],["empty"," "],["verb","+"],["empty"," "],["name","cn"]],
+ [["paren",")"]],
+ [["empty",[]]],
+ [["paren","("],["verb","s"],["empty"," "],["verb","-:"],["empty"," "],["name","settle"],["conjunction","^:"],["floating","_"],["paren",")"],["empty"," "],["integer","50 50"],["empty"," "],["verb","$"],["empty"," "],["integer","4"],["empty","      "],["comment","NB. result 1 means the two have the same output."]]],
+
 [[["name","settle1"],["empty"," "],["copula","=:"],["empty"," "],["name","monad"],["empty"," "],["name","define"]],[["empty","  "],["name","gt"],["empty"," "],["copula","=."],["empty"," "],["special","y"],["empty"," "],["verb",">"],["empty"," "],["integer","3"]],[["empty","  "],["name","up"],["empty"," "],["copula","=."],["empty"," "],["name","monad"],["empty"," "],["conjunction",":"],["empty"," "],["literal","'}.   y ,  0 '"],["empty"," "],["name","gt"]],[["empty","  "],["name","dn"],["empty"," "],["copula","=."],["empty"," "],["name","monad"],["empty"," "],["conjunction",":"],["empty"," "],["literal","'}:    0 ,  y'"],["empty"," "],["name","gt"]],[["empty","  "],["name","lf"],["empty"," "],["copula","=."],["empty"," "],["name","monad"],["empty"," "],["conjunction",":"],["empty"," "],["literal","'}.\"1 y ,. 0 '"],["empty"," "],["name","gt"]],[["empty","  "],["name","rt"],["empty"," "],["copula","=."],["empty"," "],["name","monad"],["empty"," "],["conjunction",":"],["empty"," "],["literal","'}:\"1 ]0 ,. y'"],["empty"," "],["name","gt"]],[["empty","  "],["name","cn"],["empty"," "],["copula","=."],["empty"," "],["name","monad"],["empty"," "],["conjunction",":"],["empty"," "],["literal","'_4 * y'"],["empty","       "],["name","gt"]],[["empty","  "],["special","y"],["empty"," "],["verb","+"],["empty"," "],["name","up"],["empty"," "],["verb","+"],["empty"," "],["name","dn"],["empty"," "],["verb","+"],["empty"," "],["name","lf"],["empty"," "],["verb","+"],["empty"," "],["name","rt"],["empty"," "],["verb","+"],["empty"," "],["name","cn"]],[["paren",")"]],[["paren","("],["verb","s"],["empty"," "],["verb","-:"],["empty"," "],["name","settle1"],["conjunction","^:"],["floating","_"],["paren",")"],["empty"," "],["integer","50 50"],["empty"," "],["verb","$"],["empty"," "],["integer","4"],["empty","      "],["comment","NB. result 1 means the two have the same output."]]],
 [[["name","settle2"],["empty"," "],["copula","=:"],["empty"," "],["name","monad"],["empty"," "],["name","define"]],[["empty","  "],["name","gt"],["empty"," "],["copula","=."],["empty"," "],["special","y"],["empty"," "],["verb",">"],["empty"," "],["integer","3"]],[["empty","  "],["name","up"],["empty"," "],["copula","=."],["empty"," "],["name","monad"],["empty"," "],["conjunction",":"],["empty"," "],["literal","'}.   y ,  0 '"]],[["empty","  "],["name","dn"],["empty"," "],["copula","=."],["empty"," "],["name","monad"],["empty"," "],["conjunction",":"],["empty"," "],["literal","'}:    0 ,  y'"]],[["empty","  "],["name","lf"],["empty"," "],["copula","=."],["empty"," "],["name","monad"],["empty"," "],["conjunction",":"],["empty"," "],["literal","'}.\"1 y ,. 0 '"]],[["empty","  "],["name","rt"],["empty"," "],["copula","=."],["empty"," "],["name","monad"],["empty"," "],["conjunction",":"],["empty"," "],["literal","'}:\"1 ]0 ,. y'"]],[["empty","  "],["name","cn"],["empty"," "],["copula","=."],["empty"," "],["name","monad"],["empty"," "],["conjunction",":"],["empty"," "],["literal","'_4 * y'"]],[["empty","  "],["special","y"],["empty"," "],["verb","+"],["empty"," "],["paren","("],["name","up"],["empty"," "],["verb","+"],["empty"," "],["name","dn"],["empty"," "],["verb","+"],["empty"," "],["name","lf"],["empty"," "],["verb","+"],["empty"," "],["name","rt"],["empty"," "],["verb","+"],["empty"," "],["name","cn"],["paren",")"],["empty"," "],["name","gt"]],[["paren",")"]],[["paren","("],["verb","s"],["empty"," "],["verb","-:"],["empty"," "],["name","settle2"],["conjunction","^:"],["floating","_"],["paren",")"],["empty"," "],["integer","50 50"],["empty"," "],["verb","$"],["empty"," "],["integer","4"],["empty","      "],["comment","NB. result 1 means the two have the same output."]]],
 [[["comment","NB. gt itself is a function of y, and the result is operating on y,"]],[["comment","NB. so we can turn this last line into just a function composition applied to y."]],[["name","settle3"],["empty"," "],["copula","=:"],["empty"," "],["name","monad"],["empty"," "],["name","define"]],[["empty","  "],["name","gt"],["empty"," "],["copula","=."],["empty"," "],["name","monad"],["empty"," "],["conjunction",":"],["empty"," "],["literal","'y > 3'"]],[["empty","  "],["name","up"],["empty"," "],["copula","=."],["empty"," "],["name","monad"],["empty"," "],["conjunction",":"],["empty"," "],["literal","'}.   y ,  0 '"]],[["empty","  "],["name","dn"],["empty"," "],["copula","=."],["empty"," "],["name","monad"],["empty"," "],["conjunction",":"],["empty"," "],["literal","'}:    0 ,  y'"]],[["empty","  "],["name","lf"],["empty"," "],["copula","=."],["empty"," "],["name","monad"],["empty"," "],["conjunction",":"],["empty"," "],["literal","'}.\"1 y ,. 0 '"]],[["empty","  "],["name","rt"],["empty"," "],["copula","=."],["empty"," "],["name","monad"],["empty"," "],["conjunction",":"],["empty"," "],["literal","'}:\"1 ]0 ,. y'"]],[["empty","  "],["name","cn"],["empty"," "],["copula","=."],["empty"," "],["name","monad"],["empty"," "],["conjunction",":"],["empty"," "],["literal","'_4 * y'"]],[["empty","  "],["paren","("],["verb","+"],["empty"," "],["paren","("],["name","up"],["empty"," "],["verb","+"],["empty"," "],["name","dn"],["empty"," "],["verb","+"],["empty"," "],["name","lf"],["empty"," "],["verb","+"],["empty"," "],["name","rt"],["empty"," "],["verb","+"],["empty"," "],["name","cn"],["paren",")"],["conjunction","@"],["name","gt"],["paren",")"],["empty"," "],["special","y"]],[["paren",")"]],[["paren","("],["verb","s"],["empty"," "],["verb","-:"],["empty"," "],["name","settle3"],["conjunction","^:"],["floating","_"],["paren",")"],["empty"," "],["integer","50 50"],["empty"," "],["verb","$"],["empty"," "],["integer","4"],["empty","      "],["comment","NB. result 1 means the two have the same output."]]],
@@ -129,9 +142,10 @@ document.body.addEventListener('keypress', function(e) {
 [[["name","s1"],["empty"," "],["copula","=:"],["empty"," "],["verb","+"],["verb","[:"],["verb","+"],["adverb","\/"],["conjunction","@"],["paren","("],["integer","_4"],["conjunction","&"],["verb","*"],["verb",","],["paren","("],["paren","("],["verb",","],["verb","-"],["paren",")"],["integer","2"],["verb","]"],["adverb","\\"],["verb","i:"],["boolean","1"],["paren",")"],["verb","|."],["conjunction","!."],["boolean","0"],["verb","]"],["paren",")"],["integer","3"],["conjunction","&"],["verb","<"]]],
 [[["name","load"],["empty"," "],["literal","'viewmat'"]],[["verb","d"],["empty"," "],["copula","=:"],["empty"," "],["boolean","0 1"],["verb",","],["empty"," "],["boolean","1 0"],["verb",","],["empty"," "],["integer","0 _1"],["verb",",:"],["empty"," "],["integer","_1 0"],["empty","          "],["comment","NB. directions to shift"]],[["verb","s"],["empty"," "],["copula","=:"],["empty"," "],["verb","+"],["empty"," "],["verb","[:"],["empty"," "],["verb","+"],["adverb","\/"],["conjunction","@"],["paren","("],["integer","_4"],["conjunction","&"],["verb","*"],["verb",","],["empty"," "],["verb","d"],["verb","|."],["conjunction","!."],["boolean","0"],["verb","]"],["paren",")"],["empty"," "],["integer","3"],["conjunction","&"],["verb","<"],["empty","    "],["comment","NB. sandpiles step"]],[["name","viewmat"],["empty"," "],["verb","s"],["conjunction","^:"],["floating","_"],["empty"," "],["verb","["],["empty"," "],["integer","50 50"],["empty"," "],["verb","$"],["empty"," "],["integer","4"]]],
     ]
-  data['src']=slides[1].slice()
 
-  var lines = slides[1]
+  slide = i => data['src']=slides[i].slice()
+  slide(1)
+
   let ints = i => { let r = []; for (let j=0;j<i;j++) r.push(j); return r }
   let str = tok => tok[1]
   let typ = toks => toks.map(t=>t[0])
@@ -147,7 +161,85 @@ document.body.addEventListener('keypress', function(e) {
     return li.slice(0,sp).concat([['noun','monad'],ws,['conjunction',':'],ws,['literal', mo],ws,['name',nm], ws]);
   }
 
-  console.log(line(exmo(lines[2], 'gt')))
+
+
+  // ---- scratch ---------------------------------
+
+
+  // sample animation with web animation api
+  //let h1 = document.getElementsByTagName('h1')[0]
+  //let an = h1.animate({color:'red'},{duration: 1000, fill:'forwards'})
+  //an.commitStyles()
+  //an.persist()
+
+  // animations from the web animation api only provide transformations of
+  // individual numeric or color attributes. They do not allow modifying the
+  // dom in arbitrary ways, such as changing an element's text or re-grouping
+  // elements.
+  //
+  // Since we want to do these things in our animations, we need an extended
+  // language that allows arbitrary behaviors.
+  //
+  // My animations are structures (js classes) with three functions on {dt, t},
+  // where t is a "timestamp" (a number between 0 and 1), and dt is the change
+  // in t since the last rendered frame.
+  //
+  class Animation {
+    t0(dt) {}     // called when t=0
+    t1(dt) {}     // called when t=1
+    ts(dt, t) {}} // called on every other step of the animation.
+
+  // We'll assume that time can move in either direction by any amount.
+  // From a UI perspective, imagine a single horizontal timeline with a
+  // cursor that can be dragged (or "scrubbed") left and right with the mouse.
+  //
+  // Shorter timelines can be nested inside longer timelines. (From the
+  // UI perspective, these would probably show up as separate horizontal
+  // lines beneath the main timeline, something like a Gantt chart.
+  //
+  // Each timeline treats time as an interval between 0 and 1, and the
+  // top-level t and dt variables are scaled and shifted appropriately
+  // when calling functions for the nested timelines. Likewise, dt is
+  // truncated to the range -1 ... 1, so that scrubbing past one end or
+  // the other of the timeline never results in large values being passed
+  // to t0 or t1.
+
+  class TSpan {  // time span
+    constructor(t0, dur) {
+      self.t0  = t0;   // start time
+      self.dur = dur; // duration
+    }
+  }
+
+  // constructor(dur) { self.dur = dur; } // duration, in ms
+
+  class ASeq extends Animation {
+    // sequence several animations one after another.
+    constructor(seq) {
+      super(sum(seq.map(a => a.dur)));
+      this.seq = seq; }
+    t0(dt) { this.seq[0].t0(dt) }
+    ts(dt,t) { }
+    t1(dt) { this.seq[this.seq.length-1].t1(dt) }
+  }
+
+  class TEvent { // 0-duration timeline event
+    fwd() { }    // run the event fwd
+    bkw() { }}   // undo the event
+
+
+  // extract monad as single timeline event
+  class ExMoEvt extends TEvent {
+    constructor(i, nm) { super(); this.i = i; this.nm = nm }
+    fwd() {
+      var lines = slides[1]
+      Vue.set(data.src, this.i, exmo(lines[this.i], this.nm)) }
+  }
+
+
+  function run() {
+    let evts = ints(5).map(i => i+2).map(i => new ExMoEvt(i, 'gt'))
+    evts.forEach(e => e.fwd()) }
 
 
 </script>
