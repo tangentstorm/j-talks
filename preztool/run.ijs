@@ -67,7 +67,7 @@ jtype =: verb define
   elseif. isCtrl y   do. 'control'
   elseif. isParen y  do. 'paren'
   elseif. 1 do.
-    if. isName y do. 'name' return.9
+    if. isName y do. 'name' return.
       v=.".y
       t=.>type<'v'
     else. try. t=.>type<'v'[".'v=. ',y catch. 'invalid' return. end. end.
