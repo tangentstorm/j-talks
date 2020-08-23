@@ -17,6 +17,7 @@
   .control { color: tomato; }
   .paren { color: #555; }
   .comment { color: #666; font-style: italic; }
+  .nbl { color: #888; position:absolute; left: 500px }
   .float, .integer, .complex, .boolean, .number { color: magenta; }
   .conjunction { color: orangered; }
   .adverb { color: peru; }
@@ -210,7 +211,7 @@ document.body.addEventListener('keypress', function(e) {
     '9:',  '8:', '7:', '6:', '5:', '4:', '3:', '2:', '1:', //  Constant Functions
   ];
 
-  // this remaps the short token types to
+  // this remaps the short token type codes to the ones in CSS
   let remap = {
     '?': 'invalid',
     'e': 'empty',
@@ -258,33 +259,54 @@ document.body.addEventListener('keypress', function(e) {
 
   function ano(lines) { // annotate tokens with their types (or replace annotations that are already there)
     function fixtok(tok) {
-      if (!Array.isArray(tok)) { throw "what?" }
+      if (!Array.isArray(tok)) { throw "what?" + JSON.stringify(tok) }
       if (tok.length === 1) tok = [null, tok[0]];
       if (tok[1].length === 0) tok = [tok[0], ""]; // ["e", []]   (blank line)
+      if (tok[0] === "nbl") return tok;
       return [ remap[tokTyp(tok[1])], tok[1] ]
     }
     let fixline = line => line.map(fixtok)
     return lines.map(fixline)
   }
 
+  // J: join two sequences of tokens
+  function J(xs,ys) { return xs.concat(ys) }
+
+  // P : parens
+  LPAREN = [["("]]
+  RPAREN = [[")"]]
+  function P(toks) { return J(LPAREN, J(T(toks), RPAREN)) }
+
+  // tokenize j code (str -> toks)
+  JLEXRE = /(\w+)|(\s+)|'[^']*'|(.[.:]|]|\(|\)|\/|-|[_,"+*<$>&^@])/g
+  function T(s) { return X(s.match(JLEXRE)) }
+
+  // X : expression
+  function X(toks) { return toks.map(x => [x]) }
+
+  // line with comment
+  function NB(toks, comment) { return toks.concat([["nbl", "NB. " + comment]]) }
+  function N(s, comment) { return NB(T(s),comment) }
+
   let golf = ano([ //  golfed sandpile code
-    [["load"],[" "],["'viewmat'"]],
-    [["f"],[" "],["=:"],[" "],["_1 1"],[" "],["|."],["!."],["0"],["\""],["0 _"],[" "],["]"]],
-    [["s"],[" "],["=:"],[" "],["("],["+"],["+"],["\/"],["@"],["("],["_4"],["&"],["*"],[","],["f"],[","],["f"],["&."],["("],["|:"],["\""],["2"],[")"],[")"],["@"],["("],["3"],["&"],["<"],[")"],[")"],["^:"],["_"]],
-    [["viewmat"],[" "],["s"],[" "],["50 50"],[" "],["$"],[" "],["4"]]]);
+    T("load 'viewmat'"),
+    T("f =: _1 1 |.!.0\"0 _ ]"),
+    T("s =: (++\/@(_4&*,f,f&.(|:\"2))@(3&<))^:_"),
+    T("viewmat s 50 50 $ 4")]);
 
   let orig = ano([ // original code for single animation frame
-    [["settle"],[" "], ["=:"],[" "],["monad"],[" "],["define"],["          "],["NB. settle sandpiles with entries > 3"]],
-    [["  "],["gt"],[" "],["=."],[" "],["y"],[" "],[">"],[" "],["3"]],
-    [["  "],["up"],[" "],["=."],[" "],["}."],["   "],["gt"],[" "],[","],["  "],["0"],["            "],["NB. shift in each of the 4 directions"]],
-    [["  "],["dn"],[" "],["=."],[" "],["}:"],["    "],["0"],[" "],[","],["  "],["gt"],["           "],["NB. (filling in with 0 rather than wrapping)"]],
-    [["  "],["lf"],[" "],["=."],[" "],["}."],["\""],["1"],[" "],["gt"],[" "],[",."],[" "],["0"]],
-    [["  "],["rt"],[" "],["=."],[" "],["}:"],["\""],["1"],[" "],["]"],["0"],[" "],[",."],[" "],["gt"]],
-    [["  "],["cn"],[" "],["=."],[" "],["_4"],[" "],["*"],[" "],["gt"],["                 "],["NB. the 4 we subtract from the center"]],
-    [["  "],["y"],[" "],["+"],[" "],["up"],[" "],["+"],[" "],["dn"],[" "],["+"],[" "],["lf"],[" "],["+"],[" "],["rt"],[" "],["+"],[" "],["cn"]],
+    N("settle =: monad define",   "settle sandpiles with entries > 3"),
+    T("  gt =. y > 3"),
+    N("  up =. }.     gt  ,  0",  "shift in each of the 4 directions"),
+    N("  dn =. }:      0  , gt",  "(filling in with 0 rather than wrapping)"),
+    T("  lf =. }.\"1   gt ,.  0"),
+    T("  rt =. }:\"1 ]  0 ,. gt"),
+    N("  cn =. _4 * gt",           "the 4 we subtract from the center"),
+    T("  y + up + dn + lf + rt + cn"),
     [[")"]],
     [[""]],
-    [["("],["s"],[" "],["-:"],[" "],["settle"],["^:"],["_"],[")"],[" "],["50 50"],[" "],["$"],[" "],["4"],["      "],["NB. result 1 means the two have the same output."]]]);
+    NB(J(P("s -: settle^:_"), T(" 50 50 $ 4")), "result 1 means the two have the same output.")
+  ]);
 
  let slides = [ golf, orig, ].concat([
 [[["i","lines"],["e"," "],["=","=:"],["e"," "],["i","LF"],["e"," "],["C","&"],["e"," "],["i","cut"]],[["e",[]]],[["i","golf"],["e"," "],["=","=:"],["e"," "],["i","lines"],["e"," "],["p","("],["B","0"],["e"," "],["C",":"],["e"," "],["B","0"],["p",")"]],[["i","load"],["e"," "],["S","'viewmat'"]],[["V","f"],["e"," "],["=","=:"],["e"," "],["I","_1 1"],["e"," "],["V","|."],["C","!."],["B","0"],["C","\""],["F","0 _"],["e"," "],["V","]"]],[["V","s"],["e"," "],["=","=:"],["e"," "],["p","("],["V","+"],["V","+"],["A","\/"],["C","@"],["p","("],["I","_4"],["C","&"],["V","*"],["V",","],["V","f"],["V",","],["V","f"],["C","&."],["p","("],["V","|:"],["C","\""],["I","2"],["p",")"],["p",")"],["C","@"],["p","("],["I","3"],["C","&"],["V","<"],["p",")"],["p",")"],["C","^:"],["F","_"]],[["i","viewmat"],["e"," "],["V","s"],["e"," "],["I","50 50"],["e"," "],["V","$"],["e"," "],["I","4"]],[["p",")"]],[["e",[]]],[["i","run"],["e"," "],["=","=:"],["e"," "],["I","3"],["e"," "],["C",":"],["e"," "],["B","0"]],[["e","  "],["#","NB. this command runs a list of boxed J sentences in sequence"]],[["e","  "],["control","for_i."],["e"," "],["V","i."],["V","#"],["y","y"],["e"," "],["control","do."]],[["e","   "],["i","line"],["e"," "],["=","=."],["e"," "],["V",">"],["V","i"],["V","{"],["y","y"]],[["e","   "],["i","smoutput"],["e"," "],["i","line"]],[["e","   "],["V","\"."],["e"," "],["i","line"]],[["e","  "],["control","end."]],[["p",")"]],[["i","run"],["e"," "],["i","golf"]]],
@@ -328,9 +350,7 @@ document.body.addEventListener('keypress', function(e) {
 [[["i","load"],["e"," "],["S","'viewmat'"]],[["V","d"],["e"," "],["=","=:"],["e"," "],["B","0 1"],["V",","],["e"," "],["B","1 0"],["V",","],["e"," "],["I","0 _1"],["V",",:"],["e"," "],["I","_1 0"],["e","          "],["#","NB. directions to shift"]],[["V","s"],["e"," "],["=","=:"],["e"," "],["V","+"],["e"," "],["V","[:"],["e"," "],["V","+"],["A","\/"],["C","@"],["p","("],["I","_4"],["C","&"],["V","*"],["V",","],["e"," "],["V","d"],["V","|."],["C","!."],["B","0"],["V","]"],["p",")"],["e"," "],["I","3"],["C","&"],["V","<"],["e","    "],["#","NB. sandpiles step"]],[["i","viewmat"],["e"," "],["V","s"],["C","^:"],["F","_"],["e"," "],["V","["],["e"," "],["I","50 50"],["e"," "],["V","$"],["e"," "],["I","4"]]]
     ].map(x => ano(x)));
 
-  slide = i => data['src']=slides[i].slice()
-  slide(1)
-
+  let slide = i => data['src']=slides[i].slice()
   let ints = i => { let r = []; for (let j=0;j<i;j++) r.push(j); return r }
   let str = tok => tok[1]
   let typ = toks => toks.map(t=>t[0])
@@ -434,7 +454,7 @@ document.body.addEventListener('keypress', function(e) {
     let p = new Player(evts.map(e => _ => e.fwd()))
     p.play()
   }
-
+  slide(1)
 
 
 
