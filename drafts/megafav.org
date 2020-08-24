@@ -1,6 +1,7 @@
 #+title: bex, ANF, and my two #megafavnumbers
 
-* my #megafavnumbers
+* Intro
+** my #megafavnumbers
 So #megafavnumbers is a youtube playlist where a bunch
 of math-related youtube channels are sharing their
 favorite numbers greater than 1 million.
@@ -9,12 +10,11 @@ I'm more of a programmer than a mathematician.
 I'm not sure I really have a favorite number, but
 but there are two numbers I think about quite a bit.
 
-: X =             4,294,967,295
+: X =             4,294,967,296
 : K =   614,889,782,588,491,410
 
 The first one might be pretty familiar to other programmers
-watching this - it's just one less than 2^32, although I do
-have one weird trick with that number might surprise you.
+watching this - it's just 2^32.
 
 The second is the product of the first 15 prime numbers.
 Apparently, that's called a [[https://en.wikipedia.org/wiki/Primorial][primorial]].
@@ -23,8 +23,7 @@ As far as I know, these numbers are only mildly interesting
 mathematically, but they both play a big role in one of my main
 programming projects, which is a rust crate that I call bex.
 
-
-* bex
+** bex
 # show crates.rs / github page
 
 Bex is short for "boolean expression", and not surprisingly, it
@@ -39,9 +38,27 @@ This video is a little bit about bex, a lot about boolean
 expressions, and eventually how and why those two numbers
 make a difference.
 
-* learning project
 
-It started out as a learning project.
+
+* What is a bDD
+** jsfiddle demo
+# show wikipedia
+Explain what a BDD is.
+
+** bdd as simple programming problem
+# show bddlab on github
+
+https://github.com/tangentstorm/bdd-labs/
+
+- knuth wrote a whole book about them
+- used in hardware layout, sat solvers
+- pretty easy to implement
+
+
+* Early bex
+** learning project
+
+Bex started out as a learning project.
 
 Sometimes I make tetris.
 https://github.com/learnprogramming/learntris
@@ -49,24 +66,19 @@ https://github.com/learnprogramming/learntris
 often I make a BDD:
 https://github.com/tangentstorm/bdd-labs/
 
-* jsfiddle demo
-# show wikipedia
-Explain what a BDD is.
-
-* bdd as simple programming problem
-# show bddlab on github
-
-https://github.com/tangentstorm/bdd-labs/
-
-- knuth wrote a whole book about them
-- used in hardware layout, sat solvers
-
-- pretty easy to implement
-
-* early bex
-
 I've made implementations in elixir, j, python, pascal
 So when I decided to learn rust, I made bex.
+
+** TODO briefly introduce the "solver"
+** TODO pascal is missing some pieces in git
+** timeline
+*** 2015 elixir, python
+*** 2017 pascal solver
+*** 2018 feb: started learning rust
+*** 2018 dec: open source as bex 0.1.0
+*** 2019 shell, multi-threaded workers
+*** 2020 ANF, unified NID, VidOrdering, Registers/Cursors
+** early bex
 
 Working on the train.
 
@@ -75,6 +87,8 @@ Really like rust.
 https://news.ycombinator.com/item?id=14756529
 
 These are tools to keep your pointers safe.
+
+** optimizations nudged by rust
 
 But eventually threw all that away, and now I use
 this idea called a NID.
@@ -88,16 +102,22 @@ The most expensive operation is =ITE::norm=, and it
 can be performed entirely on the CPU on three
 64-bit NIDs.
 
-* novel parts about bex
+Early on, bex was an exercise in optimization.
 
-- exercise in optimization
-- algebraic normal form
-- multi-core support
+** multi-core support
+
+non-linear speedup.
+out-of-order, short circuiting
+
+even on a 2-core machine, steps that once took 20 seconds dropped to 0 seconds.
+
+around this time, decided it wasn't just a toy but might actually become a useful application.
+
+* Towards a standard benchmark
+** standard test problem
+
 - never done any benchmarks
 - so i need a benchmark
-
-
-* test problem
 
 So that's where this number comes in:
 
@@ -112,7 +132,7 @@ best desktop calculators you can get.)
 :   (2^64) > */p:i.16
 : 0
 
-* the problem to solve
+** the problem to solve
 
 which pairs of 32-bit numbers that multiply to this function
 
@@ -146,7 +166,7 @@ basically
 the right part says get rid of the boxes, sort the individual lines, then sort the whole table
 and on the left it says only include the lines where both numbers are less than 2^32.
 
-(And yes, 2^32 is just one more than my other favorite number, but it's just showing up by coincidence here.)
+(And yes, 2^32 is my other favorite number, but it's just showing up by coincidence here.)
 
 :   txt =: ,('    ',LF,~}:)"1 ] _4 ;\ ([: < ','10}  3|.'), (', ": )"1 xys
 :   txt 1!:2 <'nums.txt'
@@ -154,8 +174,7 @@ and on the left it says only include the lines where both numbers are less than 
 then these two lines format the numbers into columns with parens and and commas
 and dump it to a text file, which I then just copied and pasted into this rust file.
 
-
-* TODO the full problem statement
+** TODO the full problem statement
 
 So now, here's the actual benchmark:
 
@@ -216,7 +235,7 @@ A BDD ought to be able to represent this truth table fairly
 efficiently. The problem is just constructing it from the
 problem statement.
 
-* give up
+** give up
 
 # I actually stopped this around 5% because my computer locked up.
 # It was right after I got up to go to the bathroom so I suspect
@@ -246,7 +265,10 @@ hard for bex to solve right now, and so the reason
 that number is always on my mind is simply that it
 represents a pretty ambitious goal to shoot for.
 
-* what's the point?
+
+* The solver
+** TODO talk about xints
+** what's the point?
 
 But you might ask, what's the point of this?
 
@@ -261,8 +283,7 @@ as quickly as possible.
 
 The solution algorithm I'm using is pretty simplistic.
 
-
-* So what can we do?
+** So what can we do?
 
 Well one nice thing about the factoring problem is that
 it scales way down.
@@ -294,16 +315,18 @@ run as unit tests.
 
 let's run again with that false changed to true.
 
-* TODO describe the diagrams that show up
-eq is the multiplication
-lt is the condition that x<y
-ast is the combination of those two
-x-final is the final AST
+** TODO describe the diagrams that show up
+eq.svg is the multiplication
+lt.svg is the condition that x<y
+ast.svg is the combination of those two
+x-final.svg is the final AST
 
+*** TODO show node numbers in the AST (before and after renumbering)
+*** TODO render and show each step as a (stop-motion) "animation"
 
-* TODO show node numbers in the AST (before and after renumbering)
-
-* TODO render and show each step as a (stop-motion) "animation"
+** TODO generate diagrams with the original and reverse orders
+use custom shapes https://www.graphviz.org/doc/info/shapes.html
+now that #1 is at the bottom...
 
 
 * slowtests and import/export
@@ -329,8 +352,7 @@ Bex doesn't yet have an import feature at runtime, but you can save
 and entire bases. Import and export should only be a few lines of code.
 It's not hard at all, just something I haven't gotten around to.
 
-
-* TODO fix that bit about import/export
+** TODO make and show a ticket for import/export
 
 also there could be one stored multiplication database, 2*n output
 bits for 2*n input bits, and you could just look at the ones you wanted.
@@ -344,6 +366,8 @@ in general.
 
 
 * algebraic normal form.
+
+meanwhile, i had another idea
 
 bdd says you can represent any boolean function with if/then/else.
 obvious just by looking at how the binary tree maps to the truth table.
@@ -368,7 +392,6 @@ p =: 0 0 1 1
 q =: 0 1 0 1
 
 p na q
-
 
 proof: nand = (1 & xor)@AND
 
@@ -405,17 +428,12 @@ https://en.wikipedia.org/wiki/Functional_completeness
 : a(d+e+f) + b((d+e+f) + c(d+e+f))   / 6 terms (not counting 0)
 
 
-* switch to visual version
+* visual ANF : numbers at the bottom
+
 truth table <-> anf
 we can think of that number as representing a set of 32 items.
 langlet, power set
-
 power set.
-
-* show visual version
-
-
-
 
 :  |:#:i.2^5
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
@@ -437,26 +455,117 @@ this is what convinced me to renumber these with the names at the bottom.
 
 but now, with these at the bottom, something interesting happens.
 
-* TODO show the "other" number
-
-now that #1 is at the bottom...
-
-
-* make the change to consts
-
-
-
-* future directions
-
-
-* test the change!
-Mostly because it can hold a 5-variable truth table or a
-5-variable anf expression. braille font
-
-binary decision diagrams
+** xor fiddle
 
 xor: https://jsfiddle.net/tangentstorm/vkmLq2bj/latest/
+
+
+* new idea: truth tables in the NID
+- So let's go back to that number 2^32
+- 32 bits can store an entire function of 5 variables
+- either as truth table or ANF polynomial (factor set)
+
+
+* TODO make the change to const NIDs (on a new branch)
+
+I always like to show how to actually make a change, and this seems like a good one.
+
+** TODO collect some more metrics
+- number of steps
+- count each kind of hash lookup, and whether it was found
+- count calls to ITE::norm (can do this in dispatcher as it sends/receives the answers)
+- or just analyze the wip table when the solution comes in to see what's still wip?
+
+** TODO =NID::is_tbl=
+- add a new bit for tables (or just use existing T) ?
+- redefine =is_const= to specifically check equality for I/O
+
+** TODO implement directly in AST for now.
+- completely eliminate the work from nano test
+
+** TODO render const nodes with braille
+Mostly because it can hold a 5-variable truth table or a
+5-variable anf expression. braille font
+binary decision diagrams
 bdd: https://jsfiddle.net/tangentstorm/bLbayo6c/
+
+** TODO implement whenhi / whenlo
+this should let it get down to I,O and work for BDD automatically.
+
+** TODO how to handle for ANF?
+- simple const-const is easy
+- how to do const + true ANF?
+- i think implementing =when_hi= and =when_lo= /might/ be sufficent.
+
+* TODO test the change!
+- compare the steps taken for each node
+- how to handle for AST?
+
+
+* TODO back to our number
+
+want it to run faster than brute force
+but still maintain the benefits of caching
+
+next higher numbers: truth table size doubles with each new input bit
+
+
+but that means the number of possible truth tables squares
+wouldn't actually be hard to store a truth table that big.
+2^32 bits = 500 MB uncompressed. (why? well 2^32 pointer gives you 4 gb,
+but that's bytes, and we need bits, so divide by 8. 4g / 8 = 0.5g, or 500mb)
+That's a pretty huge file, but it's not *that* huge.
+Maybe it's possible to have multiple worker threads generate the input truth
+table in linear ram from a BDD, and a stream processing thread to combine them.
+BDD itself is a compression algorithm, but maybe other compression algorithms
+could be used to unpack truth tables.
+
+
+* TODO bex mailing list?
+
+Remains an exercise in optimization.
+
+
+* TODO
+https://www.reddit.com/r/bex_rs/new/
+
+* TODO future directions(?)
+# probably move this to a document on bex
+- refactor and reuse BDDSWarm components for ANF, future VHL bases
+- generalize the wip/distributed solver
+- extend the raw truth table idea to arbitrary registers
+  - process with streaming instructions or the gpu
+  - convert to/from BDD for compression
+- mixed representation for wip
+  (meaning registers at the bottom, bdd up top)
+- lazy solving of regions
+  (solve truth table left to right to reach first answer faster)
+- combine bottom-up and top-down solving
+- dynamic sifting (variable permutations)
+- new base formats
+  - zdd
+  - bic
+  - cnf ? sat solver
+  - aig ? https://en.wikipedia.org/wiki/And-inverter_graph
+- gpu and fpga workers
+- var sets for functions of n vars, no matter which n they are
+  there might be 500 input variables, but only using 15.
+- better AST
+  - track topmost variable in NID even for AST
+  - allow any number of arguments
+  - full combinatory logic
+  - operations on xints (nid arrays)
+- import/export stored functions
+- apply functions across base types
+
+
+* ------------------------------------------
+
+* TODO more example(s) from old repo?
+* TODO novel parts about bex
+
+- algebraic normal form
+- shell
 
 * tangents
 ** 2^32-1
