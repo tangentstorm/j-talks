@@ -1,0 +1,486 @@
+#+title: bex, ANF, and my two #megafavnumbers
+
+* my #megafavnumbers
+So #megafavnumbers is a youtube playlist where a bunch
+of math-related youtube channels are sharing their
+favorite numbers greater than 1 million.
+
+I'm more of a programmer than a mathematician.
+I'm not sure I really have a favorite number, but
+but there are two numbers I think about quite a bit.
+
+: X =             4,294,967,295
+: K =   614,889,782,588,491,410
+
+The first one might be pretty familiar to other programmers
+watching this - it's just one less than 2^32, although I do
+have one weird trick with that number might surprise you.
+
+The second is the product of the first 15 prime numbers.
+Apparently, that's called a [[https://en.wikipedia.org/wiki/Primorial][primorial]].
+
+As far as I know, these numbers are only mildly interesting
+mathematically, but they both play a big role in one of my main
+programming projects, which is a rust crate that I call bex.
+
+
+* bex
+# show crates.rs / github page
+
+Bex is short for "boolean expression", and not surprisingly, it
+provides some data structures for working with large boolean
+expressions.
+
+https://crates.io/crates/bex
+https://github.com/tangentstorm/bex
+https://docs.rs/bex/0.1.4/bex/
+
+This video is a little bit about bex, a lot about boolean
+expressions, and eventually how and why those two numbers
+make a difference.
+
+* learning project
+
+It started out as a learning project.
+
+Sometimes I make tetris.
+https://github.com/learnprogramming/learntris
+
+often I make a BDD:
+https://github.com/tangentstorm/bdd-labs/
+
+* jsfiddle demo
+# show wikipedia
+Explain what a BDD is.
+
+* bdd as simple programming problem
+# show bddlab on github
+
+https://github.com/tangentstorm/bdd-labs/
+
+- knuth wrote a whole book about them
+- used in hardware layout, sat solvers
+
+- pretty easy to implement
+
+* early bex
+
+I've made implementations in elixir, j, python, pascal
+So when I decided to learn rust, I made bex.
+
+Working on the train.
+
+Really like rust.
+
+https://news.ycombinator.com/item?id=14756529
+
+These are tools to keep your pointers safe.
+
+But eventually threw all that away, and now I use
+this idea called a NID.
+
+Some operations can be done directly on a NID.
+
+For example, the NID knows the topmost variable,
+and it tells you.
+
+The most expensive operation is =ITE::norm=, and it
+can be performed entirely on the CPU on three
+64-bit NIDs.
+
+* novel parts about bex
+
+- exercise in optimization
+- algebraic normal form
+- multi-core support
+- never done any benchmarks
+- so i need a benchmark
+
+
+* test problem
+
+So that's where this number comes in:
+
+: */p:i.15
+
+(This is a language called J. It's a full programming language,
+but it's also a mathematical notation, and probably one of the
+best desktop calculators you can get.)
+
+:   (2^64) > */p:i.15
+: 1
+:   (2^64) > */p:i.16
+: 0
+
+* the problem to solve
+
+which pairs of 32-bit numbers that multiply to this function
+
+Here's the line from bex:
+
+: */L:0 (0,"1#:i.2^n-1) </."1 |.p:i.n=:15
+
+right side is same as before, except n=: assigns a name to the 15.
+
+this part is a table:
+
+: (0,"1#:i.2^n-1)
+
+
+
+: viewmat (0,"1#:i.2^n-10) [ p:i.n=:15
+
+: (0,"1#:i.2^n-1) </."1 |.p:i.n=:15
+
+so the idea is we're partitioning these into a left and right argument.
+
+then take the product at level 0
+
+: */L:0
+
+I'm not going to break the other lines down, but
+basically
+
+:   xys =: ({~[:I.([:*./(2^32)>])"1) \:~\:~@;"1 xy0
+
+the right part says get rid of the boxes, sort the individual lines, then sort the whole table
+and on the left it says only include the lines where both numbers are less than 2^32.
+
+(And yes, 2^32 is just one more than my other favorite number, but it's just showing up by coincidence here.)
+
+:   txt =: ,('    ',LF,~}:)"1 ] _4 ;\ ([: < ','10}  3|.'), (', ": )"1 xys
+:   txt 1!:2 <'nums.txt'
+
+then these two lines format the numbers into columns with parens and and commas
+and dump it to a text file, which I then just copied and pasted into this rust file.
+
+
+* TODO the full problem statement
+
+So now, here's the actual benchmark:
+
+#+begin_src rust
+find_factors!(BDD, X32, X64, K as usize, factors(), false); }
+#+end_src
+
+It's a macro that says use a BDD to find all pairs of 32-bit
+factors of K as a 64-bit number, arranged so that the first
+number is less than the second, and then check the answers
+against this list. (The last parameter says whether or not
+to show some extra debug information. It really ought to be
+a command line parameter, but whatever.)
+
+So let's see what happens when we run this.
+
+: cargo run --bin bdd-solve
+
+
+Off to a good start.
+
+This would be a good time for my scroll lock key to actually work,
+but since it doesn't I can just scroll up a little to freeze the
+display.
+
+And there's a bunch of stuff about ands and xors, but it also says
+step xxx of 7997 so we're already at xxx percent.
+
+Unfortunately, that number is fairly misleading. The way the
+current solver works, it knows how many steps it will take to
+construct the solution, but it doesn't know how long each step
+is going to take.
+
+You can see already it's slowing down.
+
+So what is it trying to do?
+
+If it works, then the output will be a BDD on 64 input bits,
+and 1 output bit, and it'll represent the function that returns
+true when the first 32 bits multiplied by the second 32 bits
+is this number K.
+
+Since it has 64 input bits, that means the truth table is
+2^64 bits wide, which is an INSANELY large number.
+
+This is that story about the grains of rice on the chessboard.
+As payment for inventing the game of chess, you ask the emperor
+for a grain of rice on the first square, two in the second square,
+double each time, and after a while, the emperor's accountants
+figure out what's going on and chop your head off.
+
+So yeah, the truth table is 2^64 entries wide. Each entry
+represents a pair of 32-bit numbers that might or might
+not multiply, but we happen to know that there are only
+3,827 such numbers.
+
+A BDD ought to be able to represent this truth table fairly
+efficiently. The problem is just constructing it from the
+problem statement.
+
+* give up
+
+# I actually stopped this around 5% because my computer locked up.
+# It was right after I got up to go to the bathroom so I suspect
+# the thread just got moved to the foreground and didn't want to
+# give back control. Either way, I should probably manually stop
+# the program.
+
+I wanted a problem with an easy answer to generate and check
+but that would be hard for bex.
+
+I knew multiplication is particularly hard for bdds - meaning you
+wind up with a very large bdd.
+
+But I didn't know how hard it would be.
+
+Turns out it's really really hard.
+The percentage numbers are somewhat misleading.
+It's going to get slower and slower as it goes along.
+
+I've never actually seen this program finish,
+and it's not garbage collecting, so I think last time
+i tried, it just churned for a few days, and then finally
+crashed when it ran out of RAM.
+
+So yeah, it turned out my initial problem is way too
+hard for bex to solve right now, and so the reason
+that number is always on my mind is simply that it
+represents a pretty ambitious goal to shoot for.
+
+* what's the point?
+
+But you might ask, what's the point of this?
+
+First of all, I already know the answer to the problem,
+because that's what I started with.
+
+Second of all, who cares?
+
+The point isn't really to solve this particular problem.
+The point is to solve whatever problem you throw at it
+as quickly as possible.
+
+The solution algorithm I'm using is pretty simplistic.
+
+
+* So what can we do?
+
+Well one nice thing about the factoring problem is that
+it scales way down.
+
+A few versions of the problem actually run in a few seconds
+on my machine.
+
+: cargo test
+
+Some of these are just general unit tests.
+
+By the way, if you add one character to the j program then instead of
+the final product, you'll see the running product, which is the first
+15 primorials.
+
+: */\p:i.15
+: ,.*/\p:i.15
+
+So currently, bex can solve the first four of these fast enough to
+run as unit tests.
+
+: cargo test --lib nano_bdd
+
+#+begin_src rust
+#[test] pub fn test_nano_bdd() {
+  use {bdd::BDDBase, int::{X2,X4}};
+  find_factors!(BDDBase, X2, X4, 6, vec![(2,3)], false); }
+#+end_src
+
+let's run again with that false changed to true.
+
+* TODO describe the diagrams that show up
+eq is the multiplication
+lt is the condition that x<y
+ast is the combination of those two
+x-final is the final AST
+
+
+* TODO show node numbers in the AST (before and after renumbering)
+
+* TODO render and show each step as a (stop-motion) "animation"
+
+
+* slowtests and import/export
+
+210 is an 8-bit number, and the tests look for two four-bit factors.
+If I ask it to search for two 8-bit numbers that multiply to 210 as
+a 16-bit number, then it winds up taking 11 minutes. Of course I don't
+actually need all 16 bits in the answer, so it might be interesting
+to have it discard the 16 bits in the AST stage.
+
+(Which means it ought to also take 11 minutes for solving 30030)
+
+But also, the way this works, it generates the entire BDD for
+the multiplication of two input numbers from scratch in a fresh BDD
+base every single time, even though this is completely generic.
+There's no reason this function couldn't be cached to disk and
+loaded into the base on demand.
+
+Then it would just be a matter of pulling that pre-compiled function
+in from a stored library.
+
+Bex doesn't yet have an import feature at runtime, but you can save
+and entire bases. Import and export should only be a few lines of code.
+It's not hard at all, just something I haven't gotten around to.
+
+
+* TODO fix that bit about import/export
+
+also there could be one stored multiplication database, 2*n output
+bits for 2*n input bits, and you could just look at the ones you wanted.
+
+import/export is easy, but i'd also have to teach the solver when to
+use the imported function, which means having AST nodes aware of n-bit
+ints... Which means making the AST representation much more expressive
+in general.
+
+(this is something i'm thinking about)
+
+
+* algebraic normal form.
+
+bdd says you can represent any boolean function with if/then/else.
+obvious just by looking at how the binary tree maps to the truth table.
+
+assertion:
+
+  1. you can represent any boolean function with (and, xor, 1)
+  2. and in particular, we can make a bdd-like structure
+     that uses a different ternary function:
+
+: bdd: V ? H : L         NB. if V then H else L  ("var", "hi", "lo")
+: anf: V * H + L         NB. + is "plus mod 2"
+: anf: L ~: V *. H       NB. j syntax
+
+nand is sufficient to generate all 16 boolean functions.
+fun to work out for yourself. here's a proof in J:
+
+https://github.com/tangentstorm/tangentlabs/blob/master/j/nornand.ijs
+
+
+p =: 0 0 1 1
+q =: 0 1 0 1
+
+p na q
+
+
+proof: nand = (1 & xor)@AND
+
+(show the 16 2-bit truth tables?)
+
+
+functionally complete operator sets
+NAND = AND, XOR, T
+https://en.wikipedia.org/wiki/Functional_completeness
+
+
+: (1+a)+(b+c)+(a+b)                // 6 terms (4 unique)
+:  1+a + b+c + a+b                 // simply remove the parens
+:  1   + c                         // cancel a, b
+
+: (1+a)(b+c)(a+b)                  // 6 terms (4 unique)
+: (1+a)(b(a+b)+c(a+b))
+: (1+a)(b(a+b)+ca+cb))
+: (1+a)(ba+bb+ca+cb)
+: (1+a)(ba+b+ca+cb)
+: (ba+b+ca+cb)+a(ba+b+ca+cb)
+: (ba+b+ca+cb)+ba+ba+ca+cba
+: ba+b+ca+cb+ba+ba+ca+cba
+: ab+b+ac+bc+ab+ab+ac+abc
+: ab+ab+ab+abc+ac+ac+b+bc          // cancel
+:       ab+abc      +b+bc          // 4 terms (4 unique)
+: a(b+bc)+(b+bc)                                              b(a+ac+1+c)      // not allowed
+: a(b(1+c)) + (b(1+c))                                        b(1+a+ac+c)
+: a(b(1+c)) + b(1+c)                                          b(1+a(1+c)+c)
+
+
+: (a+b+c)(d+e+f)                     / 3+3 = 6 terms
+: ad+ae+af+bd+be+bf+cd+ce+cf         / 3x3 = 9 terms
+: a(d+e+f) + b((d+e+f) + c(d+e+f))   / 6 terms (not counting 0)
+
+
+* switch to visual version
+truth table <-> anf
+we can think of that number as representing a set of 32 items.
+langlet, power set
+
+power set.
+
+* show visual version
+
+
+
+
+:  |:#:i.2^5
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1
+0 0 0 0 1 1 1 1 0 0 0 0 1 1 1 1 0 0 0 0 1 1 1 1 0 0 0 0 1 1 1 1
+0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1
+0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1
+
+:  viewmat |.&.|:~:/\^:(<32)32#1
+
+you can see that the first term in anf tells you what the first
+entry in the truth table is.
+
+when you consider these bitmaps to be ongoing, infinite patterns, then
+it doesn't really make sense that their names should constantly change
+depending on how many variables you have.
+
+this is what convinced me to renumber these with the names at the bottom.
+
+but now, with these at the bottom, something interesting happens.
+
+* TODO show the "other" number
+
+now that #1 is at the bottom...
+
+
+* make the change to consts
+
+
+
+* future directions
+
+
+* test the change!
+Mostly because it can hold a 5-variable truth table or a
+5-variable anf expression. braille font
+
+binary decision diagrams
+
+xor: https://jsfiddle.net/tangentstorm/vkmLq2bj/latest/
+bdd: https://jsfiddle.net/tangentstorm/bLbayo6c/
+
+* tangents
+** 2^32-1
+
+x-1 = largest 32-bit unsigned integer
+      "negative zero" in ones compliment
+
+four bytes:
+  more colors than on your computer screen
+  brightest color on screen
+  maximum number of ip addresses
+  four gb of ram
+
+** too small
+
+little more than half the population of earth
+  https://en.wikipedia.org/wiki/World_population
+
+414 people on earth have more money than that.
+   https://www.forbes.com/billionaires/
+$196.29 billion USD bezos
+  21.43 trillion USD (2019)
+
+zimbabwe:
+  https://en.wikipedia.org/wiki/Hyperinflation#Ten_most_severe_hyperinflations_in_world_history
+  https://en.wikipedia.org/wiki/Zimbabwean_dollar
+
