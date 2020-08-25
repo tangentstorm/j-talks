@@ -40,10 +40,22 @@ make a difference.
 
 
 
-* What is a bDD
+* What is a Bdd?
+** show the wikipedia page and my own diagram(s) in vue
+here we have a truth table
+and here we have a fully expanded decision tree
+but notice that these nodes at the bottom branch to the same place on both sides
+so we can replace them with the leaf node
+but also we don't need so many copies of this node.
+generalize a tree with a dag
+keep doing that and we have a fully reduced bdd
+
+nice feature is that the representation is cannonical
+also there are algorithms that let you combine functions together efficiently.
+
 ** jsfiddle demo
-# show wikipedia
-Explain what a BDD is.
+# show jsfiddle
+i made a little demo in coffeescript where you can experiment with the truth table
 
 ** bdd as simple programming problem
 # show bddlab on github
@@ -55,10 +67,16 @@ https://github.com/tangentstorm/bdd-labs/
 - pretty easy to implement
 
 
+** the idea of a bdd base
+
+- more advanced things, like combining expressions, or applying one to another.
+- share nodes even across functions
+- two kinds of cache:
+  - simple vhl cache
+  - this node AND this node, or more generally, an ITE triple
+
 * Early bex
 ** learning project
-
-Bex started out as a learning project.
 
 Sometimes I make tetris.
 https://github.com/learnprogramming/learntris
@@ -69,7 +87,14 @@ https://github.com/tangentstorm/bdd-labs/
 I've made implementations in elixir, j, python, pascal
 So when I decided to learn rust, I made bex.
 
-** TODO briefly introduce the "solver"
+** why rust?
+- had experimented with concurrency in elixir, but very slow
+- pascal i was working on the idea of a solver
+- pascal is one of my favorite languages, but i didn't really trust my ability to make things threadsafe.
+- rust promised to make concurrency safe
+- hoped to combine low level optimizition with concurrency
+
+
 ** TODO pascal is missing some pieces in git
 ** timeline
 *** 2015 elixir, python
@@ -112,6 +137,7 @@ out-of-order, short circuiting
 even on a 2-core machine, steps that once took 20 seconds dropped to 0 seconds.
 
 around this time, decided it wasn't just a toy but might actually become a useful application.
+
 
 * Towards a standard benchmark
 ** standard test problem
@@ -501,14 +527,12 @@ this should let it get down to I,O and work for BDD automatically.
 - compare the steps taken for each node
 - how to handle for AST?
 
-
 * TODO back to our number
 
 want it to run faster than brute force
 but still maintain the benefits of caching
 
 next higher numbers: truth table size doubles with each new input bit
-
 
 but that means the number of possible truth tables squares
 wouldn't actually be hard to store a truth table that big.
@@ -521,12 +545,10 @@ BDD itself is a compression algorithm, but maybe other compression algorithms
 could be used to unpack truth tables.
 
 
-* TODO bex mailing list?
-
+* TODO bex/bdd community?
+link in the description to a forum
 Remains an exercise in optimization.
 
-
-* TODO
 https://www.reddit.com/r/bex_rs/new/
 
 * TODO future directions(?)
@@ -593,3 +615,32 @@ zimbabwe:
   https://en.wikipedia.org/wiki/Hyperinflation#Ten_most_severe_hyperinflations_in_world_history
   https://en.wikipedia.org/wiki/Zimbabwean_dollar
 
+
+* --- thoughts from train
+- sha256 as motivator? solving tools in general aren't up for the challenge
+- move the future directions to a separate file
+- how you can get involved
+- nid was gently encouraged by rust (working with the grain of the language)
+  - might say not memory safe, but it can be saved and copied
+
+- anf: in addition, the anf base attempts to do the and and xor operations on the data in this form
+- the idea is that when you're manipulating formulas, there's likely to be a lot of reuse from
+  operations distributing over each other, and often, that can be captured near the top
+  of the graph, without necessarily merging every leaf.
+
+
+- when you're just talking about formulas, the variable order doesn't matter.
+- i called this pattern a, but in a traditional bdd, you number from the top down
+- but if you think about these as infinite patterns that appear in almost every expression,
+- it makes sense for them to always have the same name"
+
+- early on; emphasise canonical representations. bdd and anf are both cannonical. ast is not.
+
+- explain the "combining functions efficiently" paradox: compression reduces a lot of steps because you can work at the top of the dag.
+- one operation at the top might match 2^n operations at the bottom.
+- but there is also overhead of fetching nodes from memory
+- so it makes sense to balance the two
+- I think how big the "registers" are might have to do with how much entropy you expect your function to have.
+- the more regularity and structure, the more working near the top will save work
+- the more random your data, the better it is to stream
+- so it might make sense to let users configure this on each run.
