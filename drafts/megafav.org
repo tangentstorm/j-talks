@@ -1,11 +1,10 @@
-#+title: bex: an exercise in optimization
-/BDDs, ANF, and my two #megafavnumbers/
+#+title: /BDDs, ANF, and my two #megafavnumbers/
 
-* =00:30= Intro
-** my #megafavnumbers
+* =00:30= Intro:#megafavnumbers
 #megafavnumbers is a youtube playlist where a bunch
-of math-related channels are sharing their favorite
-numbers greater than 1 million.
+of really great math-related channels are sharing
+their favorite numbers greater than 1 million, and
+they've opened it up to viewers to submit their own.
 
 I'm not sure I really have a favorite number, but
 but there are two numbers I think about quite a bit.
@@ -13,19 +12,22 @@ but there are two numbers I think about quite a bit.
 : X =             4,294,967,296
 : K =   614,889,782,588,491,410
 
-The first one is probably pretty familiar to other programmers
-It's 2^32 power.
+The first one is probably at least vaguely familiar to
+other programmers out there. It's just 2^32 power.
 
 The second is an example of something called a primorial.
 It's the product of the first 15 prime numbers. It's also
-the biggest primorial that you can store in a 64-bit register.
+the biggest primorial that you can store in a 64-bit
+register.
 
-Both of these numbers play a big role in one of my main
-programming projects, which is a rust crate (or library)
-that I call bex.
+I don't know if there are any interesting theorems related
+to these numbers, but they both play a big role in one of
+my main programming projects, which is a rust crate
+(or library) that I call bex.
 
-* =00:30= bex
-** overview
+So, that's what I'm going to talk about.
+
+* =00:15= bex intro
 # show crates.rs / github page / docs as i talk
 
 Bex is short for "boolean expression", and not surprisingly, it
@@ -37,10 +39,10 @@ https://github.com/tangentstorm/bex
 https://docs.rs/bex/0.1.4/bex/
 
 This video is about boolean expressions in general,
-bex in particular, and how those two numbers get
-involved.
+bex in particular, and what those two numbers have
+to do with it.
 
-* =01:30= BDDs
+* =01:30= BDD intro
 ** bex does BDDs
 Bex has a number of ways to represent boolean expressions.
 It started with what's called a BDD.
@@ -71,7 +73,9 @@ but also we don't need so many copies of this node.
 generalize a tree with a dag
 keep doing that and we have a fully reduced bdd
 
-** who cares?
+* TODO =01:00= who cares?
+- show the paper
+
 nice feature is that the representation is cannonical
 also there are algorithms that let you combine functions together efficiently.
 
@@ -89,7 +93,9 @@ also there are algorithms that let you combine functions together efficiently.
 - pretty easy to implement
 - mostly i treat it as a simple programming problem
 
-* =02:00= bdd lab (bdd as learning project)
+It's also sort of an ongoing exercise in optimization.
+
+* =00:15= bdd lab (bdd as learning project)
 # show bddlab on github
 https://github.com/learnprogramming/learntris
 
@@ -173,96 +179,176 @@ different AST nodes, these two items both reference
 the exact same BDD node.
 
 * =00:30= briefest possible intro to nids
-Also, the NIDs for variables and constants contain
-everything you would ever need to know about the nodes,
-so you don't actually need to have those nodes in
-memory. Which means there's nothing for the pointer
-to point to.
+They're 64-bit data structure that fits nicely in a register.
+I actually started with pointers, but for a lot of different
+reasons, eventually adopted this idea instead.
 
-And if you think about that idea a little more (or
-you keep watching this video) maybe you'll start to
-see why that magic number 4,294,967,296 is on my
-favorites list.
+The NIDs for variables and constants contain everything you
+would ever need to know about the nodes, so you don't
+actually need to have those nodes in memory. Which means
+for simple nodes, there's no longer anything for the pointer
+to point to anyway.
+
+And if you think about that idea long enough,
+maybe you'll start to see why that magic number
+4,294,967,296 is on my favorites list.
 
 Don't worry. We'll get there.
 
 But first let's talk about that other number.
 
 * =01:00= Primorials
+** tests and benchmarks
+As I said, bex has become something of an exercise in optimization for me.
+
+In order to make sure I'm not breaking anything, I need a suite of test
+problems that bex can run quickly, so I can run the tests after every change.
+
+And in order to tell whether a change actually speeds things up, I need a
+benchmark - something that takes a long time to solve, so I can see whether
+the time improves.
+
 ** standard test problem
 
-: */p:i.15
+So that's where this number comes in.
+
+: */ p: i. 15
 
 (This is a language called J. It's a full programming language,
 but it's also kind of an executable math notation, and probably
 one of the best desktop calculators you can get.)
 
-:   (2^64) > */p:i.15
+It executes right to left, so:
+
+: 15                NB. the number fifteen
+: i. 15             NB. the first fifteen non-negative integers
+: p: i. 15          NB. the first fifteen primes
+: */ p: i. 15       NB. their product (literally insert a multiplication sign between them)
+
+A product of the first n primes is apparently called a primorial,
+which I suppose is a combination of the words prime and factorial.
+
+This primorial happens to be the largest one whose binary
+representation can fit in a 64-bit register.
+
+:   (2^64) > */ p: i. 15
 : 1
-:   (2^64) > */p:i.16
+:   (2^64) > */ p: i. 16
 : 0
 
 ** the problem to solve
 
-which pairs of 32-bit numbers that multiply to this function
+The benchmarking problem I set for bex is to figure out all
+the ways you can multiply two thirty-two bit numbers together
+to get this number.
 
-Here's the line from bex:
+Or in other words, factor the number. I could have asked it to
+factor any big number, but with primorials in particular it's
+really easy for me as the test author to generate the correct
+answer.
 
-: */L:0 (0,"1#:i.2^n-1) </."1 |.p:i.n=:15
+** factors
+The trick is to take the fifteen primes and find every possible
+way to divide them into two groups.
 
-right side is same as before, except n=: assigns a name to the 15.
+Well, that part's easy. You just count to 2^15 in binary.
 
-this part is a table:
+Here's a smaller example that fits on the screen:
 
-: (0,"1#:i.2^n-1)
+:   */ p: i. 15
+:   */ p: i. n=: 15     NB. let's give the 15 a name
+:   */ p: i. n=: 4      NB. and drop it to 4
+:   i. n=: 3            NB. first three ints
+:   i. 2^n =: 3         NB. count to 2^3
+:   #: i. 2^n =: 3      NB. same thing in binary
+
+Now we can use these patterns to group the primes.
+
+:   (#: i. 2^n) </."1 p:i.n =: 3     NB. use t
+
+You can see it duplicates the list.
+That's because half of the binary representations are just
+the other half flipped.
+
+: viewmat #: i. 2^n
+
+So we can just use half of them
+
+:  #: i. 2^n-1
+
+and put a 0 on the left so each line still matches the numbers of primes
+
+:  0 ,. #: i. 2^n-1
+
+Now we have every unique grouping of factors:
+
+:   (0 ,. #: i. 2^n-1) </."1 p:i.n =: 3
 
 
+And we can do the same thing for our original 15.
 
-: viewmat (0,"1#:i.2^n-10) [ p:i.n=:15
+But the question was which 32-bit factors, and some of these numbers are too big.
 
-: (0,"1#:i.2^n-1) </."1 |.p:i.n=:15
-
-so the idea is we're partitioning these into a left and right argument.
-
-then take the product at level 0
+So multiply the contents of each box:
 
 : */L:0
 
-I'm not going to break the other lines down, but
-basically
+then we can ditch the boxes completely:
 
-:   xys =: ({~[:I.([:*./(2^32)>])"1) \:~\:~@;"1 xy0
+: >
 
-the right part says get rid of the boxes, sort the individual lines, then sort the whole table
-and on the left it says only include the lines where both numbers are less than 2^32.
+just as a sanity check, that gives us:
 
-(And yes, 2^32 is my other favorite number, but it's just showing up by coincidence here.)
+: #
 
-:   txt =: ,('    ',LF,~}:)"1 ] _4 ;\ ([: < ','10}  3|.'), (', ": )"1 xys
-:   txt 1!:2 <'nums.txt'
+16384
 
-then these two lines format the numbers into columns with parens and and commas
-and dump it to a text file, which I then just copied and pasted into this rust file.
+if we factor that, we get
 
-** TODO the full problem statement
+: q: 16384
+: # q: 16384
 
-So now, here's the actual benchmark:
+2 to the 14th power. which is exactly what we asked it for.
+
+So that's all pairs of integers that multiply to our primorial.
+
+But we want to select the ones where both numbers are less than 2^32
+
+: ({~ [: I. [: *./"1 <&(2^32))
+
+This is too much J to explain in detail right now, but it
+literally says select using the indices where all the items
+on a row are less than this number.
+
+That gives us exactly...
+
+:    # ({~ [: I. [: */"1 <&(2^32)) > */L:0 (0 ,. #: i. 2^n-1) </."1 p:i.n =: 15
+: 3827
+
+... 3827 unique pairs of 32-bit numbers that factor into our number.
+
+** the rust code
+# show bdd-solve
+
+And after a little formatting, those numbers and the primorial itself
+go into this rust file, and there's our test case.
 
 #+begin_src rust
 find_factors!(BDD, X32, X64, K as usize, factors(), false); }
 #+end_src
 
 It's a macro that says use a BDD to find all pairs of 32-bit
-factors of K as a 64-bit number, arranged so that the first
-number is less than the second, and then check the answers
-against this list. (The last parameter says whether or not
-to show some extra debug information. It really ought to be
-a command line parameter, but whatever.)
+factors of the 64-bit number K, (arranged so that the first
+number is less than the second), and then check that the
+answers match this list.
+
+(The last parameter says whether or not to show some extra
+debug information. It really ought to be a command line
+parameter, but whatever.)
 
 So let's see what happens when we run this.
 
 : cargo run --bin bdd-solve
-
 
 Off to a good start.
 
@@ -280,7 +366,7 @@ is going to take.
 
 You can see already it's slowing down.
 
-So what is it trying to do?
+** So what is it trying to do? (chess story)
 
 If it works, then the output will be a BDD on 64 input bits,
 and 1 output bit, and it'll represent the function that returns
@@ -305,6 +391,7 @@ A BDD ought to be able to represent this truth table fairly
 efficiently. The problem is just constructing it from the
 problem statement.
 
+** show it working
 ** give up
 
 # I actually stopped this around 5% because my computer locked up.
@@ -319,7 +406,7 @@ but that would be hard for bex.
 I knew multiplication is particularly hard for bdds - meaning you
 wind up with a very large bdd.
 
-But I didn't know how hard it would be.
+But I didn't know HOW hard it would be.
 
 Turns out it's really really hard.
 The percentage numbers are somewhat misleading.
@@ -386,6 +473,8 @@ https://en.wikipedia.org/wiki/Functional_completeness
 : ad+ae+af+bd+be+bf+cd+ce+cf         / 3x3 = 9 terms
 : a(d+e+f) + b((d+e+f) + c(d+e+f))   / 6 terms (not counting 0)
 
+* =00:30= langlet transform
+: https://en.wikipedia.org/wiki/Zhegalkin_polynomial
 * =01:00= visual ANF : numbers at the bottom
 
 truth table <-> anf
@@ -416,8 +505,54 @@ but now, with these at the bottom, something interesting happens.
 * =01:00= a new idea: truth tables in the NID
 - So let's go back to that number 2^32
 - 32 bits can store an entire function of 5 variables
-- either as truth table or ANF polynomial (factor set)
 
+- every single bdd and every single anf graph
+  has these nodes at the bottom
+
+- if i've got the space to treat them as literals, then
+
+: X =             4,294,967,296
+
+that I don't have to allocate, and whose operations can
+be handled directly in CPU registers.
+
+# show nano ast
+
+the nano test cases would go away completely, since
+every single node in this AST has fewer than five
+variables.
+
+# show next test
+and for this one, all these nodes could go away,
+because they use only the first five variables.
+
+moreover, these nodes don't use the five lowest
+variables, but they do use only five variables.
+so maybe I could do the same thing there, and
+just have the top part of the nid point to a
+list of the variables involved.
+
+
+
+
+* =00:15= closing
+i was hoping i'd have time to actually implement those
+ideas for this video, but i'm out of time, and i've
+probably already talked long enough.
+
+so maybe if people find interesting, i'll make a follow-up
+video someday.
+
+meanwhile, you can find the source for bex up on github.
+There are links to the repo and a bunch of other fun
+things in the video description.
+
+Check out my channel for more videos about j,
+and check out the #magafavnumbers playlist for more
+videos about interesting big numbers. maybe even
+add your own.
+
+Anyway, thanks for watching, and I'll see you next time!
 
 
 * --- end here --------------------------------------
