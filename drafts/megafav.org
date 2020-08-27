@@ -1,13 +1,17 @@
 #+title: /BDDs, ANF, and my two #megafavnumbers/
 
-* =00:30= Intro:#megafavnumbers
+* =00:30= 00 Intro:#megafavnumbers
+Hi there. My name is michal, and this video
+is about boolean expressions and my two #megafavnumbers.
+
 #megafavnumbers is a youtube playlist where a bunch
 of really great math-related channels are sharing
 their favorite numbers greater than 1 million, and
 they've opened it up to viewers to submit their own.
 
-I'm not sure I really have a favorite number, but
-but there are two numbers I think about quite a bit.
+I wasn't really sure I had a favorite number, but
+then I realized there are two huge numbers I think
+about quite a bit.
 
 : X =             4,294,967,296
 : K =   614,889,782,588,491,410
@@ -27,7 +31,7 @@ my main programming projects, which is a rust crate
 
 So, that's what I'm going to talk about.
 
-* =00:15= bex intro
+* =00:15= 01 bex intro
 # show crates.rs / github page / docs as i talk
 
 Bex is short for "boolean expression", and not surprisingly, it
@@ -39,13 +43,18 @@ https://github.com/tangentstorm/bex
 https://docs.rs/bex/0.1.4/bex/
 
 This video is about boolean expressions in general,
-bex in particular, and what those two numbers have
-to do with it.
+a little bit about bex in particular, and what those
+two numbers have to do with it.
 
-* =01:30= BDD intro
+And even though bex is written in rust, if you've ever
+seen my channel before you probably won't be too
+surprised to find another language called J making
+more than one appearance.
+
+* =01:30= 02 BDD intro
 ** bex does BDDs
 Bex has a number of ways to represent boolean expressions.
-It started with what's called a BDD.
+But it started with this idea called a binary decision diagram, or bdd.
 
 If you look up binary decision diagram on wikipedia
 you'll see this.
@@ -64,68 +73,103 @@ Ordered just means the variables are in order from top to bottom.
 And reduced means that all the redundant information is stripped out.
 
 ** demo in VUE
-# The way you get that is like so...
-here we have a truth table
-and here we have a fully expanded decision tree
+i made a copy of the diagram to show how it works.
+
+at the bottom here we have the bits of the truth table
+and again the fully expanded decision tree
 but notice that these nodes at the bottom branch to the same place on both sides
 so we can replace them with the leaf node
 but also we don't need so many copies of this node.
 generalize a tree with a dag
 keep doing that and we have a fully reduced bdd
 
-* TODO =01:00= who cares?
-- show the paper
+and with those two rules
+we can convert any decision tree
+into a fully reduced
+binary decision diagram
 
-nice feature is that the representation is cannonical
-also there are algorithms that let you combine functions together efficiently.
+* =01:00= 03 about bdds
+BDDs have lots of nice features.
 
-- more advanced things, like combining expressions, or applying one to another.
-- share nodes even across functions
-- two kinds of cache:
-  - simple vhl cache
-  - this node AND this node, or more generally, an ITE triple
+They're a canonical representation for boolean expressions,
+that means that if two expressions have the same truth table
+they have the same bdd.
 
-# i made a little demo in coffeescript where you can experiment with the truth table
+But because the information is compressed, it's possible
+to work with what would be incredibly huge truth tables
+efficiently.
 
-- knuth wrote a whole book about them
-- used in hardware layout, sat solvers
+I'm barely scratching the surface here, but they've
+got all sorts of interesting applications.
 
-- pretty easy to implement
-- mostly i treat it as a simple programming problem
+Donald Knuth dedicated a whole  section to them
+in the art of computer programming, and he gave a couple
+great lectures about them (and some related graph structures)
+that I'll link in the description.
 
-It's also sort of an ongoing exercise in optimization.
+* =00:15= 04 bdd lab (bdd as learning project)
+For me, building a BDD system is just a nice way to learn a new programming languages.
 
-* =00:15= bdd lab (bdd as learning project)
-# show bddlab on github
+Sometimes I make tetris
 https://github.com/learnprogramming/learntris
 
-often I make a BDD:
+sometimes i make a bdd.
 https://github.com/tangentstorm/bdd-labs/
 
-I've made implementations in elixir, j, python, pascal
-So when I decided to learn rust, I made bex.
-quick js demo
+I've made implementations in elixir, j, python, pascal.
 
-** why rust?
-- had experimented with concurrency in elixir, but very slow
-- pascal i was working on the idea of a solver
-- pascal is one of my favorite languages, but i didn't really trust my ability to make things threadsafe.
-- rust promised to make concurrency safe
-- hoped to combine low level optimizition with concurrency
+So when I decided to learn rust, I started writing yet
+another toy bdd system.
 
-* =02:00= bex-shell demo
-show same demo
-shout out to forth
-polish notation
-i actually don't use this very much yet, so it's fairly primitive.
-but i expect it to become more important in the future.
-here's what the example expression looks like.
+But Rust turned out to be kind of an ideal language
+for writing systems like this. I gives you a tremendous
+amount of expressive power while still letting you compile
+extremely fast executables, and most importantly, it
+promised to make it a whole lot easier to write
+threadsafe code.
 
-$1 <enter> puts x1 on the stack
+So eventually I did that. My little learning project
+turned into a fairly fast multi-threaded BDD solver,
+I decided I was going to keep working on it.
+
+Somewhere along the line, I decided to make it open
+source and stuck it up on github.
+
+* =02:00= 05 bex-shell demo
+ok so let's see bex in action.
+
+generally, you'd use it as a library in a normal rust program,
+but one of the example programs is a little interactive shell.
+
+If you clone the repo, and you have rust installed, you can
+compile and run the shell like this:
+
+: cargo run
+
+Cargo is just the standard build tool that comes with rust.
+
+And you have to tell it what to run:
+
+: cargo run --bin bex-shell
+
+I actually don't use this very much yet, so it's really primitive.
+
+It's basically the simplest sort of interpreter you can make,
+which is an interpreter for reverse polish notation.
+
+These little brackets show you a stack of values. Right now it's empty.
+And as you type things, at the prompt, they'll go onto the stack.
+
+So let's enter that same example expression.
+
+: $1 <enter> puts x1 on the stack
+
 actually you can use x0 but i'll stick with the example
 
 ~ for not
-$2 ~ $3 not
+or you can use the word not
+
+: $2 ~ $3 not
 
 this is what bex call an AST.
 it means abstract syntax tree, which is an idea from parsing.
@@ -178,12 +222,12 @@ The proof is that while these two numbers represent
 different AST nodes, these two items both reference
 the exact same BDD node.
 
-* =00:30= briefest possible intro to nids
+* =00:30= 06 briefest possible intro to nids
 They're 64-bit data structure that fits nicely in a register.
 I actually started with pointers, but for a lot of different
 reasons, eventually adopted this idea instead.
 
-The NIDs for variables and constants contain everything you
+The NIDs for variables and con stants contain everything you
 would ever need to know about the nodes, so you don't
 actually need to have those nodes in memory. Which means
 for simple nodes, there's no longer anything for the pointer
@@ -197,8 +241,14 @@ Don't worry. We'll get there.
 
 But first let's talk about that other number.
 
-* =01:00= Primorials
-** tests and benchmarks
+* =01:00= 07 Primorials
+** a. tests and benchmarks
+Okay, so far, we've only been looking at these tiny functions of three variables.
+
+But but BDDs can work with hundreds or thousands of variables, and even with
+just a few more inputs, complicated functions can result in huge BDDs, and
+those are the cases I want to work with.
+
 As I said, bex has become something of an exercise in optimization for me.
 
 In order to make sure I'm not breaking anything, I need a suite of test
@@ -208,7 +258,7 @@ And in order to tell whether a change actually speeds things up, I need a
 benchmark - something that takes a long time to solve, so I can see whether
 the time improves.
 
-** standard test problem
+** b. standard test problem
 
 So that's where this number comes in.
 
@@ -491,66 +541,109 @@ power set.
 
 :  viewmat |.&.|:~:/\^:(<32)32#1
 
-you can see that the first term in anf tells you what the first
-entry in the truth table is.
+you can kinda see that the first term in anf always corresponds
+to the first entry in the truth table.
 
-when you consider these bitmaps to be ongoing, infinite patterns, then
-it doesn't really make sense that their names should constantly change
-depending on how many variables you have.
+for every slot in the truth table, there's exactly one pattern
+that starts in that column. so to get the first 1, you have to
+start with that pattern, and then the other patterns you xor
+on top of it have to be shorter because all the other bits in
+the truth table are off to the right.
 
-this is what convinced me to renumber these with the names at the bottom.
+And by the way, these patterns repeat in the same order no matter
+how wide you make the table.
 
-but now, with these at the bottom, something interesting happens.
+# show 2^64, 2^1024
+
+In a way, these simple patterns repeating off to the right are like
+the primes when it comes to truth tables.
+
+And when you think when you consider these patterns to be ongoing, infinite
+sequences that always appear in the same order no matter how many variables
+you have, then it doesn't really make sense that their names should
+constantly change depending on how many variables you have.
+
+Numbering from the bottom, this pattern is always x0, this is always x1,
+and so on.
+
+This is what convinced me to renumber these with the names at the bottom.
+
+And so finally, that's where the number 2^32 comes in.
 
 * =01:00= a new idea: truth tables in the NID
-- So let's go back to that number 2^32
-- 32 bits can store an entire function of 5 variables
+as you can see, with 32 bits, you can represent an entire
+truth table for a function of 5 variables.
 
-- every single bdd and every single anf graph
-  has these nodes at the bottom
+# show the NID
 
-- if i've got the space to treat them as literals, then
+That means I could fit an entire 5-variable truth table
+directly in these 32 bits of a NID.
 
 : X =             4,294,967,296
 
-that I don't have to allocate, and whose operations can
-be handled directly in CPU registers.
+Since that pattern always refers to x0, why not just use that
+pattern as the NID for x0? And this one for x0 anded with x1?
+
+Since the truth table contains everything you need to know
+about the function, that's 4.29 billion possible nodes that
+can be described entirely by their NID,
+and therefore 4.29 billion nodes that never actually have
+to be allocated.
+
+And now that we're numbering from the bottom up, it means
+that for every single BDD
+and every single ANF graph
+in the universe,
+the bottom six rows of nodes (five variables and the two constants)
+can be described completely in terms of 32-bit truth tables,
+which can be operated on directly in the CPU, without
+needing to reach out to actual nodes in ram,
+and without looking anything up in a cache.
+
+In other words, bex can go a whole lot faster.
 
 # show nano ast
 
-the nano test cases would go away completely, since
-every single node in this AST has fewer than five
-variables.
+So for example, this entire nano test case would go
+away, because every single node in this AST has
+fewer than five inputs. Instead of allocating a
+new AST node to AND these two inputs, bex could
+just directly calculate the truth truth table,
+and the whole expression could just be replaced
+by one single node.
 
 # show next test
-and for this one, all these nodes could go away,
-because they use only the first five variables.
+and for this one, all these nodes could go away
+for the same reason, because they use only the
+first five variables.
 
-moreover, these nodes don't use the five lowest
-variables, but they do use only five variables.
-so maybe I could do the same thing there, and
-just have the top part of the nid point to a
-list of the variables involved.
+It's interesting that these nodes also use only
+five variables, but they're not the lowest five.
+
+Maybe I could still use the same idea, though,
+and just have this top part of the nid point to
+a list of the variables involved.
+
+In that case, it doesn't really matter whether
+the smallest numbered inputs are at the bottom,
+but it still makes a pretty good default case.
 
 
 
+* -- timed --------------------------------------
+* =00:30= closing
+i was hoping to actually implement those ideas for this video,
+but i'm out of time, and i've probably talked long enough already.
 
-* =00:15= closing
-i was hoping i'd have time to actually implement those
-ideas for this video, but i'm out of time, and i've
-probably already talked long enough.
+but if people find it interesting, maybe i'll make a
+follow-up video someday.
 
-so maybe if people find interesting, i'll make a follow-up
-video someday.
+meanwhile, there's a link to the bex source code on github
+in the video description, as well as other related links.
 
-meanwhile, you can find the source for bex up on github.
-There are links to the repo and a bunch of other fun
-things in the video description.
-
-Check out my channel for more videos about j,
-and check out the #magafavnumbers playlist for more
-videos about interesting big numbers. maybe even
-add your own.
+check out the other videos in my channel for more about J,
+and check out the #magafavnumbers playlist to see more videos
+about interesting giant numbers, or to upload your own.
 
 Anyway, thanks for watching, and I'll see you next time!
 
