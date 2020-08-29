@@ -1,0 +1,182 @@
+: X =             4,294,967,296
+
+The first one is probably at least vaguely familiar to
+other programmers out there. It's just 2^32 power.
+
+
+* =00:30= 06 briefest possible intro to nids
+They're 64-bit data structure that fits nicely in a register.
+I actually started with pointers, but for a lot of different
+reasons, eventually adopted this idea instead.
+
+The NIDs for variables and con stants contain everything you
+would ever need to know about the nodes, so you don't
+actually need to have those nodes in memory. Which means
+for simple nodes, there's no longer anything for the pointer
+to point to anyway.
+
+And if you think about that idea long enough,
+maybe you'll start to see why that magic number
+4,294,967,296 is on my favorites list.
+
+Don't worry. We'll get there.
+
+But first let's talk about that other number.
+
+* bex is exercise in optimization, and anf is a possible optimization
+one idea is algebraic normal form
+i don't know if it's an optimization or not yet.
+
+* =01:00= algebraic normal form.
+
+meanwhile, i had another idea
+
+bdd says you can represent any boolean function with if/then/else.
+obvious just by looking at how the binary tree maps to the truth table.
+
+assertion:
+
+  1. you can represent any boolean function with (and, xor, 1)
+  2. and in particular, we can make a bdd-like structure
+     that uses a different ternary function:
+
+: bdd: V ? H : L         NB. if V then H else L  ("var", "hi", "lo")
+: anf: V * H + L         NB. + is "plus mod 2"
+: anf: L ~: V *. H       NB. j syntax
+
+nand is sufficient to generate all 16 boolean functions.
+fun to work out for yourself. here's a proof in J:
+
+https://github.com/tangentstorm/tangentlabs/blob/master/j/nornand.ijs
+
+
+p =: 0 0 1 1
+q =: 0 1 0 1
+
+p na q
+
+proof: nand = (1 & xor)@AND
+
+(show the 16 2-bit truth tables?)
+
+
+functionally complete operator sets
+NAND = AND, XOR, T
+https://en.wikipedia.org/wiki/Functional_completeness
+
+
+: (1+a)+(b+c)+(a+b)                // 6 terms (4 unique)
+:  1+a + b+c + a+b                 // simply remove the parens
+:  1   + c                         // cancel a, b
+
+
+: (a+b+c)(d+e+f)                     / 3+3 = 6 terms
+: ad+ae+af+bd+be+bf+cd+ce+cf         / 3x3 = 9 terms
+: a(d+e+f) + b((d+e+f) + c(d+e+f))   / 6 terms (not counting 0)
+
+* =00:30= langlet transform
+: https://en.wikipedia.org/wiki/Zhegalkin_polynomial
+* =01:00= visual ANF : numbers at the bottom
+
+truth table <-> anf
+we can think of that number as representing a set of 32 items.
+langlet, power set
+power set.
+
+:  |:#:i.2^5
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1
+0 0 0 0 1 1 1 1 0 0 0 0 1 1 1 1 0 0 0 0 1 1 1 1 0 0 0 0 1 1 1 1
+0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1
+0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1
+
+:  viewmat |.&.|:~:/\^:(<32)32#1
+
+you can kinda see that the first term in anf always corresponds
+to the first entry in the truth table.
+
+for every slot in the truth table, there's exactly one pattern
+that starts in that column. so to get the first 1, you have to
+start with that pattern, and then the other patterns you xor
+on top of it have to be shorter because all the other bits in
+the truth table are off to the right.
+
+And by the way, these patterns repeat in the same order no matter
+how wide you make the table.
+
+# show 2^64, 2^1024
+
+In a way, these simple patterns repeating off to the right are like
+the primes when it comes to truth tables.
+
+And when you think when you consider these patterns to be ongoing, infinite
+sequences that always appear in the same order no matter how many variables
+you have, then it doesn't really make sense that their names should
+constantly change depending on how many variables you have.
+
+Numbering from the bottom, this pattern is always x0, this is always x1,
+and so on.
+
+This is what convinced me to renumber these with the names at the bottom.
+
+And so finally, that's where the number 2^32 comes in.
+
+* =01:00= a new idea: truth tables in the NID
+as you can see, with 32 bits, you can represent an entire
+truth table for a function of 5 variables.
+
+# show the NID
+
+That means I could fit an entire 5-variable truth table
+directly in these 32 bits of a NID.
+
+: X =             4,294,967,296
+
+Since that pattern always refers to x0, why not just use that
+pattern as the NID for x0? And this one for x0 anded with x1?
+
+Since the truth table contains everything you need to know
+about the function, that's 4.29 billion possible nodes that
+can be described entirely by their NID,
+and therefore 4.29 billion nodes that never actually have
+to be allocated.
+
+And now that we're numbering from the bottom up, it means
+that for every single BDD
+and every single ANF graph
+in the universe,
+the bottom six rows of nodes (five variables and the two constants)
+can be described completely in terms of 32-bit truth tables,
+which can be operated on directly in the CPU, without
+needing to reach out to actual nodes in ram,
+and without looking anything up in a cache.
+
+In other words, bex can go a whole lot faster.
+
+# show nano ast
+
+So for example, this entire nano test case would go
+away, because every single node in this AST has
+fewer than five inputs. Instead of allocating a
+new AST node to AND these two inputs, bex could
+just directly calculate the truth truth table,
+and the whole expression could just be replaced
+by one single node.
+
+# show next test
+and for this one, all these nodes could go away
+for the same reason, because they use only the
+first five variables.
+
+It's interesting that these nodes also use only
+five variables, but they're not the lowest five.
+
+Maybe I could still use the same idea, though,
+and just have this top part of the nid point to
+a list of the variables involved.
+
+In that case, it doesn't really matter whether
+the smallest numbered inputs are at the bottom,
+but it still makes a pretty good default case.
+
+

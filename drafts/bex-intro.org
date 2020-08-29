@@ -1,0 +1,191 @@
+* =00:15= 01 bex intro
+# show crates.rs / github page / docs as i talk
+
+Bex is short for "boolean expression", and not surprisingly, it
+provides some data structures for working with large boolean
+expressions.
+
+https://crates.io/crates/bex
+https://github.com/tangentstorm/bex
+https://docs.rs/bex/0.1.4/bex/
+
+This video is about boolean expressions in general,
+a little bit about bex in particular, and what those
+two numbers have to do with it.
+
+And even though bex is written in rust, if you've ever
+seen my channel before you probably won't be too
+surprised to find another language called J making
+more than one appearance.
+
+* =01:30= 02 BDD intro
+** bex does BDDs
+Bex has a number of ways to represent boolean expressions.
+But it started with this idea called a binary decision diagram, or bdd.
+
+If you look up binary decision diagram on wikipedia
+you'll see this.
+
+On the left here is a fully expanded BDD, also called a decision tree.
+The idea is you have three input bits. x1 x2 x3
+This dotted line says what to do if the input is 0.
+The solid line says what to do if it's 1.
+
+So for example this line in the truth table says
+inputs 0 1 1 give output 1.
+follow it on the graph and we get the same thing.
+
+On the right here is what's called a reduced and ordered BDD.
+Ordered just means the variables are in order from top to bottom.
+And reduced means that all the redundant information is stripped out.
+
+** demo in VUE
+i made a copy of the diagram to show how it works.
+
+at the bottom here we have the bits of the truth table
+and again the fully expanded decision tree
+but notice that these nodes at the bottom branch to the same place on both sides
+so we can replace them with the leaf node
+but also we don't need so many copies of this node.
+generalize a tree with a dag
+keep doing that and we have a fully reduced bdd
+
+and with those two rules
+we can convert any decision tree
+into a fully reduced
+binary decision diagram
+
+* =01:00= 03 about bdds
+BDDs have lots of nice features.
+
+They're a canonical representation for boolean expressions,
+that means that if two expressions have the same truth table
+they have the same bdd.
+
+But because the information is compressed, it's possible
+to work with what would be incredibly huge truth tables
+efficiently.
+
+I'm barely scratching the surface here, but they've
+got all sorts of interesting applications.
+
+Donald Knuth dedicated a whole  section to them
+in the art of computer programming, and he gave a couple
+great lectures about them (and some related graph structures)
+that I'll link in the description.
+
+* =00:15= 04 bdd lab (bdd as learning project)
+For me, building a BDD system is just a nice way to learn a new programming languages.
+
+Sometimes I make tetris
+https://github.com/learnprogramming/learntris
+
+sometimes i make a bdd.
+https://github.com/tangentstorm/bdd-labs/
+
+I've made implementations in elixir, j, python, pascal.
+
+So when I decided to learn rust, I started writing yet
+another toy bdd system.
+
+But Rust turned out to be kind of an ideal language
+for writing systems like this. I gives you a tremendous
+amount of expressive power while still letting you compile
+extremely fast executables, and most importantly, it
+promised to make it a whole lot easier to write
+threadsafe code.
+
+So eventually I did that. My little learning project
+turned into a fairly fast multi-threaded BDD solver,
+I decided I was going to keep working on it.
+
+Somewhere along the line, I decided to make it open
+source and stuck it up on github.
+
+* =02:00= 05 bex-shell demo
+ok so let's see bex in action.
+
+generally, you'd use it as a library in a normal rust program,
+but one of the example programs is a little interactive shell.
+
+If you clone the repo, and you have rust installed, you can
+compile and run the shell like this:
+
+: cargo run
+
+Cargo is just the standard build tool that comes with rust.
+
+And you have to tell it what to run:
+
+: cargo run --bin bex-shell
+
+I actually don't use this very much yet, so it's really primitive.
+
+It's basically the simplest sort of interpreter you can make,
+which is an interpreter for reverse polish notation.
+
+These little brackets show you a stack of values. Right now it's empty.
+And as you type things, at the prompt, they'll go onto the stack.
+
+So let's enter that same example expression.
+
+: $1 <enter> puts x1 on the stack
+
+actually you can use x0 but i'll stick with the example
+
+~ for not
+or you can use the word not
+
+: $2 ~ $3 not
+
+this is what bex call an AST.
+it means abstract syntax tree, which is an idea from parsing.
+it just means we're trying to directly represent the as the person types it.
+in this case, we're using rpn so you hardly need a parser at all.
+but that's what i call it.
+it's also sort of a circuit diagram.
+
+: dup sho $3
+
+dup copies the top number on the stack
+
+not dup sho (shows ~3)
+and dup sho
+
+$x1 $x2 and or
+dup sho
+
+$x2 $x3 and or
+dup sho
+
+okay so now let's convert that to a bdd
+dup bdd
+
+so here's how bex draws the bdd.
+it's not exactly the same as what we saw before.
+the main difference is that x3 is at the top.
+
+putting the smallest input at the top is kind of
+the industry standard, but in the last version,
+i made the decision to break with tradition and reverse it.
+the reason has everything to do with that first
+megafav number I mentioned- 2^32 power.
+But we'll get to that in a bit.
+
+In any case, other than swapping the order of x1 and x3,
+i promise you these two graphs have exactly the same structure.
+
+Normally, that wouldn't be the case. In general, swapping
+the order of variables can dramatically change the shape of
+the BDD, but in this particular case, swapping x1 and x3
+gives you the exact same function.
+
+Let's prove that.
+
+: $1 ~ $2 ~ and $3 ~ and $1 $2 and or $2 $3 and or dup bdd
+: $3 ~ $2 ~ and $1 ~ and $3 $2 and or $2 $1 and or dup bdd
+
+The proof is that while these two numbers represent
+different AST nodes, these two items both reference
+the exact same BDD node.
+
