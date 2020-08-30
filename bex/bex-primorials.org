@@ -1,89 +1,196 @@
-#+title: BDDs and my #megafavnumber
+#+title: bex #megafavnumber
 
 * =00:30= 00 Intro:#megafavnumbers
-Hi there. My name is michal, and this video
-is about boolean expressions and my two #megafavnumbers.
 
-#megafavnumbers is a youtube playlist where a bunch
-of really great math-related channels are sharing
-their favorite numbers greater than 1 million, and
-they've opened it up to viewers to submit their own.
+Hi there. My name is michal, and this video
+is about boolean expressions and my #megafavnumber.
+
+So #megafavnumbers is a youtube playlist where a
+bunch of really great math-related channels are
+sharing their favorite numbers greater than 1
+million, and they've opened it up to viewers
+to submit their own.
 
 I wasn't really sure I had a favorite number, but
-then I realized there is a huge number I think about
-quite a bit:
+then I realized there is a huge number I think
+about quite a bit:
 
-: K =   614,889,782,588,491,410
+:   */p:i.15
+: 614,889,782,588,491,410
 
-The second is an example of something called a primorial.
-It's the product of the first 15 prime numbers. It's also
-the biggest primorial that you can store in a 64-bit
-register.
-
-I don't know if there are any interesting theorems related
-to these numbers, but they both play a big role in one of
-my main programming projects, which is a rust crate
-(or library) that I call bex.
-
-So, that's what I'm going to talk about.
-
-* =01:00= 07 Primorials
-** a. tests and benchmarks
-Okay, so far, we've only been looking at these tiny functions of three variables.
-
-But but BDDs can work with hundreds or thousands of variables, and even with
-just a few more inputs, complicated functions can result in huge BDDs, and
-those are the cases I want to work with.
-
-As I said, bex has become something of an exercise in optimization for me.
-
-In order to make sure I'm not breaking anything, I need a suite of test
-problems that bex can run quickly, so I can run the tests after every change.
-
-And in order to tell whether a change actually speeds things up, I need a
-benchmark - something that takes a long time to solve, so I can see whether
-the time improves.
-
-** b. standard test problem
-
-So that's where this number comes in.
-
-: */ p: i. 15
-
-(This is a language called J. It's a full programming language,
+This is a language called J. It's a full programming language,
 but it's also kind of an executable math notation, and probably
-one of the best desktop calculators you can get.)
+one of the best desktop calculators you can get.
 
 It executes right to left, so:
 
-: 15                NB. the number fifteen
-: i. 15             NB. the first fifteen non-negative integers
-: p: i. 15          NB. the first fifteen primes
-: */ p: i. 15       NB. their product (literally insert a multiplication sign between them)
+: 15
 
-A product of the first n primes is apparently called a primorial,
-which I suppose is a combination of the words prime and factorial.
+The number 15
 
-This primorial happens to be the largest one whose binary
-representation can fit in a 64-bit register.
+: i. 15
 
-:   (2^64) > */ p: i. 15
+The first 15 non-negative integers.
+
+: p: i. 15
+
+The first fifteen primes.
+
+
+: */ p: i. 15
+
+And their product. Literally, inserting a
+multiplication sign between each item in the
+list.
+
+The product of the first n prime numbers is called
+a primorial. Basically it's like a factorial, but
+using only primes.
+
+I suppose there are a variety of nice features of
+primorials. Once you have the product of the first
+N primes, you can use it to prove the existence of
+some other prime, and therefore that there are
+always more primes.
+
+So for example, if you take this number plus or minus one:
+
+: 1 _1 + */p:i.15
+
+Then either one of these numbers might be prime, in which
+case you've found a new prime directly, or else they're
+not, in which case Euclid showed that they must be divisible
+by some other prime that's not in the list.
+
+: q: 1 _1 + */p:i.15
+
+In this case neither of the numbers are prime.
+"q colon" gives you the prime factorizations, and
+so for this example we wound up with six new
+primes that weren't on our list.
+
+And since the same argument applies to any primorial
+you come up with, there must be an infinite number
+of primes.
+
+# show euclid's proof on wikipedia
+# https://en.wikipedia.org/wiki/Euclid%27s_theorem
+
+To be fair, Euclid's argument works for the product
+of any list of primes, whether it's a primorial or not.
+
+And in fact, the property I really wanted when I
+found this number would work with any list of
+primes, as long as it didn't have any duplicates.
+
+But if you're going to generate a list of primes,
+taking them in order is a pretty easy way to go
+about it.
+
+Before I go too much further, let me explain the problem
+I'm trying to solve.
+
+* problem statement
+
+I maintain a program called bex. It's a rust library
+(or crate) for working with boolean expressions
+
+But maybe a better way of saying that is that it's a
+tool for solving arbitrary problems.
+
+A boolean expression is just a function that operates
+on bits. You have some arbitrary number of input bits,
+and one output bit.
+
+If you want to model a function that needs more than
+one output bit, you can just model it as a list of
+boolean expressions.
+
+Since pretty much any problem can be described this
+way, you can think of bex as a general purpose
+problem solver.
+
+For me, bex is also an exercise in optimization.
+I'm always trying to find a way to make it faster.
+
+Because I'm always trying to make it faster, I'm
+always changing things, and because I'm always
+changing things, I need to make sure I don't
+break anything, and to make sure I don't break
+anything, I need some problems for it to solve,
+and I can check that it got the right answer.
+
+Ideally, I'd also maintain a formal proof that the
+code was correct, but I'm not quite there yet, and
+even if I did, I'd probably want tests to double
+check new ideas to see if they even work, before
+I go back and formally verify them.
+
+In any case, I find myself wanting two kinds of
+problems for bex to solve:
+
+- small problems that bex can solve really fast,
+  so I have some evidence things are working
+
+- and big problems that take bex a long time, so
+  I can really measure the impact of an optimization.
+
+And so the main problem I use right now is
+something like factoring numbers.
+
+For example, this number.
+
+: 614889782588491410
+
+In general, as far as anyone knows, factoring numbers
+is a hard problem, but even though this number is
+fairly huge for us, a modern computers can factor it
+in a fraction of a second.
+
+Now the actual problem I use is slightly more complicated.
+Instead of all the prime factors, I want to find certain
+pairs of numbers whose product equals that number.
+
+So for example, if I divided these factors into two boxes:
+
+:   2 3 5 7 11 13 17 19 23 ; 29 31 37 41 43 47
+: ┌──────────────────────┬─────────────────┐
+: │2 3 5 7 11 13 17 19 23│29 31 37 41 43 47│
+: └──────────────────────┴─────────────────┘
+
+And then took the product of the numbers in each box:
+
+: */ S:0 ] 2 3 5 7 11 13 17 19 23 ; 29 31 37 41 43 47
+: 223092870 2756205443
+
+Then this would be one of the pairs of numbers I'm looking for.
+
+I picked this particular primorial as a benchmark somewhat
+arbitrarily. It just happens to be the biggest one that
+will fit in a 64-bit computer register.
+
+:    (2^64) > */ p:i.15
 : 1
-:   (2^64) > */ p: i. 16
+:    (2^64) > */ p:i.16
 : 0
 
-** the problem to solve
+The full specification is to find all pairs of 32-bit
+unsigned integers (let's call them x and y) such that
+x is less than y, and x * y = this number.
 
-The benchmarking problem I set for bex is to figure out all
-the ways you can multiply two thirty-two bit numbers together
-to get this number.
+So this answer works, but if I move 29 over to the
+box on the left, then it fails, both because now the
+left number is bigger than the right, but also because
+the left number is more than 32 bits.
 
-Or in other words, factor the number. I could have asked it to
-factor any big number, but with primorials in particular it's
-really easy for me as the test author to generate the correct
-answer.
+:    (2^32) > */ S:0] 2 3 5 7 11 13 17 19 23 29; 31 37 41 43 47
+: 0 1
 
-** factors
+So let me show you how to solve that in J,
+and then we'll see how bex does it.
+
+* solution in j
+
 The trick is to take the fifteen primes and find every possible
 way to divide them into two groups.
 
@@ -100,48 +207,69 @@ Here's a smaller example that fits on the screen:
 
 Now we can use these patterns to group the primes.
 
-:   (#: i. 2^n) </."1 p:i.n =: 3     NB. use t
+Real quick, we saw earlier that you can use a semicolon
+to divide a list into boxes. If you want to put a whole
+array in one box, you can use the less than sign without
+a left argument.
+
+: 1 2 ; 3
+: < 1 2 3
+
+That lets us write this:
+
+:   (#: i. 2^n) </."1 p:i.n =: 3
+
+The slash-dot says something like "use the list on the left as
+group labels for the thing on the right" and then apply this
+box function. The double-quote 1 means do that at rank one,
+which means every row. So basically, for each row,
+separate the primes into two boxes...
+
+And we get this.
 
 You can see it duplicates the list.
 That's because half of the binary representations are just
 the other half flipped.
 
+: load 'viewmat'
 : viewmat #: i. 2^n
 
-So we can just use half of them
+So to fix this, we can just use half of them
 
 :  #: i. 2^n-1
 
-and put a 0 on the left so each line still matches the numbers of primes
+but now the list of bits in each row is shorter than the list of primes, so
+
+put a 0 on the left so each line
 
 :  0 ,. #: i. 2^n-1
+:  viewmat 0 ,. #: i. 2^n-1
 
-Now we have every unique grouping of factors:
+So if we plug that in, now we have all unique partitions of the factors into two groups.
 
 :   (0 ,. #: i. 2^n-1) </."1 p:i.n =: 3
 
-
 And we can do the same thing for our original 15.
+
+:   (0 ,. #: i. 2^n-1) </."1 p:i.n =: 15
 
 But the question was which 32-bit factors, and some of these numbers are too big.
 
 So multiply the contents of each box:
 
-: */L:0
-
-then we can ditch the boxes completely:
-
-: >
+: */L:0 (0 ,. #: i. 2^n-1) </."1 p:i.n =: 15
 
 just as a sanity check, that gives us:
 
-: #
-
-16384
+: # */L:0 (0 ,. #: i. 2^n-1) </."1 p:i.n =: 15
+: 16384
 
 if we factor that, we get
 
 : q: 16384
+
+Take the length, and we can see it's
+
 : # q: 16384
 
 2 to the 14th power. which is exactly what we asked it for.
@@ -150,39 +278,68 @@ So that's all pairs of integers that multiply to our primorial.
 
 But we want to select the ones where both numbers are less than 2^32
 
-: ({~ [: I. [: *./"1 <&(2^32))
+so first let's get rid of the boxes.
 
-This is too much J to explain in detail right now, but it
+:  > */L:0 (0 ,. #: i. 2^n-1) </."1 p:i.n =: 15
+
+And now...
+
+: u32 =: {~ [: I. [: *./"1 <&(2^32)
+: u32 > */L:0 (0 ,. #: i. 2^n-1) </."1 p:i.n =: 15
+
+This is too much J to explain in /detail/ right now, but it
 literally says select using the indices where all the items
 on a row are less than this number.
 
-That gives us exactly...
+In other words, restrict the whole table to 32-bit unsigned integers.
 
-:    # ({~ [: I. [: */"1 <&(2^32)) > */L:0 (0 ,. #: i. 2^n-1) </."1 p:i.n =: 15
+And if we count the results, we have exactly...
+
+:  # u32 > */L:0 (0 ,. #: i. 2^n-1) </."1 p:i.n =: 15
 : 3827
 
 ... 3827 unique pairs of 32-bit numbers that factor into our number.
 
-** the rust code
+Now just sort each line, so the smaller number is always on the left
+
+: /:~"1 u32 > */L:0 (0 ,. #: i. 2^n-1) </."1 p:i.n =: 15
+
+And now we're done.
+
+But just to make it look nice, we'll sort again without the rank 1 part,
+and that will sort the whole table so the smallest pair is at the top.
+
+: /:~ /:~"1 u32 > */L:0 (0 ,. #: i. 2^n-1) </."1 p:i.n =: 15
+
+* the problem in bex
 # show bdd-solve
+
+Okay, so that wasn't too hard from a math point of view.
+
+Let's see how bex does.
 
 And after a little formatting, those numbers and the primorial itself
 go into this rust file, and there's our test case.
+
+If you clone the repo, it's bex/examples/solve/bdd-solve.rs
+
+And if you scroll to the bottom of that file, you'll see this:
 
 #+begin_src rust
 find_factors!(BDD, X32, X64, K as usize, factors(), false); }
 #+end_src
 
-It's a macro that says use a BDD to find all pairs of 32-bit
-factors of the 64-bit number K, (arranged so that the first
-number is less than the second), and then check that the
-answers match this list.
+It's a macro that says use something called BDD to find all
+pairs of 32-bit factors of the 64-bit number K, (arranged
+so that the first number is less than the second),
+and then check that the answers match this list of factors.
 
-(The last parameter says whether or not to show some extra
-debug information. It really ought to be a command line
+(The last parameter says whether or not to generate some
+diagrams for debugging. It really ought to be a command line
 parameter, but whatever.)
 
-So let's see what happens when we run this.
+So before we look at what it's doing, let's just run this and
+see what happens.
 
 : cargo run --bin bdd-solve
 
@@ -200,79 +357,508 @@ current solver works, it knows how many steps it will take to
 construct the solution, but it doesn't know how long each step
 is going to take.
 
-You can see already it's slowing down.
+If we start scrolling again, you can see already it's slowing down.
 
-** So what is it trying to do? (chess story)
+And... It's pretty much just going to
+keep getting slower and slower
+and slower.
 
-If it works, then the output will be a BDD on 64 input bits,
-and 1 output bit, and it'll represent the function that returns
-true when the first 32 bits multiplied by the second 32 bits
-is this number K.
+And I think the last time I let it run, it took two or three
+days and then it finally crashed, because it ran out of
+memory.
 
-Since it has 64 input bits, that means the truth table is
-2^64 bits wide, which is an INSANELY large number.
+By the way, bex is a concurrent system, and this is a moderately
+high end gaming machine with six cores and 12 logical CPUs.
+Bex doesn't doesn't really max them out yet, but it does put
+all twelve of them to work.
 
-This is that story about the grains of rice on the chessboard.
-As payment for inventing the game of chess, you ask the emperor
-for a grain of rice on the first square, two in the second square,
-double each time, and after a while, the emperor's accountants
-figure out what's going on and chop your head off.
+Since I need my computer to be responsive in order to make this
+video, I'm going to go ahead and just stop it right now.
 
-So yeah, the truth table is 2^64 entries wide. Each entry
-represents a pair of 32-bit numbers that might or might
-not multiply, but we happen to know that there are only
-3,827 such numbers.
+...
 
-A BDD ought to be able to represent this truth table fairly
-efficiently. The problem is just constructing it from the
-problem statement.
+So... Yeah. At the moment,
+this is actually way too hard for bex to solve.
 
-** give up
+* why is it hard?
 
-# I actually stopped this around 5% because my computer locked up.
-# It was right after I got up to go to the bathroom so I suspect
-# the thread just got moved to the foreground and didn't want to
-# give back control. Either way, I should probably manually stop
-# the program.
+So why?
 
-I wanted a problem with an easy answer to generate and check
-but that would be hard for bex.
+Why was it easy for us to solve this, and
+so much harder for bex?
 
-I knew multiplication is particularly hard for bdds - meaning you
-wind up with a very large bdd.
+Part of it is that we started with the answer.
 
-But I didn't know HOW hard it would be.
+Since we knew it was a primorial, we knew all the
+factors from the start. We could have written
+that same program in a few lines of pretty
+much any language, and generated our answer set
+just as fast.
 
-Turns out it's really really hard.
-The percentage numbers are somewhat misleading.
-It's going to get slower and slower as it goes along.
+If didn't know the factors and we were just given
+some big number, we'd have to factor it ourselves,
+and depending on the language, we might even have
+to write the algorithm for that, and are probably
+some tricks to making that efficient, but still,
+it just wouldn't be a big deal to get these results.
 
-I've never actually seen this program finish,
-and it's not garbage collecting, so I think last time
-i tried, it just churned for a few days, and then finally
-crashed when it ran out of RAM.
+But another part of it is that our systems know
+about math.
 
-So yeah, it turned out my initial problem is way too
-hard for bex to solve right now, and so the reason
-that number is always on my mind is simply that it
-represents a pretty ambitious goal to shoot for.
+Almost any programming language you pick up is going
+to have arithmetic built in. For factoring in particular
+you probably want division, and of course that's
+usually provided directly by the hardware.
 
-** show it working
+But bex doesn't know anything about division.
 
-* =00:30= closing
-i was hoping to actually implement those ideas for this video,
-but i'm out of time, and i've probably talked long enough already.
+In fact, the solver part doesn't know anything
+about numbers at all.
 
-but if people find it interesting, maybe i'll make a
-follow-up video someday.
+* scaling the problem
 
-meanwhile, there's a link to the bex source code on github
-in the video description, as well as other related links.
+Let's scale problem down and see what's happening.
 
-check out the other videos in my channel for more about J,
-and check out the #magafavnumbers playlist to see more videos
-about interesting giant numbers, or to upload your own.
+If we go back to J for a second
 
-Anyway, thanks for watching, and I'll see you next time!
+: */ p: i. 15
+
+If we add one more character here,
+
+: */\ p: i. 15
+
+then now we're insert the multiplication sign between
+the items of each /prefix/ of the first 15 primes.
+
+And so this is like a running product of the primes,
+or just the first 15 primorials.
+
+So one nice thing about the factoring problem is
+that we can scale it up and down, just by picking
+a different number in this sequence.
+
+So let's look at 6. We need 3 bits to represent 6.
+
+:  #: 6
+: 1 1 0
+
+So let's just that up and call it a four bit number.
+And let's ask what are the two-bit factors that
+multiply to give 6?
+
+Well the factors are 1 2 3 and 6
+
+:   #: 1 2 3 6
+
+and we just said we need three bits for the number 6
+so that discards 1 and 6. But 2 and 3 each fit in two
+bits, so that's our only answer.
+
+Thankfully, bex can solve this version of the problem
+in less than a second. In fact, it's one of the standard
+test cases:
+
+: cargo test --lib nano_bdd
+
+# show the code
+
+The code pretty much just calls the same macro we saw
+before, just passing in different numbers. As I
+said this last parameter really ought to be a command
+line flag, but for now, let's just change the test and
+generate some diagrams.
+
+: cargo test --lib nano_bdd
+
+* the answer from bex
+** diagrams from bex
+So now the same thing happens, but we can see what
+bex was thinking along the way.
+
+# show the graphs
+
+So first, this is how bex thinks of the answer,
+at least when you ask for this BDD thing.
+
+It's pretty easy to understand once you know how
+to read it, but let's work work our way up.
+
+# ast
+
+This is how bex thinks of the problem statement.
+These two are just smaller parts of that problem.
+This is the part about the first number being less
+than the second. This is the multiplication.
+
+Let's see how we got here.
+
+As I said, the solver part knows nothing about math,
+but there is a way to treat a list of boolean
+expressions as if they were the bits in a number,
+and then translate operations on those numbers to
+the same sort of low-level boolean operations that
+happen in a CPU.
+
+** multiplication
+
+# + mul0 ,  center top of screen
+
+So for example, here we're asking bex to multiply
+two two-bit numbers. As you can see, we give each
+bit an identifier.
 
 
+When you multiply numbers with multiple digits,
+you multiply the top number by each digit of the
+bottom number and add the results.
+
+So here's the first row.
+
+# + mul1
+
+Since this is binary, x2 can only ever be 0 or 1.
+Multiplying by 0 or 1 is the same operation as
+using the AND operator on each digit, so let's
+change that to an AND sign.
+
+# + mul1.andtbl
+# + mul1.andx2
+
+So then we'll do the same thing for x3 on the next
+row, remembering to shift it over one place...
+
+# +mul 2
+
+and add them together.
+
+# +muladd
+
+So now we've simplified the problem a bit.
+
+# -mul0 mul1 mull.andtbl
+
+move to left and shrink down a bit. (175% or so)
+
+Let's go ahead and apply the and operator.
+
+# - mul*
+
+And now we're left with simple addition problem.
+
+** addition
+# top center  and shrink to 125%
+
+well adding 0 to anything is the same as just copying it,
+so that's easy.
+
+# + add1.ones
+
+To add these two bits, we need two steps. The result bit
+is the same as the XOR operation, on NOT EQUAL.
+
+That's because adding zero to anything keeps it the same,
+and adding two ones together gives you a two. That's 1 0
+in binary, so we put the result down here...
+
+# + add2.twos
+
+And then carry.
+
+But we only carry when both inputs are 1, so that's AND again.
+
+# + add3.carry
+
+Now if we were working with more than two bits in each number,
+we'd have to handle adding up to three bits. Bex knows how
+to do this, but here we have a zero, so we can just ignore that.
+
+And again we just do the two bit addition, so XOR and then carry
+the AND.
+
+# - xortbl , center
+
+Now we have our four-bit product, and we just test whether it's
+equal to the number we're trying to factor, which is 6.
+
+# + eq0
+
+So it might be a little weird to see an equal sign here, but
+it actually is one of the 16 boolean operations. It's the same
+as NOT XOR.
+
+# +eq3-tbl
+
+When we compare each bit of our product to the bits of the number
+six and we'll get four new outputs.
+
+# +eq1.res
+
+But we want a single bit, so we have to AND them all together.
+
+If we had more bits, this wouldn't be the most efficient way
+to AND all the bits together, but this is how bex currently
+does it.
+
+So now we just have to figure out these slots.
+
+However, if we look at the truth table, you'll notice that
+when you check for equality with 1 it's the same as just copying,
+so we can just connect these two bits of the product directly
+to the AND node.
+
+# + eq=1
+
+And likewise, an equality check with 0 is the same as
+flipping the bit, and bex handles that by setting a bit on
+the reference to this node, rather than allocating an extra
+node just to flip one bit.
+
+So these four bits never actually appear in our expression.
+
+So this graph represents the full boolean expression for
+testing whether two two-bit numbers multiply to get six.
+
+So if we flipped this down and broke these four bits
+down one more step, you'd get a graph that looks
+something like this.
+
+Feel free to pause the video if you want to double check.
+
+** less than.
+
+That leaves the less than condition.
+
+# + lt
+
+Rather than derive it, let's try to just read the the AST.
+
+This is the symbol for OR, so this is true when either of
+the linked conditions are true.
+
+NOT x3 and X1, (this bit is a 0 and this is a 1).
+
+OR
+
+Both of the following are true:
+
+These two are equal (not not equal).
+
+AND
+
+X0 and not X2. So this is a 0 and this is a 1.
+
+Again feel free to pause if you want to study this a bit.
+
+** AST
+
+# show all three side by side.
+
+Now this is starting to look like a complete mess, but it's
+just the check for whether the product is six anded with the
+less than check, where the duplicate nodes at the
+bottom are fused together.
+
+So this right here is the complete description of the problem
+from bex's point of view.
+
+** BDD
+# final and AST side by side
+
+Finally, here is the answer.
+
+This is called a Binary Decision Digram. That's what we
+got when we asked for a BDD.
+
+You can think of a BDD as a compressed truth table.
+
+One of the nice properties of BDDs is that just like a
+truth table, they're cannonical representations.
+
+What that means is that no matter what sequence of operations
+you use to convert this AST to a BDD, you will always get
+a graph that's equal to this one, as long as you draw
+it with the variables in the same order from top to bottom.
+
+In contrast, there are an infinite number of things you
+could do to this graph on the left that would leave the
+truth table the same. For example, you could change this
+not-xor to an equality check, or you could take multiple
+copies of this whole graph and AND them together.
+
+It's actually a really hard problem to decide whether
+two boolean expressions like this are equivalent. In
+fact, that's pretty much the standard example of an
+NP-complete problem. (It's called satisfiability - you
+test whether or not a giant expression is equivalent
+to the constant false.)
+
+So if you wanted to use BEX as a sat solver, you could
+generate a BDD and then just see if it's compared to the
+single false node. (Which is this upward facing tack symbol.)
+
+I'm not going to explain how the bex solver works in this
+video. It's not terribly complicated, but it's slow. There's
+a lot of work I want to do to make it better. But more
+importantly, it doesn't really matter, because again,
+no matter what strategy we choose to do the conversion,
+we get the same BDD.
+
+So instead, I'm going to do what is literally the slowest
+possible conversion, because it's also the simplest.
+
+** Truth table in j
+
+The way to generate the truth table is to evaluate the
+expression for every combination of inputs. But rather
+than try to plug values into that entire expression graph,
+I'm just going to build the truth table in J.
+
+We already saw how to generate a table of every combination of n bits.
+
+: #: i. 2^4
+
+Just count from 0 to 15 in binary.
+
+Since we want to treat this as two integers, we can also do the
+same thing in base four.
+
+: 4 4 #: i. 2^4
+
+Now for each row, insert a less than sign.
+The bracket is an identity function. It's just separates
+the rank 1 symbol from the 4 4.
+
+: </"1 ] 4 4 #: i. 2^4
+
+We can use that same identity bracket to turn it back
+into a table with a copy of the original input on the left.
+
+: (] , </)"1 ] 4 4 #: i. 2^4
+
+So now let's add a row to check whether the product is equal to 6.
+
+: (] , (6 = */) , </)"1 ] 4 4 #: i. 2^4
+
+And then and these last two rows together:
+
+: (] , (6 = */) *. </)"1 ] 4 4 #: i. 2^4
+
+Now we have our truth table. Let's convert it to binary and
+spruce it up a little bit.
+
+: (] , (6 = */) *. </)"1 ] 4 4 #: i. 2^4
+
+give the original numbers a name and show them in binary on the left.
+
+: (#:i); ,. (] , (6 = */) *. </)"1 ] 4 4 #: i =: i. 2^4
+
+and then get rid of the numbers in the middle
+
+: (#:i); ,. ((6 = */) *. </)"1 ] 4 4 #: i =: i. 2^4
+
+and then put a little header up there.
+
+we'll call it e for expression.
+
+:  ('x3x2x1x0';'e'),: (#:i);,. ((6 = */) *. </)"1 ] 4 4 #: i =: i. 2^4
+
+** reading the BDD
+
+# just have the j window next to the diagram and walk through it
+# delete lines from the truth table at each step, pointing out the branch to O in the diagram.
+
+* summary
+
+So as I said, bex does not do this brute force method of generating
+the whole truth table. It tries to be smarter, but it is hard problem,
+and even though the truth tables are compressed as BDDs (or other
+representations I haven't shown you), the size of the uncompressed
+truth table grows exponentially.
+
+# show   */ p: i. 15
+
+So if we go back to our original problem, we're dealing with
+64 input bits. That means the truth table is 2^64 bits long.
+
+That's another really big number.
+
+Now each answer in a BDD is just a path from the top down to
+the true node. So this one has one path, and one answer. We
+know the answer for primorial 15 has 3,827.
+
+So if bex could solve that problem, the result would be a huge
+BDD with x63 at the top and 3,827 branching and intertwining
+paths down to the true node.
+
+I don't know how many nodes that would be, but would be a really
+big graph. I suspect if you drew the nodes really small, you might
+just barely be able to fit the whole thing on an 8k monitor. But
+that's just an issue with drawing it. I'm pretty sure the graph
+structure ought to be small enough to fit in memory even on a low end PC.
+
+The AST for the problem is small too. When we ran it, it generated
+the 32-bit multiplication and less-than check in a fraction of a second,
+and the number 7997 we saw is actually the number of intermediate nodes
+in the AST. So it's also more than you can make sense of on a screen,
+but very small in memory.
+
+So the before and after are small, but the actual truth table is
+gigantic. Maybe if you're google or amazon, you'd have enough hard
+drives to store the uncompressed truth table, but I kinda doubt it.
+
+So the problem is that because the truth table is so big, you
+can't approach it by brute force. And even if the final result
+winds up being small, you might have intermediate steps that
+turn out to be gigantic. You have to be really smart about
+making the conversion.
+
+Bex is smarter than brute force, but if you think of this series
+of numbers as a ladder to climb, well bex is currently down here.
+
+: |.,.*/\p:i.15
+
+210 fits into 8 bits, and bex can solve it for two 4-bit inputs.
+That's actually one of the other test cases.
+
+But if you ask it to multiply two 8-bit numbers to get 210, then
+it takes 11 minutes. I haven't tried them but everything up to
+30,030 here is also 8-bit multiplication, although the answer
+is 16 bits.
+
+Honestly, I haven't bothered to try any of the tests in between,
+because I know I'm not going to get here without a major
+improvement to the solving algorithm.
+
+The thing is, much better algorithms than what I'm using
+already exist. I've been lead to believe the algorigthms
+they use in SAT solving can already get me here, and I hope
+to start experimenting with those algorithms in the future.
+
+* closing
+
+By the way, BDDs generally aren't used in solving, although
+I've heard that there are a few SAT solvers out there that
+are starting to incorporate them.
+
+For me, the only use I had for a BDD package was as an exercise
+for learning new programming languages. But then I saw how fast
+I could make it go in rust, and as I said, it became an exercise
+in optimization.
+
+But so far, the effort has has gone into the pure BDD part,
+and not the solving part.
+
+When I decided to have bex factor this fifteenth primorial,
+I had no idea whether it would take bex a few seconds or a
+thousand years. It was an arbitrary choice, and it turned out
+I aimed high.
+
+If it had been easy bex, I might not have ever shifted my
+focus from making a fast BDD to making a fast solver.
+
+So even though this number was an arbitrary choice, it wound
+up representing a goal to shoot for.
+
+And that's how primorial 15 became my #megafavnumber.
+
+Thanks for watching, and I hope to see you again.
