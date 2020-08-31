@@ -1,9 +1,10 @@
 #+title: bex #megafavnumber
 
-* =00:30= 00 Intro:#megafavnumbers
+* =00:30= intro (face cam)
 
 Hi there. My name is michal, and this video
-is about boolean expressions and my #megafavnumber.
+is about solving boolean expressions and
+about my #megafavnumber:
 
 So #megafavnumbers is a youtube playlist where a
 bunch of really great math-related channels are
@@ -13,18 +14,26 @@ to submit their own.
 
 I wasn't really sure I had a favorite number, but
 then I realized there is a huge number I think
-about quite a bit:
+about all the time:
+
+614 quadrillion
+889 trillion
+782 billion
+588 million
+491 thousand
+410
+
+Otherwise known as primorial 15.
+
+* the number (J cam, wikipedia)
 
 :   */p:i.15
 : 614,889,782,588,491,410
 
-This is a language called J. It's a full programming language,
-but it's also kind of an executable math notation, and probably
-one of the best desktop calculators you can get.
+Here's how you construct that number in J, an open source
+programming language and executable math notation from jsoftware.com
 
-It executes right to left, so:
-
-: 15
+J executes right to left, so:
 
 The number 15
 
@@ -36,7 +45,6 @@ The first 15 non-negative integers.
 
 The first fifteen primes.
 
-
 : */ p: i. 15
 
 And their product. Literally, inserting a
@@ -47,50 +55,24 @@ The product of the first n prime numbers is called
 a primorial. Basically it's like a factorial, but
 using only primes.
 
-I suppose there are a variety of nice features of
-primorials. Once you have the product of the first
-N primes, you can use it to prove the existence of
-some other prime, and therefore that there are
-always more primes.
+Apparently there are various interesting features of
+primorials, but this is the one I cared about most:
+they're square free numbers.
 
-So for example, if you take this number plus or minus one:
+Literally, that means no square numbers evenly divide it,
+but more importantly for me, it means
+there's only one of each factor,
+so it's easy to put them into groups
+without having to worry about duplicates.
 
-: 1 _1 + */p:i.15
+Of course, any list of unique primes has this property,
+but if you're going to generate a list of primes,
+taking them in order
+seemed to be the simplest way to go about it.
 
-Then either one of these numbers might be prime, in which
-case you've found a new prime directly, or else they're
-not, in which case Euclid showed that they must be divisible
-by some other prime that's not in the list.
+So let me explain the problem I'm trying to solve.
 
-: q: 1 _1 + */p:i.15
-
-In this case neither of the numbers are prime.
-"q colon" gives you the prime factorizations, and
-so for this example we wound up with six new
-primes that weren't on our list.
-
-And since the same argument applies to any primorial
-you come up with, there must be an infinite number
-of primes.
-
-# show euclid's proof on wikipedia
-# https://en.wikipedia.org/wiki/Euclid%27s_theorem
-
-To be fair, Euclid's argument works for the product
-of any list of primes, whether it's a primorial or not.
-
-And in fact, the property I really wanted when I
-found this number would work with any list of
-primes, as long as it didn't have any duplicates.
-
-But if you're going to generate a list of primes,
-taking them in order is a pretty easy way to go
-about it.
-
-Before I go too much further, let me explain the problem
-I'm trying to solve.
-
-* problem statement
+* problem statement (face cam, bex website)
 
 I maintain a program called bex. It's a rust library
 (or crate) for working with boolean expressions
@@ -113,21 +95,16 @@ problem solver.
 For me, bex is also an exercise in optimization.
 I'm always trying to find a way to make it faster.
 
-Because I'm always trying to make it faster, I'm
-always changing things, and because I'm always
-changing things, I need to make sure I don't
-break anything, and to make sure I don't break
-anything, I need some problems for it to solve,
-and I can check that it got the right answer.
+Because I'm always trying to make it faster,
+I'm always changing things,
+and because I'm always changing things,
+I need to make sure I don't break anything,
+and to make sure I don't break anything,
+I need some problems for it to solve,
+where I can check that it got the right answer.
 
-Ideally, I'd also maintain a formal proof that the
-code was correct, but I'm not quite there yet, and
-even if I did, I'd probably want tests to double
-check new ideas to see if they even work, before
-I go back and formally verify them.
-
-In any case, I find myself wanting two kinds of
-problems for bex to solve:
+So I find myself wanting two kinds of problems
+for bex to solve:
 
 - small problems that bex can solve really fast,
   so I have some evidence things are working
@@ -138,17 +115,20 @@ problems for bex to solve:
 And so the main problem I use right now is
 something like factoring numbers.
 
-For example, this number.
-
-: 614889782588491410
+* problem statement (J screen)
 
 In general, as far as anyone knows, factoring numbers
 is a hard problem, but even though this number is
 fairly huge for us, a modern computers can factor it
 in a fraction of a second.
 
-Now the actual problem I use is slightly more complicated.
-Instead of all the prime factors, I want to find certain
+:   q: 614889782588491410
+
+So that right there is the basic problem I'm asking bex to solve.
+
+Now the actual problem statement somewhat more complicated.
+
+Instead of all /the/ prime factors, I want to find
 pairs of numbers whose product equals that number.
 
 So for example, if I divided these factors into two boxes:
@@ -160,43 +140,53 @@ So for example, if I divided these factors into two boxes:
 
 And then took the product of the numbers in each box:
 
-: */ S:0 ] 2 3 5 7 11 13 17 19 23 ; 29 31 37 41 43 47
+:    */ S:0 ] 2 3 5 7 11 13 17 19 23 ; 29 31 37 41 43 47
 : 223092870 2756205443
 
 Then this would be one of the pairs of numbers I'm looking for.
 
 I picked this particular primorial as a benchmark somewhat
 arbitrarily. It just happens to be the biggest one that
-will fit in a 64-bit computer register.
+will fit in a 64-bit integer.
 
 :    (2^64) > */ p:i.15
 : 1
 :    (2^64) > */ p:i.16
 : 0
 
-The full specification is to find all pairs of 32-bit
+The full specification is to find every pair of 32-bit
 unsigned integers (let's call them x and y) such that
-x is less than y, and x * y = this number.
+x is less than y, and x * y = primorial 15.
 
-So this answer works, but if I move 29 over to the
-box on the left, then it fails, both because now the
+:    223092870 < 2756205443
+:    (2^32) > 223092870 2756205443
+
+So this pair of numbers is one of the answers.
+
+But if I move 29 over to the
+box on the left, then it fails,
+
+ both because now the
 left number is bigger than the right, but also because
 the left number is more than 32 bits.
 
 :    (2^32) > */ S:0] 2 3 5 7 11 13 17 19 23 29; 31 37 41 43 47
 : 0 1
 
-So let me show you how to solve that in J,
+So let's generate the pairs ourselves in J,
 and then we'll see how bex does it.
 
 * solution in j
 
-The trick is to take the fifteen primes and find every possible
-way to divide them into two groups.
+The trick is find every possible way to divide
+our list of primes into two groups.
 
-Well, that part's easy. You just count to 2^15 in binary.
+That part's easy. You just count to 2^15 in binary.
 
-Here's a smaller example that fits on the screen:
+: #: i.2^15
+
+Let's work through a smaller example that actually
+fits on the screen.
 
 :   */ p: i. 15
 :   */ p: i. n=: 15     NB. let's give the 15 a name
@@ -862,3 +852,37 @@ up representing a goal to shoot for.
 And that's how primorial 15 became my #megafavnumber.
 
 Thanks for watching, and I hope to see you again.
+
+
+* --------
+* CUT euclid's theorem
+Once you have the product of the first
+N primes, you can use it to prove the existence of
+some other prime, and therefore that there are
+always more primes.
+
+So for example, if you take this number plus or minus one:
+
+: 1 _1 + */p:i.15
+
+Then either one of these numbers might be prime, in which
+case you've found a new prime directly, or else they're
+not, in which case Euclid showed that they must be divisible
+by some other prime that's not in the list.
+
+: q: 1 _1 + */p:i.15
+
+In this case neither of the numbers are prime.
+"q colon" gives you the prime factorizations, and
+so for this example we wound up with six new
+primes that weren't on our list.
+
+And since the same argument applies to any primorial
+you come up with, there must be an infinite number
+of primes.
+
+# show euclid's proof on wikipedia
+# https://en.wikipedia.org/wiki/Euclid%27s_theorem
+
+To be fair, Euclid's argument works for the product
+of any list of primes, whether it's a primorial or not.
