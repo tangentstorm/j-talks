@@ -324,10 +324,6 @@ pairs of 32-bit factors of the 64-bit number K, (arranged
 so that the first number is less than the second),
 and then check that the answers match this list of factors.
 
-(The last parameter says whether or not to generate some
-diagrams for debugging. It really ought to be a command line
-parameter, but whatever.)
-
 So before we look at what it's doing, let's just run this and
 see what happens.
 
@@ -370,60 +366,23 @@ video, I'm going to go ahead and just stop it right now.
 So... Yeah. At the moment,
 this is actually way too hard for bex to solve.
 
-* why is it hard?
-
-So why?
-
-Why was it easy for us to solve this, and
-so much harder for bex?
-
-Part of it is that we started with the answer.
-
-Since we knew it was a primorial, we knew all the
-factors from the start. We could have written
-that same program in a few lines of pretty
-much any language, and generated our answer set
-just as fast.
-
-If didn't know the factors and we were just given
-some big number, we'd have to factor it ourselves,
-and depending on the language, we might even have
-to write the algorithm for that, and are probably
-some tricks to making that efficient, but still,
-it just wouldn't be a big deal to get these results.
-
-But another part of it is that our systems know
-about math.
-
-Almost any programming language you pick up is going
-to have arithmetic built in. For factoring in particular
-you probably want division, and of course that's
-usually provided directly by the hardware.
-
-But bex doesn't know anything about division.
-
-In fact, the solver part doesn't know anything
-about numbers at all.
-
-* scaling the problem
+* scaling down
 
 Let's scale problem down and see what's happening.
 
-If we go back to J for a second
-
 : */ p: i. 15
 
-If we add one more character here,
+If we add one more character to our J constuction here,
 
 : */\ p: i. 15
 
-then now we're insert the multiplication sign between
-the items of each /prefix/ of the first 15 primes.
+then it nows says to insert the multiplication sign
+between the items of each /prefix/ of the first 15 primes.
 
-And so this is like a running product of the primes,
-or just the first 15 primorials.
+And so this is a running product of the primes,
+or the first 15 primorials.
 
-So one nice thing about the factoring problem is
+So one nice thing about this factoring problem is
 that we can scale it up and down, just by picking
 a different number in this sequence.
 
@@ -453,22 +412,20 @@ test cases:
 # show the code
 
 The code pretty much just calls the same macro we saw
-before, just passing in different numbers. As I
-said this last parameter really ought to be a command
-line flag, but for now, let's just change the test and
-generate some diagrams.
+before, just passing in different numbers. This last
+parameter tells it to generate some diagrams for
+debugging. It really ought to be a command line flag,
+but for now, let's just change the test.
 
 : cargo test --lib nano_bdd
 
-* the answer from bex
-** diagrams from bex
-So now the same thing happens, but we can see what
-bex was thinking along the way.
+* diagrams from bex
+So now we can see what bex was thinking.
 
 # show the graphs
 
-So first, this is how bex thinks of the answer,
-at least when you ask for this BDD thing.
+So first, this is how bex represents the answer,
+at least when you ask for a BDD.
 
 It's pretty easy to understand once you know how
 to read it, but let's work work our way up.
@@ -482,14 +439,13 @@ than the second. This is the multiplication.
 
 Let's see how we got here.
 
+* multiplication
 As I said, the solver part knows nothing about math,
 but there is a way to treat a list of boolean
 expressions as if they were the bits in a number,
 and then translate operations on those numbers to
 the same sort of low-level boolean operations that
 happen in a CPU.
-
-** multiplication
 
 # + mul0 ,  center top of screen
 
@@ -535,7 +491,7 @@ Let's go ahead and apply the and operator.
 
 And now we're left with simple addition problem.
 
-** addition
+* addition
 # top center  and shrink to 125%
 
 well adding 0 to anything is the same as just copying it,
@@ -614,7 +570,7 @@ something like this.
 
 Feel free to pause the video if you want to double check.
 
-** less than.
+* less than.
 
 That leaves the less than condition.
 
@@ -639,7 +595,7 @@ X0 and not X2. So this is a 0 and this is a 1.
 
 Again feel free to pause if you want to study this a bit.
 
-** AST
+* AST
 
 # show all three side by side.
 
@@ -651,7 +607,7 @@ bottom are fused together.
 So this right here is the complete description of the problem
 from bex's point of view.
 
-** BDD
+* BDD
 # final and AST side by side
 
 Finally, here is the answer.
@@ -696,7 +652,7 @@ we get the same BDD.
 So instead, I'm going to do what is literally the slowest
 possible conversion, because it's also the simplest.
 
-** Truth table in j
+* Truth table in j
 
 The way to generate the truth table is to evaluate the
 expression for every combination of inputs. But rather
@@ -752,11 +708,10 @@ we'll call it e for expression.
 
 :  ('x3x2x1x0';'e'),: (#:i);,. ((6 = */) *. </)"1 ] 4 4 #: i =: i. 2^4
 
-** reading the BDD
+* reading the BDD
 
 # just have the j window next to the diagram and walk through it
 # delete lines from the truth table at each step, pointing out the branch to O in the diagram.
-
 * summary
 
 So as I said, bex does not do this brute force method of generating
@@ -853,36 +808,3 @@ And that's how primorial 15 became my #megafavnumber.
 
 Thanks for watching, and I hope to see you again.
 
-
-* --------
-* CUT euclid's theorem
-Once you have the product of the first
-N primes, you can use it to prove the existence of
-some other prime, and therefore that there are
-always more primes.
-
-So for example, if you take this number plus or minus one:
-
-: 1 _1 + */p:i.15
-
-Then either one of these numbers might be prime, in which
-case you've found a new prime directly, or else they're
-not, in which case Euclid showed that they must be divisible
-by some other prime that's not in the list.
-
-: q: 1 _1 + */p:i.15
-
-In this case neither of the numbers are prime.
-"q colon" gives you the prime factorizations, and
-so for this example we wound up with six new
-primes that weren't on our list.
-
-And since the same argument applies to any primorial
-you come up with, there must be an infinite number
-of primes.
-
-# show euclid's proof on wikipedia
-# https://en.wikipedia.org/wiki/Euclid%27s_theorem
-
-To be fair, Euclid's argument works for the product
-of any list of primes, whether it's a primorial or not.
