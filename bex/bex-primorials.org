@@ -4,7 +4,7 @@
 
 Hi there. My name is michal, and this video
 is about solving boolean expressions and
-about my #megafavnumber:
+my #megafavnumber:
 
 So #megafavnumbers is a youtube playlist where a
 bunch of really great math-related channels are
@@ -25,7 +25,7 @@ about all the time:
 
 Otherwise known as primorial 15.
 
-* the number (J cam, wikipedia)
+* =01:00= the number (J cam, wikipedia)
 
 :   */p:i.15
 : 614,889,782,588,491,410
@@ -70,22 +70,20 @@ but if you're going to generate a list of primes,
 taking them in order
 seemed to be the simplest way to go about it.
 
-So let me explain the problem I'm trying to solve.
+So let me explain the problem I wanted to solve
+that lead me to this number.
 
-* problem statement (face cam, bex website)
+* =01:00= problem statement (face cam, bex website)
 
 I maintain a program called bex. It's a rust library
 (or crate) for working with boolean expressions
-
-But maybe a better way of saying that is that it's a
-tool for solving arbitrary problems.
 
 A boolean expression is just a function that operates
 on bits. You have some arbitrary number of input bits,
 and one output bit.
 
-If you want to model a function that needs more than
-one output bit, you can just model it as a list of
+Of course, if you want to model a function that needs
+more than one output bit, you can just make a /list/ of
 boolean expressions.
 
 Since pretty much any problem can be described this
@@ -93,29 +91,31 @@ way, you can think of bex as a general purpose
 problem solver.
 
 For me, bex is also an exercise in optimization.
-I'm always trying to find a way to make it faster.
+I'm always looking for ways to make it faster.
 
-Because I'm always trying to make it faster,
+Since I'm always trying to make it faster,
 I'm always changing things,
 and because I'm always changing things,
-I need to make sure I don't break anything,
+I want to make sure I don't break anything,
 and to make sure I don't break anything,
 I need some problems for it to solve,
-where I can check that it got the right answer.
+so I can check that it still gets the right answer.
 
-So I find myself wanting two kinds of problems
-for bex to solve:
+I find myself needing two main types of problem:
 
-- small problems that bex can solve really fast,
+
+- really small problems that it can solve quickly,
   so I have some evidence things are working
+  as I make changes
 
-- and big problems that take bex a long time, so
+- and big problems that take it a long time, so
   I can really measure the impact of an optimization.
 
-And so the main problem I use right now is
-something like factoring numbers.
+And so the main problem I give bex right now for
+both of those situations has to do with factoring
+numbers.
 
-* problem statement (J screen)
+* =01:30= problem statement (J screen)
 
 In general, as far as anyone knows, factoring numbers
 is a hard problem, but even though this number is
@@ -124,12 +124,13 @@ in a fraction of a second.
 
 :   q: 614889782588491410
 
-So that right there is the basic problem I'm asking bex to solve.
+So that right there is the /basic/ problem I'm asking bex to solve.
 
-Now the actual problem statement somewhat more complicated.
+Now the /actual/ problem statement somewhat more complicated.
 
-Instead of all /the/ prime factors, I want to find
-pairs of numbers whose product equals that number.
+Instead of /all/ the prime factors, I want to find
+pairs of numbers
+whose product equals that number.
 
 So for example, if I divided these factors into two boxes:
 
@@ -173,202 +174,232 @@ the left number is more than 32 bits.
 :    (2^32) > */ S:0] 2 3 5 7 11 13 17 19 23 29; 31 37 41 43 47
 : 0 1
 
-So let's generate the pairs ourselves in J,
-and then we'll see how bex does it.
+So that's what we're looking for.
 
-* solution in j
+I'm going to go ahead and generate the actual answer
+in J real quick, and then we can compare that to how
+bex does it.
 
-The trick is find every possible way to divide
-our list of primes into two groups.
+* =02:30= solution in j
 
-That part's easy. You just count to 2^15 in binary.
+The trick is to find every possible way
+to divide our list of primes
+into two groups.
+
+That part's easy.
+You just count to 2^15 in binary.
 
 : #: i.2^15
 
-Let's work through a smaller example that actually
-fits on the screen.
+Let's use a smaller example that actually fits on the screen.
 
-:   */ p: i. 15
-:   */ p: i. n=: 15     NB. let's give the 15 a name
-:   */ p: i. n=: 4      NB. and drop it to 4
-:   i. n=: 3            NB. first three ints
-:   i. 2^n =: 3         NB. count to 2^3
-:   #: i. 2^n =: 3      NB. same thing in binary
+:   */ p: i. 15              NB. so here's our primorial
+:   */ p: i. n=: 15          NB. let's give that 15 a name
+:   */ p: i. n=: 3           NB. and drop it all the way down to 3
+
+:   p: i. n=: 3              NB. we don't need the product anymore
+
+: (i.n) ; p: i. n=: 3        NB. now next to it let's count to n
+: (i.2^n) ; p: i. n=: 3      NB. rather 2^n
+: (#: i.2^n) ; p: i. n=: 3   NB. in binary
 
 Now we can use these patterns to group the primes.
 
-Real quick, we saw earlier that you can use a semicolon
-to divide a list into boxes. If you want to put a whole
-array in one box, you can use the less than sign without
-a left argument.
+So far, I've been inserting a semicolon
+between things
+to create boxes.
 
 : 1 2 ; 3
+
+If you just want one one box,
+you can use the less than sign
+without a right-hand argument.
+
 : < 1 2 3
 
 That lets us write this:
 
 :   (#: i. 2^n) </."1 p:i.n =: 3
+# don't run it yet
 
-The slash-dot says something like "use the list on the left as
-group labels for the thing on the right" and then apply this
-box function. The double-quote 1 means do that at rank one,
-which means every row. So basically, for each row,
-separate the primes into two boxes...
+The forward slash and dot says something like
+"use the items on the left
+as group labels
+for the items on the right
+and then apply this boxing function to each group."
 
-And we get this.
+The double-quote and the 1
+mean do that at rank one,
+which means do it for every row.
 
-You can see it duplicates the list.
-That's because half of the binary representations are just
-the other half flipped.
+So basically, for each row on the left, separate the primes into two boxes...
+
+# enter
+Run that, and we get this.
+
+Unfortunately, you can see it duplicates the list.
 
 : load 'viewmat'
-: viewmat #: i. 2^n
+: viewmat #:i.2^n
 
-So to fix this, we can just use half of them
+That's because the second half of these bit patterns
+is exactly the same as the first half
+with all the bits inverted.
 
-:  #: i. 2^n-1
+So really we only want the first half:
 
-but now the list of bits in each row is shorter than the list of primes, so
+:  viewmat #: i. 2^n-1
 
-put a 0 on the left so each line
+but now each row on the left
+is shorter than the list of primes,
+so we'll get a length error
+
+# show error
+
+we can just put a zero on the left of each row.
+
+:  viewmat 0 ,. #: i. 2^n-1
+# show all three side by side.
 
 :  0 ,. #: i. 2^n-1
-:  viewmat 0 ,. #: i. 2^n-1
 
-So if we plug that in, now we have all unique partitions of the factors into two groups.
+and if we plug that in, we now have all unique partitions
+of the factors of primorial 3 into two groups.
 
 :   (0 ,. #: i. 2^n-1) </."1 p:i.n =: 3
 
-And we can do the same thing for our original 15.
+And we can do the same thing with 15
 
 :   (0 ,. #: i. 2^n-1) </."1 p:i.n =: 15
 
-But the question was which 32-bit factors, and some of these numbers are too big.
-
-So multiply the contents of each box:
+To get unique pairs of factors,
+take product of the numbers in each box:
 
 : */L:0 (0 ,. #: i. 2^n-1) </."1 p:i.n =: 15
 
-just as a sanity check, that gives us:
+So now we have every pair of positive integers
+that multiply to primorial 15.
 
-: # */L:0 (0 ,. #: i. 2^n-1) </."1 p:i.n =: 15
-: 16384
+We still need to select the rows where both numbers are less than 2^32
 
-if we factor that, we get
-
-: q: 16384
-
-Take the length, and we can see it's
-
-: # q: 16384
-
-2 to the 14th power. which is exactly what we asked it for.
-
-So that's all pairs of integers that multiply to our primorial.
-
-But we want to select the ones where both numbers are less than 2^32
-
-so first let's get rid of the boxes.
+so first, let's get rid of the boxes.
 
 :  > */L:0 (0 ,. #: i. 2^n-1) </."1 p:i.n =: 15
 
-And now...
+And now I'm going to paste in a definition
 
 : u32 =: {~ [: I. [: *./"1 <&(2^32)
-: u32 > */L:0 (0 ,. #: i. 2^n-1) </."1 p:i.n =: 15
 
 This is too much J to explain in /detail/ right now, but it
 literally says select using the indices where all the items
 on a row are less than this number.
+or In other words,
+restrict the whole table to 32-bit unsigned integers.
 
-In other words, restrict the whole table to 32-bit unsigned integers.
+So here we go:
+
+: u32 > */L:0 (0 ,. #: i. 2^n-1) </."1 p:i.n =: 15
 
 And if we count the results, we have exactly...
 
 :  # u32 > */L:0 (0 ,. #: i. 2^n-1) </."1 p:i.n =: 15
 : 3827
 
-... 3827 unique pairs of 32-bit numbers that factor into our number.
+... 3827 unique pairs of 32-bit numbers that factor into our number,
+down from the 2^14 we started with.
 
-Now just sort each line, so the smaller number is always on the left
+: 2^14
+
+Finally let's sort each line, so the smaller number is always on the left
 
 : /:~"1 u32 > */L:0 (0 ,. #: i. 2^n-1) </."1 p:i.n =: 15
 
-And now we're done.
+And that's the answer we're looking for.
 
-But just to make it look nice, we'll sort again without the rank 1 part,
-and that will sort the whole table so the smallest pair is at the top.
+But just to make it look nice,
+we'll sort one more time
+/without/ the rank 1 suffix,
+and that'll puts the smallest pairs at the top.
 
 : /:~ /:~"1 u32 > */L:0 (0 ,. #: i. 2^n-1) </."1 p:i.n =: 15
 
-* the problem in bex
+* =01:30= the problem in bex
 # show bdd-solve
 
 Okay, so that wasn't too hard from a math point of view.
 
 Let's see how bex does.
 
-And after a little formatting, those numbers and the primorial itself
-go into this rust file, and there's our test case.
+after a little formatting,
+those numbers
+and the primorial itself
+go into this rust file,
+and that becomes our test case.
 
-If you clone the repo, it's bex/examples/solve/bdd-solve.rs
+If you clone the repo, it's examples/solve/bdd-solve.rs
 
-And if you scroll to the bottom of that file, you'll see this:
+and if you scroll to the bottom of that file, you'll see this line
 
 #+begin_src rust
 find_factors!(BDD, X32, X64, K as usize, factors(), false); }
 #+end_src
 
-It's a macro that says use something called BDD to find all
-pairs of 32-bit factors of the 64-bit number K, (arranged
-so that the first number is less than the second),
-and then check that the answers match this list of factors.
+It's a macro that says
+use something called a BDD
+to find all pairs of 32-bit factors
+of the 64-bit number K,
+and then check that the answers match this list.
 
-So before we look at what it's doing, let's just run this and
-see what happens.
+So before we talk about
+how it's going to do that,
+let's just run this and see what happens.
 
 : cargo run --bin bdd-solve
 
 Off to a good start.
 
-This would be a good time for my scroll lock key to actually work,
-but since it doesn't I can just scroll up a little to freeze the
-display.
+there's a bunch of stuff about ands and xors,
+but the thing to watch for are these step xxx of 7997 lines.
+Apparently, we're already at xxx percent.
 
-And there's a bunch of stuff about ands and xors, but it also says
-step xxx of 7997 so we're already at xxx percent.
+Unfortunately, that number is fairly misleading.
+The way the current solver works,
+it knows how many steps it will take to construct the solution,
+but it doesn't know how long each step is going to take.
 
-Unfortunately, that number is fairly misleading. The way the
-current solver works, it knows how many steps it will take to
-construct the solution, but it doesn't know how long each step
-is going to take.
+If we start scrolling again,
+you can see already it's slowing down.
 
-If we start scrolling again, you can see already it's slowing down.
+even more unfortunately
+It's pretty much just going to /keep/ slowing down.
 
-And... It's pretty much just going to
-keep getting slower and slower
-and slower.
+I think the last time I let it run,
+it ran for about three days
+and then it finally crashed,
+because it ran out of memory.
 
-And I think the last time I let it run, it took two or three
-days and then it finally crashed, because it ran out of
-memory.
+And by the way, this is a
+/fairly/ high end gaming machine,
+it's got six cores and 12 logical CPUs.
 
-By the way, bex is a concurrent system, and this is a moderately
-high end gaming machine with six cores and 12 logical CPUs.
-Bex doesn't doesn't really max them out yet, but it does put
-all twelve of them to work.
+# show task manager and resource manager
 
-Since I need my computer to be responsive in order to make this
-video, I'm going to go ahead and just stop it right now.
+As you can see, bex puts all 12 of them to work.
+It doesn't really max each CPU out yet,
+but it's still throwing a /lot/
+of processing power at this problem.
 
-...
+So... Yeah.
 
-So... Yeah. At the moment,
-this is actually way too hard for bex to solve.
+At the moment, this is actually way too hard for bex to solve.
 
-* scaling down
+And... Since I need my computer to be responsive
+in order to make this video,
+I'm going to go ahead and just stop it right now.
 
-Let's scale problem down and see what's happening.
+* =01:00= scaling down
+
+Let's scale the problem down and see what's happening.
 
 : */ p: i. 15
 
@@ -376,13 +407,15 @@ If we add one more character to our J constuction here,
 
 : */\ p: i. 15
 
-then it nows says to insert the multiplication sign
-between the items of each /prefix/ of the first 15 primes.
+then it nows says to
+insert the multiplication sign
+between the items
+of each /prefix/ of the first 15 primes.
 
-And so this is a running product of the primes,
+That gives us a running product of primes,
 or the first 15 primorials.
 
-So one nice thing about this factoring problem is
+one nice thing about this factoring problem is
 that we can scale it up and down, just by picking
 a different number in this sequence.
 
@@ -391,107 +424,130 @@ So let's look at 6. We need 3 bits to represent 6.
 :  #: 6
 : 1 1 0
 
-So let's just that up and call it a four bit number.
-And let's ask what are the two-bit factors that
-multiply to give 6?
+I tend to round that up to a power of two and just
+call it a four bit number. then we can ask what
+are the two-bit factors that multiply to give 6?
 
 Well the factors are 1 2 3 and 6
 
 :   #: 1 2 3 6
 
-and we just said we need three bits for the number 6
-so that discards 1 and 6. But 2 and 3 each fit in two
-bits, so that's our only answer.
+and we just said we need three bits for the number 6.
+so that disqualifies 6 and 1. But 2 and 3 each fit
+in two bits, so that pair is our only answer.
 
 Thankfully, bex can solve this version of the problem
-in less than a second. In fact, it's one of the standard
-test cases:
+in less than a second. In fact, it's one of the
+standard test cases:
 
 : cargo test --lib nano_bdd
 
 # show the code
 
 The code pretty much just calls the same macro we saw
-before, just passing in different numbers. This last
-parameter tells it to generate some diagrams for
-debugging. It really ought to be a command line flag,
-but for now, let's just change the test.
+before, just passing in different numbers.
+
+This last parameter tells bex whether or not to generate
+diagrams for debugging.
+
+It really ought to be a command line flag, but for now,
+let's just change the test.
 
 : cargo test --lib nano_bdd
 
-* diagrams from bex
+* =00:30= diagrams from bex
 So now we can see what bex was thinking.
 
 # show the graphs
 
-So first, this is how bex represents the answer,
+first, this is how bex represents the answer,
 at least when you ask for a BDD.
 
-It's pretty easy to understand once you know how
-to read it, but let's work work our way up.
+It's actually pretty easy to understand
+once you know how to read it,
+but we're going to work our way up to it.
 
 # ast
 
-This is how bex thinks of the problem statement.
-These two are just smaller parts of that problem.
-This is the part about the first number being less
-than the second. This is the multiplication.
+This one is how bex thinks of the problem statement.
+
+These two are just
+smaller parts
+of that problem.
+
+This is the part about the first
+number being less than the second.
+
+This is the multiplication.
 
 Let's see how we got here.
 
-* multiplication
-As I said, the solver part knows nothing about math,
-but there is a way to treat a list of boolean
-expressions as if they were the bits in a number,
-and then translate operations on those numbers to
-the same sort of low-level boolean operations that
-happen in a CPU.
+* =01:00= multiplication
+part of the reason the factoring problem is
+so much harder for bex, is that the solver doesn't
+really know anything about math.
+
+But bex does have a sort of translator,
+which lets you treat a list of expressions
+as if they were the bits in a number.
+It can also map operations on those numbers
+to the same sort of low-level operations
+that happen inside a CPU.
 
 # + mul0 ,  center top of screen
 
 So for example, here we're asking bex to multiply
-two two-bit numbers. As you can see, we give each
-bit an identifier.
+two two-bit numbers.
 
+As you can see, we give each bit its own identifier.
 
-When you multiply numbers with multiple digits,
-you multiply the top number by each digit of the
-bottom number and add the results.
+this is how we present the factoring problem to the
+translator.
 
-So here's the first row.
+when you want to multiply numbers
+with multiple digits,
+you multiply a copy of the top number
+by each digit of the bottom number
+and add the results.
+
+So here's the copy for x2.
 
 # + mul1
 
-Since this is binary, x2 can only ever be 0 or 1.
-Multiplying by 0 or 1 is the same operation as
-using the AND operator on each digit, so let's
-change that to an AND sign.
+well multiplying isn't exactly a boolean operation,
+but since we're working in binary,
+x2 can only ever be 0 or 1.
+and in that case,
+multiplication has the same truth table as the AND operator.
 
 # + mul1.andtbl
+
+So we can change this to an AND sign.
+
 # + mul1.andx2
 
-So then we'll do the same thing for x3 on the next
-row, remembering to shift it over one place...
+Now we'll do the same thing for x3 on the next
+row, remembering to shift it over one place
+and append a zero.
 
 # +mul 2
-
-and add them together.
-
 # +muladd
 
-So now we've simplified the problem a bit.
+So now we've completely restated our factoring
+problem in terms of multiplication, and restated
+it again in terms of addition. But we still don't
+have a boolean expression.
 
 # -mul0 mul1 mull.andtbl
+# move to left and shrink down a bit. (175% or so)
 
-move to left and shrink down a bit. (175% or so)
-
-Let's go ahead and apply the and operator.
+Let's go ahead and apply the AND operators.
 
 # - mul*
 
-And now we're left with simple addition problem.
+And now we actually have to add these lines together.
 
-* addition
+* =01:30= addition
 # top center  and shrink to 125%
 
 well adding 0 to anything is the same as just copying it,
@@ -499,87 +555,96 @@ so that's easy.
 
 # + add1.ones
 
-To add these two bits, we need two steps. The result bit
-is the same as the XOR operation, on NOT EQUAL.
+To add these two bits, we need two steps.
+
+The result bit is the same as the XOR operation, or NOT EQUAL TO.
 
 That's because adding zero to anything keeps it the same,
-and adding two ones together gives you a two. That's 1 0
-in binary, so we put the result down here...
+and adding two ones together gives you a two. But two is 1 0
+in binary, so we put the zero down here...
 
 # + add2.twos
 
-And then carry.
-
-But we only carry when both inputs are 1, so that's AND again.
+And then we carry the 1.
+But we /only/ carry when both inputs are 1,
+so really we carry the AND.
 
 # + add3.carry
 
-Now if we were working with more than two bits in each number,
-we'd have to handle adding up to three bits. Bex knows how
-to do this, but here we have a zero, so we can just ignore that.
+At this point, if we were working with more than two bits in our numbers,
+we'd have to handle adding up to three bits vertically.
+The translator knows how to do this, but we have a zero here,
+so we can just ignore it.
 
-And again we just do the two bit addition, so XOR and then carry
-the AND.
+And again we just do the two bit addition,
+so XOR and then carry the AND.
 
 # - xortbl , center
 
-Now we have our four-bit product, and we just test whether it's
-equal to the number we're trying to factor, which is 6.
+Now we have our four-bit sum,
+which is also the product of our original two numbers,
+and we need to test whether it's equal to
+the number we're trying to factor, which is 6.
 
 # + eq0
 
-So it might be a little weird to see an equal sign here, but
-it actually is one of the 16 boolean operations. It's the same
-as NOT XOR.
+It might be a little weird to see an equal sign here, but
+it actually /is/ one of the 16 boolean operations.
+It's the same as NOT XOR.
 
 # +eq3-tbl
 
-When we compare each bit of our product to the bits of the number
-six and we'll get four new outputs.
+When we compare each bit of our product
+to the bits of the number six
+we'll get four new outputs.
 
 # +eq1.res
 
-But we want a single bit, so we have to AND them all together.
-
-If we had more bits, this wouldn't be the most efficient way
-to AND all the bits together, but this is how bex currently
-does it.
+But in order to get a boolean expression,
+we need a single output bit,
+so we have to AND all of these results together in some way.
+This is how bex currently does it.
 
 So now we just have to figure out these slots.
 
-However, if we look at the truth table, you'll notice that
-when you check for equality with 1 it's the same as just copying,
-so we can just connect these two bits of the product directly
-to the AND node.
+However, if we look at the truth table for EQUAL,
+you'll notice that when you check for equality with 1
+it's the same as just copying,
+so we can connect these two bits of the product
+directly to the AND nodes.
 
 # + eq=1
 
-And likewise, an equality check with 0 is the same as
-flipping the bit, and bex handles that by setting a bit on
-the reference to this node, rather than allocating an extra
-node just to flip one bit.
+Likewise, an equality check with 0 is the same as
+flipping the bit, and rather than allocating an extra
+node for the "not" operation, bex handles that by setting
+a bit on the reference to this node. So we draw the edge
+as a dotted line instead of a solid one, and then these
+four equality check bits never actually appear in our graph.
 
-So these four bits never actually appear in our expression.
+Now this graph represents the complete boolean expression
+for testing whether two two-bit numbers multiply together
+to get six.
 
-So this graph represents the full boolean expression for
-testing whether two two-bit numbers multiply to get six.
-
-So if we flipped this down and broke these four bits
-down one more step, you'd get a graph that looks
-something like this.
+And if we flipped it upside down
+and broke these four bits down one more step,
+you'd get a graph that looks pretty much like this.
 
 Feel free to pause the video if you want to double check.
 
-* less than.
+* =00:30= less than.
 
 That leaves the less than condition.
 
 # + lt
 
-Rather than derive it, let's try to just read the the AST.
+Rather than derive it, let's try to just read the graph.
 
-This is the symbol for OR, so this is true when either of
+This is the symbol for OR,
+so the expression is true when either of
 the linked conditions are true.
+
+So EITHER
 
 NOT x3 and X1, (this bit is a 0 and this is a 1).
 
@@ -595,88 +660,96 @@ X0 and not X2. So this is a 0 and this is a 1.
 
 Again feel free to pause if you want to study this a bit.
 
-* AST
-
+* =00:15= AST
 # show all three side by side.
 
-Now this is starting to look like a complete mess, but it's
-just the check for whether the product is six anded with the
-less than check, where the duplicate nodes at the
-bottom are fused together.
+Put this graph together with the
+one about multiplying to get six,
+fuse the duplicate nodes together,
+and you get this.
 
-So this right here is the complete description of the problem
+So this right here is the complete
+description of the problem
 from bex's point of view.
 
-* BDD
+* =01:00= BDD
 # final and AST side by side
 
-Finally, here is the answer.
+Let's go back to the answer.
 
-This is called a Binary Decision Digram. That's what we
-got when we asked for a BDD.
+This is called a Binary Decision Diagram, or BDD.
 
 You can think of a BDD as a compressed truth table.
 
-One of the nice properties of BDDs is that just like a
-truth table, they're cannonical representations.
+One of the nice properties of BDDs is that
+just like a truth table,
+they're cannonical representations.
 
-What that means is that no matter what sequence of operations
-you use to convert this AST to a BDD, you will always get
-a graph that's equal to this one, as long as you draw
-it with the variables in the same order from top to bottom.
+That means no matter what sequence of operations
+you use to convert this boolean expression to a BDD,
+you will always get a graph that's equal to this one,
+provided you draw it with the variables in the
+same order from top to bottom.
 
-In contrast, there are an infinite number of things you
-could do to this graph on the left that would leave the
-truth table the same. For example, you could change this
-not-xor to an equality check, or you could take multiple
-copies of this whole graph and AND them together.
+In contrast, there are an infinite number of
+things you could do to this graph on the left
+that would leave the
+truth table the same.
+For example, you could change this not-xor to just "equals",
+or you could take multiple copies of this whole graph
+and AND them together.
 
-It's actually a really hard problem to decide whether
-two boolean expressions like this are equivalent. In
-fact, that's pretty much the standard example of an
-NP-complete problem. (It's called satisfiability - you
-test whether or not a giant expression is equivalent
-to the constant false.)
+Deciding whether two boolean expressions are equivalent
+is actually a really hard problem. In fact, that's pretty
+much the standard example of an NP-complete problem, in
+the form of satisfiability - you test whether or not a
+giant expression is equivalent to the constant false.
 
-So if you wanted to use BEX as a sat solver, you could
-generate a BDD and then just see if it's compared to the
-single false node. (Which is this upward facing tack symbol.)
+If you wanted to use bex as a SAT solver, you could
+generate a BDD and then see whether or not it consisted
+of the single node for false. (Which is this upward
+facing tack symbol.)
 
-I'm not going to explain how the bex solver works in this
-video. It's not terribly complicated, but it's slow. There's
-a lot of work I want to do to make it better. But more
-importantly, it doesn't really matter, because again,
-no matter what strategy we choose to do the conversion,
-we get the same BDD.
+Now, I'm not going to explain how the bex solver works in this video.
+It's not terribly complicated,
+but it's slow, and there's a lot of work
+I need to do before it's worth talking about.
 
-So instead, I'm going to do what is literally the slowest
-possible conversion, because it's also the simplest.
+But also, it doesn't really matter how the solver works,
+since no matter what strategy we choose to do the
+conversion, we get the same BDD.
 
-* Truth table in j
+So instead, I'm going to do what is probably
+the slowest possible conversion, just because
+it's also the simplest.
+
+* =00:30= Truth table in j
 
 The way to generate the truth table is to evaluate the
-expression for every combination of inputs. But rather
-than try to plug values into that entire expression graph,
+expression for every combination of inputs.
+
+But rather than try to plug values into that giant graph,
 I'm just going to build the truth table in J.
 
 We already saw how to generate a table of every combination of n bits.
 
 : #: i. 2^4
 
-Just count from 0 to 15 in binary.
+Just enumerate them in binary.
 
-Since we want to treat this as two integers, we can also do the
+Now, since we want to treat this as two integers, we can also do the
 same thing in base four.
 
 : 4 4 #: i. 2^4
 
 Now for each row, insert a less than sign.
-The bracket is an identity function. It's just separates
-the rank 1 symbol from the 4 4.
 
 : </"1 ] 4 4 #: i. 2^4
 
-We can use that same identity bracket to turn it back
+The bracket is an identity function. It's just separates
+the rank 1 symbol from the 4 4.
+
+We can use that same identity function to turn this back
 into a table with a copy of the original input on the left.
 
 : (] , </)"1 ] 4 4 #: i. 2^4
@@ -685,12 +758,13 @@ So now let's add a row to check whether the product is equal to 6.
 
 : (] , (6 = */) , </)"1 ] 4 4 #: i. 2^4
 
-And then and these last two rows together:
+And then AND these last two rows together:
 
 : (] , (6 = */) *. </)"1 ] 4 4 #: i. 2^4
 
-Now we have our truth table. Let's convert it to binary and
-spruce it up a little bit.
+Now we have our truth table.
+
+Let's convert it to binary and spruce it up a little bit.
 
 : (] , (6 = */) *. </)"1 ] 4 4 #: i. 2^4
 
@@ -698,7 +772,7 @@ give the original numbers a name and show them in binary on the left.
 
 : (#:i); ,. (] , (6 = */) *. </)"1 ] 4 4 #: i =: i. 2^4
 
-and then get rid of the numbers in the middle
+let's get rid of the numbers in the middle
 
 : (#:i); ,. ((6 = */) *. </)"1 ] 4 4 #: i =: i. 2^4
 
@@ -708,103 +782,117 @@ we'll call it e for expression.
 
 :  ('x3x2x1x0';'e'),: (#:i);,. ((6 = */) *. </)"1 ] 4 4 #: i =: i. 2^4
 
-* reading the BDD
+And that's our truth table.
 
+* TODO reading the BDD
 # just have the j window next to the diagram and walk through it
 # delete lines from the truth table at each step, pointing out the branch to O in the diagram.
-* summary
+* =02:00= summary
 
-So as I said, bex does not do this brute force method of generating
-the whole truth table. It tries to be smarter, but it is hard problem,
-and even though the truth tables are compressed as BDDs (or other
-representations I haven't shown you), the size of the uncompressed
+So as I said, bex does /not/ use this brute force method of generating
+the whole truth table. It tries to be smarter,
+but it's a hard problem,
+and even though the truth tables are compressed as BDDs
+(or other representations I haven't shown you),
+the size of the uncompressed
 truth table grows exponentially.
 
 # show   */ p: i. 15
 
-So if we go back to our original problem, we're dealing with
-64 input bits. That means the truth table is 2^64 bits long.
+So if we go back to our original problem,
+we're dealing with 64 input bits.
+That means the truth table is 2^64 bits long.
 
 That's another really big number.
 
-Now each answer in a BDD is just a path from the top down to
-the true node. So this one has one path, and one answer. We
-know the answer for primorial 15 has 3,827.
+now,
+each answer in a BDD is just a path from the top down to
+the 'true' node.
 
+This one here only has one path, and so there's
+only one answer.
+
+We know the solution for primorial 15 has 3,827 answers.
 So if bex could solve that problem, the result would be a huge
 BDD with x63 at the top and 3,827 branching and intertwining
 paths down to the true node.
 
-I don't know how many nodes that would be, but would be a really
-big graph. I suspect if you drew the nodes really small, you might
-just barely be able to fit the whole thing on an 8k monitor. But
-that's just an issue with drawing it. I'm pretty sure the graph
-structure ought to be small enough to fit in memory even on a low end PC.
+I don't know how many nodes that would be,
+but it would be a giant mess if you drew it on the screen.
+However... the graph structure itself ought to be small
+enough to fit in memory even on a low end PC.
 
-The AST for the problem is small too. When we ran it, it generated
-the 32-bit multiplication and less-than check in a fraction of a second,
-and the number 7997 we saw is actually the number of intermediate nodes
-in the AST. So it's also more than you can make sense of on a screen,
-but very small in memory.
+On the other hand, the actual truth table it represents is gigantic.
+Maybe if you were google or amazon, you'd have enough hard drives to store
+it without compression, but I kind of doubt it.
 
-So the before and after are small, but the actual truth table is
-gigantic. Maybe if you're google or amazon, you'd have enough hard
-drives to store the uncompressed truth table, but I kinda doubt it.
+So the problem is that because the truth table is so big,
+you can't approach it by brute force.
 
-So the problem is that because the truth table is so big, you
-can't approach it by brute force. And even if the final result
-winds up being small, you might have intermediate steps that
-turn out to be gigantic. You have to be really smart about
-making the conversion.
+Well you can, but it might still be running when the sun burns out.
 
-Bex is smarter than brute force, but if you think of this series
-of numbers as a ladder to climb, well bex is currently down here.
+And even if the final result winds up being small,
+you often have intermediate steps
+that turn out to be gigantic.
+So you have to be really
+smart about making the conversion.
+
+Bex /is/ smarter than brute force,
+but if you think of this series of primorials as a ladder to climb...
 
 : |.,.*/\p:i.15
 
-210 fits into 8 bits, and bex can solve it for two 4-bit inputs.
-That's actually one of the other test cases.
+... well, bex is currently down here.
 
-But if you ask it to multiply two 8-bit numbers to get 210, then
-it takes 11 minutes. I haven't tried them but everything up to
-30,030 here is also 8-bit multiplication, although the answer
-is 16 bits.
+210 fits into 8 bits, and bex can solve it for two 4-bit inputs
+in less than a second. That's actually one of the other standard
+test cases.
 
-Honestly, I haven't bothered to try any of the tests in between,
-because I know I'm not going to get here without a major
+But if you ask it to multiply two /8-bit/ numbers to get 210, then
+it takes 11 minutes. I haven't timed anything else, but everything
+up to 30,030 here is also 8-bit multiplication, although you need
+16 bits for the answer.
+
+The reason I haven't bothered to try any of the tests in between,
+is because I know I'm not going to get here without a major
 improvement to the solving algorithm.
 
-The thing is, much better algorithms than what I'm using
-already exist. I've been lead to believe the algorigthms
-they use in SAT solving can already get me here, and I hope
-to start experimenting with those algorithms in the future.
+Luckily, much better algorithms than what I'm using already
+exist. For example, I've been lead to believe the algorigthms
+they use in SAT solving can already get me to this level here,
+and I hope to start incorporating some of those algorithms into
+bex in the future.
 
-* closing
+* =00:45= closing
 
 By the way, BDDs generally aren't used in solving, although
 I've heard that there are a few SAT solvers out there that
 are starting to incorporate them.
 
 For me, the only use I had for a BDD package was as an exercise
-for learning new programming languages. But then I saw how fast
-I could make it go in rust, and as I said, it became an exercise
-in optimization.
+for learning new programming languages.
 
-But so far, the effort has has gone into the pure BDD part,
+But then I saw how fast I could make it go in rust,
+and as I said,
+it became an exercise in optimization.
+
+Now so far, my optimization efforts
+have mostly gone into the pure BDD part,
 and not the solving part.
 
 When I decided to have bex factor this fifteenth primorial,
-I had no idea whether it would take bex a few seconds or a
-thousand years. It was an arbitrary choice, and it turned out
-I aimed high.
+I had no idea whether it would take a few seconds or a
+thousand years. It turned out I aimed high.
 
-If it had been easy bex, I might not have ever shifted my
+If it had been easy for bex, I might not have ever shifted my
 focus from making a fast BDD to making a fast solver.
 
 So even though this number was an arbitrary choice, it wound
-up representing a goal to shoot for.
+up causing a change in the way I thought about bex,
+and became sort of a long-term goal to shoot for.
 
-And that's how primorial 15 became my #megafavnumber.
+So...
 
-Thanks for watching, and I hope to see you again.
+That's how primorial 15 became my #megafavnumber.
 
+Anyway, thanks for watching, and I hope to see you again.
