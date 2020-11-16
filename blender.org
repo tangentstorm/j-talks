@@ -1,0 +1,45 @@
+#+title: Blender As A Video Editor
+
+* VSE comes at the end of the pipeline
+
+* Compositing /can/ be done in the VSE, but the UI is lacking.
+
+* Why blender then, instead of kdenlive/openshot/etc?
+Python scripting.
+
+* we can overlay a scene in the vse
+
+* what prevents vse from being an input to compositor?
+- there's no such input node
+
+- is it possible to read the timeline from the vse
+  and use it to control the frame in an image sequence?
+
+- there's apparently a PyNode.
+
+* chromakey
+
+* what's the fastest way to set up chromakey for the current video?
+** option a: instead of editing raw video, could i edit the composite scene?
+- answer: yes! and this seems like the right way to do it!
+- then the filename would only be in the compositor.
+- apply compositing to the raw, unedited footage
+
+https://github.com/cgvirus/Blender-Compositor-Disc-Cache-Realtime-Preview-Addon
+
+
+
+** option b: separate blender file that imports the edited footage
+- create a rectangular mask in upper left corner
+  (could just be a static image in illustrator)
+- insert a key mask node
+
+
+* python switch scene
+
+
+* greenscreen notes
+motion tracking tab
+create object and give it a name
+ctrl-click to append a bunch of trackers
+add keying screen object
