@@ -1,0 +1,6 @@
+
+i've already covered this so let's talk about different ways to write it.
+
+- https://rosettacode.org/wiki/Mandelbrot_set#J
+- https://code.jsoftware.com/wiki/NYCJUG/2014-12-09#Developing_Mandelbrot
+
