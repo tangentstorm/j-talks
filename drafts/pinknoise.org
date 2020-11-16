@@ -1,0 +1,22 @@
+
+so you have random events
+but not completely random
+say you're rolling a normal six-sided die
+imagine you made a pie chart.
+you would expect that over time you'd see
+six equally sized slices.
+
+this is white noise.
+
+suppose we label three sides of the die 1,2,3 as normal, but then -1,-2,-3 moves,
+and then used it to move a token up or down.
+
+you'd expect a normal distribution of final positions after n moves, clustered around the center.
+
+
+
+so if you look at the indivdiual movements, you'd expect 
+you'd expect a normal distribution.
+
+# look up martin gardner article / pink noise
+
