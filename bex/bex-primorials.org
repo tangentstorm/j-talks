@@ -1,6 +1,6 @@
 #+title: bex #megafavnumber
 
-* =00:30= intro (face cam)
+* DONE =00:30= 00 intro (face cam)
 
 Hi there. My name is michal, and this video
 is about solving boolean expressions and
@@ -25,7 +25,7 @@ about all the time:
 
 Otherwise known as primorial 15.
 
-* =01:00= the number (J cam, wikipedia)
+* DONE =01:00= 01 the number (J cam, wikipedia)
 
 :   */p:i.15
 : 614,889,782,588,491,410
@@ -73,7 +73,7 @@ seemed to be the simplest way to go about it.
 So let me explain the problem I wanted to solve
 that lead me to this number.
 
-* =01:00= problem statement (face cam, bex website)
+* DONE =01:00= 02 problem statement (face cam, bex website)
 
 I maintain a program called bex. It's a rust library
 (or crate) for working with boolean expressions
@@ -111,11 +111,13 @@ I find myself needing two main types of problem:
 - and big problems that take it a long time, so
   I can really measure the impact of an optimization.
 
+* DONE =01:30= 03 problem statement (J screen)
+
+:   614889782588491410
+
 And so the main problem I give bex right now for
 both of those situations has to do with factoring
 numbers.
-
-* =01:30= problem statement (J screen)
 
 In general, as far as anyone knows, factoring numbers
 is a hard problem, but even though this number is
@@ -180,7 +182,7 @@ I'm going to go ahead and generate the actual answer
 in J real quick, and then we can compare that to how
 bex does it.
 
-* =02:30= solution in j
+* DONE =02:30= 04 solution in j
 
 The trick is to find every possible way
 to divide our list of primes
@@ -323,7 +325,7 @@ and that'll puts the smallest pairs at the top.
 
 : /:~ /:~"1 u32 > */L:0 (0 ,. #: i. 2^n-1) </."1 p:i.n =: 15
 
-* =01:30= the problem in bex
+* DONE =01:30= 05 the problem in bex
 # show bdd-solve
 
 Okay, so that wasn't too hard from a math point of view.
@@ -354,6 +356,7 @@ So before we talk about
 how it's going to do that,
 let's just run this and see what happens.
 
+* DONE (test cam)
 : cargo run --bin bdd-solve
 
 Off to a good start.
@@ -397,9 +400,9 @@ And... Since I need my computer to be responsive
 in order to make this video,
 I'm going to go ahead and just stop it right now.
 
-* =01:00= scaling down
+* DONE =01:00= 06 scaling down
 
-Let's scale the problem down and see what's happening.
+ Let's scale the problem down and see what's happening.
 
 : */ p: i. 15
 
@@ -455,7 +458,7 @@ let's just change the test.
 
 : cargo test --lib nano_bdd
 
-* =00:30= diagrams from bex
+* DONE =00:30= 07 diagrams from bex
 So now we can see what bex was thinking.
 
 # show the graphs
@@ -482,7 +485,7 @@ This is the multiplication.
 
 Let's see how we got here.
 
-* =01:00= multiplication
+* TODO =01:00= 08 multiplication
 part of the reason the factoring problem is
 so much harder for bex, is that the solver doesn't
 really know anything about math.
@@ -500,7 +503,6 @@ So for example, here we're asking bex to multiply
 two two-bit numbers.
 
 As you can see, we give each bit its own identifier.
-
 this is how we present the factoring problem to the
 translator.
 
@@ -547,7 +549,7 @@ Let's go ahead and apply the AND operators.
 
 And now we actually have to add these lines together.
 
-* =01:30= addition
+* TODO =01:30= 09 addition
 # top center  and shrink to 125%
 
 well adding 0 to anything is the same as just copying it,
@@ -632,7 +634,7 @@ you'd get a graph that looks pretty much like this.
 
 Feel free to pause the video if you want to double check.
 
-* =00:30= less than.
+* TODO =00:30= 10 less than.
 
 That leaves the less than condition.
 
@@ -660,7 +662,7 @@ X0 and not X2. So this is a 0 and this is a 1.
 
 Again feel free to pause if you want to study this a bit.
 
-* =00:15= AST
+* TODO =00:15= 11 AST
 # show all three side by side.
 
 Put this graph together with the
@@ -672,7 +674,7 @@ So this right here is the complete
 description of the problem
 from bex's point of view.
 
-* =01:00= BDD
+* TODO =01:00= 12 BDD
 # final and AST side by side
 
 Let's go back to the answer.
@@ -723,7 +725,8 @@ So instead, I'm going to do what is probably
 the slowest possible conversion, just because
 it's also the simplest.
 
-* =00:30= Truth table in j
+* TODO =00:30= 13 Truth table in j
+First we're going to generate the complete truth table for our expression.
 
 The way to generate the truth table is to evaluate the
 expression for every combination of inputs.
@@ -754,11 +757,11 @@ into a table with a copy of the original input on the left.
 
 : (] , </)"1 ] 4 4 #: i. 2^4
 
-So now let's add a row to check whether the product is equal to 6.
+So now let's add a column to check whether the product is equal to 6.
 
 : (] , (6 = */) , </)"1 ] 4 4 #: i. 2^4
 
-And then AND these last two rows together:
+And then AND these last two columns together:
 
 : (] , (6 = */) *. </)"1 ] 4 4 #: i. 2^4
 
@@ -784,10 +787,10 @@ we'll call it e for expression.
 
 And that's our truth table.
 
-* TODO reading the BDD
+* DONE ~xx:xx~ 14 reading the BDD
 # just have the j window next to the diagram and walk through it
 # delete lines from the truth table at each step, pointing out the branch to O in the diagram.
-* =02:00= summary
+* TODO =02:00= 15 summary
 
 So as I said, bex does /not/ use this brute force method of generating
 the whole truth table. It tries to be smarter,
@@ -803,6 +806,8 @@ So if we go back to our original problem,
 we're dealing with 64 input bits.
 That means the truth table is 2^64 bits long.
 
+# 2^64
+
 That's another really big number.
 
 now,
@@ -812,7 +817,7 @@ the 'true' node.
 This one here only has one path, and so there's
 only one answer.
 
-We know the solution for primorial 15 has 3,827 answers.
+ We know the solution for primorial 15 has 3,827 answers.
 So if bex could solve that problem, the result would be a huge
 BDD with x63 at the top and 3,827 branching and intertwining
 paths down to the true node.
@@ -863,36 +868,43 @@ they use in SAT solving can already get me to this level here,
 and I hope to start incorporating some of those algorithms into
 bex in the future.
 
-* =00:45= closing
-
 By the way, BDDs generally aren't used in solving, although
 I've heard that there are a few SAT solvers out there that
 are starting to incorporate them.
 
-For me, the only use I had for a BDD package was as an exercise
-for learning new programming languages.
+* DONE =00:45= 16 closing
 
-But then I saw how fast I could make it go in rust,
-and as I said,
+For me, a BDD system was always just
+a way to learn new programming languages.
+
+But then I saw how fast I could make one go in rust,
+and as I said before,
 it became an exercise in optimization.
 
-Now so far, my optimization efforts
+So far, my optimization efforts
 have mostly gone into the pure BDD part,
 and not the solving part.
 
 When I decided to have bex factor this fifteenth primorial,
-I had no idea whether it would take a few seconds or a
-thousand years. It turned out I aimed high.
+I had no idea how long it would take.
+Turns out I aimed high.
 
-If it had been easy for bex, I might not have ever shifted my
-focus from making a fast BDD to making a fast solver.
+If it had been easy for bex,
+I might not have ever shifted my focus
+from making a fast BDD to making a fast solver.
 
-So even though this number was an arbitrary choice, it wound
-up causing a change in the way I thought about bex,
-and became sort of a long-term goal to shoot for.
+So even though this number was an arbitrary choice,
+it wound up causing a change in the way I thought about my program,
+and became sort of a long-term goal for me to shoot for.
 
-So...
+So yeah.
 
-That's how primorial 15 became my #megafavnumber.
+That's why primorial 15 is my #megafavnumber.
 
-Anyway, thanks for watching, and I hope to see you again.
+Thanks for watching, and I hope to see you again.
+
+
+* TODO in bex website shot, show boolean expressions formally?
+* TODO 3:05 show the problem statement formally
+
+
