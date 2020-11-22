@@ -98,8 +98,11 @@ not sure about model numbers
 
 * color scheme
 
+title font: kulim park
 desktop background: #001824
 background colors: 122c3d 003a61 00538a 0071bd 3c90c8
+gold bar: html gold = 255 204 0 / ffcc00
+
 
 * TODO blender color management:
 : output -> color management -> transform -> default
