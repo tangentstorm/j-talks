@@ -288,6 +288,11 @@ document.body.addEventListener('keypress', function(e) {
   function NB(toks, comment) { return toks.concat([["nbl", "NB. " + comment]]) }
   function N(s, comment) { return NB(T(s),comment) }
 
+  // define a value, using the given copula ('=.' or '=:')
+  function D(nm, cop, xs) { return T(`  ${nm} ${cop} ${xs}`) }
+  function LD(nm, xs) { return D(nm, "=.", xs)}
+  function GD(nm, xs) { return D(nm, "=:", xs)}
+
   let golf = ano([ //  golfed sandpile code
     T("load 'viewmat'"),
     T("f =: _1 1 |.!.0\"0 _ ]"),
@@ -295,13 +300,13 @@ document.body.addEventListener('keypress', function(e) {
     T("viewmat s 50 50 $ 4")]);
 
   let orig = ano([ // original code for single animation frame
-    N("settle =: monad define",   "settle sandpiles with entries > 3"),
-    T("  gt =. y > 3"),
-    N("  up =. }.     gt  ,  0",  "shift in each of the 4 directions"),
-    N("  dn =. }:      0  , gt",  "(filling in with 0 rather than wrapping)"),
-    T("  lf =. }.\"1   gt ,.  0"),
-    T("  rt =. }:\"1 ]  0 ,. gt"),
-    N("  cn =. _4 * gt",           "the 4 we subtract from the center"),
+    N("settle =: monad define",          "settle sandpiles with entries > 3"),
+       LD("gt", "y > 3"),
+    NB(LD("up", "}.     gt  ,  0"),      "shift in each of the 4 directions"),
+    NB(LD("dn", "}:      0  , gt"),      "(filling in with 0 rather than wrapping)"),
+       LD("lf", "}.\"1   gt ,.  0"),
+       LD("rt", "}:\"1 ]  0 ,. gt"),
+    NB(LD("cn", "_4 * gt"),              "the 4 we subtract from the center"),
     T("  y + up + dn + lf + rt + cn"),
     [[")"]],
     [[""]],
@@ -359,7 +364,7 @@ document.body.addEventListener('keypress', function(e) {
   let ins = (a,i,x)=> a.slice(0,i).concat(x).concat(a.slice(i))
   function exmo(li, nm) {  // li: line of tokens,  nm: variable name
     let sp = 5  // start position
-    let ep = -2 // end position -- strip trailing ws and comma ( TODO: fix this )
+    let ep = -1 // end position -- strip trailing ws and comma ( TODO: fix this )
     let re = RegExp("\\b" + nm + "\\b") // only match name when it's a complete word
     let mo = ("'" + txt(li.slice(sp,ep)).join('') + "'").replace(re, 'y')  // extracted monad as string
     let ws = ['empty', ' '] // whitespace (one space char)
@@ -445,18 +450,17 @@ document.body.addEventListener('keypress', function(e) {
   class Player {
     constructor(seq) { this.t = 0; this.i = 0; this.seq = seq; }
     step() { this.seq[this.i++]() }
-    play() { if (this.i < this.seq.length) { this.step(); setTimeout(_ => this.play(), 100); }}}
+    play() { if (this.i < this.seq.length) { this.step(); setTimeout(_ => this.play(), 250); }}}
 
 
   function run() {
     let evts = ints(5).map(i => i+2).map(i => new ExMoEvt(i, 'gt'))
     // evts.forEach(e => e.fwd())
-    let p = new Player(evts.map(e => _ => e.fwd()))
+    let p = new Player([_ => slide(1)].concat(evts.map(e => _ => e.fwd())))
     p.play()
   }
-  slide(1)
 
-
+slide(1)
 
 </script>
 </html>
