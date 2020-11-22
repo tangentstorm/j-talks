@@ -1,0 +1,23 @@
+okay so goldbach's conjecture is simply the idea
+that if you pick any even number greater than two
+there's some way to add two prime numbers together and get that number.
+
+
+
+original length: 47:03
+  average view duration as of jan 10, 2020 was 4:20 since original upload
+  (although the overview page said 6:56 for last 28 days)
+
+now it's at 43:15 ... so i edited the first 4 mins.
+
+i got up to the ravel command (around the original 8:45) before i ran out of segments.
+
+
+* TODO: 5:00  "can do one of two things" - do i ever go back
+after "a list"  -> "so that's one way to do it"
+
+
+don't worry what this means right now.
+the important point is there's different behavior
+depending on whether there's a left side argument
+or not.
