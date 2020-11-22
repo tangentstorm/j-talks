@@ -1,4 +1,4 @@
-* orignal golf
+* COMMENT
 Bootstrapping the bootstrap environment.
 (Using pre-built tools to get data in place.)
 
@@ -25,6 +25,14 @@ run =: 3 : 0
   end.
 )
 run golf
+#+end_src
+
+* orignal golf
+#+begin_src j
+load 'viewmat'
+f =: _1 1 |.!.0"0 _ ]
+s =: (++/@(_4&*,f,f&.(|:"2))@(3&<))^:_
+viewmat s 50 50 $ 4
 #+end_src
 
 * NOTE motivation
@@ -654,3 +662,16 @@ d =: 0 1, 1 0, 0 _1,: _1 0          NB. directions to shift
 s =: + [: +/@(_4&*, d|.!.0]) 3&<    NB. sandpiles step
 viewmat s^:_ [ 50 50 $ 4
 #+end_src
+
+
+* TODO more from jitwit:
+
+: s1 =: +[:+/@(_4&*,((,-)2]\i:1)|.!.0])3&<
+: ab =: -[:(4&*(-+/)((,-)=/~i.2)|.!.0])3&<
+
+knocks another two characters off:
+
+"and hinted at a second trick--avoid multiplication and instead
+subtract from each shifted copy:"
+
+: ab =: -[:+/@(-"2((,-)=/~i.2)|.!.0])3&<
