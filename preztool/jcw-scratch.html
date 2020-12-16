@@ -4,13 +4,14 @@
 <title>J Code Window</title>
 <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="./jlang.js"></script>
 <style type="text/css">
   html, body {
     margin: 0; padding:0;
-    font-family: Calibri; font-size: 28px;
+    font-family: Calibri,sans-serif; font-size: 28px;
     background:black; color:#fff; }
-  h1 { background: gold; color: black; padding: 2px; padding-left:16px; margin:0;}
-  pre { font-family: consolas;  padding-left: 16px; margin-top:1ex;}
+  h1 { background: gold; color: black; padding: 2px 2px 2px 16px; margin:0;}
+  pre { font-family: consolas, monospace;  padding-left: 16px; margin-top:1ex;}
   /* syntax highlighting for j code */
   .special { color:  limegreen }
   .copula { color: darkcyan; }
@@ -38,17 +39,13 @@ Vue.component('j-code', {
   props: ['src'],
   render: function(h) {
     return h('pre', this.src.map(function(line){
-      var toks = line.map(function(tok){
+      let toks = line.map(function(tok){
         if(tok[1]===[]) return '';
-        return h('span', {'class': tok[0]}, tok[1]);
-      });
+        return h('span', {'class': tok[0]}, tok[1])});
       toks.push('\n');
-      return h('span', toks);
-    }));
-  }
-});
+      return h('span', toks)}))}});
 
-var data = {head:'head goes here', src:'code goes here'},
+let data = {head:'head goes here', src:'code goes here'},
     app = new Vue({el:"#app", data:data}),
     qcom;
 
@@ -69,11 +66,9 @@ function jerr(s) { jpost('err', s); }
 
 /// this dispatches messages coming *from* j:
 function jnotify(s) {
- var f = "j" + s.shift();
- if (window[f] === undefined)
-  return jerr("function not found: " + f);
- window[f](s);
-}
+ let f = "j" + s.shift();
+ if (window[f] === undefined) jerr("function not found: " + f);
+ else window[f](s)}
 
 
 // -- api exposed to j -----------------------------
@@ -90,126 +85,6 @@ document.body.addEventListener('keypress', function(e) {
 
 </script>
 <script id="scratch">
-  let A=[  // adverbs
-    '~',   // Reflex • Passive / Evoke
-    '/',   // Insert • Table
-    '/.',  // Oblique • Key
-    '\\',  // Prefix • Infix
-    '\\.', // Suffix • Outfix
-    '}',   // Item Amend • Amend
-    'b.',  // Boolean / Basic
-    'f.',  // Fix
-    'M.',  // Memo
-    't.',  // Taylor Coeff. (m t. u t.)
-    't:',  // Weighted Taylor
-  ]
-
-  let C = [// Conjunctions
-    '^:',  // Power (u^:n u^:v)
-    '.',   // Determinant • Dot Product
-    '..',  // Even
-    '.:',  // Odd
-    ':',   // Explicit / Monad-Dyad
-    ':.',  // Obverse
-    '::',  // Adverse
-    ';.',  // Cut
-    '!.',  // Fit (Customize)
-    '!:',  // Foreign
-    '"',   // Rank (m"n u"n m"v u"v)
-    '`',   // Tie (Gerund)
-    '`:',  // Evoke Gerund
-    '@',   // Atop
-    '@.',  // Agenda
-    '@:',  // At
-    '&',   // Bond / Compose
-    '&.',  // Under (Dual)
-    '&.:', // Under (Dual)
-    '&:',  // Appose
-    'd.',  // Derivative
-    'D.',  // Derivative
-    'D:',  // Secant Slope
-    'H.',  // Hypergeometric
-    'L:',  // Level At
-    'S:',  // Spread
-    'T.',  // Taylor Approximation
-  ];
-
-  let V = [ // Verbs
-    '=',    // Self-Classify • Equal
-    '<',    // Box • Less Than
-    '<.',   // Floor • Lesser Of (Min)
-    '<:',   // Decrement • Less Or Equal
-    '>',    // Open • Larger Than
-    '>.',   // Ceiling • Larger of (Max)
-    '>:',   // Increment • Larger Or Equal
-    '_:',   // Infinity
-    '+',    // Conjugate • Plus
-    '+.',   // Real / Imaginary • GCD (Or)
-    '+:',   // Double • Not-Or
-    '*',    // Signum • Times
-    '*.',   // Length/Angle • LCM (And)
-    '*:',   // Square • Not-And
-    '-',    // Negate • Minus
-    '-.',   // Not • Less
-    '-:',   // Halve • Match
-    '%',    // Reciprocal • Divide
-    '%.',   // Matrix Inverse • Matrix Divide
-    '%:',   // Square Root • Root
-    '^',    // Exponential • Power
-    '^.',   // Natural Log • Logarithm
-    '$',    // Shape Of • Shape
-    '$.',   // Sparse
-    '$:',   // Self-Reference
-    '~.',   // Nub •
-    '~:',   // Nub Sieve • Not-Equal
-    '|',    // Magnitude • Residue
-    '|.',   // Reverse • Rotate (Shift)
-    '|:',   // Transpose
-    ',',    // Ravel • Append
-    ',.',   // Ravel Items • Stitch
-    ',:',   // Itemize • Laminate
-    ';',    // Raze • Link
-    ';:',   // Words • Sequential Machine
-    '#',    // Tally • Copy
-    '#.',   // Base 2 • Base
-    '#:',   // Antibase 2 • Antibase
-    '!',    // Factorial • Out Of
-    '/:',   // Grade Up • Sort
-    '\\:',   // Grade Down • Sort
-    '[',    // Same • Left
-    '[:',   // Cap
-    ']',    // Same • Right
-    '{',    // Catalogue • From
-    '{.',   // Head • Take
-    '{:',   // Tail •
-    '{::',  //  Map • Fetch
-    '}.',   // Behead • Drop
-    '}:',   // Curtail •
-    '".',   // Do • Numbers
-    '":',   // Default Format • Format
-    '?',    // Roll • Deal
-    '?.',   // Roll • Deal (fixed seed)
-    'A.',   // Anagram Index • Anagram
-    'C.',   // Cycle-Direct • Permute
-    'e.',   // Raze In • Member (In)
-    'E.',   // • Member of Interval
-    'i.',   // Integers • Index Of
-    'i:',   // Steps • Index Of Last
-    'I.',   // Indices • Interval Index
-    'j.',   // Imaginary • Complex
-    'L.',   // Level Of •
-    'o.',   // Pi Times • Circle Function
-    'p.',   // Roots • Polynomial
-    'p..',  // Poly. Deriv. • Poly. Integral
-    'p:',   // Primes
-    'q:',   // Prime Factors • Prime Exponents
-    'r.',   // Angle • Polar
-    's:',   // Symbol,
-    'u:',   // Unicode,
-    'x:',   // Extended Precision
-    '_9:',' _8:','_7:','_6:','_5:','_4:','_3:','_2:','_1:','0:',
-    '9:',  '8:', '7:', '6:', '5:', '4:', '3:', '2:', '1:', //  Constant Functions
-  ];
 
   // this remaps the short token type codes to the ones in CSS
   let remap = {
@@ -243,6 +118,7 @@ document.body.addEventListener('keypress', function(e) {
     'y' : 'y', // special x
     'x' : 'y', // special y
   }
+  // register primitives from jlang.js:
   V.forEach(x => kind[x] = 'V')
   C.forEach(x => kind[x] = 'C')
   A.forEach(x => kind[x] = 'A')
@@ -257,17 +133,14 @@ document.body.addEventListener('keypress', function(e) {
   }
 
 
-  function ano(lines) { // annotate tokens with their types (or replace annotations that are already there)
+  function ano(tokLines) { // annotate tokens with their types (or replace annotations that are already there)
     function fixtok(tok) {
       if (!Array.isArray(tok)) { throw "what?" + JSON.stringify(tok) }
       if (tok.length === 1) tok = [null, tok[0]];
       if (tok[1].length === 0) tok = [tok[0], ""]; // ["e", []]   (blank line)
       if (tok[0] === "nbl") return tok;
-      return [ remap[tokTyp(tok[1])], tok[1] ]
-    }
-    let fixline = line => line.map(fixtok)
-    return lines.map(fixline)
-  }
+      return [ remap[tokTyp(tok[1])], tok[1] ]}
+    return tokLines.map(toks => toks.map(fixtok))}
 
   // J: join two sequences of tokens
   function J(xs,ys) { return xs.concat(ys) }
@@ -368,8 +241,7 @@ document.body.addEventListener('keypress', function(e) {
     let re = RegExp("\\b" + nm + "\\b") // only match name when it's a complete word
     let mo = ("'" + txt(li.slice(sp,ep)).join('') + "'").replace(re, 'y')  // extracted monad as string
     let ws = ['empty', ' '] // whitespace (one space char)
-    return li.slice(0,sp).concat([['noun','monad'],ws,['conjunction',':'],ws,['literal', mo],ws,['name',nm], ws]);
-  }
+    return li.slice(0,sp).concat([['noun','monad'],ws,['conjunction',':'],ws,['literal', mo],ws,['name',nm], ws])}
 
 
 
@@ -415,23 +287,18 @@ document.body.addEventListener('keypress', function(e) {
   // to t0 or t1.
 
   class TSpan {  // time span
-    constructor(t0, dur) {
-      self.t0  = t0;   // start time
-      self.dur = dur; // duration
-    }
-  }
+    /// t0: start time,  dur: duration
+    constructor(t0, dur) { self.t0  = t0; self.dur = dur}}
 
-  // constructor(dur) { self.dur = dur; } // duration, in ms
 
   class ASeq extends Animation {
     // sequence several animations one after another.
     constructor(seq) {
-      super(sum(seq.map(a => a.dur)));
+      super(); // super(sum(seq.map(a => a.dur)));
       this.seq = seq; }
     t0(dt) { this.seq[0].t0(dt) }
     ts(dt,t) { }
-    t1(dt) { this.seq[this.seq.length-1].t1(dt) }
-  }
+    t1(dt) { this.seq[this.seq.length-1].t1(dt) }}
 
   class TEvent { // 0-duration timeline event
     fwd() { }    // run the event fwd
@@ -442,9 +309,8 @@ document.body.addEventListener('keypress', function(e) {
   class ExMoEvt extends TEvent {
     constructor(i, nm) { super(); this.i = i; this.nm = nm }
     fwd() {
-      var lines = slides[1]
-      Vue.set(data.src, this.i, exmo(lines[this.i], this.nm)) }
-  }
+      let lines = slides[1]
+      Vue.set(data.src, this.i, exmo(lines[this.i], this.nm)) }}
 
 
   class Player {
@@ -457,8 +323,7 @@ document.body.addEventListener('keypress', function(e) {
     let evts = ints(5).map(i => i+2).map(i => new ExMoEvt(i, 'gt'))
     // evts.forEach(e => e.fwd())
     let p = new Player([_ => slide(1)].concat(evts.map(e => _ => e.fwd())))
-    p.play()
-  }
+    p.play()}
 
 slide(1)
 
