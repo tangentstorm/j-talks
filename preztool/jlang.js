@@ -121,3 +121,25 @@ let V = [
   '_9:',' _8:','_7:','_6:','_5:','_4:','_3:','_2:','_1:','0:',
   '9:',  '8:', '7:', '6:', '5:', '4:', '3:', '2:', '1:', //  Constant Functions
 ];
+
+// tokenize j code (str -> toks)
+const JTYPES = ['nb',   'xyn',            'num',    'str',    'par', 'ws', 'op',                          'ctl',   'idn']
+const JLEXRE = /(NB.*$)|(a[.:]|[xyuvn]\b)|(_|_?\d+)|('[^']*')|([()])|(\s+)|([^ ][.:]+|-|[_,"+*<$>&^@{:}])|(\w+[.])|(\w+)/g
+const JKIND = {
+  '=:': 'cop', // is (global)
+  '=.': 'cop', // is (local)
+  '_.': 'num', // indeterminate
+  'a.': 'L', // alphabet
+  'a:': 'y', // it's a boxed noun.
+}
+// register primitives from jlang.js:
+V.forEach(x => JKIND[x] = 'V')
+C.forEach(x => JKIND[x] = 'C')
+A.forEach(x => JKIND[x] = 'A')
+
+function* jlex(src) {
+  for (let m of src.matchAll(JLEXRE)) {
+    let tok = m.shift()
+    let typ = JTYPES[m.indexOf(tok)]
+    if (typ === 'op') typ = JKIND[tok];
+    yield [typ, tok] }}
