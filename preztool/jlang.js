@@ -143,3 +143,97 @@ function* jlex(src) {
     let typ = JTYPES[m.indexOf(tok)]
     if (typ === 'op') typ = JKIND[tok];
     yield [typ, tok] }}
+
+
+// token type: {
+//   a: 1 (indicates atom in AST)
+//   k: kind (from JKIND, used for css styling)
+//   t: text of the token
+//   p: part of speech (if applicable)
+
+function jPartOfSpeech(tok) {
+  switch (tok.k) {
+    case 'A': case 'V': case 'N': case 'C': return tok.k
+    case 'cop': return '='
+    case 'str': return 'N'
+    case 'num': return 'N'
+    case 'xyn': return 'xynm'.includes(tok.t) ? 'N' : 'V'  // !! is this always true?
+    case 'par': return tok.t==='(' ? 'L' : 'R'
+    case 'idn': return 'I'
+    default: return ''}}
+
+/// Extends jlex to provide a list of token objects grouped by line
+function jTokens(src) {
+  // one object per lexeme, grouped by line:
+  let tokls = src.split("\n").map(x=>[...jlex(x)].map(tok=>({a:1, k:tok[0], t:tok[1]})))
+  // annotate with text coordinates:
+  for (let y=0; y<tokls.length; y++) { let x=0
+    for (let tok of tokls[y]) { tok.x=x; tok.y=y; x+=tok.t.length; tok.p = jPartOfSpeech(tok)}}
+  return tokls}
+
+
+// node type: {
+///  a: 0 (indicating not an atom)
+//   r: grammar rule
+//   p: part of speech (CAVN)
+//   d: data                                        TODO: use or delete this d:data slot.
+//   c: children }
+function jNode(r, p, d, c) { return {a:0, r, p, d, c}}
+
+
+/// shorthand constructor for jNode from 'res' in jStmt
+function jN(pos, len, r, p, d, c) { this.splice(pos,len,jNode(r,p,d,c)) }
+
+// J Parsing and Evaluation Rules
+// https://www.jsoftware.com/help/dictionary/dicte.htm
+function r0Monad(_,v,n)  { jN.call(this, 1, 2, 'mo', 'N', {}, [v,n]) }
+function r1Monad(_,u,v,n){ jN.call(this, 2, 2, 'mo', 'N', {}, [v, n]); r0Monad()}
+function r2Dyad(_,x,v,y) { jN.call(this, 1, 3, 'dy', 'N', {}, [x, v, y]) }
+function r3Adverb(_,vn,a){ jN.call(this, 1, 2, 'ad', vn.p, {}, [vn, a]) }   // TODO: deduce true part of speech
+function r4Conj(_,m,c,n) { jN.call(this, 1, 3, 'cn', 'V', {}, [m, c, n]) }  // TODO: deduce true part of speech
+function r5Fork(_,m,u,v,){ jN.call(this, 1, 3, 'fk', 'V', {}, [m, u, v])}
+function r6Bident(_,x,y) { jN.call(this, 1, 2, 'bi', 'V', {}, [x, y]) }     // TODO: deduce true part of speech
+function r7Is(i,o,e)     { jN.call(this, 0, 3, 'is', e.p, {}, [i,o,e]) }
+function r8Paren(){ return this } // TODO
+// The documentation link above doesn't yet include a rule for direct definition, but it's obvious enough.
+// https://code.jsoftware.com/wiki/Vocabulary/DirectDefinition
+// note that i'm working with a single line at a time so this can't yet parse multi-line direct defs
+function r9Direct(){ return this } // TODO
+
+const rules = [
+  // 'M' = mark (start of input)
+  // '=' assignment token (=. or =:)
+  // 'L'..'R'  = parens '('..')'
+  // 'l'..'r'   = direct definition '{{' .. '}}'
+  // 'A' = adverb
+  // 'C' = conjunction
+  // 'N' = noun
+  // 'V' = verb
+  // 'I' = iden
+  [/[M=L]VN./,  r0Monad],
+  [/[M=LAVN]VVN/, r1Monad],
+  [/[M=LAVN]NVN/, r2Dyad],
+  [/[M=LAVN]A./,  r3Adverb],
+  [/[M=LAVN][VN]C[VN]/, r4Conj],
+  [/[M=LAVN][VN]V/, r5Fork],
+  [/[M=L][CAVN][CAVN]./, r6Bident],
+  [/[IN]=[CAVN]./, r7Is],
+  [/L[CAVN]R./, r8Paren],
+  [/l[CAVN]r./, r9Direct]]
+
+/// parse a single line of text
+function jStmt(tokl) {
+  let d = {}, res = [], tl=tokl.length
+  if (tl && tokl[tl-1].k === 'nb') { d.nb = tokl.pop() }
+  let state = '', toks = [{p:'M'}].concat(tokl.filter(t=>t.k !== 'ws'))
+  while ((tl = toks.length)) {
+    let tok = toks.pop(); state = tok.k + state; res.unshift(tok)
+    state = res.map(x => x.p).join('') + '..'
+    // console.log(state)
+    for (let i=0; i<rules.length; i++) if (state.match(rules[i][0])) {
+      // console.log(`MATCHED RULE ${i}`)
+      rules[i][1].apply(res, res)
+      break }}
+  if (res.length === 2 && res[0].p === "M") res.shift();
+  else { console.warn(['expected to be at left edge!', res])}
+  return jNode('stmt', '-', d, res)}
