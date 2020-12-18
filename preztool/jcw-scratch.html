@@ -38,6 +38,7 @@
 Vue.component('j-code', {
   props: ['src'],
   render: function(h) {
+    console.log(this.src)
     return h('pre', this.src.map(function(line){
       let toks = line.map(function(tok){
         if(tok[1]===[]) return '';
@@ -45,20 +46,23 @@ Vue.component('j-code', {
       toks.push('\n');
       return h('span', toks)}))}});
 
-let data = {head:'head goes here', src:'code goes here'},
+let data = {head:'head goes here', src:[]},
     app = new Vue({el:"#app", data:data}),
     qcom;
 
 // -- generic j communication driver --------------
 
-/// this makes the connection
-/// qt is supplied by "qrc:///qtwebchannel/qwebchannel.js"
-new QWebChannel(qt.webChannelTransport, function(channel) {
-  qcom = channel.objects.qcom;
-  qcom.qNotify.connect(jnotify);
-  jpost('init', '');
-});
-
+try {
+  /// this makes the connection
+  /// qt is supplied by "qrc:///qtwebchannel/qwebchannel.js"
+    new QWebChannel(qt.webChannelTransport, function (channel) {
+      qcom = channel.objects.qcom;
+      qcom.qNotify.connect(jnotify);
+      jpost('init', '');
+    });
+} catch {
+  console.log("qWebChannel not found")
+}
 
 /// this sends a message to j:
 function jpost(e,v) { qcom.qPost(['post', e, v]); }
@@ -151,7 +155,6 @@ document.body.addEventListener('keypress', function(e) {
   function P(toks) { return J(LPAREN, J(T(toks), RPAREN)) }
 
   // tokenize j code (str -> toks)
-  JLEXRE = /(\w+)|(\s+)|'[^']*'|(.[.:]|]|\(|\)|\/|-|[_,"+*<$>&^@])/g
   function T(s) { return X(s.match(JLEXRE)) }
 
   // X : expression
