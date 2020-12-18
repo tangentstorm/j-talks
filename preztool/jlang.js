@@ -221,7 +221,7 @@ const rules = [
   [/L[CAVN]R./, r8Paren],
   [/l[CAVN]r./, r9Direct]]
 
-/// parse a single line of text
+/// parse a single line of j tokens
 function jStmt(tokl) {
   let d = {}, res = [], tl=tokl.length
   if (tl && tokl[tl-1].k === 'nb') { d.nb = tokl.pop() }
@@ -235,5 +235,21 @@ function jStmt(tokl) {
       rules[i][1].apply(res, res)
       break }}
   if (res.length === 2 && res[0].p === "M") res.shift();
-  else { console.warn(['expected to be at left edge!', res])}
+  else if (toks.length){ console.warn(['expected to be at left edge!', res])}
   return jNode('stmt', '-', d, res)}
+
+function jParse(tokls) {
+  let ln = 0, res = []
+  while (ln<tokls.length) {
+    let tokl = tokls[ln], stmt = jStmt(tokl)
+    // TODO: do a complete analysis for (:0) to find any explicit definition (including nouns or more than one)
+    if (tokl.some(tok=> tok.t === 'define')) {
+      let suite = []
+      while(++ln<tokls.length) {
+        tokl = tokls[ln]
+        if (tokl.length && tokl[0].t === ')') break;
+        else suite.push(jStmt(tokl)) }
+      res.push(jNode('suite', '-', {stmt, suite}, [])) }
+    else res.push(stmt)
+    ln++ }
+  return jNode('jlang', '-', {}, res)}
