@@ -1,3 +1,13 @@
+/* J Language Services
+ *
+ * Provides a lexer for J, and a parser for a subset of J.
+ *
+ * Basically, this does just enough to provide a data model
+ * for some refactoring animations in my videos.
+ *
+ */
+
+
 /// Adverbs
 let A=[
   '~',   // Reflex • Passive / Evoke
@@ -176,7 +186,7 @@ function jTokens(src) {
 ///  a: 0 (indicating not an atom)
 //   r: grammar rule
 //   p: part of speech (CAVN)
-//   d: data                                        TODO: use or delete this d:data slot.
+//   d: definitions
 //   c: children }
 function jNode(r, p, d, c) { return {a:0, r, p, d, c}}
 
@@ -187,7 +197,8 @@ function jN(pos, len, r, p, d, c) { this.splice(pos,len,jNode(r,p,d,c)) }
 // J Parsing and Evaluation Rules
 // https://www.jsoftware.com/help/dictionary/dicte.htm
 function r0Monad(_,v,n)  { jN.call(this, 1, 2, 'mo', 'N', {}, [v,n]) }
-function r1Monad(_,u,v,n){ jN.call(this, 2, 2, 'mo', 'N', {}, [v, n]); r0Monad()}
+function r1Monad(_,u,v,n){ jN.call(this, 2, 2, 'mo', 'N', {}, [v, n]);
+                           r0Monad.apply(this, this) }
 function r2Dyad(_,x,v,y) { jN.call(this, 1, 3, 'dy', 'N', {}, [x, v, y]) }
 function r3Adverb(_,vn,a){ jN.call(this, 1, 2, 'ad', vn.p, {}, [vn, a]) }   // TODO: deduce true part of speech
 function r4Conj(_,m,c,n) { jN.call(this, 1, 3, 'cn', 'V', {}, [m, c, n]) }  // TODO: deduce true part of speech
@@ -221,7 +232,7 @@ const rules = [
   [/L[CAVN]R./, r8Paren],
   [/l[CAVN]r./, r9Direct]]
 
-/// parse a single line of j tokens
+/// parse a single line of tokens into an AST node
 function jStmt(tokl) {
   let d = {}, res = [], tl=tokl.length
   if (tl && tokl[tl-1].k === 'nb') { d.nb = tokl.pop() }
@@ -234,10 +245,11 @@ function jStmt(tokl) {
       // console.log(`MATCHED RULE ${i}`)
       rules[i][1].apply(res, res)
       break }}
-  if (res.length === 2 && res[0].p === "M") res.shift();
+  if (res[0].p === "M") res.shift();
   else if (toks.length){ console.warn(['expected to be at left edge!', res])}
   return jNode('stmt', '-', d, res)}
 
+/// given a 2d list of tokens (token lines), build an AST
 function jParse(tokls) {
   let ln = 0, res = []
   while (ln<tokls.length) {
@@ -249,7 +261,43 @@ function jParse(tokls) {
         tokl = tokls[ln]
         if (tokl.length && tokl[0].t === ')') break;
         else suite.push(jStmt(tokl)) }
-      res.push(jNode('suite', '-', {stmt, suite}, [])) }
+      res.push(jNode('suite', '-', {}, [stmt, ...suite])) }
     else res.push(stmt)
     ln++ }
   return jNode('jlang', '-', {}, res)}
+
+// walk the node and collect definitions in the .d slot of each node
+function jFindDefs(node) {
+  if (node.r === 'is') {
+    let [lhs, op, rhs] = node.c
+    if (lhs.k === 'str') console.warn("unhandled: 'a b c'=: 1 2 3"); // TODO
+    else {
+      let n = op.t === '=.' ? '.' + lhs.t : lhs.t
+      // !! This creates a circular data structure, but it lets us
+      //    keep the whole definition (both right and left sides).
+      //    Maybe move this up one level so the 'is' note doesn't
+      //    contain a reference to itself?
+      node.d[n] = node }}
+  else if (node.a) {} // no change for atoms
+  else if (!node.c) { console.log('no .c found in node:'); console.log(node)}
+  else for (let c of node.c) Object.assign(node.d, jFindDefs(c).d)
+  return node}
+
+/// Given an AST node, recover the original source code
+/// as a single string. (mostly for debugging)
+// TODO: re-insert comments
+function jDumpAST(node) {
+  let res = {txt:[], sx:0, sy:-1}
+  function f(node, res) {
+    if (node.a) {
+      if (res.sy===-1) res.sy=node.y
+      else while (node.y > res.sy) { res.txt.push('\n'); res.sy++; res.sx=0 }
+      while (node.x > res.sx) { res.txt.push(' '); res.sx++ }
+      res.txt.push(node.t); res.sx += node.t.length }
+    else for (let c of node.c) f(c, res)}
+  f(node, res); return res.txt.join('')}
+
+/// Given an AST node, return the (non-whitespace, non-comment) tokens as 1d array
+function jFlattenAST(node) {
+  let toks = []; function f(n) { n.a ? toks.push(n): n.c.forEach(f) }
+  f(node); return toks }
