@@ -31,4 +31,4 @@ describe("jParse", ()=>{
     expect(ast.r).to.equal('jlang')
     expect(ast.c.length).to.equal(3)
     expect(ast.c.map(n=>n.r)).to.eql(['stmt','suite','stmt'])
-    expect(ast.c[1].d.suite.map(n=>n.r)).to.eql(['stmt','stmt']) })})
+    expect(ast.c[1].c.map(n=>n.r)).to.eql(['stmt','stmt','stmt']) })})
