@@ -234,19 +234,19 @@ const rules = [
 
 /// parse a single line of tokens into an AST node
 function jStmt(tokl, scope) {
-  scope = scope || {}
   let d = {}, res = [], tl=tokl.length
   if (tl && tokl[tl-1].k === 'nb') { d.nb = tokl.pop() }
   let state = '', toks = [{p:'M'}].concat(tokl.filter(t=>t.k !== 'ws'))
   while ((tl = toks.length)) {
-    let tok = toks.pop(); state = tok.k + state; res.unshift(tok)
-    if (tok.p==='I') { tok.p = scope[tok.t] || 'I'} // attempt to resolve identifiers to part of speech
+    let tok = toks.pop(); res.unshift(tok)
+    if (tok.p==='I') tok.p = scope[tok.t] || 'I' // attempt to resolve identifiers to part of speech
+    // if (res.length===1 || res[1].k!=='cop') console.log(`${tok.t} pos: ${tok.p}`)
     state = res.map(x => x.p).join('') + '..'
     // console.log(state)
     for (let i=0; i<rules.length; i++) if (state.match(rules[i][0])) {
       // console.log(`MATCHED RULE ${i}`)
       rules[i][1].apply(res, res)
-      if (res[0].r === 'is') console.log(res[0])
+      if (res[0].r === 'is') scope[res[0].c[0].t] = res[0].c[2].p // remember part of speech on assignment
       break }}
   if (res[0].p === "M") res.shift();
   else if (toks.length){ console.warn(['expected to be at left edge!', res])}
@@ -256,7 +256,7 @@ function jStmt(tokl, scope) {
 function jParse(tokls) {
   let ln = 0, res = [], scope={} // TODO: properly handle global vs local scope
   while (ln<tokls.length) {
-    let tokl = tokls[ln], stmt = jStmt(tokl)
+    let tokl = tokls[ln], stmt = jStmt(tokl, scope)
     // TODO: do a complete analysis for (:0) to find any explicit definition (including nouns or more than one)
     if (tokl.some(tok=> tok.t === 'define')) {
       let suite = []
@@ -264,10 +264,10 @@ function jParse(tokls) {
         tokl = tokls[ln]
         if (tokl.length && tokl[0].t === ')') break;
         else suite.push(jStmt(tokl, scope)) }
-      res.push(jNode('suite', '-', {}, [stmt, ...suite])) }
+      res.push(jNode('suite', '', {}, [stmt, ...suite])) }
     else res.push(stmt)
     ln++ }
-  return jNode('jlang', '-', {}, res)}
+  return jNode('jlang', '', {}, res)}
 
 // walk the node and collect definitions in the .d slot of each node
 function jFindDefs(node) {
