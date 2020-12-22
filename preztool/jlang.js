@@ -133,8 +133,8 @@ let V = [
 ];
 
 // tokenize j code (str -> toks)
-const JTYPES = ['nb',   'xyn',            'num',    'str',    'par', 'ws', 'op',                          'ctl',   'idn']
-const JLEXRE = /(NB.*$)|(a[.:]|[xyuvn]\b)|(_|_?\d+)|('[^']*')|([()])|(\s+)|([^ ][.:]+|-|[_,"+*<$>&^@{:}])|(\w+[.])|(\w+)/g
+const JTYPES = ['nb',   'xyn',            'num','num','num','num',   'str',    'par', 'ws', 'op',                               'ctl',   'idn']
+const JLEXRE = /(NB.*$)|(a[.:]|[xyuvn]\b)|((_|_?\d+)(\s+(_|_?\d+))*)|('[^']*')|([()])|(\s+)|([^ ][.:]+|-|\[|]|[_,"+*<$>&^@{:}=])|(\w+[.])|(\w+)/g
 const JKIND = {
   '=:': 'cop', // is (global)
   '=.': 'cop', // is (local)
@@ -233,25 +233,28 @@ const rules = [
   [/l[CAVN]r./, r9Direct]]
 
 /// parse a single line of tokens into an AST node
-function jStmt(tokl) {
+function jStmt(tokl, scope) {
+  scope = scope || {}
   let d = {}, res = [], tl=tokl.length
   if (tl && tokl[tl-1].k === 'nb') { d.nb = tokl.pop() }
   let state = '', toks = [{p:'M'}].concat(tokl.filter(t=>t.k !== 'ws'))
   while ((tl = toks.length)) {
     let tok = toks.pop(); state = tok.k + state; res.unshift(tok)
+    if (tok.p==='I') { tok.p = scope[tok.t] || 'I'} // attempt to resolve identifiers to part of speech
     state = res.map(x => x.p).join('') + '..'
     // console.log(state)
     for (let i=0; i<rules.length; i++) if (state.match(rules[i][0])) {
       // console.log(`MATCHED RULE ${i}`)
       rules[i][1].apply(res, res)
+      if (res[0].r === 'is') console.log(res[0])
       break }}
   if (res[0].p === "M") res.shift();
   else if (toks.length){ console.warn(['expected to be at left edge!', res])}
-  return jNode('stmt', '-', d, res)}
+  return jNode('stmt', '', d, res)}
 
 /// given a 2d list of tokens (token lines), build an AST
 function jParse(tokls) {
-  let ln = 0, res = []
+  let ln = 0, res = [], scope={} // TODO: properly handle global vs local scope
   while (ln<tokls.length) {
     let tokl = tokls[ln], stmt = jStmt(tokl)
     // TODO: do a complete analysis for (:0) to find any explicit definition (including nouns or more than one)
@@ -260,7 +263,7 @@ function jParse(tokls) {
       while(++ln<tokls.length) {
         tokl = tokls[ln]
         if (tokl.length && tokl[0].t === ')') break;
-        else suite.push(jStmt(tokl)) }
+        else suite.push(jStmt(tokl, scope)) }
       res.push(jNode('suite', '-', {}, [stmt, ...suite])) }
     else res.push(stmt)
     ln++ }
