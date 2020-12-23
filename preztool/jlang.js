@@ -133,8 +133,9 @@ let V = [
 ];
 
 // tokenize j code (str -> toks)
-const JTYPES = ['nb',   'xyn',            'num','num','num','num',   'str',    'par', 'ws', 'op',                               'ctl',   'idn']
-const JLEXRE = /(NB.*$)|(a[.:]|[xyuvn]\b)|((_|_?\d+)(\s+(_|_?\d+))*)|('[^']*')|([()])|(\s+)|([^ ][.:]+|-|\[|]|[_,"+*<$>&^@{:}=])|(\w+[.])|(\w+)/g
+// 'NB.!' is a special comment syntax I use for pre-processing
+const JTYPES = ['pre',      'nb',          'xyn',            'num','num','num','num',   'str',    'def', 'par', 'ws', 'op',                                 'ctl',   'idn']
+const JLEXRE = /(NB[.]!.*$)|(NB[.].*$)|(a[.:]|[xyuvn]\b)|((_|_?\d+)(\s+(_|_?\d+))*)|('[^']*')|({{|}})|([()])|(\s+)|([^ ][.:]+|-|\[|]|[_,"+*<$>&^@{:}=])|(\w+[.])|(\w+)/g
 const JKIND = {
   '=:': 'cop', // is (global)
   '=.': 'cop', // is (local)
@@ -235,7 +236,8 @@ const rules = [
 /// parse a single line of tokens into an AST node
 function jStmt(tokl, scope) {
   let d = {}, res = [], tl=tokl.length
-  if (tl && tokl[tl-1].k === 'nb') { d.nb = tokl.pop() }
+  if (tl && tokl[tl-1].k === 'nb') { d.nb = tokl.pop(); tl-- }
+  if (tl && tokl[tl-1].k === 'pre') { d.pre = tokl.pop(); tl-- }
   let state = '', toks = [{p:'M'}].concat(tokl.filter(t=>t.k !== 'ws'))
   while ((tl = toks.length)) {
     let tok = toks.pop(); res.unshift(tok)

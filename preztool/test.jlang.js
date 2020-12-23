@@ -12,7 +12,7 @@ describe("jTokens", ()=>{
 describe("jStmt", ()=>{
 
   it('should parse a single line of j code', ()=>{
-    let ast = jStmt(jTokens('b =: i. a =: 2+2 NB. nota bene')[0])
+    let ast = jStmt(jTokens('b =: i. a =: 2+2 NB. nota bene')[0], {})
     expect(ast.r).to.equal('stmt')
     expect(ast.d.nb.t).to.equal('NB. nota bene')
     expect(ast.c.length).to.equal(1) })})
