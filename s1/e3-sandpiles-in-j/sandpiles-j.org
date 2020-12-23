@@ -1,33 +1,6 @@
-* COMMENT
-Bootstrapping the bootstrap environment.
-(Using pre-built tools to get data in place.)
+#+title: sandpiles in j
 
-For my "sandpiles in J" video, I want to present
-various transformations to the following source code:
-
-
-#+begin_src j
-lines =: LF & cut
-
-golf =: lines (0 : 0)
-load 'viewmat'
-f =: _1 1 |.!.0"0 _ ]
-s =: (++/@(_4&*,f,f&.(|:"2))@(3&<))^:_
-viewmat s 50 50 $ 4
-)
-
-run =: 3 : 0
-  NB. this command runs a list of boxed J sentences in sequence
-  for_i. i.#y do.
-   line =. >i{y
-   smoutput line
-   ". line
-  end.
-)
-run golf
-#+end_src
-
-* orignal golf
+* TODO intro: sandpiles golf
 #+begin_src j
 load 'viewmat'
 f =: _1 1 |.!.0"0 _ ]
@@ -35,57 +8,45 @@ s =: (++/@(_4&*,f,f&.(|:"2))@(3&<))^:_
 viewmat s 50 50 $ 4
 #+end_src
 
-* NOTE motivation
-I'm using this as an opportunity to invest in my
-systems for building animations and for doing text
-transformations, because these align with some of
-my long term goals about the presentations I want to
-be able to make, and also the idea of a system
-bootstrapped from the ground up with formally
-specified and verified code.
-
-I want to build a system that lets me specify rules
-for transformations on code, and I want to be able
-to easily load that source code into the system.
-
-To do that properly for J, the system would have to
-support its own J parser. However, I don't need to
-start with that: as long as I know what the
-intermediate representation is, I can use whatever
-existing tools are at hand to parse the text for me.
-
-In fact, for something this small, I could just manually
-enter the tokens myself, but doing this as a program in
-J is easier and allows me to check my work as I go along.
-
-So, for row, I will use J's built-in lexer to tokenize
-this code without having to write a lexer myself:
-
-:    [ gtoks =: ~.,;;:&.> golf NB. unique tokens for program 'golf'
-: ┌────┬─────────┬─┬──┬────┬──┬──┬─┬─┬───┬─┬─┬─┬─┬─┬─┬──┬─┬─┬─┬──┬──┬─┬─┬─┬─┬──┬─┬───────┬─────┬─┬─┐
-: │load│'viewmat'│f│=:│_1 1│|.│!.│0│"│0 _│]│s│(│+│/│@│_4│&│*│,│&.│|:│2│)│3│<│^:│_│viewmat│50 50│$│4│
-: └────┴─────────┴─┴──┴────┴──┴──┴─┴─┴───┴─┴─┴─┴─┴─┴─┴──┴─┴─┴─┴──┴──┴─┴─┴─┴─┴──┴─┴───────┴─────┴─┴─┘
-
-Probably in my video I want to start at this version of the code,
-and show how the two are equivalent.
+- quick recap: what are sandpiles?
+- this is the code review for the sandpiles video
+- covered most of the gui logic in the basic animation and sprite editor videos
+- will focus on these two screens
 
 
-* original 'settle'
+Then I showed this slide...
+Was the most obvious way to write it at the time.
+You might say this write only code.
+
+This right bracket doesn't match with anything.
+The syntax highlighting really helps, but you just have to know that |: is one token whereas ++ is two
+(the rule is that if it's more than one character, everything after the first character is a dot or colon)
+
+
+I certainly don't just instantly grok what it says,
+just like I wouldn't just instantly grok what a page of
+python code means.
+
+It's sort of like reading a long unfamiliar foreign word. You just have to take it slow and look at each piece in isolation.
+
+But before we do that, let's take a look at another way to write this same function.
+
+* settle recap
 #+begin_src j
 settle =: monad define          NB. settle sandpiles with entries > 3
   gt =. y > 3
   up =. }.   gt ,  0            NB. shift in each of the 4 directions
-  dn =. }:    0 ,  gt           NB. (filling in with 0 rather than wrapping)
+  dn =. }:    0 ,  gt           NB. (fill in with 0 rather than wrap)
   lf =. }."1 gt ,. 0
   rt =. }:"1 ]0 ,. gt
   cn =. _4 * gt                 NB. the 4 we subtract from the center
   y + up + dn + lf + rt + cn
 )
-
-(s -: settle^:_) 50 50 $ 4      NB. result 1 means the two have the same output.
 #+end_src
 
-* extract monads
+This was the beginner version...
+
+the whole thing is a monad
 
 The lines in the middle all make nouns, but they could be functions on 'gt'.
 
@@ -101,97 +62,346 @@ all instances of the variable with ~y~ inside the single quotes.
 
 All five of these noun phrases can become monads acting on gt in this way.
 
+* are they the same?
 #+begin_src j
-settle1 =: monad define
+settle =: monad define          NB. settle sandpiles with entries > 3
   gt =. y > 3
-  up =. monad : '}.   y ,  0 ' gt
-  dn =. monad : '}:    0 ,  y' gt
-  lf =. monad : '}."1 y ,. 0 ' gt
-  rt =. monad : '}:"1 ]0 ,. y' gt
-  cn =. monad : '_4 * y'       gt
+  up =. }.   gt ,  0            NB. shift in each of the 4 directions
+  dn =. }:    0 ,  gt           NB. (fill in with 0 rather than wrap)
+  lf =. }."1 gt ,. 0
+  rt =. }:"1 ]0 ,. gt
+  cn =. _4 * gt                 NB. the 4 we subtract from the center
   y + up + dn + lf + rt + cn
 )
-(s -: settle1^:_) 50 50 $ 4      NB. result 1 means the two have the same output.
+
+f =: _1 1 |.!.0"0 _ ]           NB. golfed version
+s =: (++/@(_4&*,f,f&.(|:"2))@(3&<))^:_
+
+(s -: settle^:_) 50 50 $ 4      NB. if this=1, s and settle are same
 #+end_src
 
-* extract fork
-Now we can use a fork train to shorten:
+One way we can test that these are the same is to compare the outputs.
 
+That's what this line at the bottom does.
+
+* (demo: show how each step of settle works)
 #+begin_src j
-settle2 =: monad define
+[ y  =. 0 0 4 0 0, 0 0 4 0 0, 4 4 4 4 4, 0 0 4 0 0,: 0 0 4 0 0
+y > 3
+gt =. y > 3
+[ gt =. y > 3
+[ up =. }.   gt ,  0            NB. shift in each of the 4 directions
+[ dn =. }:    0 ,  gt           NB. (fill in with 0 rather than wrap)
+[ lf =. }."1 gt ,. 0
+[ rt =. }:"1 ]0 ,. gt
+  cn =. _4 * gt                 NB. the 4 we subtract from the center
+y + up + dn + lf + rt + cn
+#+end_src
+
+assume y is some rank 2 array. other languages would call it a 2 dimensional array.
+here's a little 5x5 grid with a plus sign made of fours.
+
+where is y greater than 3? all the fours turn into 1's
+
+let's call that gt.
+notice it didnt print out the grid this time. j hides the result when the leftmost part of the line is an assignment
+if we put a bracket here it's just an identity function, but it changes the leftmost part of the line and so j prints the result
+
+the rule is that any time a cell has more than 3 grains of sand, we shift one grain in each of the 4 cardinal directions.
+
+so to shift upward, we can append a row of 0s and chop off the top row.
+
+to shift down we append the 0 at the top and then chop off the bottom row.
+
+left and right work the same way, but we apply the rule at each row instead of to the whole array
+
+so for left we use this rank 1 modifier. we could do the same for the comma but it's so common that j gives us ,. (stitch)
+it doesn't necessarily mean rank 1, it means 1 less than the highest rank. but since a grid is a rank 2 array, that's rank 1.
+
+same idea for shifting right, but since the 0 is now right next to the 1, we have to separate them, or they'll be treated
+as a single token and passed to the rank conjunction. we could put parens in here somewhere, but the identity function works just as well.
+
+# (either bracket works. there's only a difference when the bracket is between two nouns. This 1 is a noun, but j looks ahead to the left and evaluates this whole thing (}:"1) first. the rank conjunction consumes both the verb and the noun and leaves a new verb in its place. So then j sees that verb, the bracket, and the result off to the right.
+
+* deriving s from settle
+
+* goal: extract a fork
+#+begin_src j
+settle =: monad define
   gt =. y > 3
-  up =. monad : '}.   y ,  0 '
-  dn =. monad : '}:    0 ,  y'
-  lf =. monad : '}."1 y ,. 0 '
-  rt =. monad : '}:"1 ]0 ,. y'
-  cn =. monad : '_4 * y'
-  y + (up + dn + lf + rt + cn) gt
+  up =. }.   gt ,  0
+  dn =. }:    0 ,  gt
+  lf =. }."1 gt ,. 0
+  rt =. }:"1 ]0 ,. gt
+  cn =. _4 * gt
+  y + up + dn + lf + rt + cn
 )
-(s -: settle2^:_) 50 50 $ 4      NB. result 1 means the two have the same output.
+#+end_src
+
+the bottom line here is a sum of a bunch of things, and most of them are derived from gt.
+so if each of these were verbs that took gt as an argument, we could rewrite it like this:
+
+: (y + up + dn + lf + rt + cn) gt
+
+The rule is that when you have a sequence of tokens on a line or in parentheses,
+then the rightmost token determines usually what your final result is going to be.
+
+So at the moment, cn is a noun, so this whole thing in parentheses is a noun.
+
+And then we're sticking that noun next to gt, which is also a noun, and that's a syntax error.
+
+But if we turn cn into a verb = again we know it's a noun because we have a noun on the right,
+but we can replace it with the identity function:
+
+: cn =. _4 * ]
+
+and now cn is a verb.
+
+that makes this whole thing a verb train. you can have as many nouns on the left as you like,
+as long as you put verbs in between them.
+
+and by the way, that rule is a little oversimplified, because you actually can have a noun on
+the right edge and still wind up with a verb, if the thing next to it is a conjunction. so
+we could also write cn like this:
+
+: cn =. *&_4
+
+Negative four is a noun, but we're using the bind conjunction to bind it to multiplication operator so the whole thing is a verb that multiplies its argument by negative four.
+
+anyway, now that cn is a verb, we've got a verb on the right in the parentheses, and so this whole thing
+becomes a verb operating on gt.
+
+let's turn the rest of these nouns into verbs as well.
+
+* tacit up
+#+begin_src j
+up =. }. gt , 0
+
+up =. }. ] , 0:    NB.
+#+end_src
+
+
+cn and the train we've created below it are what we call tacit verbs, in that they don't refer directly to their arguments.
+
+a lot of times, tacit programming like this is going to give you a very compact representation of your operation, but it's not always obvious how to get there.
+
+For example, with the initial rewrite of =cn=, I just replaced =gt= with the right identity bracket, and that turned it into a valid fork.
+
+: cn =. 4 * ]
+
+With up, we have a zero on the right, and zero is a noun, so it's not so easy. If we try doing this,
+it's just going to apply a comma and right identity and the behead function to that zero. So you
+enlist the zero, do nothing and then remove the first item, giving you an empty list. Not what we want!
+
+: up =. }. ] , 0     NB. no good: empty list
+
+So we need that zero to be a verb. You can take any primitive and turn it into a verb using the rank conjunction.
+So for example, here's i.10
+
+: i. 10
+
+and here's i.10 zeroed out at rank zero:
+
+: 0"0 i. 10
+
+and at rank infinity:
+
+: 0"_ i. 10
+
+So for up we could say:
+
+: up =. }. ] , 0"_   NB. still no good
+
+or... all the single digit numbers have primitive verb equivalents if you just put a colon after them, so we could try that:
+
+: up =. }. ] , 0:    NB. still no good
+
+Either way, =up= is now a verb, but it doesn't do what we want because it's a hook. Basically, the verbs in a train alternate between being applied to the arguments and being applied to the results of the other verbs.
+
+# highlight the slots
+: up =. }. ] , 0:    NB. still no good
+
+
+Since there isn't a verb on the left, J fills it in with a left bracket, which passes in the left argument if you use it as a dyad, and the right argument if you use it as a monad.
+
+: 2 (,]) 3
+: (,])
+
+Anyway, that means this definition of up:
+
+: up =.   }. ] , 0:    NB. hook. still no good
+
+Is shorthand for this:
+
+: up =. [ }. ] , 0:    NB. equivalent fork. still no good
+
+Which means the right-curly dot isn't the monad called 'behead', but rather the dyad called 'drop', and that's not what we want. So to force it to be called as a monad, we'd have to cap off the left hand side of the train:
+
+: up =. [: }. ] , 0:   NB. finally!
+
+* tacit up (test)
+#+begin_src j
+settle =: monad define
+  gt =. y > 3
+  up =. }.   gt ,  0   NB. original
+  up =. [: }. ] , 0:   NB. tacit version
+  dn =. }:    0 ,  gt
+  lf =. }."1 gt ,. 0
+  rt =. }:"1 ]0 ,. gt
+  cn =. *&_4
+  (y + up + dn + lf + rt + cn) gt
+)
+#+end_src
+
+Okay, so now that's actually the function we want it to be, and it will work fine in the train.
+
+We /could/ work through that same process to turn all these other nouns into tacit verbs, but it's kind of a premature optimization and also can often do the translation for us.
+
+
+So instead of tacit verbs, we can make up into an explicit verb.
+
+Right now, settle itself is an explicit verb. The word =define= is an adverb:
+
+: define
+
+It's composed of a zero applied to the right side of the explicit definition conjunction (the colon).
+
+Explicit definition takes a number on the left saying what part of speech you're defining. So here monad is just the number 3: which indicates a monadic verb.
+
+: monad
+
+Then the zero indicates that j is to read the definition from the following lines until it encounters a line consisting of a closing parenthesis:
+
+: )
+
+But instead of a zero, you can also pass in a string, and so you can use that to quickly turn any line of j into a verb:
+
+* explicit up
+#+begin_src j
+up =. }. gt , 0             NB.#+v1
+up =. monad : '}. gt , 0'   NB.#-v1
+up =. monad : '}. y , 0'    NB.#-v2
+up =. {{ }. y , 0 }}        NB.#-v3
+#+end_src
+
+So, for example, we can just wrap this whole definition in a string, stick the word monad and a colon in front of it, and we're good to go.
+
+Of course this function ignores its argument and depends on =gt= to be defined elsewhere in the scope, but if we change the gt to the special name y, then it will perform its operations on its argument.
+
+This is actually kind of the old way to do things. The latest cutting edge versions of J have a new syntax, which I'll show you in a minute, but I wanted to show this in case you've got an older version installed, and also because of the following trick:
+
+We already saw that the word monad was the number 3. You can also pass in the number 0 if you want to define a noun, 1 for an adverb, 2 for a conjunction, or 4 for a dyadic verb. (All of these also have corresponding constants). But you can also pass in the number 13, and if you do that, J will make an attempt to translate your verb to tacit form:
+
+: 13 : '}. y , 0'
+: [: }. 0 ,~ ]
+
+This version is a little different than what I did before. Instead of using the zero colon constant function, it used a tilde to swap the arguments to the comma.
+
+The point is, for very small verbs, J can often do the tacit conversion for you.
+
+If you're not playing code golf, there's no particular reason to always use the tacit form.
+The explicit version is often clearer, and even if you are playing code golf, explicit is sometimes actually shorter.
+
+But for this one-line syntax, sticking your code in a string is kind of unpleasant. It breaks your syntax highlighting, and it's kind of annoying when the definition itself includes a string, because you have to escape it with extra single quotes and the whole thing looks terrible.
+
+But as of J902 beta-i, which came out in October of 2020, you can now use the direct definition syntax, which uses these double curly braces:
+
+: only v3
+
+* extract monads
+#+begin_src j
+settle1 =: monad define
+NB.#if before
+  gt =. y > 3
+  up =. }.   gt ,  0
+  dn =. }:    0 ,  gt
+  lf =. }."1 gt ,. 0
+  rt =. }:"1 ]0 ,. gt
+NB.#else
+  up =. {{ }. y , 0 }}
+  dn =. {{ }: 0 , y }}
+  lf =. {{ }."1  y ,. 0 }}
+  rt =. {{ }:"1 ]0 ,. y }}
+NB.#end
+  cn =. *&_4
+  y + up + dn + lf + rt + cn
+)
+
+f =: _1 1 |.!.0"0 _ ]           NB. golfed version
+s =: (++/@(_4&*,f,f&.(|:"2))@(3&<))^:_
+
+(s -: settle^:_) 50 50 $ 4      NB. if this=1, s and settle are same
 #+end_src
 
 * extract hook
 #+begin_src j
-NB. gt itself is a function of y, and the result is operating on y,
-NB. so we can turn this last line into just a function composition applied to y.
-settle3 =: monad define
-  gt =. monad : 'y > 3'
-  up =. monad : '}.   y ,  0 '
-  dn =. monad : '}:    0 ,  y'
-  lf =. monad : '}."1 y ,. 0 '
-  rt =. monad : '}:"1 ]0 ,. y'
-  cn =. monad : '_4 * y'
-  (+ (up + dn + lf + rt + cn)@gt) y
+settle =: monad define
+  gt =. y > 3               NB.#+v0
+  gt =. {{y > 3}}           NB.#-v1
+  up =. {{}. y , 0}}
+  dn =. {{}: 0 , y}}
+  lf =. {{}."1  y ,. 0}}
+  rt =. {{}:"1 ]0 ,. y}}
+  (y + up + dn + lf + rt + cn) gt     NB.#+v0
+  (+ (up + dn + lf + rt + cn)@gt) y   NB.#+v1
 )
-(s -: settle3^:_) 50 50 $ 4      NB. result 1 means the two have the same output.
 #+end_src
+
+gt itself is a function of y, and the result is operating on y,
+so we can turn this last line into just a function composition applied to y.
 
 * lift inner definitions
 #+begin_src j
-NB. this is actually somewhat longer, but it puts the final expression in tacit form.
-NB. which means we could pull all these local definitions
-gt =: monad : 'y > 3'
-up =: monad : '}.   y ,  0 '
-dn =: monad : '}:    0 ,  y'
-lf =: monad : '}."1 y ,. 0 '
-rt =: monad : '}:"1 ]0 ,. y'
-cn =: monad : '_4 * y'
+gt =: {{y > 3}}
+up =: {{}. y , 0}}
+dn =: {{}: 0 , y}}
+lf =: {{}."1  y ,. 0}}
+rt =: {{}:"1 ]0 ,. y}}
+cn =: *&_4
 settle =: monad define
   (+ (up + dn + lf + rt + cn)@gt) y
 )
-(s -: settle^:_) 50 50 $ 4      NB. result 1 means the two have the same output.
 #+end_src
+
+Now we can move all those function outside the definition of settle.
+Settle itself is now a one line tacit verb applied to an argument, so that tacit verb can just be our definition of settle.
+
 
 * explicit to tacit
 #+begin_src j
-NB. and now we can make the final expression tacit, meaning we don't have to
-NB. refer to local variable y, and we're just directly constructing the verb
-NB. out of previously defined verbs.
-gt =: monad : 'y > 3'
-up =: monad : '}.   y ,  0 '
-dn =: monad : '}:    0 ,  y'
-lf =: monad : '}."1 y ,. 0 '
-rt =: monad : '}:"1 ]0 ,. y'
-cn =: monad : '_4 * y'
+gt =: {{y > 3}}
+up =: {{}. y , 0}}
+dn =: {{}: 0 , y}}
+lf =: {{}."1  y ,. 0}}
+rt =: {{}:"1 ]0 ,. y}}
+cn =: *&_4
+NB.#if v0
+settle =: monad define
+  (+ (up + dn + lf + rt + cn)@gt) y
+)
+NB.else
 settle =: + (up + dn + lf + rt + cn)@gt
-(s -: settle^:_) 50 50 $ 4      NB. result 1 means the two have the same output.
+NB.end
 #+end_src
 
+So now we can make the final expression tacit, meaning we don't have to
+refer to local variable y, and we're just directly constructing the verb
+out of previously defined verbs.
+
 * compare to golfed version
-When I wrote the golfed version, I didn't actually derive it
-this way. I just wrote it from scratch.
-
-But, this line is pretty much the template that was in my head when I wrote it.
-
-So let's compare the two:
-)
-
 #+begin_src j
 settle =: + (up + dn + lf + rt + cn)@gt
 
+NB.#if step>2
 f =: _1 1 |.!.0"0 _ ]
 s =: (++/@(_4&*,f,f&.(|:"2))@(3&<))^:_
+NB.#end
 #+end_src
+
+When I wrote the golfed version, I didn't actually derive it this way. I just wrote it from scratch.
+But, this line is pretty much the template that was in my head when I wrote it.
+
+So let's compare the two:
 
 * factor out s0
 let's factor out s0
@@ -250,8 +460,8 @@ s1 =: + +/@(_4&*,u,u&.(|:"2))@(3&<)   NB. we need to insert + between them
 * compare
 now these two are exactly the same, except for the definitions of u and f
 #+begin_src j
-up =: monad : '}.   y ,  0 '
-dn =: monad : '}:    0 ,  y'
+up =: {{}. y , 0}}
+dn =: {{}: 0 , y}}
 u =: up,:dn
 s0 =: + +/@(_4&*,f,f&.(|:"2))@(3&<)
 
@@ -266,10 +476,10 @@ Okay, so let's back up and talk about what this &.(|:"2) means.
 Here's what our four shifting verbs looked like before:
 
 #+begin_src j
-up =: monad : '}.     y ,  0 '
-dn =: monad : '}:     0 ,  y'
-lf =: monad : '}."1   y ,. 0 '
-rt =: monad : '}:"1 ] 0 ,. y'
+up =: {{ }.     y ,  0}}
+dn =: {{ }:     0 ,  y}}
+lf =: {{ }."1   y ,. 0}}
+rt =: {{ }:"1 ] 0 ,. y}}
 #+end_src
 
 ** explicit ranks
@@ -281,12 +491,11 @@ These operate at rank infinity, meaning they operate on the entire list at once.
 So we can make that explicit with no change of meaning:
 
 #+begin_src j
-up =: monad : '}."_   y ,  0 '
-dn =: monad : '}:"_ ] 0 ,  y'
-lf =: monad : '}."1   y ,. 0 '
-rt =: monad : '}:"1 ] 0 ,. y'
+up =: {{ }."_   y ,  0}}
+dn =: {{ }:"_ ] 0 ,  y}}
+lf =: {{ }."1   y ,. 0}}
+rt =: {{ }:"1 ] 0 ,. y}}
 #+end_src
-
 
 Note the use of the right identity for the down and right verbs.
 This does nothing except separate the number on the left from the zero on the right.
@@ -301,11 +510,11 @@ So just to make this easier to read, I'm going to temporarily introduce a consta
 
 #+begin_src j
 o =: 0
-up =: monad : '}."_  y ,"_  o'
-lf =: monad : '}."1  y ,"1  o'
+up =: {{ }."_  y ,"_  o}}
+lf =: {{ }."1  y ,"1  o}}
 
-dn =: monad : '}:"_  o ,"_  y'
-rt =: monad : '}:"1  o ,"1  y'
+dn =: {{ }:"_  o ,"_  y}}
+rt =: {{ }:"1  o ,"1  y}}
 #+end_src
 
 ** quick demo
@@ -342,10 +551,10 @@ That's probably okay because if we go back to the original definitions...
 
 ** original definitions
 #+begin_src j
-up =: monad : '}.     y ,  0 '
-dn =: monad : '}:     0 ,  y'
-lf =: monad : '}."1   y ,. 0 '
-rt =: monad : '}:"1 ] 0 ,. y'
+up =: {{ }.     y ,  0}}
+dn =: {{ }:     0 ,  y}}
+lf =: {{ }."1   y ,. 0}}
+rt =: {{ }:"1 ] 0 ,. y}}
 #+end_src
 
 ...then up and down were the simpler choices.
@@ -354,8 +563,8 @@ rt =: monad : '}:"1 ] 0 ,. y'
 So one way we can do this is:
 
 #+begin_src j
-up =: monad : '}. y , 0'
-dn =: monad : '}: 0 , y'
+up =: {{ }. y , 0 }}
+dn =: {{ }: 0 , y }}
 lf =: up"1
 rt =: dn"1
 
@@ -409,8 +618,8 @@ s1 =: + +/@(_4&*,u,u&.(|:"2))@(3&<)
 Our definitions are now the same except for u vs f:
 
 #+begin_src j
-up =: monad : '}. y , 0'
-dn =: monad : '}: 0 , y'
+up =: {{ }. y , 0}}
+dn =: {{ }: 0 , y}}
 u =: up,:dn
 
 f =: _1 1 |.!.0"0 _ ]
@@ -466,11 +675,11 @@ So now we can re-implement up and dn in terms of shift:
 
 * up and dn in terms of shift
 #+begin_src j
-up =: monad : '}. y , 0'
-dn =: monad : '}: 0 , y'
+up =: {{ }. y , 0 }}
+dn =: {{ }: 0 , y }}
 
-up =: monad : ' 1 |.!.0 y'
-dn =: monad : '_1 |.!.0 y'
+up =: {{ 1 |.!.0 y}}
+dn =: {{_1 |.!.0 y}}
 #+end_src
 
 This is a longer definition, but it gives us some duplicate code we can factor out.
@@ -662,7 +871,6 @@ d =: 0 1, 1 0, 0 _1,: _1 0          NB. directions to shift
 s =: + [: +/@(_4&*, d|.!.0]) 3&<    NB. sandpiles step
 viewmat s^:_ [ 50 50 $ 4
 #+end_src
-
 
 * TODO more from jitwit:
 
