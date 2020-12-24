@@ -135,7 +135,7 @@ let V = [
 // tokenize j code (str -> toks)
 // 'NB.!' is a special comment syntax I use for pre-processing
 const JTYPES = ['pre',      'nb',          'xyn',            'num','num','num','num',   'str',    'def', 'par', 'ws', 'op',                                 'ctl',   'idn']
-const JLEXRE = /(NB[.]!.*$)|(NB[.].*$)|(a[.:]|[xyuvn]\b)|((_|_?\d+)(\s+(_|_?\d+))*)|('[^']*')|({{|}})|([()])|(\s+)|([^ ][.:]+|-|\[|]|[_,"+*<$>&^@{:}=])|(\w+[.])|(\w+)/g
+const JLEXRE = /(NB[.]!.*$)|(NB[.].*$)|(a[.:]|[xyuvn]\b)|((_|_?\d+)(\s+(_|_?\d+))*)|('[^']*')|({{|}})|([()])|(\s+)|([^ ][.:]+|-|\\|\/|\[|]|[_,"+*<$>&^@{:}=])|(\w+[.])|(\w+)/g
 const JKIND = {
   '=:': 'cop', // is (global)
   '=.': 'cop', // is (local)
