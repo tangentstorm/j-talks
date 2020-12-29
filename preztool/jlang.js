@@ -168,7 +168,7 @@ function jPartOfSpeech(tok) {
     case 'cop': return '='
     case 'str': return 'N'
     case 'num': return 'N'
-    case 'xyn': return 'xynm'.includes(tok.t) ? 'N' : 'V'  // !! is this always true?
+    case 'xyn': return 'I'
     case 'par': return tok.t==='(' ? 'L' : 'R'
     case 'idn': return 'I'
     default: return ''}}
@@ -261,11 +261,13 @@ function jParse(tokls) {
     let tokl = tokls[ln], stmt = jStmt(tokl, scope)
     // TODO: do a complete analysis for (:0) to find any explicit definition (including nouns or more than one)
     if (tokl.some(tok=> tok.t === 'define')) {
-      let suite = []
+      let suite = [], oldScope = JSON.stringify(scope)
+      Object.assign(scope, {x:'N', y:'N', m:'N', n:'N', u:'V', v:'V'})
       while(++ln<tokls.length) {
         tokl = tokls[ln]
         if (tokl.length && tokl[0].t === ')') break;
         else suite.push(jStmt(tokl, scope)) }
+      scope = JSON.parse(oldScope)
       res.push(jNode('suite', '', {}, [stmt, ...suite])) }
     else res.push(stmt)
     ln++ }
