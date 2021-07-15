@@ -4,8 +4,10 @@ NB. Available for use under the MIT license.
 NB. --------------------------------------------
 require'regex'
 require'convert/json'
-
 cocurrent'prez'
+relpath =: {{ (fpath_j_ jpath>(4!:4<'relpath'){4!:3''),'/',y }}
+load relpath 'org.ijs'
+load relpath 'jlex.ijs'
 
 smoutput help =: noun define
 This utility opens two windows, both generated from the same *.org file.
@@ -31,57 +33,8 @@ which window is focused.
 In the org file, each block of code should have its own header.
 )
 
-NB. j syntax highlighting ------------------------------
-
-jtoks =: verb define
-  NB. tokenize j like ;: but include whitespace
-  r =. 0$a:
-  for_t. ;: y do.                  NB. for each token
-    if. p =. {. (>t) ss y do.      NB. if there's whitespace before first match
-      'w y' =. p ({. ; }.) y       NB. shift prefix into w
-      r =. r, <w                   NB. and append to tokens
-    end.
-    r =. r,t
-    y =. (#>t)}.y                  NB. drop token from y
-  end.
-  if. #y do. r =. r,<y end.        NB. append final whitespace
-  r
-)
-
-NB. helpers for jtyp
-isName =: [: # '^[[:alpha:]]\w+$' & rxmatches
-reCtrl =: '^(assert|break|continue|(goto|label|for)(_\w+)|do|end|if|else|elseif|return'
-reCtrl =: reCtrl,'|select|f?case|throw|while|whilst)[.]'
-isCtrl =: [: #  reCtrl & rxmatches
-isCopula =: [: # '=[.:]' & rxmatches
-isParen =: (1=#) *. [: +./@, '()' -:"0 {.
-isSpace =: [:*./' '=]
-isSpecial =: [: +./ (1=#) *. 'xymnuv'-:"0 _ {.
-
-jtype =: verb define
-  NB. classify a j token
-  if. 'NB.' -: 3 {. y do. 'comment'
-  elseif. isSpecial y do. 'special'
-  elseif. isSpace y  do. 'empty'
-  elseif. isCopula y do. 'copula'
-  elseif. isCtrl y   do. 'control'
-  elseif. isParen y  do. 'paren'
-  elseif. 1 do.
-    if. isName y do. 'name' return.
-      v=.".y
-      t=.>type<'v'
-    else. try. t=.>type<'v'[".'v=. ',y catch. 'invalid' return. end. end.
-    if. t -: 'noun' do. datatype v
-    elseif. t -: 'not defined' do. 'undefined'
-    elseif. t -: 'floating' do. 'float'
-    elseif. 1 do. t end.
-  end.
-)
-
-jlex =: verb def '(jtype;]) L:0 jtoks each ,. y'
-
-
-NB. org file parser -------------------------------------
+NB. slide parser -----------------------------------------
+NB. slides are stored in *.org files. see org.ijs for the parser.
 
 verb : 0 ''  NB. initialize org_path if it isn't already defined.
   if. -. (<'org_path') e. nl'' do. org_path =: jpath '~JTalks' end.
@@ -89,22 +42,6 @@ verb : 0 ''  NB. initialize org_path if it isn't already defined.
 
 org_path =: wd'mb open1 "Open org file" "',org_path,'" "org (*.org)"'
 
-between =: (>:@[ +  i.@<:@-~)/           NB. between 3 7 ->  4 5 6
-parse =: monad define
-  NB. parse a single slide
-  NB. returns (head; text; src) triple
-  head =. (2+I.'* 'E.h) }. h=.>{. y      NB. strip any number of leading '*'s, up to ' '
-  text =. }. y
-  srcd =. '#+begin_src j';'#+end_src'    NB. source code delimiters
-  src =: , |: I. y ="1 0 srcd            NB. indices of start and end delimiters
-  if. #src do.
-     code =. y {~ between 2$src          NB. only take the first source block
-     text =. text -. code, srcd
-  else.
-     code =. a:
-  end.
-  (<head),(<text),(<code)
-)
 
 load_slides =: verb define
   org =. 'b'freads org_path              NB. returns a vector of boxed strings
