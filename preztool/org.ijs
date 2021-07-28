@@ -14,3 +14,22 @@ parse =: monad define
   end.
   (<head),(<text),(<code)
 )
+
+org_slides =: verb define
+  org =. 'b'freads y                     NB. returns a vector of boxed strings
+  headbits =. '*' = {.&> org             NB. 1 if org line starts with '*' (a headline)
+  slide0 =. headbits <;.1 org            NB. group lines: each headline starts a new slide
+  slides =: > parse each slide0
+)
+
+
+cur=:0
+fwd=:verb :'cur=:(<:#slides)<.>:cur'
+bak=:verb :'cur=:0>.<:cur'
+
+head =: verb : '> (<y,0) { slides'  NB. -> str
+text =: verb : '> (<y,1) { slides'  NB. -> [box(str)]
+code =: verb : '> (<y,2) { slides'  NB. -> [box(str)]
+
+
+
