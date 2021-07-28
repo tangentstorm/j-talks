@@ -4,7 +4,7 @@ jtoks =: verb define
   NB. tokenize j like ;: but include whitespace
   r =. 0$a:
   for_t. ;: y do.                  NB. for each token
-    if. p =. {. (>t) ss y do.      NB. if there's whitespace before first match
+    if. p =. {. (>t) ss y do.      NB. if there is whitespace before first match..
       'w y' =. p ({. ; }.) y       NB. shift prefix into w
       r =. r, <w                   NB. and append to tokens
     end.
@@ -28,6 +28,7 @@ isSpecial =: [: +./ (1=#) *. 'xymnuv'-:"0 _ {.
 jtype =: verb define
   NB. classify a j token
   if. 'NB.' -: 3 {. y do. 'comment'
+  elseif. y e. '{{',:'}}' do. 'dcurl'
   elseif. isSpecial y do. 'special'
   elseif. isSpace y  do. 'empty'
   elseif. isCopula y do. 'copula'
