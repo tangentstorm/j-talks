@@ -5,6 +5,7 @@
 NB. run sandpaint
 #+end_src
 
+
 sandpiles are a fun little cellular automata that can make some interesting patterns.
 
 I did a whole video on them a while back, but since I thought it might be interesting to a wider audience than my usual J programming videos, I decided to cover the actual implementation in a separate video. That's what you're watching now.
@@ -27,12 +28,12 @@ i. 2 2
 load viewmat
 viewmat i. 2 2
 #+end_src
-
 ** nicer palette
 #+begin_src j
 p0 =: 16b0f0000 16b9d3f3f 16bd87878 16bffacac   NB. i.4 drawn as shades of blue
 p0 viewmat i. 2 2
 #+end_src
+
 
 but the problem is if we try to print higher numbers...
 
@@ -41,6 +42,7 @@ but the problem is if we try to print higher numbers...
 p0 viewmat i. 4 4
 #+end_src
 
+
 like the numbers up to 16
 then it interpolates
 
@@ -48,6 +50,7 @@ then it interpolates
 #+begin_src j
 p0 viewmat 0 2 ,: 2 0
 #+end_src
+
 same thing if we don't have a 4... it maps the highest number we do have to the color i want for 4.
 
 ** better solution
@@ -63,26 +66,17 @@ to_rgb =: rgb {~ (>./pal) | pal I. ]
 'rgb' viewmat ,: to_rgb pal
 'rgb' viewmat to_rgb i. 32 32
 #+end_src
-
 so instead we make a custom verb to map the colors to rgb.
-
 so here i just defined the first four colors by hand.
 (we were using bgr colors before, so i had to scramble the digits up a bit)
-
 then i built a gradient by taking the number for dark green and multiplying it by i._16
 So that's like multiplying by eleven hundred in decimal...
 it gives us the digits, ff,ee,and so on all the way down to 00
-
 and then we add all those numbers to bright red, so we geta nice gradient from all red plus all green (which is yellow) down to pure red.
-
 so now we combine those into a single list called 'rgb', which is a list of 20 colors.
-
 but then we want to map any number to its corresponding color.
-
 this is builtin in J... use use capital i-dot (interval) to find the index of the bin into which each value should go.
-
 : pal I. i.16
-
 ** TODO rewrite to_rgb?
 #+begin_src j
 NB. does this give the same result?
@@ -91,11 +85,11 @@ to_rgb =: rgb {~ pal I. ]
 
 vsp =: 'rgb' viewmat to_rgb
 #+end_src
-
 * TODO animation
 #+begin_src j
 NB. TODO: whatever
 #+end_src
+
 - animation (i'll probably do another video on the gui stuff in the future)
 i covered most of animation stuff in my other video
 this time around i'm not doing anything interactive,
@@ -120,33 +114,21 @@ vsp rt =. }:"1 ]0 ,. gt
 
 vsp y + up + dn + lf + rt + cn
 #+end_src
-
 okay so now let's see how to actually do the sandpile logic.
-
 here's a little 5x5 grid with a plus sign made of fours.
-
 where is y greater than 3? all the fours turn into 1's
-
 let's call that gt.
 notice it didnt print out the grid this time. j hides the result when the leftmost part of the line is an assignment
 if we put a bracket here it's just an identity function, but it changes the leftmost part of the line and so j prints the result
-
 the rule is that any time a cell has more than 3 grains of sand, we shift one grain in each of the 4 cardinal directions.
-
 so to shift upward, we can append a row of 0s and chop off the top row.
-
 to shift down we append the 0 at the top and then chop off the bottom row.
-
 left and right work the same way, but we apply the rule at each row instead of to the whole array
-
 so for left we use this rank 1 modifier. we could do the same for the comma but it's so common that j gives us ,. (stitch)
 it doesn't necessarily mean rank 1, it means 1 less than the highest rank. but since a grid is a rank 2 array, that's rank 1.
-
 same idea for shifting right, but since the 0 is now right next to the 1, we have to separate them, or they'll be treated
 as a single token and passed to the rank conjunction. we could put parens in here somewhere, but the identity function works just as well.
-
 # (either bracket works. there's only a difference when the bracket is between two nouns. This 1 is a noun, but j looks ahead to the left and evaluates this whole thing (}:"1) first. the rank conjunction consumes both the verb and the noun and leaves a new verb in its place. So then j sees that verb, the bracket, and the result off to the right.
-
 * how to consolidate?
 #+begin_src j
 settle =: monad define          NB. settle sandpiles with entries > 3
@@ -159,6 +141,7 @@ settle =: monad define          NB. settle sandpiles with entries > 3
   y + up + dn + lf + rt + cn
 )
 #+end_src
+
 
 so now we wrap this as a verb...
 
@@ -185,6 +168,7 @@ f =: _1 1 |.!.0"0 _ ]
 s =: (+ +/@(_4&*,f,f&.(|:"2))@(3&<))^:_
 vm s 50 50 $ 4
 #+end_src
+
 
 - quick recap: what are sandpiles?
 - this is the code review for the sandpiles video
@@ -228,18 +212,12 @@ NB.! before
 NB.! after
 (s -: settle^:_) 50 50 $ 4      NB. if this=1, s and settle are same
 #+end_src
-
 One way we can test that these are the same is to compare the outputs.
-
 That's what this line at the bottom does.
-
 Looks like they're not the same.
-
 But we can change the settle to keep running until it reaches a fixedpoint.
 That's what this carat-colon-underscore sequence means.
-
 Or in the spirit of golfing, we could remove the sequence from s, and have it do only a single step.
-
 * first golf: one step at a time
 #+begin_src j
 load 'viewmat'
@@ -251,6 +229,7 @@ NB.! after
 s =: + +/@(_4&*,f,f&.(|:"2))@(3&<)
 viewmat s^:_ [50 50 $ 4
 #+end_src
+
 
 in fact if we do that we save at least one character, because we can remove the parentheses,
 and move the fixedpoint sequence down to the next line. ^:_
@@ -277,110 +256,65 @@ settle =: monad define
 f =: _1 1 |.!.0"0 _ ]
 s =: + +/@(_4&*,f,f&.(|:"2))@(3&<)
 #+end_src
-
 anyway, back to our comparison.
-
 the bottom line of settle is a sum of a bunch of things, and most of them are derived from gt.
 so if each of these were verbs that took gt as an argument, we could rewrite it like this:
-
 : (y + up + dn + lf + rt + cn) gt
-
 The rule is that when you have a sequence of tokens on a line or in parentheses,
 then the rightmost token determines usually what your final result is going to be.
-
 So at the moment, cn is a noun, so this whole thing in parentheses is a noun.
-
 And then we're sticking that noun next to gt, which is also a noun, and that's a syntax error.
-
 But if we turn cn into a verb = again we know it's a noun because we have a noun on the right,
 but we can replace it with the identity function:
-
 : cn =. _4 * ]
-
 and now cn is a verb.
-
 that makes this whole thing a verb train. you can have as many nouns on the left as you like,
 as long as you put verbs in between them.
-
 and by the way, that rule is a little oversimplified, because you actually can have a noun on
 the right edge and still wind up with a verb, if the thing next to it is a conjunction. so
 we could also write cn like this:
-
 : cn =. *&_4
-
 Negative four is a noun, but we're using the bind conjunction to bind it to multiplication operator so the whole thing is a verb that multiplies its argument by negative four.
-
 anyway, now that cn is a verb, we've got a verb on the right in the parentheses, and so this whole thing
 becomes a verb operating on gt.
-
 let's turn the rest of these nouns into verbs as well.
-
 * tacit up
 #+begin_src j
 up =. }. gt , 0
 
 up =. }. ] , 0:    NB.
 #+end_src
-
-
 cn and the train we've created below it are what we call tacit verbs, in that they don't refer directly to their arguments.
-
 a lot of times, tacit programming like this is going to give you a very compact representation of your operation, but it's not always obvious how to get there.
-
 For example, with the initial rewrite of =cn=, I just replaced =gt= with the right identity bracket, and that turned it into a valid fork.
-
 : cn =. 4 * ]
-
 With up, we have a zero on the right, and zero is a noun, so it's not so easy. If we try doing this,
 it's just going to apply a comma and right identity and the behead function to that zero. So you
 enlist the zero, do nothing and then remove the first item, giving you an empty list. Not what we want!
-
 : up =. }. ] , 0     NB. no good: empty list
-
 So we need that zero to be a verb. You can take any primitive and turn it into a verb using the rank conjunction.
 So for example, here's i.10
-
 : i. 10
-
 and here's i.10 zeroed out at rank zero:
-
 : 0"0 i. 10
-
 and at rank infinity:
-
 : 0"_ i. 10
-
 So for up we could say:
-
 : up =. }. ] , 0"_   NB. still no good
-
 or... all the single digit numbers have primitive verb equivalents if you just put a colon after them, so we could try that:
-
 : up =. }. ] , 0:    NB. still no good
-
 Either way, =up= is now a verb, but it doesn't do what we want because it's a hook. Basically, the verbs in a train alternate between being applied to the arguments and being applied to the results of the other verbs.
-
 # highlight the slots
 : up =. }. ] , 0:    NB. still no good
-
-
 Since there isn't a verb on the left, J fills it in with a left bracket, which passes in the left argument if you use it as a dyad, and the right argument if you use it as a monad.
-
 : 2 (,]) 3
 : (,])
-
 Anyway, that means this definition of up:
-
 : up =.   }. ] , 0:    NB. hook. still no good
-
 Is shorthand for this:
-
 : up =. [ }. ] , 0:    NB. equivalent fork. still no good
-
 Which means the right-curly dot isn't the monad called 'behead', but rather the dyad called 'drop', and that's not what we want. So to force it to be called as a monad, we'd have to cap off the left hand side of the train:
-
 : up =. [: }. ] , 0:   NB. finally!
-
 * tacit up (test)
 #+begin_src j
 settle =: monad define
@@ -394,6 +328,7 @@ settle =: monad define
   (y + up + dn + lf + rt + cn) gt
 )
 #+end_src
+
 
 Okay, so now that's actually the function we want it to be, and it will work fine in the train.
 
@@ -425,6 +360,7 @@ up =. monad : '}. gt , 0'   NB.!-v1
 up =. monad : '}. y , 0'    NB.!-v2
 up =. {{ }. y , 0 }}        NB.!-v3
 #+end_src
+
 
 So, for example, we can just wrap this whole definition in a string, stick the word monad and a colon in front of it, and we're good to go.
 
@@ -474,7 +410,6 @@ s =: (++/@(_4&*,f,f&.(|:"2))@(3&<))^:_
 
 (s -: settle^:_) 50 50 $ 4      NB. if this=1, s and settle are same
 #+end_src
-
 * extract hook
 #+begin_src j
 settle =: monad define
@@ -488,6 +423,7 @@ settle =: monad define
   (+ (up + dn + lf + rt + cn)@gt) y   NB.!+v1
 )
 #+end_src
+
 
 gt itself is a function of y, and the result is operating on y,
 so we can turn this last line into just a function composition applied to y.
@@ -504,6 +440,7 @@ settle =: monad define
   (+ (up + dn + lf + rt + cn)@gt) y
 )
 #+end_src
+
 
 Now we can move all those function outside the definition of settle.
 Settle itself is now a one line tacit verb applied to an argument, so that tacit verb can just be our definition of settle.
@@ -525,6 +462,7 @@ settle =: + (up + dn + lf + rt + cn)@gt
 NB.end
 #+end_src
 
+
 So now we can make the final expression tacit, meaning we don't have to
 refer to local variable y, and we're just directly constructing the verb
 out of previously defined verbs.
@@ -538,23 +476,19 @@ f =: _1 1 |.!.0"0 _ ]
 s =: (++/@(_4&*,f,f&.(|:"2))@(3&<))^:_
 NB.!end
 #+end_src
-
 When I wrote the golfed version, I didn't actually derive it this way. I just wrote it from scratch.
 But, this line is pretty much the template that was in my head when I wrote it.
-
 So let's compare the two:
-
 * factor out s0
-let's factor out s0
-
 #+begin_src j
 s =: (s0)^:_
 s0 =: + +/@(_4&*,f,f&.(|:"2))@(3&<)
 #+end_src
 
-* compare again
-and now let's compare to our verb-in -progress
+let's factor out s0
 
+
+* compare again
 #+begin_src j
 s0 =: + +/@(_4&*,f,f&.(|:"2))@(3&<)    NB. for comparison
 s1 =: +    (up+dn+lf+rt+cn)@gt         NB. settle
@@ -567,17 +501,8 @@ s1 =: +    (_4&*+up+dn+lf+rt)@(3&<)    NB. inline cn and gt
 s0 =: + +/@(_4&*,f,f&.(|:"2))@(3&<)    NB. for comparison
 
 #+end_src
-
+and now let's compare to our verb-in -progress
 * u and v
-so s0 replaces the plus signs with commas, adds
-the 'plus insert' outside, and replaces the
-individual up down left right verbs with
-the verb f and a modified version of f.
-
-f is just doing the same as up,:dn
-and this modified version of f -- f under transpose at rank 2
-is the same as lf,:rt
-
 #+begin_src j
 u =: up,:dn                          NB. same as f
 v =: lf,:rt                          NB. same as f&.(|:"2)
@@ -585,21 +510,27 @@ s1 =: + +/@(_4&*,u,v)@(3&<)          NB. we need to insert + between them
 
 (s -: s1^:_) 50 50 $ 4               NB. result 1 means the two have the same output.
 #+end_src
-
+so s0 replaces the plus signs with commas, adds
+the 'plus insert' outside, and replaces the
+individual up down left right verbs with
+the verb f and a modified version of f.
+f is just doing the same as up,:dn
+and this modified version of f -- f under transpose at rank 2
+is the same as lf,:rt
 * v under rank 2 transpose
-if it's true that u and f are the same thing, then we ought to be able to get rid of
-v, and therefore the lf and rt verbs, and just do the same thing in s1 for u that s0 does with f.
-
-so let's try it.
-
 #+begin_src j
 u =: up,:dn                           NB. same as f
 s1 =: + +/@(_4&*,u,u&.(|:"2))@(3&<)   NB. we need to insert + between them
 (s -: s1^:_) 50 50 $ 4                NB. result 1 means the two have the same output.
 #+end_src
 
+if it's true that u and f are the same thing, then we ought to be able to get rid of
+v, and therefore the lf and rt verbs, and just do the same thing in s1 for u that s0 does with f.
+
+so let's try it.
+
+
 * compare
-now these two are exactly the same, except for the definitions of u and f
 #+begin_src j
 up =: {{}. y , 0}}
 dn =: {{}: 0 , y}}
@@ -609,13 +540,11 @@ s0 =: + +/@(_4&*,f,f&.(|:"2))@(3&<)
 f =: _1 1 |.!.0"0 _ ]
 s1 =: + +/@(_4&*,u,u&.(|:"2))@(3&<)
 #+end_src
-
+now these two are exactly the same, except for the definitions of u and f
 * back up: what does  &.(|:"2) actually do?
 Okay, so let's back up and talk about what this &.(|:"2) means.
 
 ** our shifting verbs
-Here's what our four shifting verbs looked like before:
-
 #+begin_src j
 up =: {{ }.     y ,  0}}
 dn =: {{ }:     0 ,  y}}
@@ -623,14 +552,10 @@ lf =: {{ }."1   y ,. 0}}
 rt =: {{ }:"1 ] 0 ,. y}}
 #+end_src
 
+Here's what our four shifting verbs looked like before:
+
+
 ** explicit ranks
-On the left we have these two verbs, right curly dot and right curly colon.
-Right curly dot is called "behead", and it removes the first item from a list.
-Right curly colon is called "curtail", and it removes the last item from a list.
-
-These operate at rank infinity, meaning they operate on the entire list at once.
-So we can make that explicit with no change of meaning:
-
 #+begin_src j
 up =: {{ }."_   y ,  0}}
 dn =: {{ }:"_ ] 0 ,  y}}
@@ -638,17 +563,19 @@ lf =: {{ }."1   y ,. 0}}
 rt =: {{ }:"1 ] 0 ,. y}}
 #+end_src
 
+On the left we have these two verbs, right curly dot and right curly colon.
+Right curly dot is called "behead", and it removes the first item from a list.
+Right curly colon is called "curtail", and it removes the last item from a list.
+
+These operate at rank infinity, meaning they operate on the entire list at once.
+So we can make that explicit with no change of meaning:
+
+
 Note the use of the right identity for the down and right verbs.
 This does nothing except separate the number on the left from the zero on the right.
 Otherwise the two numbers would form a single token.
 
 ** avoiding clutter
-
-Comma is called append.
-Stitch is the same as comma at rank 1. *only when you're talking about 2d arrays*
-
-So just to make this easier to read, I'm going to temporarily introduce a constant, o.
-
 #+begin_src j
 o =: 0
 up =: {{ }."_  y ,"_  o}}
@@ -657,7 +584,9 @@ lf =: {{ }."1  y ,"1  o}}
 dn =: {{ }:"_  o ,"_  y}}
 rt =: {{ }:"1  o ,"1  y}}
 #+end_src
-
+Comma is called append.
+Stitch is the same as comma at rank 1. *only when you're talking about 2d arrays*
+So just to make this easier to read, I'm going to temporarily introduce a constant, o.
 ** quick demo
 #+begin_quote j
    m =: 5 5 $ _
@@ -698,11 +627,10 @@ lf =: {{ }."1   y ,. 0}}
 rt =: {{ }:"1 ] 0 ,. y}}
 #+end_src
 
+
 ...then up and down were the simpler choices.
 
 ** simplifying with rank
-So one way we can do this is:
-
 #+begin_src j
 up =: {{ }. y , 0 }}
 dn =: {{ }: 0 , y }}
@@ -713,22 +641,16 @@ u =: up,:dn
 v =: lf,:rt        NB. this still works
 NB. v =: up"1,:rt"1    NB. or this, but not (v =: u"1)
 #+end_src
-
-
+So one way we can do this is:
 So that got rid of two of the definitions, but there
 isn't a simple way to apply the "1 transformation
 at each prong of the fork, rather than applying it
 to the entire fork.
-
 It's probably possible to use J's introspection capabilities
 (5!:y) to write a conjunction that does such a thing, but as
 far as I know, it's not built into J.
-
 But in this case, it doesn't matter: there's a simple alternative.
-
 ** using transpose instead
-We can transpose the grid before and after:
-
 #+begin_src j
 u =: up,:dn
 v =:  |:&up&|:  ,:  |:&dn&|:        NB. transpose each side before and after
@@ -741,23 +663,20 @@ v =: u&.(|:"2)
 s1 =: + +/@(_4&*,u,v)@(3&<)
 viewmat s1^:_ ] 50 50 $ 4
 #+end_src
-
+We can transpose the grid before and after:
 Note: the important thing isn't that the before and after are the same,
 it's that they're inverses of each other.
-
 Removing the rank"2 here is a perfectly valid J program. It just isn't
 the program we actually want.
-
 ** inline v
-Anyway, now we can inline v:
-
 #+begin_src j
 s1 =: + +/@(_4&*,u,u&.(|:"2))@(3&<)
 #+end_src
 
-* compare
-Our definitions are now the same except for u vs f:
+Anyway, now we can inline v:
 
+
+* compare
 #+begin_src j
 up =: {{ }. y , 0}}
 dn =: {{ }: 0 , y}}
@@ -770,11 +689,9 @@ s0 =: + +/@(_4&*,f,f&.(|:"2))@(3&<)
 
 (s -: s1^:_) 50 50 $ 4
 #+end_src
-
-
+Our definitions are now the same except for u vs f:
 This is kind of a long expression, but it's not that complicated.
 The core idea is the verb "rotate":
-
 * rotate demo
 #+begin_src j
    i. 3 3
@@ -792,8 +709,14 @@ The core idea is the verb "rotate":
 0 1 2
 3 4 5
 #+end_src
-
 * rotate -> shift
+#+begin_src j
+   1 |.!._ i. 3 3
+3 4 5
+6 7 8
+_ _ _
+#+end_src
+
 Rotate is one of a handful of primitive verbs that have variations
 which would be really useful if you had a way to pass in one more
 argument. Of course we do, and that's by using a conjunction. The
@@ -802,12 +725,6 @@ customize conjunction !. is just what we need.
 Anyway, |.!.n means rotate, and fill with n. You can replace
 the n with whatever you like.
 
-#+begin_src j
-   1 |.!._ i. 3 3
-3 4 5
-6 7 8
-_ _ _
-#+end_src
 
 
 In our case, we want 0.
@@ -822,25 +739,25 @@ dn =: {{ }: 0 , y }}
 up =: {{ 1 |.!.0 y}}
 dn =: {{_1 |.!.0 y}}
 #+end_src
-
 This is a longer definition, but it gives us some duplicate code we can factor out.
-
 * tacit shift
-First we can convert to tacit form:
-
 #+begin_src j
 up =:  1 |.!.0 ]
 dn =: _1 |.!.0 ]
 u =: up,:dn
 #+end_src
 
-* rotate rank
-The rotate verb applies at rank 1 on the left and rank infinity on the right.
+First we can convert to tacit form:
 
+
+* rotate rank
 #+begin_src j
    |.b.0
 _ 1 _
 #+end_src
+
+The rotate verb applies at rank 1 on the left and rank infinity on the right.
+
 
 (The first number has to do with its use as a monad, which means reverse, then the
 second two numbers indicate the rank at which the verb is applied to the left and
@@ -855,11 +772,12 @@ To make it do what we want (which is basically a simple for-each loop), we can j
 adjust the rank
 
 * and we're done!
-
 #+begin_src j
 u =: 1 _1 |.!.0"0 _ ]
 f =: _1 1 |.!.0"0 _ ]
 #+end_src
+
+
 
 Now u and f are exactly the same except for the order, which,
 since we're just summing the two versions, doesn't actually matter.
@@ -867,6 +785,11 @@ since we're just summing the two versions, doesn't actually matter.
 So now we've arrived at my golfed implementation of sandpiles.
 
 * golf update
+#+begin_src j
+jw=:(+[:(_4&*+[:+/((,-)(,:|.)0 1)|.!.0])3&<)^:_     NB. jitwit's version
+(s -: jw) 5 5 $ 4
+#+end_src
+
 
 This isn't how I arrived at it the first time. I pretty much had
 the shape of the program in my head at the start.
@@ -891,19 +814,8 @@ And someone rose to the challenge!
 https://www.reddit.com/r/apljk/comments/fo472r/video_sandpiles_cellular_automata_in_j/fle394x?utm_source=share&utm_medium=web2x
 
 )
-#+begin_src j
-jw=:(+[:(_4&*+[:+/((,-)(,:|.)0 1)|.!.0])3&<)^:_     NB. jitwit's version
-(s -: jw) 5 5 $ 4
-#+end_src
 
 * what's going on here?
-
-In the console:
-
-:   jw
-: (+ ([: (_4&* + [: +/ (4 2$0 1 1 0 0 _1 _1 0) |.!.0 ]) 3&<))^:_
-: )
-
 #+begin_src j
 sj =:(+ [: (_4&*+[:+/((,-)(,:|.)0 1)|.!.0]) 3&<)     NB. remove the ^:_
 
@@ -912,13 +824,14 @@ NB.   _ __ ________________________________ ___    4 verbs
 NB.   _ ___________________________   2 verbs
 s0 =: + +/@(_4&*,f,f&.(|:"2))@(3&<)
 #+end_src
-
+In the console:
+:   jw
+: (+ ([: (_4&* + [: +/ (4 2$0 1 1 0 0 _1 _1 0) |.!.0 ]) 3&<))^:_
+: )
 There are some small differences in the way the verbs are composed.
 Jitwit uses a train of 4 verbs compared to my 2. Either way, it's still
 even numbered, which makes it a hook.
-
 (except the [: changes how the fork is applied)
-
 * left arguments to |.
 So earlier I glossed over the left argument for shift and rotate.
 The reason it looks at rank one for the left argument is because
@@ -930,6 +843,7 @@ up =:  1 |.!.0 ]
 dn =: _1 |.!.0 ]
 u =: up,:dn
 #+end_src
+
 ** new
 #+begin_src j
 up =:  1 0 |.!.0 ]
@@ -940,11 +854,8 @@ u =: up,:dn
 v =: lf,:rt
 #+end_src
 
-* all four at once
-But because it operates on rank 1, it means if you supply a rank 2 array
-on the left, you get the "foreach" for free. So now we can drop the transpose,
-and do all four at once:
 
+* all four at once
 #+begin_src j
 g =: u,v
 g =: (1 0, _1 0, 0 1,: 0 _1) |.!.0 ]
@@ -952,17 +863,23 @@ s1 =: ++/@(_4&*,g)@(3&<)
 (s -: s1^:_) 5 5 $ 4
 #+end_src
 
+But because it operates on rank 1, it means if you supply a rank 2 array
+on the left, you get the "foreach" for free. So now we can drop the transpose,
+and do all four at once:
+
+
 * jitwit's trick
-So jitwit's main trick is to generate that left argument concisely.
-Or rather any permutation of that left argument.
-
-Jitwit's version is in a slightly different order:
-
 #+begin_src j
 n =: 4 2$0 1 1 0 0 _1 _1 0
 n =: 0 1, 1 0, 0 _1,: _1 0
 n =: (,-)(,:|.)0 1
 #+end_src
+
+So jitwit's main trick is to generate that left argument concisely.
+Or rather any permutation of that left argument.
+
+Jitwit's version is in a slightly different order:
+
 
 
 They've also re-arranged some things, replacing composition
@@ -977,24 +894,27 @@ s1 =: +[:+/@(_4&*,n|.!.0])3&<    NB. shaves off one character by swapping [: for
 (s -: s1^:_) 5 5 $ 4
 #+end_src
 
-* compressing n
-Can we find a shorter definition of n, or any permutation of those rows?
-I don't see a way to improve on (,-), but these shave off two
-characters each:
 
+* compressing n
 #+begin_src j
 n =: (,-)(,:|.)0 1
 n =: (,-)=/~i.2
 n =: (,-)2]\i:1
 #+end_src
 
+Can we find a shorter definition of n, or any permutation of those rows?
+I don't see a way to improve on (,-), but these shave off two
+characters each:
+
+
 * final golf
-
-Picking the last version and inlining leaves us with the final golfed version:
-
 #+begin_src j
 s1 =: +[:+/@(_4&*,((,-)2]\i:1)|.!.0])3&<
 #+end_src
+
+
+Picking the last version and inlining leaves us with the final golfed version:
+
 
 If you can beat that, leave your code in a comment. :)
 
@@ -1004,14 +924,15 @@ adding code just to compress a string of numbers just makes
 the reader do extra work.
 
 * final program
-So given what I know now, I'd probably write something like this:
-
 #+begin_src j
 load 'viewmat'
 d =: 0 1, 1 0, 0 _1,: _1 0          NB. directions to shift
 s =: + [: +/@(_4&*, d|.!.0]) 3&<    NB. sandpiles step
 viewmat s^:_ [ 50 50 $ 4
 #+end_src
+
+So given what I know now, I'd probably write something like this:
+
 
 * TODO more from jitwit:
 
