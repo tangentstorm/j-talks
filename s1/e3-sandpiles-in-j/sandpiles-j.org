@@ -1,6 +1,15 @@
 #+title: sandpiles in j
 
-* sandpiles recap
+* :main
+[[*:recap]]
+[[*:colormap]]
+[[*:animation]]
+[[*:settle]]
+[[*:derivation]]
+[[*:codegolf]]
+[[*:wrapup]]
+
+* TODO :recap
 #+begin_src j
 NB. run sandpaint
 #+end_src
@@ -20,7 +29,7 @@ I did a whole video on them a while back, but since I thought it might be intere
 - help you understand both versions and how one is derived from the other
 - talk a little bit about rendering real quick
 
-* TODO mapping numbers -> colors
+* :colormap
 ** render with viewmat
 #+begin_src j
 i. 2 2
@@ -85,7 +94,7 @@ to_rgb =: rgb {~ pal I. ]
 
 vsp =: 'rgb' viewmat to_rgb
 #+end_src
-* TODO animation
+* :animation
 #+begin_src j
 NB. TODO: whatever
 #+end_src
@@ -99,7 +108,8 @@ or we can just skip the animations altogether.
 - reusing viewmat window for animation i've talked about before
 - here i'm just doing a simple loop
 
-* TODO settle: step by step
+* :settle
+** settle, step by step
 #+begin_src j
 [ y  =. 0 0 4 0 0, 0 0 4 0 0, 4 4 4 4 4, 0 0 4 0 0,: 0 0 4 0 0
 y > 3
@@ -129,7 +139,7 @@ it doesn't necessarily mean rank 1, it means 1 less than the highest rank. but s
 same idea for shifting right, but since the 0 is now right next to the 1, we have to separate them, or they'll be treated
 as a single token and passed to the rank conjunction. we could put parens in here somewhere, but the identity function works just as well.
 # (either bracket works. there's only a difference when the bracket is between two nouns. This 1 is a noun, but j looks ahead to the left and evaluates this whole thing (}:"1) first. the rank conjunction consumes both the verb and the noun and leaves a new verb in its place. So then j sees that verb, the bracket, and the result off to the right.
-* how to consolidate?
+** how to consolidate?
 #+begin_src j
 settle =: monad define          NB. settle sandpiles with entries > 3
   gt =. y > 3
@@ -161,7 +171,7 @@ all instances of the variable with ~y~ inside the single quotes.
 
 All five of these noun phrases can become monads acting on gt in this way.
 
-* code golf: sandpiles in j
+* :derivation
 #+begin_src j
 load 'tangentstorm/kvm/vm'
 f =: _1 1 |.!.0"0 _ ]
@@ -192,7 +202,7 @@ It's sort of like reading a long unfamiliar foreign word. You just have to take 
 
 But before we do that, let's take a look at another way to write this same function.
 
-* are they the same?
+** are they the same?
 #+begin_src j
 settle =: monad define          NB. settle sandpiles with entries > 3
   gt =. y > 3
@@ -218,7 +228,7 @@ Looks like they're not the same.
 But we can change the settle to keep running until it reaches a fixedpoint.
 That's what this carat-colon-underscore sequence means.
 Or in the spirit of golfing, we could remove the sequence from s, and have it do only a single step.
-* first golf: one step at a time
+** first golf: one step at a time
 #+begin_src j
 load 'viewmat'
 f =: _1 1 |.!.0"0 _ ]
@@ -241,7 +251,7 @@ readable.
 
 or you know, as readable as possible. :)
 
-* derivation
+** derivation
 #+begin_src j
 settle =: monad define
   gt =. y > 3
@@ -278,7 +288,7 @@ Negative four is a noun, but we're using the bind conjunction to bind it to mult
 anyway, now that cn is a verb, we've got a verb on the right in the parentheses, and so this whole thing
 becomes a verb operating on gt.
 let's turn the rest of these nouns into verbs as well.
-* tacit up
+** tacit up
 #+begin_src j
 up =. }. gt , 0
 
@@ -315,7 +325,7 @@ Is shorthand for this:
 : up =. [ }. ] , 0:    NB. equivalent fork. still no good
 Which means the right-curly dot isn't the monad called 'behead', but rather the dyad called 'drop', and that's not what we want. So to force it to be called as a monad, we'd have to cap off the left hand side of the train:
 : up =. [: }. ] , 0:   NB. finally!
-* tacit up (test)
+** tacit up (test)
 #+begin_src j
 settle =: monad define
   gt =. y > 3
@@ -353,7 +363,7 @@ Then the zero indicates that j is to read the definition from the following line
 
 But instead of a zero, you can also pass in a string, and so you can use that to quickly turn any line of j into a verb:
 
-* explicit up
+** explicit up
 #+begin_src j
 up =. }. gt , 0             NB.!+v1
 up =. monad : '}. gt , 0'   NB.!-v1
@@ -386,7 +396,7 @@ But as of J902 beta-i, which came out in October of 2020, you can now use the di
 
 : only v3
 
-* extract monads
+** extract monads
 #+begin_src j
 settle1 =: monad define
 NB.!if before
@@ -410,7 +420,7 @@ s =: (++/@(_4&*,f,f&.(|:"2))@(3&<))^:_
 
 (s -: settle^:_) 50 50 $ 4      NB. if this=1, s and settle are same
 #+end_src
-* extract hook
+** extract hook
 #+begin_src j
 settle =: monad define
   gt =. y > 3               NB.!+v0
@@ -428,7 +438,7 @@ settle =: monad define
 gt itself is a function of y, and the result is operating on y,
 so we can turn this last line into just a function composition applied to y.
 
-* lift inner definitions
+** lift inner definitions
 #+begin_src j
 gt =: {{y > 3}}
 up =: {{}. y , 0}}
@@ -445,7 +455,7 @@ settle =: monad define
 Now we can move all those function outside the definition of settle.
 Settle itself is now a one line tacit verb applied to an argument, so that tacit verb can just be our definition of settle.
 
-* explicit to tacit
+** explicit to tacit
 #+begin_src j
 gt =: {{y > 3}}
 up =: {{}. y , 0}}
@@ -467,7 +477,7 @@ So now we can make the final expression tacit, meaning we don't have to
 refer to local variable y, and we're just directly constructing the verb
 out of previously defined verbs.
 
-* compare to golfed version
+** compare to golfed version
 #+begin_src j
 settle =: + (up + dn + lf + rt + cn)@gt
 
@@ -479,7 +489,7 @@ NB.!end
 When I wrote the golfed version, I didn't actually derive it this way. I just wrote it from scratch.
 But, this line is pretty much the template that was in my head when I wrote it.
 So let's compare the two:
-* factor out s0
+** factor out s0
 #+begin_src j
 s =: (s0)^:_
 s0 =: + +/@(_4&*,f,f&.(|:"2))@(3&<)
@@ -487,8 +497,7 @@ s0 =: + +/@(_4&*,f,f&.(|:"2))@(3&<)
 
 let's factor out s0
 
-
-* compare again
+** compare again
 #+begin_src j
 s0 =: + +/@(_4&*,f,f&.(|:"2))@(3&<)    NB. for comparison
 s1 =: +    (up+dn+lf+rt+cn)@gt         NB. settle
@@ -502,7 +511,7 @@ s0 =: + +/@(_4&*,f,f&.(|:"2))@(3&<)    NB. for comparison
 
 #+end_src
 and now let's compare to our verb-in -progress
-* u and v
+** u and v
 #+begin_src j
 u =: up,:dn                          NB. same as f
 v =: lf,:rt                          NB. same as f&.(|:"2)
@@ -517,7 +526,7 @@ the verb f and a modified version of f.
 f is just doing the same as up,:dn
 and this modified version of f -- f under transpose at rank 2
 is the same as lf,:rt
-* v under rank 2 transpose
+** v under rank 2 transpose
 #+begin_src j
 u =: up,:dn                           NB. same as f
 s1 =: + +/@(_4&*,u,u&.(|:"2))@(3&<)   NB. we need to insert + between them
@@ -529,8 +538,7 @@ v, and therefore the lf and rt verbs, and just do the same thing in s1 for u tha
 
 so let's try it.
 
-
-* compare
+** compare
 #+begin_src j
 up =: {{}. y , 0}}
 dn =: {{}: 0 , y}}
@@ -541,10 +549,10 @@ f =: _1 1 |.!.0"0 _ ]
 s1 =: + +/@(_4&*,u,u&.(|:"2))@(3&<)
 #+end_src
 now these two are exactly the same, except for the definitions of u and f
-* back up: what does  &.(|:"2) actually do?
+** back up: what does  &.(|:"2) actually do?
 Okay, so let's back up and talk about what this &.(|:"2) means.
 
-** our shifting verbs
+*** our shifting verbs
 #+begin_src j
 up =: {{ }.     y ,  0}}
 dn =: {{ }:     0 ,  y}}
@@ -555,7 +563,7 @@ rt =: {{ }:"1 ] 0 ,. y}}
 Here's what our four shifting verbs looked like before:
 
 
-** explicit ranks
+*** explicit ranks
 #+begin_src j
 up =: {{ }."_   y ,  0}}
 dn =: {{ }:"_ ] 0 ,  y}}
@@ -575,7 +583,7 @@ Note the use of the right identity for the down and right verbs.
 This does nothing except separate the number on the left from the zero on the right.
 Otherwise the two numbers would form a single token.
 
-** avoiding clutter
+*** avoiding clutter
 #+begin_src j
 o =: 0
 up =: {{ }."_  y ,"_  o}}
@@ -587,7 +595,7 @@ rt =: {{ }:"1  o ,"1  y}}
 Comma is called append.
 Stitch is the same as comma at rank 1. *only when you're talking about 2d arrays*
 So just to make this easier to read, I'm going to temporarily introduce a constant, o.
-** quick demo
+*** quick demo
 #+begin_quote j
    m =: 5 5 $ _
    m
@@ -619,7 +627,7 @@ rt and lf in terms up up and down, but not vice versa.
 
 That's probably okay because if we go back to the original definitions...
 
-** original definitions
+*** original definitions
 #+begin_src j
 up =: {{ }.     y ,  0}}
 dn =: {{ }:     0 ,  y}}
@@ -630,7 +638,7 @@ rt =: {{ }:"1 ] 0 ,. y}}
 
 ...then up and down were the simpler choices.
 
-** simplifying with rank
+*** simplifying with rank
 #+begin_src j
 up =: {{ }. y , 0 }}
 dn =: {{ }: 0 , y }}
@@ -650,7 +658,7 @@ It's probably possible to use J's introspection capabilities
 (5!:y) to write a conjunction that does such a thing, but as
 far as I know, it's not built into J.
 But in this case, it doesn't matter: there's a simple alternative.
-** using transpose instead
+*** using transpose instead
 #+begin_src j
 u =: up,:dn
 v =:  |:&up&|:  ,:  |:&dn&|:        NB. transpose each side before and after
@@ -668,15 +676,14 @@ Note: the important thing isn't that the before and after are the same,
 it's that they're inverses of each other.
 Removing the rank"2 here is a perfectly valid J program. It just isn't
 the program we actually want.
-** inline v
+*** inline v
 #+begin_src j
 s1 =: + +/@(_4&*,u,u&.(|:"2))@(3&<)
 #+end_src
 
 Anyway, now we can inline v:
 
-
-* compare
+** compare
 #+begin_src j
 up =: {{ }. y , 0}}
 dn =: {{ }: 0 , y}}
@@ -692,7 +699,7 @@ s0 =: + +/@(_4&*,f,f&.(|:"2))@(3&<)
 Our definitions are now the same except for u vs f:
 This is kind of a long expression, but it's not that complicated.
 The core idea is the verb "rotate":
-* rotate demo
+** rotate demo
 #+begin_src j
    i. 3 3
 0 1 2
@@ -709,7 +716,7 @@ The core idea is the verb "rotate":
 0 1 2
 3 4 5
 #+end_src
-* rotate -> shift
+** rotate -> shift
 #+begin_src j
    1 |.!._ i. 3 3
 3 4 5
@@ -731,7 +738,7 @@ In our case, we want 0.
 
 So now we can re-implement up and dn in terms of shift:
 
-* up and dn in terms of shift
+** up and dn in terms of shift
 #+begin_src j
 up =: {{ }. y , 0 }}
 dn =: {{ }: 0 , y }}
@@ -740,7 +747,7 @@ up =: {{ 1 |.!.0 y}}
 dn =: {{_1 |.!.0 y}}
 #+end_src
 This is a longer definition, but it gives us some duplicate code we can factor out.
-* tacit shift
+** tacit shift
 #+begin_src j
 up =:  1 |.!.0 ]
 dn =: _1 |.!.0 ]
@@ -749,8 +756,7 @@ u =: up,:dn
 
 First we can convert to tacit form:
 
-
-* rotate rank
+** rotate rank
 #+begin_src j
    |.b.0
 _ 1 _
@@ -771,7 +777,7 @@ actually does in just a minute).
 To make it do what we want (which is basically a simple for-each loop), we can just
 adjust the rank
 
-* and we're done!
+** and we're done!
 #+begin_src j
 u =: 1 _1 |.!.0"0 _ ]
 f =: _1 1 |.!.0"0 _ ]
@@ -784,7 +790,7 @@ since we're just summing the two versions, doesn't actually matter.
 
 So now we've arrived at my golfed implementation of sandpiles.
 
-* golf update
+* :codegolf
 #+begin_src j
 jw=:(+[:(_4&*+[:+/((,-)(,:|.)0 1)|.!.0])3&<)^:_     NB. jitwit's version
 (s -: jw) 5 5 $ 4
@@ -815,7 +821,7 @@ https://www.reddit.com/r/apljk/comments/fo472r/video_sandpiles_cellular_automata
 
 )
 
-* what's going on here?
+** what's going on here?
 #+begin_src j
 sj =:(+ [: (_4&*+[:+/((,-)(,:|.)0 1)|.!.0]) 3&<)     NB. remove the ^:_
 
@@ -832,19 +838,19 @@ There are some small differences in the way the verbs are composed.
 Jitwit uses a train of 4 verbs compared to my 2. Either way, it's still
 even numbered, which makes it a hook.
 (except the [: changes how the fork is applied)
-* left arguments to |.
+** left arguments to |.
 So earlier I glossed over the left argument for shift and rotate.
 The reason it looks at rank one for the left argument is because
 each number in the list corresponds to an amount to shift on each axis.
 so:
-** old
+*** old
 #+begin_src j
 up =:  1 |.!.0 ]
 dn =: _1 |.!.0 ]
 u =: up,:dn
 #+end_src
 
-** new
+*** new
 #+begin_src j
 up =:  1 0 |.!.0 ]
 dn =: _1 0 |.!.0 ]
@@ -854,8 +860,7 @@ u =: up,:dn
 v =: lf,:rt
 #+end_src
 
-
-* all four at once
+** all four at once
 #+begin_src j
 g =: u,v
 g =: (1 0, _1 0, 0 1,: 0 _1) |.!.0 ]
@@ -867,8 +872,7 @@ But because it operates on rank 1, it means if you supply a rank 2 array
 on the left, you get the "foreach" for free. So now we can drop the transpose,
 and do all four at once:
 
-
-* jitwit's trick
+** jitwit's trick
 #+begin_src j
 n =: 4 2$0 1 1 0 0 _1 _1 0
 n =: 0 1, 1 0, 0 _1,: _1 0
@@ -886,7 +890,7 @@ They've also re-arranged some things, replacing composition
 with use of the verb cap, but it doesn't actually affect
 the length:
 
-* removing parens with cap
+** removing parens with cap
 #+begin_src j
 jw =: +[:(_4&*+[:+/n|.!.0])3&<
 s1 =: ++/@(_4&*,n|.!.0])@(3&<)   NB. (f g@h)  <-->  (f[:g h)
@@ -894,8 +898,7 @@ s1 =: +[:+/@(_4&*,n|.!.0])3&<    NB. shaves off one character by swapping [: for
 (s -: s1^:_) 5 5 $ 4
 #+end_src
 
-
-* compressing n
+** compressing n
 #+begin_src j
 n =: (,-)(,:|.)0 1
 n =: (,-)=/~i.2
@@ -906,8 +909,7 @@ Can we find a shorter definition of n, or any permutation of those rows?
 I don't see a way to improve on (,-), but these shave off two
 characters each:
 
-
-* final golf
+** final golf
 #+begin_src j
 s1 =: +[:+/@(_4&*,((,-)2]\i:1)|.!.0])3&<
 #+end_src
@@ -923,7 +925,7 @@ And while I think a shorter program is often a better program,
 adding code just to compress a string of numbers just makes
 the reader do extra work.
 
-* final program
+** final program
 #+begin_src j
 load 'viewmat'
 d =: 0 1, 1 0, 0 _1,: _1 0          NB. directions to shift
@@ -933,8 +935,7 @@ viewmat s^:_ [ 50 50 $ 4
 
 So given what I know now, I'd probably write something like this:
 
-
-* TODO more from jitwit:
+*** TODO more from jitwit:
 
 : s1 =: +[:+/@(_4&*,((,-)2]\i:1)|.!.0])3&<
 : ab =: -[:(4&*(-+/)((,-)=/~i.2)|.!.0])3&<
@@ -945,5 +946,6 @@ knocks another two characters off:
 subtract from each shifted copy:"
 
 : ab =: -[:+/@(-"2((,-)=/~i.2)|.!.0])3&<
-* TODO -- outro
-check out my channel for more j videos
+
+* :wrapup
+** TODO check out my channel for more j videos
