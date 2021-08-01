@@ -1,6 +1,5 @@
 #+title: sandpiles in j
 
-
 * sandpiles recap
 #+begin_src j
 NB. run sandpaint
@@ -10,7 +9,18 @@ sandpiles are a fun little cellular automata that can make some interesting patt
 
 I did a whole video on them a while back, but since I thought it might be interesting to a wider audience than my usual J programming videos, I decided to cover the actual implementation in a separate video. That's what you're watching now.
 
-* render with viewmat
+
+- sandpiles are just rank 2 arrays (formally they can be any graph, but rank 2 array is how I presented them)
+- viewmat to render at each frame
+  - viewmat comes with j
+  - but we need color
+- most of the video on the step function
+- instead i want to focus on the rule, and how to get to the short version
+- help you understand both versions and how one is derived from the other
+- talk a little bit about rendering real quick
+
+* TODO mapping numbers -> colors
+** render with viewmat
 #+begin_src j
 i. 2 2
 
@@ -18,31 +28,29 @@ load viewmat
 viewmat i. 2 2
 #+end_src
 
-* nicer palette
+** nicer palette
 #+begin_src j
 p0 =: 16b0f0000 16b9d3f3f 16bd87878 16bffacac   NB. i.4 drawn as shades of blue
-lo viewmat i. 2 2
+p0 viewmat i. 2 2
 #+end_src
 
 but the problem is if we try to print higher numbers...
 
-* but...
+** but...
 #+begin_src j
-lo viewmat i. 4 4
+p0 viewmat i. 4 4
 #+end_src
 
 like the numbers up to 16
 then it interpolates
 
-* also
+** also
 #+begin_src j
-lo viewmat 0 2 ,: 2 0
+p0 viewmat 0 2 ,: 2 0
 #+end_src
 same thing if we don't have a 4... it maps the highest number we do have to the color i want for 4.
 
-
-
-* better solution
+** better solution
 #+begin_src j
 lo =: 16b00000f 16b3f3f9d 16b7878d8 16bacacff   NB. i.4 drawn as shades of blue
 hi =: 16bff0000 + 16b001100 * i._16             NB. 4+i.204 are yellow..red
@@ -75,18 +83,29 @@ this is builtin in J... use use capital i-dot (interval) to find the index of th
 
 : pal I. i.16
 
-* TODO rewrite to_rgb?
-
+** TODO rewrite to_rgb?
 #+begin_src j
 NB. does this give the same result?
 pal =: 0 1 2 3, 2^2+i.15 NB. just make it one shorter than rgb?
 to_rgb =: rgb {~ pal I. ]
 
 vsp =: 'rgb' viewmat to_rgb
-
 #+end_src
 
-* settle: step by step
+* TODO animation
+#+begin_src j
+NB. TODO: whatever
+#+end_src
+- animation (i'll probably do another video on the gui stuff in the future)
+i covered most of animation stuff in my other video
+this time around i'm not doing anything interactive,
+so i can use a much simpler technique...
+or we can just skip the animations altogether.
+
+- reusing viewmat window for animation i've talked about before
+- here i'm just doing a simple loop
+
+* TODO settle: step by step
 #+begin_src j
 [ y  =. 0 0 4 0 0, 0 0 4 0 0, 4 4 4 4 4, 0 0 4 0 0,: 0 0 4 0 0
 y > 3
@@ -128,32 +147,6 @@ as a single token and passed to the rank conjunction. we could put parens in her
 
 # (either bracket works. there's only a difference when the bracket is between two nouns. This 1 is a noun, but j looks ahead to the left and evaluates this whole thing (}:"1) first. the rank conjunction consumes both the verb and the noun and leaves a new verb in its place. So then j sees that verb, the bracket, and the result off to the right.
 
-
-* settle
-#+begin_src j
-settle =: monad define          NB. settle sandpiles with entries > 3
-  gt =. y > 3
-  up =. }.   gt ,  0            NB. shift in each of the 4 directions
-  dn =. }:    0 ,  gt           NB. (fill in with 0 rather than wrap)
-  lf =. }."1 gt ,. 0
-  rt =. }:"1 ]0 ,. gt
-  cn =. _4 * gt                 NB. the 4 we subtract from the center
-  y + up + dn + lf + rt + cn
-)
-#+end_src
-
-so now we wrap this as a verb...
-
-
-* animation
-#+begin_src j
-NB. TODO: whatever
-#+end_src
-
-i covered most of this in my other video
-
-
-
 * how to consolidate?
 #+begin_src j
 settle =: monad define          NB. settle sandpiles with entries > 3
@@ -167,6 +160,7 @@ settle =: monad define          NB. settle sandpiles with entries > 3
 )
 #+end_src
 
+so now we wrap this as a verb...
 
 the whole thing is a monad
 
@@ -184,13 +178,12 @@ all instances of the variable with ~y~ inside the single quotes.
 
 All five of these noun phrases can become monads acting on gt in this way.
 
-
 * code golf: sandpiles in j
 #+begin_src j
-load 'viewmat'
+load 'tangentstorm/kvm/vm'
 f =: _1 1 |.!.0"0 _ ]
 s =: (+ +/@(_4&*,f,f&.(|:"2))@(3&<))^:_
-viewmat s 50 50 $ 4
+vm s 50 50 $ 4
 #+end_src
 
 - quick recap: what are sandpiles?
@@ -206,7 +199,6 @@ You might think this is write-only code.
 This right bracket doesn't match with anything.
 The syntax highlighting really helps, but you just have to know that |: is one token whereas ++ is two
 (the rule is that if it's more than one character, everything after the first character is a dot or colon)
-
 
 I certainly don't just instantly grok what it says,
 just like I wouldn't just instantly grok what a page of
@@ -248,7 +240,6 @@ That's what this carat-colon-underscore sequence means.
 
 Or in the spirit of golfing, we could remove the sequence from s, and have it do only a single step.
 
-
 * first golf: one step at a time
 #+begin_src j
 load 'viewmat'
@@ -270,7 +261,6 @@ in fact you could just remove most of the spaces, but I'd rather save that until
 readable.
 
 or you know, as readable as possible. :)
-
 
 * derivation
 #+begin_src j
@@ -669,7 +659,7 @@ rt =: {{ }:"1  o ,"1  y}}
 #+end_src
 
 ** quick demo
-#+begin_src j
+#+begin_quote j
    m =: 5 5 $ _
    m
 _ _ _ _ _
@@ -685,7 +675,7 @@ _ _ _ _ _
 │_ _ _ _ _│_ _ _ _ _│_ _ _ _ 0│0 _ _ _ _│
 │0 0 0 0 0│_ _ _ _ _│_ _ _ _ 0│0 _ _ _ _│
 └─────────┴─────────┴─────────┴─────────┘
-#+end_src
+#+end_quote
 
 
 Anyway,now we can see that up and left are identical except for the rank
@@ -1034,3 +1024,5 @@ knocks another two characters off:
 subtract from each shifted copy:"
 
 : ab =: -[:+/@(-"2((,-)=/~i.2)|.!.0])3&<
+* TODO -- outro
+check out my channel for more j videos
