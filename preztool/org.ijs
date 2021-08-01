@@ -13,7 +13,7 @@ parse =: monad define
   else.
      code =. a:
   end.
-  (<head),(<text),(<code);depth
+  (<head),(<text),(<code),<depth
 )
 
 org_slides =: verb define
@@ -26,7 +26,7 @@ org_slides =: verb define
 
 
 slide_lines =: {{
-  'd h t c' =. (depth;head;text;code) y
+  'd h t c' =. (depth;head;text;<@code) y
   r =. <(d#'*'),' ',h
   if. #>c do. r =. r,'#+begin_src j';c,<'#+end_src' end.
   r,t }}
