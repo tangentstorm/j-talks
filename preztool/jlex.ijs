@@ -1,4 +1,9 @@
 NB. j syntax highlighting ------------------------------
+NB.
+NB. don't use this. use the cleaned up j addon version instead:
+NB. https://github.com/tangentstorm/j-lex
+NB.
+NB. TODO: move preztool over to tangentstorm/j-lex
 
 jtoks =: verb define
   NB. tokenize j like ;: but include whitespace
