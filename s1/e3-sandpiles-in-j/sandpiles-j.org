@@ -1,15 +1,6 @@
 #+title: sandpiles in j
 
-* :main
-[[*:recap]]
-[[*:colormap]]
-[[*:animation]]
-[[*:settle]]
-[[*:derivation]]
-[[*:codegolf]]
-[[*:wrapup]]
-
-* TODO :recap
+* :recap
 #+begin_src j
 NB. run sandpaint
 #+end_src
@@ -30,70 +21,165 @@ I did a whole video on them a while back, but since I thought it might be intere
 - talk a little bit about rendering real quick
 
 * :colormap
-** render with viewmat
-#+begin_src j
-i. 2 2
 
+We can render pretty much any matrix with viewmat:
+
+** :viewmat-repl-demo                                          :repl:
+*** :normal-viewmat
+#+begin_src j
+i. 2 2   NB. a stable sandpile
 load viewmat
 viewmat i. 2 2
 #+end_src
-** nicer palette
+
+*** :console-viewmat
 #+begin_src j
-p0 =: 16b0f0000 16b9d3f3f 16bd87878 16bffacac   NB. i.4 drawn as shades of blue
-p0 viewmat i. 2 2
+install 'github:tangentstorm/j-kvm@main'
+load 'tangentstorm/j-kvm/vm'
+vm i. 2 2
 #+end_src
 
-
-but the problem is if we try to print higher numbers...
-
-** but...
+*** :viewmat-colorspace
 #+begin_src j
-p0 viewmat i. 4 4
+NB. rgb hex codes for some shades of blue
+p0 =. 16b00000f 16b3f3f9d 16b7878d8 16bacacff
+p0 vm i. 2 2
+
+p1 =. 16b0f0000 16b9d3f3f 16bd87878 16bffacac
+p1 vm i. 2 2
+
+p2 =. ((3#256)#:p0)
+p2 vm i. 2 2
 #+end_src
+We can pass in a custom palette to control the colors.
+Most programs tend to use 'rgb' ordering.
+Viewmat uses 'bgr' ordering.
+So you can either write them backwards, or you can send a rank two array in rgb order.
 
-
-like the numbers up to 16
-then it interpolates
-
-** also
+*** :viewmat-interpolation
 #+begin_src j
-p0 viewmat 0 2 ,: 2 0
+p2 vm i. 10 10
 #+end_src
+But if we try use more numbers, then it interpolates.
 
-same thing if we don't have a 4... it maps the highest number we do have to the color i want for 4.
-
-** better solution
+*** :viewmat-minmax
 #+begin_src j
-lo =: 16b00000f 16b3f3f9d 16b7878d8 16bacacff   NB. i.4 drawn as shades of blue
-hi =: 16bff0000 + 16b001100 * i._16             NB. 4+i.204 are yellow..red
-rgb =: lo,hi
-
-NB. map any non-negative integer to the palette
-pal =: 0 1 2 3, 2^2+i.16                        NB. the actual values to draw
-to_rgb =: rgb {~ (>./pal) | pal I. ]
-
-'rgb' viewmat ,: to_rgb pal
-'rgb' viewmat to_rgb i. 32 32
+ 2|i. 10 10
+p2 vm 2|i. 10 10
 #+end_src
-so instead we make a custom verb to map the colors to rgb.
-so here i just defined the first four colors by hand.
-(we were using bgr colors before, so i had to scramble the digits up a bit)
-then i built a gradient by taking the number for dark green and multiplying it by i._16
+It also only looks at the biggest and smallest numbers in your array,
+so here it shows all the ones using the color we want for four.
+
+*** :viewmat-rgb
+#+begin_src j
+'rgb' vm p0{~ 2|i. 10 10
+'rgb' vm p0{~ 4|i. 10 10
+'rgb' vm p0{~ i. 10 10  NB. more numbers than are in the palette
+3 { p0
+5 { p0   NB. index error
+#+end_src
+this works great when the values are 0, 1, 2, or 3, but
+but if we use a number outside the range, we'll get an index error.
+
+*** :rgb-gradient
+#+begin_src j
+'rgb' vm 16b001100
+'rgb' vm 16b001100 * i.16
+hfd 16b001100 * i.16
+'rgb' vm 16bff0000 + 16b001100 * i.16
+'rgb' vm 16bff0000 + 16b001100 * i._16
+#+end_src
+so we can fix this by making our own gradient.
+that's almost too dark to see.
+but we can multiply that by a range to go from black all the way to pure green.
+
 So that's like multiplying by eleven hundred in decimal...
-it gives us the digits, ff,ee,and so on all the way down to 00
-and then we add all those numbers to bright red, so we geta nice gradient from all red plus all green (which is yellow) down to pure red.
-so now we combine those into a single list called 'rgb', which is a list of 20 colors.
-but then we want to map any number to its corresponding color.
-this is builtin in J... use use capital i-dot (interval) to find the index of the bin into which each value should go.
-: pal I. i.16
-** TODO rewrite to_rgb?
-#+begin_src j
-NB. does this give the same result?
-pal =: 0 1 2 3, 2^2+i.15 NB. just make it one shorter than rgb?
-to_rgb =: rgb {~ pal I. ]
+it gives us the digits, 00,11,22 all the way up to ff.
 
-vsp =: 'rgb' viewmat to_rgb
+anyway, adding pure red to that gives us a gradient from red to yellow.
+I actually wanted yellow to red, so we can just make the 16 negative.
+
+*** :rgb-palette
+#+begin_src j
+'rgb' vm p0, 16bff0000 + 16b001100 * i._16
+p0
+lo =. 16b00000f 16b3f3f9d 16b7878d8 16bacacff   NB. black and blue/indigo
+hi =. 16bff0000 + 16b001100 * i._16             NB. 4+i.204 are yellow..red
+'rgb' vm pal =. lo,hi
+pal =: lo,hi
 #+end_src
+so if we add p0 back in, we have our palette.
+
+now we have to map all the numbers greater than four to this range.
+
+I wanted pure yellow to mean 4,
+then this next color to mean 5 through 8,
+and then 9 through 16,
+then 17 through 32,
+using powers of two each time.
+
+*** :interval-index
+#+begin_src j
+NB. map any non-negative integer to the palette
+idx =: 0 1 2 3, 2^2+i.16
+idx I. 0 1 2 3 4
+idx I. 0 1 2 3 4 5 6 7 8
+idx I. 0 1 2 3 4 5 6 7 8 9 10
+#+end_src
+so the idea is to make in index of the palette.
+then we can use Interval Index (dyadic cap I dot) to map any number to that range.
+the left argument is a list of ascending numbers.
+then for each item on the right, it figures out where it would have to go in the left argument to keep that list sorted.
+
+so here anything 0 or less goes in bin 0.
+1 goes in bin 1.
+2 goes in bin 2.
+and so on up to 4.
+then 5 6 7 and 8 all go into bin 5,
+9 goes into bin 6
+and so on.
+
+*** :indexed-palette
+#+begin_src j
+pal {~ idx I. 0 1 2 3 4 5 6 7 8 9 10
+'rgb' vm pal {~ idx I. 0 1 2 3 4 5 6 7 8 9 10
+vm i. 32 32
+vm idx I. i. 32 32
+0'rgb' vm pal {~ idx I. 2^10
+'rgb' vm pal {~ idx I. 2^17
+'rgb' vm pal {~ idx I. 2^18 NB. too big
+idx =: 0 1 2 3, 2^2+i.15
+'rgb' vm pal {~ idx I. 2^203948 NB. no problem
+#+end_src
+now we can use that as an index into the palette.
+but of course if the numbers are too big, we're outside the palette.
+
+in the original code I did some manual bounds checking but
+what i should have done is just made the index one item shorter.
+then anything bigger than 2^17 (remember we're adding 2)
+goes into the last bin.
+
+*** :smooth-color
+#+begin_src j
+'rgb' vm pal {~ idx I. i. 32 32
+#+end_src
+anyway, now we can draw sandpiles and get with this nice smooth ramping effect for the colors.
+
+one last note before we move on:
+
+*** :vm-vs-viewmat
+#+begin_src j
+'rgb' viewmat 16b001100  NB. shape error
+'rgb' viewmat ,.16b001100  NB. fix with 'ravel items'
+'rgb' viewmat ,.16b001100  * i. 16
+'rgb' viewmat |:,.16b001100  * i. 16
+#+end_src
+all this time i've been showing individual scalars and lists with this vm verb.
+If you're using viewmat in general, it'll give you an error if you try that.
+but you can fix that with comma dot. It brings any array to rank 2, by turning each of the array's items into a flat list.
+then for rank 1 arrays, i tend to like seeing them as horizonal instead of vertical, so if you want that, you can use transpose. (for rank 1, you could also use ,: which takes an array and wraps it in another array one rank higher. so that gives you a single row for i.10)
+anyway, the 'vm' verb is doing that behind the scenes.
+
 * :animation
 #+begin_src j
 NB. TODO: whatever
@@ -109,36 +195,81 @@ or we can just skip the animations altogether.
 - here i'm just doing a simple loop
 
 * :settle
-** settle, step by step
+** settle: step by step
+: *
+
+Okay so now let's see how to actually do the sandpile logic.
+
+:    n?0 0 4 0 0?       !
+:  b n?0 0 4 0 0? v?,:? !
+: 2b n?4 4 4 4 4? v?,?  !
+: 2b n?0 0 4 0 0? v?,?  !
+: 2b n?0 0 4 0 0? v?,?  !
+: 2b i?y? c?=.?         !
 #+begin_src j
 [ y  =. 0 0 4 0 0, 0 0 4 0 0, 4 4 4 4 4, 0 0 4 0 0,: 0 0 4 0 0
-y > 3
-gt =. y > 3
-[ gt =. y > 3
-vsp up =. }.   gt ,  0            NB. shift in each of the 4 directions
-up
-vsp dn =. }:    0 ,  gt           NB. (fill in with 0 rather than wrap)
-vsp lf =. }."1 gt ,. 0
-vsp rt =. }:"1 ]0 ,. gt
-[ cn =. _4 * gt                 NB. the 4 we subtract from the center
+#+end_src
 
+Here's a little 5x5 grid with a plus sign made of fours.
+
+Where is y greater than 3?
+: y > 3
+#+begin_src j
+y > 3
+#+end_src
+
+All the fours turn into ones.
+
+let's call that gt.
+#+begin_src j
+gt =. y > 3
+#+end_src
+
+notice it didnt print out the grid this time. j hides the result when the leftmost part of the line is an assignment
+
+if we put a bracket here it's just an identity function, but it changes the leftmost part of the line and so j prints the result
+#+begin_src j
+[ gt =. y > 3
+#+end_src
+
+The rule is that any time a cell has more than 3 grains of sand, we shift one grain in each of the 4 cardinal directions.
+
+so to shift upward, we can append a row of 0s and chop off the top row.
+#+begin_src j
+vsp up =. }.   gt ,  0
+up
+#+end_src
+
+to shift down, we append the 0 at the top and then chop off the bottom row.
+#+begin_src j
+vsp dn =. }:    0 ,  gt
+#+end_src
+
+left and right work the same way, but we apply the rule at each row instead of to the whole array
+
+so for left we use this rank 1 modifier. we could do the same for the comma but it's so common that j gives us ,. (stitch)
+#+begin_src j
+vsp lf =. }."1 gt ,. 0
+#+end_src
+
+it doesn't necessarily mean rank 1, it means 1 less than the highest rank. but since a grid is a rank 2 array, that's rank 1.
+
+same idea for shifting right, but since the 0 is now right next to the 1, we have to separate them, or they'll be treated as a single token and passed to the rank conjunction. we could put parens in here somewhere, but the identity function works just as well.
+#+begin_src j
+vsp rt =. }:"1 ]0 ,. gt
+#+end_src
+
+Now we just want to add all these together.
+#+begin_src j
+vsp y + up + dn + lf + rt
+#+end_src
+
+And of course remove four from the centers:
+#+begin_src j
+[ cn =. _4 * gt
 vsp y + up + dn + lf + rt + cn
 #+end_src
-okay so now let's see how to actually do the sandpile logic.
-here's a little 5x5 grid with a plus sign made of fours.
-where is y greater than 3? all the fours turn into 1's
-let's call that gt.
-notice it didnt print out the grid this time. j hides the result when the leftmost part of the line is an assignment
-if we put a bracket here it's just an identity function, but it changes the leftmost part of the line and so j prints the result
-the rule is that any time a cell has more than 3 grains of sand, we shift one grain in each of the 4 cardinal directions.
-so to shift upward, we can append a row of 0s and chop off the top row.
-to shift down we append the 0 at the top and then chop off the bottom row.
-left and right work the same way, but we apply the rule at each row instead of to the whole array
-so for left we use this rank 1 modifier. we could do the same for the comma but it's so common that j gives us ,. (stitch)
-it doesn't necessarily mean rank 1, it means 1 less than the highest rank. but since a grid is a rank 2 array, that's rank 1.
-same idea for shifting right, but since the 0 is now right next to the 1, we have to separate them, or they'll be treated
-as a single token and passed to the rank conjunction. we could put parens in here somewhere, but the identity function works just as well.
-# (either bracket works. there's only a difference when the bracket is between two nouns. This 1 is a noun, but j looks ahead to the left and evaluates this whole thing (}:"1) first. the rank conjunction consumes both the verb and the noun and leaves a new verb in its place. So then j sees that verb, the bracket, and the result off to the right.
+
 ** how to consolidate?
 #+begin_src j
 settle =: monad define          NB. settle sandpiles with entries > 3
@@ -178,7 +309,6 @@ f =: _1 1 |.!.0"0 _ ]
 s =: (+ +/@(_4&*,f,f&.(|:"2))@(3&<))^:_
 vm s 50 50 $ 4
 #+end_src
-
 
 - quick recap: what are sandpiles?
 - this is the code review for the sandpiles video
