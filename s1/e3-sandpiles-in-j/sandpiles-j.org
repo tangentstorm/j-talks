@@ -1,10 +1,15 @@
 #+title: sandpiles in j
 
-* :recap
+* TODO :recap
 #+begin_src j
 NB. run sandpaint
 #+end_src
 
+
+- quick recap: what are sandpiles?
+- this is the code review for the sandpiles video
+- covered most of the gui logic in the basic animation and sprite editor videos
+- will focus on these two screens
 
 sandpiles are a fun little cellular automata that can make some interesting patterns.
 
@@ -165,8 +170,7 @@ goes into the last bin.
 #+end_src
 anyway, now we can draw sandpiles and get with this nice smooth ramping effect for the colors.
 
-one last note before we move on:
-
+*** TODO :vsp
 *** :vm-vs-viewmat
 #+begin_src j
 'rgb' viewmat 16b001100  NB. shape error
@@ -174,13 +178,14 @@ one last note before we move on:
 'rgb' viewmat ,.16b001100  * i. 16
 'rgb' viewmat |:,.16b001100  * i. 16
 #+end_src
+one last note before we move on:
 all this time i've been showing individual scalars and lists with this vm verb.
 If you're using viewmat in general, it'll give you an error if you try that.
 but you can fix that with comma dot. It brings any array to rank 2, by turning each of the array's items into a flat list.
 then for rank 1 arrays, i tend to like seeing them as horizonal instead of vertical, so if you want that, you can use transpose. (for rank 1, you could also use ,: which takes an array and wraps it in another array one rank higher. so that gives you a single row for i.10)
 anyway, the 'vm' verb is doing that behind the scenes.
 
-* :animation
+* TODO :animation
 #+begin_src j
 NB. TODO: whatever
 #+end_src
@@ -195,8 +200,8 @@ or we can just skip the animations altogether.
 - here i'm just doing a simple loop
 
 * :settle
-** settle: step by step
-: *
+** settle: step by step                                        :repl:
+*** :plus-sign
 
 Okay so now let's see how to actually do the sandpile logic.
 
@@ -212,8 +217,9 @@ Okay so now let's see how to actually do the sandpile logic.
 
 Here's a little 5x5 grid with a plus sign made of fours.
 
+*** :gt
 Where is y greater than 3?
-: y > 3
+
 #+begin_src j
 y > 3
 #+end_src
@@ -234,17 +240,22 @@ if we put a bracket here it's just an identity function, but it changes the left
 
 The rule is that any time a cell has more than 3 grains of sand, we shift one grain in each of the 4 cardinal directions.
 
-so to shift upward, we can append a row of 0s and chop off the top row.
+*** :shift-up
 #+begin_src j
 vsp up =. }.   gt ,  0
 up
 #+end_src
 
+so to shift upward, we can append a row of 0s and chop off the top row.
+
 to shift down, we append the 0 at the top and then chop off the bottom row.
+
+*** :shift-down
 #+begin_src j
 vsp dn =. }:    0 ,  gt
 #+end_src
 
+*** :left
 left and right work the same way, but we apply the rule at each row instead of to the whole array
 
 so for left we use this rank 1 modifier. we could do the same for the comma but it's so common that j gives us ,. (stitch)
@@ -254,11 +265,13 @@ vsp lf =. }."1 gt ,. 0
 
 it doesn't necessarily mean rank 1, it means 1 less than the highest rank. but since a grid is a rank 2 array, that's rank 1.
 
+*** :right
 same idea for shifting right, but since the 0 is now right next to the 1, we have to separate them, or they'll be treated as a single token and passed to the rank conjunction. we could put parens in here somewhere, but the identity function works just as well.
 #+begin_src j
 vsp rt =. }:"1 ]0 ,. gt
 #+end_src
 
+*** :adding-up
 Now we just want to add all these together.
 #+begin_src j
 vsp y + up + dn + lf + rt
@@ -270,7 +283,7 @@ And of course remove four from the centers:
 vsp y + up + dn + lf + rt + cn
 #+end_src
 
-** how to consolidate?
+** settle monad
 #+begin_src j
 settle =: monad define          NB. settle sandpiles with entries > 3
   gt =. y > 3
@@ -283,40 +296,13 @@ settle =: monad define          NB. settle sandpiles with entries > 3
 )
 #+end_src
 
-
-so now we wrap this as a verb...
-
-the whole thing is a monad
-
-The lines in the middle all make nouns, but they could be functions on 'gt'.
-
-The main idea here is that a noun phrase that depends on a single variable
-can be replaced with a monad applied to that variable.
-
-We wrap the noun phrase in single quotes (escaping appropriately), put
-the tokens ~monad :~ on the left, and then invoke the monad we just created
-on the variable in question.
-
-Now since we're getting the value as the first argument, we can replace
-all instances of the variable with ~y~ inside the single quotes.
-
-All five of these noun phrases can become monads acting on gt in this way.
-
-* :derivation
+** the short version
 #+begin_src j
-load 'tangentstorm/kvm/vm'
 f =: _1 1 |.!.0"0 _ ]
 s =: (+ +/@(_4&*,f,f&.(|:"2))@(3&<))^:_
 vm s 50 50 $ 4
 #+end_src
 
-- quick recap: what are sandpiles?
-- this is the code review for the sandpiles video
-- covered most of the gui logic in the basic animation and sprite editor videos
-- will focus on these two screens
-
-
-Then I showed this slide...
 Was the most obvious way to write it at the time.
 You might think this is write-only code.
 
@@ -330,7 +316,6 @@ python code means.
 
 It's sort of like reading a long unfamiliar foreign word. You just have to take it slow and look at each piece in isolation.
 
-But before we do that, let's take a look at another way to write this same function.
 
 ** are they the same?
 #+begin_src j
@@ -358,6 +343,7 @@ Looks like they're not the same.
 But we can change the settle to keep running until it reaches a fixedpoint.
 That's what this carat-colon-underscore sequence means.
 Or in the spirit of golfing, we could remove the sequence from s, and have it do only a single step.
+
 ** first golf: one step at a time
 #+begin_src j
 load 'viewmat'
@@ -381,7 +367,7 @@ readable.
 
 or you know, as readable as possible. :)
 
-** derivation
+* :deconstruct
 #+begin_src j
 settle =: monad define
   gt =. y > 3
@@ -418,6 +404,25 @@ Negative four is a noun, but we're using the bind conjunction to bind it to mult
 anyway, now that cn is a verb, we've got a verb on the right in the parentheses, and so this whole thing
 becomes a verb operating on gt.
 let's turn the rest of these nouns into verbs as well.
+** TODO
+so now we wrap this as a verb...
+
+the whole thing is a monad
+
+The lines in the middle all make nouns, but they could be functions on 'gt'.
+
+The main idea here is that a noun phrase that depends on a single variable
+can be replaced with a monad applied to that variable.
+
+We wrap the noun phrase in single quotes (escaping appropriately), put
+the tokens ~monad :~ on the left, and then invoke the monad we just created
+on the variable in question.
+
+Now since we're getting the value as the first argument, we can replace
+all instances of the variable with ~y~ inside the single quotes.
+
+All five of these noun phrases can become monads acting on gt in this way.
+
 ** tacit up
 #+begin_src j
 up =. }. gt , 0
@@ -607,6 +612,7 @@ So now we can make the final expression tacit, meaning we don't have to
 refer to local variable y, and we're just directly constructing the verb
 out of previously defined verbs.
 
+* :reconcile
 ** compare to golfed version
 #+begin_src j
 settle =: + (up + dn + lf + rt + cn)@gt
@@ -681,7 +687,6 @@ s1 =: + +/@(_4&*,u,u&.(|:"2))@(3&<)
 now these two are exactly the same, except for the definitions of u and f
 ** back up: what does  &.(|:"2) actually do?
 Okay, so let's back up and talk about what this &.(|:"2) means.
-
 *** our shifting verbs
 #+begin_src j
 up =: {{ }.     y ,  0}}
@@ -691,7 +696,6 @@ rt =: {{ }:"1 ] 0 ,. y}}
 #+end_src
 
 Here's what our four shifting verbs looked like before:
-
 
 *** explicit ranks
 #+begin_src j
@@ -920,7 +924,19 @@ since we're just summing the two versions, doesn't actually matter.
 
 So now we've arrived at my golfed implementation of sandpiles.
 
-* :codegolf
+* :golf
+** TODO up,:dn as tacit dyad?
+#+begin_src j
+up =. {{ }. y , 0}}
+dn =. {{ }: 0 , y}}
+u =. up,:dn
+
+f =: _1 1 |.!.0"0 _ ]
+u =: 0&(}:@,,:}.@,~)
+#+end_src
+way smaller than old version and saves a charecter vs f
+
+** jitwit's version
 #+begin_src j
 jw=:(+[:(_4&*+[:+/((,-)(,:|.)0 1)|.!.0])3&<)^:_     NB. jitwit's version
 (s -: jw) 5 5 $ 4
@@ -1065,7 +1081,7 @@ viewmat s^:_ [ 50 50 $ 4
 
 So given what I know now, I'd probably write something like this:
 
-*** TODO more from jitwit:
+** TODO more from jitwit:
 
 : s1 =: +[:+/@(_4&*,((,-)2]\i:1)|.!.0])3&<
 : ab =: -[:(4&*(-+/)((,-)=/~i.2)|.!.0])3&<
