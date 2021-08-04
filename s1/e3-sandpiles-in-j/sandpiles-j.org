@@ -284,86 +284,127 @@ Anyway, the 'vm' verb does that for you behind the scenes.
 * :settle
 ** settle: step by step                                        :repl:
 *** :plus-sign
-
 Okay so now let's see how to actually do the sandpile logic.
+We need a sandpile to work with, so let's make a little plus sign.
 
-:    n?0 0 4 0 0?       !
-:  b n?0 0 4 0 0? v?,:? !
-: 2b n?4 4 4 4 4? v?,?  !
-: 2b n?0 0 4 0 0? v?,?  !
-: 2b n?0 0 4 0 0? v?,?  !
-: 2b i?y? c?=.?         !
-#+begin_src j
-[ y  =. 0 0 4 0 0, 0 0 4 0 0, 4 4 4 4 4, 0 0 4 0 0,: 0 0 4 0 0
-#+end_src
+Here's a 5 by 5 grid of zeros:
 
-Here's a little 5x5 grid with a plus sign made of fours.
+: 5 5 $ 0
+
+Let's put the number four in slot 2.
+
+: . n?4 (2}) 5 5 $ 0?
+
+Right curly brace is called amend, and it's an adverb. Passing the 2 in as the left argument makes it into a verb that takes its left argument (4) and sticks it into slot 2 on the right argument.
+
+: . !
+
+As you can see that sets the whole row at index 2.
+
+We can do the same thing at rank 1 to put a 4 at index 2 in each individual line.
+
+: . ^i4 (2}"1) ?
+# 4 (2}"1) 4 (2}) 5 5 $ 0
+
+That's exactly what I want, but let's factor out the four.
+
+# 4 (2}"1 ; 2}) 5 5 $ 0
+
+As you can see it passes 4 and the grid of zeros to both of these amend verbs, and then combines the two results. This is called a fork.
+
+Here the combining verb is this semicolon, called link, that puts the two arrays into their own boxes and returns the boxes as an array.
+
+If we want to combine them together to make a plus sign, we could use something like max:
+
+# 4 (2}"1 >. 2}) 5 5 $ 0
+
+We didn't really need to do these last two steps, but I wanted to get you thinking about this idea of performing some verb at different ranks and then combining the results with a fork, since we're going to see that same pattern several times as we look at the logic for settle.
+
+Okay so now we have a sandpile to work with. Let's call it y.
+
+: y =. 4 (2}"1 >. 2}) 5 5 $ 0
+: vsp y
 
 *** :gt
-Where is y greater than 3?
+Any time there are more than three grains of sand in a cell, the pile topples over.
 
-#+begin_src j
-y > 3
-#+end_src
+So where is y greater than 3?
+
+: y > 3
 
 All the fours turn into ones.
 
-let's call that gt.
-#+begin_src j
-gt =. y > 3
-#+end_src
+Let's call that gt for greater than.
 
-notice it didnt print out the grid this time. j hides the result when the leftmost part of the line is an assignment
+: gt =. y > 3
 
-if we put a bracket here it's just an identity function, but it changes the leftmost part of the line and so j prints the result
-#+begin_src j
-[ gt =. y > 3
-#+end_src
+Notice it didnt print out the grid this time. j hides the result when the leftmost part of the line is an assignment
 
-The rule is that any time a cell has more than 3 grains of sand, we shift one grain in each of the 4 cardinal directions.
+If we put a bracket here it's just an identity function, but it changes the leftmost part of the line and so j prints the result
+
+: gt =. y > 3
+
+Or since it's a sandpile, we could just use vsp:
+
+: vsp gt =. y > 3
+
+
+The complete rule is that any time a cell has more than 3 grains of sand, we send one grain in each of the 4 cardinal directions.
 
 *** :shift-up
-#+begin_src j
-vsp up =. }.   gt ,  0
-up
-#+end_src
-
+Well gt already tracks the position of one grain of sand.
 so to shift upward, we can append a row of 0s and chop off the top row.
 
-to shift down, we append the 0 at the top and then chop off the bottom row.
+: vsp up =. }.   gt ,  0
 
 *** :shift-down
-#+begin_src j
-vsp dn =. }:    0 ,  gt
-#+end_src
+to shift down, we append the 0 at the top and then chop off the bottom row.
+
+: vsp dn =. }:    0 ,  gt
 
 *** :left
-left and right work the same way, but we apply the rule at each row instead of to the whole array
+Left and right work the same way, but we apply the rule at each row instead of to the whole array
 
-so for left we use this rank 1 modifier. we could do the same for the comma but it's so common that j gives us ,. (stitch)
-#+begin_src j
-vsp lf =. }."1 gt ,. 0
-#+end_src
+So for left we use this rank 1 modifier again.
 
-it doesn't necessarily mean rank 1, it means 1 less than the highest rank. but since a grid is a rank 2 array, that's rank 1.
+: vsp lf =. }."1 gt ,"1 ] 0
+
+We need the right identity bracket or parentheses to separate the 1 in the rank 1 conjunction from the 0, which is an argument to the resulting verb.
+
+But actually, appending something to each row, or putting two arrays together side by side, is so common that there's another primitive that does exactly that.
+
+: vsp lf =. }."1 gt ,. 0
+
+We saw the monadic form (called ravel items) earlier when we were lifting scalars and vectors up to rank 2 for viewmat.
+
+The dyadic from is called stitch, and it joins each item of x with the corresponding item of y. It doesn't necessarily mean rank 1, it works at 1 less than the highest rank. But since the items of gt are its rows, and the corresponding items of zero are just the zero itself, it does exactly what we want here.
 
 *** :right
-same idea for shifting right, but since the 0 is now right next to the 1, we have to separate them, or they'll be treated as a single token and passed to the rank conjunction. we could put parens in here somewhere, but the identity function works just as well.
-#+begin_src j
-vsp rt =. }:"1 ]0 ,. gt
-#+end_src
+And the same idea for shifting right.
+
+With the 0 on the left side of the stich, we're stuck with a bracket again.
+
+: vsp rt =. }:"1 ]0 ,. gt
+
+We could also use the tilde to switch the order:
+
+: vsp rt =. }:"1 gt ,.~ 0
+
+Or we could do the stitch after we behead each row:
+
+: vsp rt =. 0 ,. }:"1 gt
+
+But we're going to shrink all of this way down in a few minutes anyway, so it doesn't really matter.
 
 *** :adding-up
-Now we just want to add all these together.
-#+begin_src j
-vsp y + up + dn + lf + rt
-#+end_src
+Now we just need add all these shifted versions to the original sandpile:
+
+: vsp y + up + dn + lf + rt
 
 And of course remove four from the centers:
-#+begin_src j
-[ cn =. _4 * gt
-vsp y + up + dn + lf + rt + cn
-#+end_src
+
+: [ cn =. _4 * gt
+: vsp y + up + dn + lf + rt + cn
 
 ** settle monad
 #+begin_src j
@@ -377,13 +418,18 @@ settle =: monad define          NB. settle sandpiles with entries > 3
   y + up + dn + lf + rt + cn
 )
 #+end_src
+Okay, so here's everything all together...
 
-** the short version
+: settle y
+
+** TODO the short version
 #+begin_src j
 f =: _1 1 |.!.0"0 _ ]
 s =: (+ +/@(_4&*,f,f&.(|:"2))@(3&<))^:_
-vm s 50 50 $ 4
+vsp s 50 50 $ 4
 #+end_src
+
+... And here's the short version.
 
 Was the most obvious way to write it at the time.
 You might think this is write-only code.
