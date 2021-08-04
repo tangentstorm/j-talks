@@ -31,91 +31,131 @@ We can render pretty much any matrix with viewmat:
 
 ** :viewmat-repl-demo                                          :repl:
 *** :normal-viewmat
-#+begin_src j
-i. 2 2   NB. a stable sandpile
-load viewmat
-viewmat i. 2 2
-#+end_src
+For rendering the sandpiles, I used viewmat, which is part of the J library.
 
-*** :console-viewmat
-#+begin_src j
-install 'github:tangentstorm/j-kvm@main'
-load 'tangentstorm/j-kvm/vm'
-vm i. 2 2
-#+end_src
+: i. 2 2   NB. a stable sandpile
+: load 'viewmat'
+: viewmat i. 2 2
+
+Viewmat's normal behavior is to render an image to a standalone file and open it in a new window.
+
+In the last couple videos, I've been rendering repeatedly to a standalone window to do animations. You can see how that works in the "animation in J" video, so I'm not going to cover that again.
+
+*** TODO :console-viewmat   fix branch
+Instead, lately I've been working with a wrapper for viewmat that lets you render the results directly in a terminal window using esape codes for color and unicode block drawing characters for the pixels. This lets you see the viewmat results directly in the J console.
+: install 'github:tangentstorm/j-kvm@work
+: load 'tangentstorm/j-kvm/vm'
+: vm i. 2 2
 
 *** :viewmat-colorspace
-#+begin_src j
-NB. rgb hex codes for some shades of blue
-p0 =. 16b00000f 16b3f3f9d 16b7878d8 16bacacff
-p0 vm i. 2 2
-
-p1 =. 16b0f0000 16b9d3f3f 16bd87878 16bffacac
-p1 vm i. 2 2
-
-p2 =. ((3#256)#:p0)
-p2 vm i. 2 2
-#+end_src
 We can pass in a custom palette to control the colors.
 Most programs tend to use 'rgb' ordering.
-Viewmat uses 'bgr' ordering.
-So you can either write them backwards, or you can send a rank two array in rgb order.
+
+If you just pass in numbers, Viewmat uses 'bgr' ordering.
+: p0 =. 16b00000f 16b3f3f9d 16b7878d8 16bacacff
+: p0 vm i. 2 2
+
+So you can either write them backwards:
+: p1 =. 16b0f0000 16b9d3f3f 16bd87878 16bffacac
+: p1 vm i. 2 2
+
+Or you can use a rank two array in rgb order:
+: p2 =. ((3#256)#:p0)
+: p2 vm i. 2 2
 
 *** :viewmat-interpolation
-#+begin_src j
-p2 vm i. 10 10
-#+end_src
-But if we try use more numbers, then it interpolates.
+So that's what I wan't my sandpile to look like, but there are a few problems.
+
+Part of the fun of sandpiles is to oversaturate them and watch them topple, so you have to account for cells with more than four grains of sand.
+
+But viewmat isn't using an indexed palette here. Rather, if we put bigger numbers in our array, it will map the highest and lowest palette colors to the highest and lowest values in the array, and interpolate between them.
+
+So if we have more values, we lose our mapping:
+
+: i. 10 10
+: p2 vm i. 10 10
 
 *** :viewmat-minmax
-#+begin_src j
- 2|i. 10 10
-p2 vm 2|i. 10 10
-#+end_src
-It also only looks at the biggest and smallest numbers in your array,
-so here it shows all the ones using the color we want for four.
+And if we don't have all four values, then it won't map the way we want. Here we only have zeros and ones in the array, but it shows the colors we want to use for zero and four.
+
+: 2|i. 10 10
+: p2 vm 2|i. 10 10
 
 *** :viewmat-rgb
-#+begin_src j
-'rgb' vm p0{~ 2|i. 10 10
-'rgb' vm p0{~ 4|i. 10 10
-'rgb' vm p0{~ i. 10 10  NB. more numbers than are in the palette
-3 { p0
-5 { p0   NB. index error
-#+end_src
-this works great when the values are 0, 1, 2, or 3, but
-but if we use a number outside the range, we'll get an index error.
+But we can do the palette lookup ourselves, putting the colors directly into the array:
+
+: p0 {~ 2 | i. 10 10
+
+And then pass the string 'rgb' as the left argument to viewmat:
+
+: 'rgb' vm p0{~ 2|i. 10 10
+: 'rgb' vm p0{~ 4|i. 10 10
+
+Of course now if we use numbers that are larger than the size of the palette, then we'll get an index error.
+
+: 'rgb' vm p0{~ i. 10 10  NB. more numbers than are in the palette
+
+That's coming from here:
+
+: 3 { p0
+: 5 { p0   NB. index error
+
+The left curly is pronounced 'from'. So index 3 from p0.
+
+: 3 { p0      NB. p0[3] in other languages
+
+The tilde just swaps the left and right arguments.
+
+: p0 {~ 3     NB. same
 
 *** :rgb-gradient
-#+begin_src j
-'rgb' vm 16b001100
-'rgb' vm 16b001100 * i.16
-hfd 16b001100 * i.16
-'rgb' vm 16bff0000 + 16b001100 * i.16
-'rgb' vm 16bff0000 + 16b001100 * i._16
-#+end_src
-so we can fix this by making our own gradient.
-that's almost too dark to see.
-but we can multiply that by a range to go from black all the way to pure green.
+We want to support larger numbers, so what do we do?
 
-So that's like multiplying by eleven hundred in decimal...
-it gives us the digits, 00,11,22 all the way up to ff.
+We can fix this by making our own gradient to hold bigger numbers, and then writing a verb that maps arbitrary integers to that gradient.
 
-anyway, adding pure red to that gives us a gradient from red to yellow.
-I actually wanted yellow to red, so we can just make the 16 negative.
+I want the gradient to go from yellow to red as you add more sand, and to get yellow you need green and red, so let's start with some dark green:
+
+: 'rgb' vm 16b001100
+
+That's probably too dark to see, but if we multiply by idot 16, we'll see a nice gradient from black to pure green:
+
+: 'rgb' vm 16b001100 * i.16
+
+The 16b prefix mean hexidecimal. So this is just like multiply by eleven hundred in decimal... It gives us 00,11 hundred, 22 hundred, and so on all the way up to ff00.
+
+: hfd 16b001100 * i.16
+
+Now if we add pure red we'll get the gradient we want:
+
+: 'rgb' vm 16bff0000 + 16b001100 * i.16
+
+Only it's backwards, so make the 16 negative.
+
+: 'rgb' vm 16bff0000 + 16b001100 * i._16
+
+Underscore 16 means negative 16. You could use the minus sign, but that's a verb acting on an argument, whereas the underscore is actually part of the name.
+
+It makes no difference in this case because we're only dealing with a scalar, but it makes a huge difference when you have an array:
+
+: (_16 15) ; (16 _15)
+: (-16 15) ; (16 -15)
 
 *** :rgb-palette
-#+begin_src j
-'rgb' vm p0, 16bff0000 + 16b001100 * i._16
-p0
-lo =. 16b00000f 16b3f3f9d 16b7878d8 16bacacff   NB. black and blue/indigo
-hi =. 16bff0000 + 16b001100 * i._16             NB. 4+i.204 are yellow..red
-'rgb' vm pal =. lo,hi
-pal =: lo,hi
-#+end_src
-so if we add p0 back in, we have our palette.
 
-now we have to map all the numbers greater than four to this range.
+Anyway, if we append this to p0, we have our full palette.
+
+: 'rgb' vm p0, 16bff0000 + 16b001100 * i._16
+
+Let's write this explicitly:
+
+: p0
+: lo =. 16b00000f 16b3f3f9d 16b7878d8 16bacacff   NB. black and blue/indigo
+: hi =. 16bff0000 + 16b001100 * i._16             NB. yellow...red
+: pal =: lo,hi
+: 'rgb' vm pal
+
+
+Now we have to map all the numbers greater than four to this range.
 
 I wanted pure yellow to mean 4,
 then this next color to mean 5 through 8,
@@ -124,80 +164,122 @@ then 17 through 32,
 using powers of two each time.
 
 *** :interval-index
-#+begin_src j
-NB. map any non-negative integer to the palette
-idx =: 0 1 2 3, 2^2+i.16
-idx I. 0 1 2 3 4
-idx I. 0 1 2 3 4 5 6 7 8
-idx I. 0 1 2 3 4 5 6 7 8 9 10
-#+end_src
-so the idea is to make in index of the palette.
-then we can use Interval Index (dyadic cap I dot) to map any number to that range.
-the left argument is a list of ascending numbers.
+So the idea is to make an interval index.
+
+: idx =: 0 1 2 3, 2^2+i.16
+: idx
+
+Then Interval Index is dyadic capital idot.
+The left argument is a list of ascending numbers.
 then for each item on the right, it figures out where it would have to go in the left argument to keep that list sorted.
 
-so here anything 0 or less goes in bin 0.
-1 goes in bin 1.
-2 goes in bin 2.
-and so on up to 4.
+: idx I. 0 1 2 3 4
+
+The idea is that anything that's 0 or less goes into the first bin. Anything greater than zero and less than or equal to 1 gets mapped to index 1, and so on. So the first four numbers map to themselves.
+
+: idx I. 0 1 2 3 4 5 6 7 8
+
 then 5 6 7 and 8 all go into bin 5,
-9 goes into bin 6
-and so on.
+
+: idx I. 0 1 2 3 4 5 6 7 8 9 10 16 17
+
+9 through 16 go into bin 6, and so on.
 
 *** :indexed-palette
-#+begin_src j
-pal {~ idx I. 0 1 2 3 4 5 6 7 8 9 10
-'rgb' vm pal {~ idx I. 0 1 2 3 4 5 6 7 8 9 10
-vm i. 32 32
-vm idx I. i. 32 32
-0'rgb' vm pal {~ idx I. 2^10
-'rgb' vm pal {~ idx I. 2^17
-'rgb' vm pal {~ idx I. 2^18 NB. too big
-idx =: 0 1 2 3, 2^2+i.15
-'rgb' vm pal {~ idx I. 2^203948 NB. no problem
-#+end_src
-now we can use that as an index into the palette.
-but of course if the numbers are too big, we're outside the palette.
+
+Now we can use that as an index into the palette.
+
+: pal {~ idx I. 0 1 2 3 4 5 6 7 8 9 10
+: 'rgb' vm pal {~ idx I. 0 1 2 3 4 5 6 7 8 9 10
+
+But there's still a problem. The way I've written it, this works all the way up to 2^17. But if the number is too big, then we'll get an index error:
+
+: 'rgb' vm pal {~ idx I. 2^17
+: 'rgb' vm pal {~ idx I. 1 + 2^17 NB. too big
+
+The problem is that 2^17 is the last number in the index.
+
+: idx = 2^17
+: idx I. 2^17
+
+So if you ask for a higher number, it puts it in the next bin, which is bin 20.
+
+: idx I. 1+2^17
+
+And since the length of the palette is 20 and indexing starts at 0,
+
+: # pal
+
+: 20 { pal   NB. index error
+
+.. then it's not going to work.
 
 in the original code I did some manual bounds checking but
 what i should have done is just made the index one item shorter.
-then anything bigger than 2^17 (remember we're adding 2)
-goes into the last bin.
+then anything bigger than 2^17 (remember we're adding 2).
+
+: idx =: 0 1 2 3, 2^2+i.15
+: # idx
+
+Since the length of the index is now one less than the length of the palette, every number will now get mapped properly.
+
+: 'rgb' vm pal {~ idx I. 2^203948 NB. no problem
 
 *** :smooth-color
-#+begin_src j
-'rgb' vm pal {~ idx I. i. 32 32
-#+end_src
 anyway, now we can draw sandpiles and get with this nice smooth ramping effect for the colors.
 
-*** TODO :vsp
+: 'rgb' vm pal {~ idx I. i. 32 32
+
+*** :vsp
+So now let's wrap this up as a verb:
+
+: {{ 'rgb' vm pal {~ idx I. y }} i. 32 32
+
+These double curly braces are a new syntax that was added in j902. You can use them to define all sorts of things inline. Here we're using the magic special name y inside, so we get a monadic verb.
+
+Let's call it vsp for view sandpile:
+
+: vsp =: {{ 'rgb' vm pal {~ idx I. y }}
+
+And we're ready to go.
+
+: vsp i. 2 2
+
 *** :vm-vs-viewmat
-#+begin_src j
-'rgb' viewmat 16b001100  NB. shape error
-'rgb' viewmat ,.16b001100  NB. fix with 'ravel items'
-'rgb' viewmat ,.16b001100  * i. 16
-'rgb' viewmat |:,.16b001100  * i. 16
-#+end_src
-one last note before we move on:
-all this time i've been showing individual scalars and lists with this vm verb.
-If you're using viewmat in general, it'll give you an error if you try that.
-but you can fix that with comma dot. It brings any array to rank 2, by turning each of the array's items into a flat list.
-then for rank 1 arrays, i tend to like seeing them as horizonal instead of vertical, so if you want that, you can use transpose. (for rank 1, you could also use ,: which takes an array and wraps it in another array one rank higher. so that gives you a single row for i.10)
-anyway, the 'vm' verb is doing that behind the scenes.
 
-* TODO :animation
-#+begin_src j
-NB. TODO: whatever
-#+end_src
+One last note before we move on.
 
-- animation (i'll probably do another video on the gui stuff in the future)
-i covered most of animation stuff in my other video
-this time around i'm not doing anything interactive,
-so i can use a much simpler technique...
-or we can just skip the animations altogether.
+All this time i've been showing individual scalars and lists with this vm verb.
 
-- reusing viewmat window for animation i've talked about before
-- here i'm just doing a simple loop
+: 'rgb' vm 16b001100
+
+If you're using plain viewmat, it'll give you an error if you try that.
+
+: 'rgb' viewmat 16b001100  NB. shape error
+
+You can fix that with comma dot. It brings any array to rank 2, by turning each of the array's items into a flat list.
+
+: 'rgb' viewmat ,.16b001100  NB. fix with 'ravel items'
+: 'rgb' viewmat ,.16b001100  * i. 16
+
+That works for rank 1 as well. If you want it horizontal, you can use transpose:
+
+: 'rgb' viewmat |:,.16b001100  * i. 16
+
+For rank 1 in particular you can do that all in one step, with itemize:
+
+: 'rgb' viewmat ,:16b001100  * i. 16
+
+But that won't work for a scalar.
+
+: 'rgb' viewmat ,:16b001100  NB. error
+
+Whereas transposing after ravel items works for both:
+
+: 'rgb' viewmat |:,.16b001100  NB. error
+
+Anyway, the 'vm' verb does that for you behind the scenes.
+
 
 * :settle
 ** settle: step by step                                        :repl:
@@ -316,8 +398,8 @@ python code means.
 
 It's sort of like reading a long unfamiliar foreign word. You just have to take it slow and look at each piece in isolation.
 
-
 ** are they the same?
+*** :side-by-side
 #+begin_src j
 settle =: monad define          NB. settle sandpiles with entries > 3
   gt =. y > 3
@@ -331,10 +413,10 @@ settle =: monad define          NB. settle sandpiles with entries > 3
 
 f =: _1 1 |.!.0"0 _ ]           NB. golfed version
 s =: (++/@(_4&*,f,f&.(|:"2))@(3&<))^:_
-
-NB.! before
+#+end_src
+*** :test-same                                                :repl:
+#+begin_src j
 (s -: settle) 50 50 $ 4         NB. if this=1, s and settle are same
-NB.! after
 (s -: settle^:_) 50 50 $ 4      NB. if this=1, s and settle are same
 #+end_src
 One way we can test that these are the same is to compare the outputs.
@@ -346,16 +428,13 @@ Or in the spirit of golfing, we could remove the sequence from s, and have it do
 
 ** first golf: one step at a time
 #+begin_src j
-load 'viewmat'
 f =: _1 1 |.!.0"0 _ ]
-NB.! before
 s =: (+ +/@(_4&*,f,f&.(|:"2))@(3&<))^:_
-viewmat s 50 50 $ 4
-NB.! after
-s =: + +/@(_4&*,f,f&.(|:"2))@(3&<)
-viewmat s^:_ [50 50 $ 4
-#+end_src
+vm s 50 50 $ 4
 
+s =: + +/@(_4&*,f,f&.(|:"2))@(3&<)
+vm s^:_ [50 50 $ 4
+#+end_src
 
 in fact if we do that we save at least one character, because we can remove the parentheses,
 and move the fixedpoint sequence down to the next line. ^:_
@@ -531,21 +610,14 @@ But as of J902 beta-i, which came out in October of 2020, you can now use the di
 
 : only v3
 
-** extract monads
+** extract monads                                              :ed:
 #+begin_src j
 settle1 =: monad define
-NB.!if before
   gt =. y > 3
   up =. }.   gt ,  0
   dn =. }:    0 ,  gt
   lf =. }."1 gt ,. 0
   rt =. }:"1 ]0 ,. gt
-NB.!else
-  up =. {{ }. y , 0 }}
-  dn =. {{ }: 0 , y }}
-  lf =. {{ }."1  y ,. 0 }}
-  rt =. {{ }:"1 ]0 ,. y }}
-NB.!end
   cn =. *&_4
   y + up + dn + lf + rt + cn
 )
@@ -555,6 +627,15 @@ s =: (++/@(_4&*,f,f&.(|:"2))@(3&<))^:_
 
 (s -: settle^:_) 50 50 $ 4      NB. if this=1, s and settle are same
 #+end_src
+
+** :all-monads
+#+begin_src j
+  up =. {{ }. y , 0 }}
+  dn =. {{ }: 0 , y }}
+  lf =. {{ }."1  y ,. 0 }}
+  rt =. {{ }:"1 ]0 ,. y }}
+#+end_src
+
 ** extract hook
 #+begin_src j
 settle =: monad define
@@ -598,15 +679,12 @@ dn =: {{}: 0 , y}}
 lf =: {{}."1  y ,. 0}}
 rt =: {{}:"1 ]0 ,. y}}
 cn =: *&_4
-NB.!if v0
 settle =: monad define
   (+ (up + dn + lf + rt + cn)@gt) y
 )
-NB.else
-settle =: + (up + dn + lf + rt + cn)@gt
-NB.end
 #+end_src
 
+: settle =: + (up + dn + lf + rt + cn)@gt
 
 So now we can make the final expression tacit, meaning we don't have to
 refer to local variable y, and we're just directly constructing the verb
