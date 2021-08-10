@@ -1,10 +1,10 @@
 #+title: sandpiles in j
 
 * TODO :recap
-#+begin_src j
-NB. run sandpaint
-#+end_src
 
+: vm 16bffcc33
+
+: < 3
 
 - quick recap: what are sandpiles?
 - this is the code review for the sandpiles video
@@ -34,7 +34,9 @@ We can render pretty much any matrix with viewmat:
 For rendering the sandpiles, I used viewmat, which is part of the J library.
 
 : i. 2 2   NB. a stable sandpile
+
 : load 'viewmat'
+
 : viewmat i. 2 2
 
 Viewmat's normal behavior is to render an image to a standalone file and open it in a new window.
@@ -43,8 +45,10 @@ In the last couple videos, I've been rendering repeatedly to a standalone window
 
 *** TODO :console-viewmat   fix branch
 Instead, lately I've been working with a wrapper for viewmat that lets you render the results directly in a terminal window using esape codes for color and unicode block drawing characters for the pixels. This lets you see the viewmat results directly in the J console.
-: install 'github:tangentstorm/j-kvm@work
+: NB. install 'github:tangentstorm/j-kvm@work'
+
 : load 'tangentstorm/j-kvm/vm'
+
 : vm i. 2 2
 
 *** :viewmat-colorspace
@@ -53,14 +57,17 @@ Most programs tend to use 'rgb' ordering.
 
 If you just pass in numbers, Viewmat uses 'bgr' ordering.
 : p0 =. 16b00000f 16b3f3f9d 16b7878d8 16bacacff
+
 : p0 vm i. 2 2
 
 So you can either write them backwards:
 : p1 =. 16b0f0000 16b9d3f3f 16bd87878 16bffacac
+
 : p1 vm i. 2 2
 
 Or you can use a rank two array in rgb order:
 : p2 =. ((3#256)#:p0)
+
 : p2 vm i. 2 2
 
 *** :viewmat-interpolation
@@ -73,12 +80,14 @@ But viewmat isn't using an indexed palette here. Rather, if we put bigger number
 So if we have more values, we lose our mapping:
 
 : i. 10 10
+
 : p2 vm i. 10 10
 
 *** :viewmat-minmax
 And if we don't have all four values, then it won't map the way we want. Here we only have zeros and ones in the array, but it shows the colors we want to use for zero and four.
 
 : 2|i. 10 10
+
 : p2 vm 2|i. 10 10
 
 *** :viewmat-rgb
@@ -89,6 +98,7 @@ But we can do the palette lookup ourselves, putting the colors directly into the
 And then pass the string 'rgb' as the left argument to viewmat:
 
 : 'rgb' vm p0{~ 2|i. 10 10
+
 : 'rgb' vm p0{~ 4|i. 10 10
 
 Of course now if we use numbers that are larger than the size of the palette, then we'll get an index error.
@@ -98,6 +108,7 @@ Of course now if we use numbers that are larger than the size of the palette, th
 That's coming from here:
 
 : 3 { p0
+
 : 5 { p0   NB. index error
 
 The left curly is pronounced 'from'. So index 3 from p0.
@@ -138,6 +149,7 @@ Underscore 16 means negative 16. You could use the minus sign, but that's a verb
 It makes no difference in this case because we're only dealing with a scalar, but it makes a huge difference when you have an array:
 
 : (_16 15) ; (16 _15)
+
 : (-16 15) ; (16 -15)
 
 *** :rgb-palette
@@ -149,9 +161,13 @@ Anyway, if we append this to p0, we have our full palette.
 Let's write this explicitly:
 
 : p0
+
 : lo =. 16b00000f 16b3f3f9d 16b7878d8 16bacacff   NB. black and blue/indigo
+
 : hi =. 16bff0000 + 16b001100 * i._16             NB. yellow...red
+
 : pal =: lo,hi
+
 : 'rgb' vm pal
 
 
@@ -167,6 +183,7 @@ using powers of two each time.
 So the idea is to make an interval index.
 
 : idx =: 0 1 2 3, 2^2+i.16
+
 : idx
 
 Then Interval Index is dyadic capital idot.
@@ -190,16 +207,19 @@ then 5 6 7 and 8 all go into bin 5,
 Now we can use that as an index into the palette.
 
 : pal {~ idx I. 0 1 2 3 4 5 6 7 8 9 10
+
 : 'rgb' vm pal {~ idx I. 0 1 2 3 4 5 6 7 8 9 10
 
 But there's still a problem. The way I've written it, this works all the way up to 2^17. But if the number is too big, then we'll get an index error:
 
 : 'rgb' vm pal {~ idx I. 2^17
+
 : 'rgb' vm pal {~ idx I. 1 + 2^17 NB. too big
 
 The problem is that 2^17 is the last number in the index.
 
 : idx = 2^17
+
 : idx I. 2^17
 
 So if you ask for a higher number, it puts it in the next bin, which is bin 20.
@@ -219,6 +239,7 @@ what i should have done is just made the index one item shorter.
 then anything bigger than 2^17 (remember we're adding 2).
 
 : idx =: 0 1 2 3, 2^2+i.15
+
 : # idx
 
 Since the length of the index is now one less than the length of the palette, every number will now get mapped properly.
@@ -260,6 +281,7 @@ If you're using plain viewmat, it'll give you an error if you try that.
 You can fix that with comma dot. It brings any array to rank 2, by turning each of the array's items into a flat list.
 
 : 'rgb' viewmat ,.16b001100  NB. fix with 'ravel items'
+
 : 'rgb' viewmat ,.16b001100  * i. 16
 
 That works for rank 1 as well. If you want it horizontal, you can use transpose:
@@ -280,7 +302,6 @@ Whereas transposing after ravel items works for both:
 
 Anyway, the 'vm' verb does that for you behind the scenes.
 
-
 * :settle
 ** settle: step by step                                        :repl:
 *** :plus-sign
@@ -294,6 +315,7 @@ Here's a 5 by 5 grid of zeros:
 Let's put the number four in slot 2.
 
 : . n?4 (2}) 5 5 $ 0?
+: 4 (2}) 5 5 $ 0
 
 Right curly brace is called amend, and it's an adverb. Passing the 2 in as the left argument makes it into a verb that takes its left argument (4) and sticks it into slot 2 on the right argument.
 
@@ -304,11 +326,11 @@ As you can see that sets the whole row at index 2.
 We can do the same thing at rank 1 to put a 4 at index 2 in each individual line.
 
 : . ^i4 (2}"1) ?
-# 4 (2}"1) 4 (2}) 5 5 $ 0
+: 4 (2}"1) 4 (2}) 5 5 $ 0
 
 That's exactly what I want, but let's factor out the four.
 
-# 4 (2}"1 ; 2}) 5 5 $ 0
+: 4 (2}"1 ; 2}) 5 5 $ 0
 
 As you can see it passes 4 and the grid of zeros to both of these amend verbs, and then combines the two results. This is called a fork.
 
@@ -316,13 +338,14 @@ Here the combining verb is this semicolon, called link, that puts the two arrays
 
 If we want to combine them together to make a plus sign, we could use something like max:
 
-# 4 (2}"1 >. 2}) 5 5 $ 0
+: 4 (2}"1 >. 2}) 5 5 $ 0
 
 We didn't really need to do these last two steps, but I wanted to get you thinking about this idea of performing some verb at different ranks and then combining the results with a fork, since we're going to see that same pattern several times as we look at the logic for settle.
 
 Okay so now we have a sandpile to work with. Let's call it y.
 
 : y =. 4 (2}"1 >. 2}) 5 5 $ 0
+
 : vsp y
 
 *** :gt
@@ -347,7 +370,6 @@ If we put a bracket here it's just an identity function, but it changes the left
 Or since it's a sandpile, we could just use vsp:
 
 : vsp gt =. y > 3
-
 
 The complete rule is that any time a cell has more than 3 grains of sand, we send one grain in each of the 4 cardinal directions.
 
@@ -404,7 +426,9 @@ Now we just need add all these shifted versions to the original sandpile:
 And of course remove four from the centers:
 
 : [ cn =. _4 * gt
+
 : vsp y + up + dn + lf + rt + cn
+
 
 ** settle monad
 #+begin_src j
@@ -418,32 +442,28 @@ settle =: monad define          NB. settle sandpiles with entries > 3
   y + up + dn + lf + rt + cn
 )
 #+end_src
-Okay, so here's everything all together...
+
+Okay, so here's everything all together, wrapped up as a monad.
 
 : settle y
 
 ** TODO the short version
 #+begin_src j
+
 f =: _1 1 |.!.0"0 _ ]
-s =: (+ +/@(_4&*,f,f&.(|:"2))@(3&<))^:_
+s =: (++/@(_4&*,f,f&.(|:"2))@(3&<))^:_
 vsp s 50 50 $ 4
 #+end_src
-
 ... And here's the short version.
-
 Was the most obvious way to write it at the time.
 You might think this is write-only code.
-
 This right bracket doesn't match with anything.
 The syntax highlighting really helps, but you just have to know that |: is one token whereas ++ is two
 (the rule is that if it's more than one character, everything after the first character is a dot or colon)
-
 I certainly don't just instantly grok what it says,
 just like I wouldn't just instantly grok what a page of
 python code means.
-
 It's sort of like reading a long unfamiliar foreign word. You just have to take it slow and look at each piece in isolation.
-
 ** are they the same?
 *** :side-by-side
 #+begin_src j
@@ -481,7 +501,6 @@ vm s 50 50 $ 4
 s =: + +/@(_4&*,f,f&.(|:"2))@(3&<)
 vm s^:_ [50 50 $ 4
 #+end_src
-
 in fact if we do that we save at least one character, because we can remove the parentheses,
 and move the fixedpoint sequence down to the next line. ^:_
 but we have to give a character back becaues underscore is a number (it means infinity)
@@ -489,9 +508,7 @@ and so we need an identity bracket to separate it from the 50 50.
 although if you're serious about golfing, you could just replace the space.
 in fact you could just remove most of the spaces, but I'd rather save that until the very end just to keep things
 readable.
-
 or you know, as readable as possible. :)
-
 * :deconstruct
 #+begin_src j
 settle =: monad define
@@ -673,7 +690,6 @@ s =: (++/@(_4&*,f,f&.(|:"2))@(3&<))^:_
 
 (s -: settle^:_) 50 50 $ 4      NB. if this=1, s and settle are same
 #+end_src
-
 ** :all-monads
 #+begin_src j
   up =. {{ }. y , 0 }}
@@ -1059,7 +1075,6 @@ f =: _1 1 |.!.0"0 _ ]
 u =: 0&(}:@,,:}.@,~)
 #+end_src
 way smaller than old version and saves a charecter vs f
-
 ** jitwit's version
 #+begin_src j
 jw=:(+[:(_4&*+[:+/((,-)(,:|.)0 1)|.!.0])3&<)^:_     NB. jitwit's version
