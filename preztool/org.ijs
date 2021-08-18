@@ -29,6 +29,7 @@ slide_lines =: {{
   if. #>c do. r =. r,'#+begin_src j';c,<'#+end_src' end.
   r,t }}
 
+NB. turn the arrays back into org text:
 org_text =: {{ ;(,&LF)L:0 title,'';;slide_lines each i.#slides }}
 
 cur=:0
