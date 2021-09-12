@@ -4,23 +4,19 @@
 #+begin_src j
 settle =: monad define
   gt =. y > 3
-  up =. }.   gt ,  0
+  up =. {{ }.   y ,  0 }} gt
   dn =. }:    0 ,  gt
   lf =. }."1 gt ,. 0
   rt =. }:"1 ]0 ,. gt
   cn =. _4 * gt
-  y + up + dn + lf + rt + cn
+  ( + up + dn + lf + rt + cn) gt
 )
 
 f =: _1 1 |.!.0"0 _ ]
 s =: + +/@(_4&*,f,f&.(|:"2))@(3&<)
 #+end_src
-
-: vm 16bffcc33
-
-: < 3
-
-- quick recap: what are sandpiles?
+: {{ i. y }}"0 i. 5
+- quick recap: what are sandpiles??
 - this is the code review for the sandpiles video
 - covered most of the gui logic in the basic animation and sprite editor videos
 - will focus on these two screens
@@ -35,6 +31,7 @@ I did a whole video on them a while back, but since I thought it might be intere
   - viewmat comes with j
   - but we need color
 - most of the video on the step function
+
 - instead i want to focus on the rule, and how to get to the short version
 - help you understand both versions and how one is derived from the other
 - talk a little bit about rendering real quick
@@ -80,7 +77,7 @@ So you can either write them backwards:
 : p1 vm i. 2 2
 
 Or you can use a rank two array in rgb order:
-: p2 =. ((3#256)#:p0)
+: p2 =. (3#256)#:p0
 
 : p2 vm i. 2 2
 
@@ -319,6 +316,11 @@ Anyway, the 'vm' verb does that for you behind the scenes.
 * :settle
 ** settle: step by step                                        :repl:
 *** :plus-sign
+#+begin_src j
+4 (2}) 5 5 $ 0
+x =. 3
+#+end_src
+
 Okay so now let's see how to actually do the sandpile logic.
 We need a sandpile to work with, so let's make a little plus sign.
 
@@ -885,24 +887,9 @@ Comma is called append.
 Stitch is the same as comma at rank 1. *only when you're talking about 2d arrays*
 So just to make this easier to read, I'm going to temporarily introduce a constant, o.
 *** quick demo
-#+begin_quote j
-   m =: 5 5 $ _
-   m
-_ _ _ _ _
-_ _ _ _ _
-_ _ _ _ _
-_ _ _ _ _
-_ _ _ _ _
-   (up;dn;lf;rt) m
-: ┌─────────┬─────────┬─────────┬─────────┐
-: │_ _ _ _ _│0 0 0 0 0│_ _ _ _ 0│0 _ _ _ _│
-: │_ _ _ _ _│_ _ _ _ _│_ _ _ _ 0│0 _ _ _ _│
-: │_ _ _ _ _│_ _ _ _ _│_ _ _ _ 0│0 _ _ _ _│
-: │_ _ _ _ _│_ _ _ _ _│_ _ _ _ 0│0 _ _ _ _│
-: │0 0 0 0 0│_ _ _ _ _│_ _ _ _ 0│0 _ _ _ _│
-: └─────────┴─────────┴─────────┴─────────┘
-#+end_quote
-
+: m =: 5 5 $ _
+: m
+: NB. (up;dn;lf;rt) m     NB. !! doesn't work because up,dn,lf,rt are nouns at this point in time
 
 Anyway,now we can see that up and left are identical except for the rank
 and dn and right are identical except for the rank.
