@@ -1,0 +1,153 @@
+0:00 demo
+1:00 planning
+
+bug on save
+
+* 1:44 "playing back the macro"
+
+- where to put the handler?
+reactive feedback
+update repl
+
+*  5:10 "the way this is supposed to work"
+(creating the blank line)
+
+*  6:48 the two kinds of pauses
+tempo character
+
+* fix right side of outline so it scrolls
+* make sure i can save
+* discover reload bug(s)
+* should probably cut out a bunch of floundering here
+* code review of =open= function
+- worth talking about the data structures
+- but in a coherent review of the architecture
+
+* took forever to understand index
+* 27:02 - talk about interval index
+episode 11 - how the outliner works
+* 9am - finish up the bugfix... thinking about what to film here
+
+* productive session
+** DONE bug: text added from repl gets discarded
+   |(fix was to use insline instead of ins__cmd)
+** DONE do not show macros in the repl
+   |(fix was change to new_repl_line)
+   |
+** DONE fix the right side of outline so that it scrolls
+   |HEIGHT (H)  was just set wrong
+   |
+** DONE =goz_UiList_= does not scroll correctly (cursor hidden when entering from bottom)
+   |fixed by adding bounds checking to goz
+   |
+
+* TODO i set TSV=0 istead of 1 after deciding on 1
+
+
+* what story do i have to tell here? "HOW DOES the macro playback work?"
+- goal is to record the short
+- this should have been easy
+- after i got macros to record yesterday
+- but first i needed it to save
+  - wasn't saving the page
+- final stretch but bugs kept getting in the way
+  - i spent half an hour planning doing some long overdue planning
+
+
+
+* what actually happened
+0:00-0:42
+1:00 planning
+2:00 two kinds of pauses
+3:00 problem - need the starting point
+4:20 - test framework
+ - actually ahave a decent plan
+but cut the 5:00 planning
+5:20-6:20 - ignore the cursor ui problems for now
+
+7:00 < can gloss over  the future worlds stuff >
+
+8:00 "my goal is to film the screenplay"
+explain  "one more thing"
+(need to explain scroll so i can read the text)
+
+ but first i have to save...
+ 10:15 or so .. "hrm" because ctrl-o doesn't work
+11:17 not doing anything to r-open
+
+restore the
+
+14:58 - not clearing the history...
+15:20 showing the wrong history problem
+16:00 < trying to explain the index but it confuses me  >
+17:00 - "15 lines?!?"
+18:00 begin code review of 'open'
+  25:10 finally understand what's actually happening
+  27:00 interval index demo is too rambly
+  32:00 finally hit 9:00am
+  33: planning inside code review (to enter macro)
+36:00 end code review.
+36:20 reflections: how to make livecoding interesting?? (long silences)
+
+37:50 bug: history is still messed up. (but easy fix now)
+  - should probably have cutaway for git commits
+
+40:00 tmux config (cut this)
+
+43:00 fix right side until it scrolls
+44:19 shows recording a macro (is this a repeat?)
+
+45:32 (13:21 on clock) <new bug - it doesn't save>
+  48:00 (13:25) fix was inscmd, but still needed some work
+  52:47 finally fix this bug
+54:00 demo it saves (@13:30 clock)
+
+55:23 / @13:31 don't show macro in repl
+57:41 - done
+
+59:00, @13.37 height set wrong, move prev slide doesn't scroll correctly
+1:01:00 @actually it's goz
+@13:48 scroll position
+@13:50 demo tilde..
+@13:52 silly face, confusion about min/max
+@13:54 can't cursor all the way up
+
+1:08:00 @13:58 macro playback planning
+1:12 (@14:06 thinking about how/when to do it)
+@14:08 "don't have to move cursor. just press shift-n"
+
+@14:11 successfully saving the macro
+@14:13 but not playing correctly
+@14:16 have to manually update children
+@14:18:30 playing back macro super slow
+@14:22 - 10x speed hack. ideas for speeding up redraws
+
+@14:25 planning session : pre-play macros to get the start states
+14:37 - implementing this went really smoothly after planning
+
+@14:40 start of getstate/setstate for macro
+@14:43 need the cursor position
+@14:45 'make the memo thing'
+@14:50 confused by explicit v) vs )v
+@14:53 working demo for memo thing
+(git commits)
+@14:55 olr for memos
+@14:56 <-- introduce a bug...
+@14:59 show working olr
+
+@15:00 now set starting state before playing
+<git commit patch aside>
+
+@15:07 "even this line illustrates the problem"
+<include this>
+15:08 except this current index is probably elsewhere... "dry"
+
+<trying to demo the start state thing>
+@15:11 here is where the bug manifests
+
+@15:15 left it without actually evaluating
+(not exactly necessary for recording a movie but ought to be there)
+
+
+* next episode : code review
+start with I.
