@@ -1,4 +1,12 @@
+
 #+title: Blender As A Video Editor
+
+* importing a video
+- drag footage to start of timeline
+- pgup to go to end of clip
+- ctrl-end to set end of timeline
+- home puts whole footage in view
+
 
 * VSE comes at the end of the pipeline
 

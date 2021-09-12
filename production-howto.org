@@ -1,23 +1,33 @@
 
-* TODO next time try recording at 30fps in obs.
+
+* OBS settings
+** 30fps as standard speed
+: settings -> video -> common fps values
+** 300ms delay on the audio input to sync with video
+: audio mixer -> advanced properties
+** audio encoding: use aac instead of vorbis
+: settings -> output -> recording -> audio encoder = aac
+blender has no problem with vorbis,
+but davinci doesn't see the audio track.
+can re-encode quickly with with avidemux if you record it wrong
 
 * recording checklist
 ** OBS
 - [ ] studio mode off
-- [ ] make sure (settings -> audio -> devices -> mic ) is set to turtle beach
-      Refresh in device manager if it doesn't show up.
+- [ ] make sure (settings -> audio -> devices -> mic ) is set to mic
 ** j windows
 - [ ] preztool should take care af most of this
 - [ ] run finished example app
 - [ ] then 'c' to clear environment
 - [ ] have autohotkey scripts running (tools/viewmat.ahk) if necessary
-** microphone
-- [ ] green setting
-
 
 * editing in blender
 edit -> preferences -> system -> sequencer cache  = 4096
 lower left hand corner in timeline: playback -> top dropdown = av sync
+
+** importing the footage
+- set first frame to 0
+- set 
 
 ** usage notes
 - New / Video Editing
