@@ -1,23 +1,25 @@
-* rejms
-** completed
-*** [3/3] app framework
-**** DONE render multiple widgets to buffer
-**** DONE emit only changed lines
-**** DONE handle unicode vid buffers properly
-*** [5/5] basic line editor
-**** DONE fix broken fwd/bwd commands
-**** DONE syntax highlighting in the editor (proof of concept)
-**** DONE fix bug: space key does not work
-**** DONE record keystrokes as macros
-**** DONE concatenate the inserted characters without redundant escapes
-**** DONE remove spurious color codes
-**** DONE move macros from token editor to plain editor
-**** DONE set aside "token editor" concept for now
-**** DONE restore syntax highlighting
-*** [4/4] macro timing
-**** DONE record and quantize keystroke timestamps
-**** DONE encode timing in the macros itself
-**** DONE [7/7] make macro animations asynchronous
+#+TITLE: kanban for rejms (the ridiculously early j morning show)
+#+TODO: BUG TODO | DONE
+
+* finished
+** [3/3] app framework
+*** DONE render multiple widgets to buffer
+*** DONE emit only changed lines
+*** DONE handle unicode vid buffers properly
+** [5/5] basic line editor
+*** DONE fix broken fwd/bwd commands
+*** DONE syntax highlighting in the editor (proof of concept)
+*** DONE fix bug: space key does not work
+*** DONE record keystrokes as macros
+*** DONE concatenate the inserted characters without redundant escapes
+*** DONE remove spurious color codes
+*** DONE move macros from token editor to plain editor
+*** DONE set aside "token editor" concept for now
+*** DONE restore syntax highlighting
+** [4/4] macro timing
+*** DONE record and quantize keystroke timestamps
+*** DONE encode timing in the macros itself
+*** DONE [7/7] make macro animations asynchronous
 (get them out of the while loop)
 
 - [X] each widget needs an 'update' verb and an 'A' flag for whether it's active/animated.
@@ -28,82 +30,82 @@
 - [X] editor needs a flag/mode that indicates it's playing (maybe the A flag does this)
 - [X] editor's update method should play the next character in the macro if it's animating.
 
-**** DONE allow speed control per keystroke in the editor.
+*** DONE allow speed control per keystroke in the editor.
 initially got this for free because it pauses after each keystroke
 
-*** [4/4] screenplay editor ui
-**** DONE [3/3] implement a scrolling list widget
-***** DONE visible range
-***** DONE current highlight
-***** DONE scroll
-**** DONE show slides and steps in separate panes at bottom
-**** DONE roundtrip to/from org-mode
-**** DONE make kvm a library so syndir can import it
-*** [6/6] extract repl widget
-**** DONE add history widget to repl
-**** DONE implement solution for composite widgets
-**** DONE allow widgets to draw and blit themselves to current terminal
-**** DONE implement blit for vt
-**** DONE make repl a composite widget
-**** DONE draw history whether it's part of MJE or not
-*** previously
-**** DONE finish parser for xterm color codes (vputs)
-**** DONE widgetize repl history
-**** DONE evaluate and show output
-**** DONE implement ^K -> clear to end of line (d$ in vim?)
-**** DONE don't hardcode the script path
-**** DONE 'pre-render' the repl interactions for all slides
+** [4/4] screenplay editor ui
+*** DONE [3/3] implement a scrolling list widget
+**** DONE visible range
+**** DONE current highlight
+**** DONE scroll
+*** DONE show slides and steps in separate panes at bottom
+*** DONE roundtrip to/from org-mode
+*** DONE make kvm a library so syndir can import it
+** [6/6] extract repl widget
+*** DONE add history widget to repl
+*** DONE implement solution for composite widgets
+*** DONE allow widgets to draw and blit themselves to current terminal
+*** DONE implement blit for vt
+*** DONE make repl a composite widget
+*** DONE draw history whether it's part of MJE or not
+** previously
+*** DONE finish parser for xterm color codes (vputs)
+*** DONE widgetize repl history
+*** DONE evaluate and show output
+*** DONE implement ^K -> clear to end of line (d$ in vim?)
+*** DONE don't hardcode the script path
+*** DONE 'pre-render' the repl interactions for all slides
 - history can just be the list of lines on the screen
 - at each step, store which one is the bottom-most on screen.
 - then to render, take a window of lines the same size as the terminal
 - for each input there should/could also be an animation of how we arrived at it
-**** DONE implement 'worlds' so I can track the state of the system at each point
-**** DONE pre-determine the height of the repl window (=H_REPL=) for the presentation.
-**** DONE use an in-world variable to track the state of the editor
-**** DONE parse repl inputs from the org file
+*** DONE implement 'worlds' so I can track the state of the system at each point
+*** DONE pre-determine the height of the repl window (=H_REPL=) for the presentation.
+*** DONE use an in-world variable to track the state of the editor
+*** DONE parse repl inputs from the org file
 - lines starting with ': . ' are editor animations (macros)
 - lines starting with ':' are repl input
 - If a editor animaiton precedes the repl input, it should be treated as a derivation of the input, and an alarm should be triggered if it doesn't actually produce the expected input.
 (this might happen if the editor macro modifies previous inputs and the input history changes due to modifying the narrative)
-**** DONE handle local definitions
+*** DONE handle local definitions
 I see three alternatives:
   - [X] rewrite the code before it is evaluated (replace =. with =:)
   - execute the code in a separate j process
   - execute the code as part of an immex expression
-**** DONE execute every line starting with ':' (but not ': .') on load
-**** DONE execute each line using the world concept
-**** DONE append output to the echo history
-**** DONE track the repl history length at each step (before and after)
-**** DONE when navigating to a step, render the repl in its 'before' state
-**** DONE map each step in the slide to a world
-**** DONE handle box-drawing characters
-**** DONE rewrite special names
+*** DONE execute every line starting with ':' (but not ': .') on load
+*** DONE execute each line using the world concept
+*** DONE append output to the echo history
+*** DONE track the repl history length at each step (before and after)
+*** DONE when navigating to a step, render the repl in its 'before' state
+*** DONE map each step in the slide to a world
+*** DONE handle box-drawing characters
+*** DONE rewrite special names
 
-*** ep 10: repl recorder
-**** DONE insert new commands into screenplay
-**** DONE insert keylog macro into screenplay
-**** DONE clear macro after each input
-*** ep-11: macro playback in repl
-**** bugs
-***** DONE fix ctrl-o so it re-opens the file
-***** DONE bug: history is messed up when you press ctrl-o
+** ep-10: repl recorder
+*** DONE insert new commands into screenplay
+*** DONE insert keylog macro into screenplay
+*** DONE clear macro after each input
+** ep-11: macro playback in repl
+*** bugs
+**** DONE fix ctrl-o so it re-opens the file
+**** DONE bug: history is messed up when you press ctrl-o
 (needed to fix =init_world_=)
-***** DONE bug: text added from repl gets discarded
+**** DONE bug: text added from repl gets discarded
 (fix was to use =insline= instead of =ins__cmd=)
-***** DONE do not show macros in the repl
+**** DONE do not show macros in the repl
 (fix was change to =new_repl_line=)
-***** DONE fix the right side of outline so that it scrolls
+**** DONE fix the right side of outline so that it scrolls
 height (H)  was just set wrong
-***** DONE =goz_UiList_= does not scroll correctly (cursor hidden when entering from bottom)
+**** DONE =goz_UiList_= does not scroll correctly (cursor hidden when entering from bottom)
 fixed by adding bounds checking to =goz=
 
-**** features
-***** DONE get simple macro playback working (using empty start state for now)
+*** features
+**** DONE get simple macro playback working (using empty start state for now)
 - Play macro when cmd cursor is on macro and you press 'N'.
-***** DONE track the mark/selection on each line as we load (part of repl state)
+**** DONE track the mark/selection on each line as we load (part of repl state)
 - maybe answer here is to have UiEditWidget produce and consume a state memo
 
-***** DONE play macros (without pauses) when loading and keep start states for each line
+**** DONE play macros (without pauses) when loading and keep start states for each line
 - =tmp= is temporary editor object (no need to render)
 - set =KPS__tmp= to _ for infinite speed
 - set =TSV__tmp= to 0 to turn off random variation
@@ -112,47 +114,253 @@ fixed by adding bounds checking to =goz=
 - state for next iteration is =B__tmp=
 - save start states in =olr=
 
-***** DONE play macros from the line's starting state when 'N' is pressed
+**** DONE play macros from the line's starting state when 'N' is pressed
 
-** backlog
-*** TODO start clocking time with org-mode
-*** TODO learn how to use org-clock org-clock-report
-*** TODO start repl cursor at top of the screen               :jprez:
-*** TODO run the command and show the output in the repl
-*** TODO test that the macro actually produces the next line of code in the script.
-*** TODO "focus color" for cursors in list, edit, repl
-*** TODO clear "future" worlds on input
-*** TODO recalculate all worlds
-*** TODO backspace key in editor
-*** TODO tie in to the command history
-*** TODO hook input up to worlds.ijs
-*** TODO make worlds optional
+* canceled
+** DONE stop/ restart macros during playback
+* current
+** BUG inserting repl->script mis-manages start state          :bug:jprez:
+** BUG I set TSV=0 in macro player. it should be 1.            :jprez:
+** TODO [#A] backspace key in editor
+** TODO [#A] tie repl to the command history                   :jrepl:
+Pressing up or down should let you navigate the input history.
+This history is provided by worlds.ijs.
+** TODO [#A] colorize input history for standalone repl        :jrepl:
+** TODO [#A] make A=:1  the default for widgets                :jkvm:
+** TODO [#B] hide errors containing =do_WORLDnn_=                :jrepl:
+** TODO start repl cursor at top of the screen                 :jprez:
+** TODO run the command and show the output in the repl        :jprez:
+** TODO learn to clock time with org-mode                      :learn:
+** TODO learn how to use org-clock org-clock-report            :learn:
+** TODO learn how to use level of effort                      :learn:
+** TODO "focus color" for cursors in list, edit, repl
+** TODO allow wrapping long output lines                   :jkvm:
+** TODO support the escape codes to toggle wrapping            :jkvm:
+** TODO make sure R=:0 in =render__repl= (in update, copy R from ed)
 
-*** TODO wrap long output lines                               :jrepl:
-*** TODO hide errors containing =do_WORLDnn_=                   :jrepl:
-*** TODO show world for line, with content?                   :jrepl:
-*** TODO repl animations can also push input to the editor buffer :lsed:
+* backlog
+** TODO [#A] optimize output of render/blit
+:PROPERTIES:
+:Effort:   1h
+:END:
+** TODO [#A] clean up the whole focus/keybinding mess          :jkvm:jprez:
+:PROPERTIES:
+:Effort:   3d
+:END:
+** TODO [#A] fix j-kvm on osx
+:PROPERTIES:
+:Effort:   3d
+:END:
+** TODO [#B] alt-d to delete next word                         :jkvm:edit:
+** TODO [#B] alt-backspace to delete previous word             :jkvm:edit:
+** TODO [#B] repl animations can also push input to the editor buffer :jprez:lsed:
 - maybe any assignment or load/import goes to the editor buffer by default?
-*** TODO store editor state (visible, buffer, cursor) in each world :lsed:
-*** TODO insert a named block into the editor                 :lsed:
+** TODO [#B] store lsed state (visible, buffer, cursor) in each world :jprez:lsed:
+** TODO [#B] make worlds optional                              :jrepl:
+Some people will just prefer a regular repl.
+
+** TODO [#B] set initial state of editor for slide             :jprez:lsed:
 Ex: we want to show complete settle code /before/ we derive it.
 - parse block names from org-mode ... /or/ just use headlines?
-*** TODO command to insert a line from repl into the buffer at position x :lsed:
-*** TODO command to evaluate the editor in the repl           :lsed:
+** TODO [#B] command to insert a line from repl into the buffer at position x :jprez:lsed:
+** TODO [#B] command to evaluate the editor in the repl        :jprez:lsed:
 - probably don't want to dump the whole buffer
 - maybe say '<<evaluated x lines...>>' in the repl
-*** TODO draw the editor cursor(s)                            :lsed:
-*** TODO use background to draw selection                     :lsed:
-*** TODO save state of the editor/slide at each step          :lsed:
+** TODO [#B] draw the editor cursor(s)                         :jprez:lsed:
+** TODO [#B] draw selection                                    :jprez:lsed:
+** TODO [#B] save state of the editor/slide at each step       :jprez:lsed:
 
-** [0/7] larger changes (after I ship a video)
-*** TODO speed up the escape code parsers (vputs, onkey)
-*** TODO optimize output of render/blit
-*** TODO make keybindings table-driven (so people can choose which keys they use for input)
-*** TODO fix loop_kvm so left argument does not need to be in the z locale
-*** TODO clean up the whole focus/keybinding mess
-*** TODO make sure R=:0 in =render__repl= (in update, copy R from ed)
-*** TODO fix j-kvm on osx
+** TODO [#B] make keybindings table-driven (so people can choose which keys they use for input) :jkvm:
+** TODO [#B] speed up the escape code parsers (vputs, onkey)   :jkvm:
+:PROPERTIES:
+:Effort:   2d
+:END:
+** TODO [#C] test that the macro actually produces the next line of code in the script.
+examples: manually edited macros might break.
+using "future" completion history is not allowed.
+** TODO [#C] detect and "bake" usage of "future command line history" :jprez:
+this when you have a full future history from loading a presentation,
+and you use that history to complete a line in the past.
+This makes no sense from a narrative point of view.
+** TODO [#C] clear "future" worlds on input                    :jprez:
+** TODO [#C] recalculate all worlds                            :jprez:
+** TODO [#C] show world for line, with content?                :jrepl:debug:
+** TODO [#C] fix =loop_kvm= so left argument does not need to be in the z locale :jkvm:
+:PROPERTIES:
+:Effort:   3d
+:END:
+** TODO [#C] decide whether curs 0 should be part of loop_kvm_, and if so, how to use cursors?
+maybe this is just a flag.
+** TODO [#C] re-arrange mje.ijs so that open'' isn't in the middle of the file :jprez:techdebt:
+** TODO [#C] allow setting vim or emacs keys                   :jkvm:edit:
+** TODO use numeric prefix for multi-commands                  :jkvm:edit:
+** TODO cut, copy, paste                                       :jkvm:edit:
+** TODO toggle selection mode                                  :jkvm:edit:
+** TODO highlight the selection                                :jkvm:edit:
+** ----------------------
+** TODO app: emit color codes only when they change
+** TODO app: emit only changed cells
+** TODO app: define applications' widget in a table with x,y,class,args
+** TODO in the repl, if i print out a non-noun, syntax highlight it.
+** TODO add word-wrap mode
+** TODO extract UiComponent from UiApp (component=widget+container) (??)
+have a list of children and auto-provide the ability to draw all of them with extra code.
+(probably can factor this out of ui/app.ijs)
+** TODO add ability to run arbitrary verbs on every frame
+** TODO bug: open quote breaks the lexer
+
+** TODO repl widget (enhanced shell for J, b4, etc)            :widget:
+*** TODO edit j function
+*** TODO preserve source code
+**** integrate with JOD?
+*** TODO repl widget
+**** TODO up/down: history
+** TODO outliner widget (for presentations)                    :widget:
+** TODO stack widget                                           :widget:
+** TODO [5/12] have =puts= recognize escape codes
+https://www2.ccs.neu.edu/research/gpc/VonaUtils/vona/terminal/vtansi.htm
+*** DONE home/goxy:  ~CSI (row? ; col?)? H~
+*** TODO cursor shift: ~CSI count? A|B|C|D~ # A=up B=dn C=rt D=lf
+*** TODO erase down: ~CSI J~
+*** DONE erase screen: ~CSI 2J~
+*** DONE clear to eol: ~CSI K~
+*** DONE show cursor: ~CSI ?25 h~
+*** DONE hide cursor: ~CSI ?25 l~
+*** TODO [0/9] ansi color: ~CSI (attr (;attr)*)* m~
+**** TODO 0=reset attrs
+**** TODO 1=bright
+**** TODO 30-37 → krgybmcw fg
+**** TODO 40-47 → krgybmcw bg
+**** TODO 38;5 → 256-color fg
+**** TODO 48;5 → 256-color bg
+**** TODO 38;2 → 24-bit fg
+**** TODO 48;2 → 24-bit bg
+*** TODO scrolling
+*** TODO enable line wrap: ~CSI 7h~
+*** TODO disable line wrap: ~CSI 7l~
+*** TODO query cursor position: ~CSI 6n~  (responds with =CSI ROW;COL R=)
+'0123456789' e.~ s=:'1234;1234234x42342'
+** TODO document and port cwio
+** TODO [2/9] missing kvm features
+*** DONE fetch real terminal dimensions
+  hw =. _".}: 2!:0 'stty size'
+*** TODO make sure i can fill entire screen
+*** TODO disable ^C on linux
+*** TODO [#9] mouse events
+*** TODO [#9] show console in jqt
+: jshowconsole_j_ 1  NB. doesn't seem to work in jqt
+*** TODO blit subwindows
+: {{ (u x {y) x } y }}  NB. from bob t.
+: ix _:"0 {{ (u x {y) x } y }} i.10 10 [ (ix=.<2 3 4; 5 6)
+https://stackoverflow.com/questions/68362425/amend-a-subarray-in-place-in-j
+*** TODO [3/5] virtual terminal buffer
+**** DONE state variables for terminal
+**** DONE write a character to video ram
+**** DONE draw entire buffer
+**** TODO increment cursor position
+**** TODO [#2] handle end of line behavior
+*** DONE [2/2] termstack
+**** DONE wrap putc, goxy, etc
+**** DONE push/pop term
+*** TODO [#9] [0/3] low priority terminal enhancements
+**** TODO [#9] on redraw, compare buf vs cached
+***** TODO check for runs of same fg,bg colors
+***** etc
+a =: 8 32 $ a.i.'.'
+b =: 95 (0 3;3 24; 3 26; 4 18)}a
+(draw =: [: puts cls, a.{~ ])
+draw b
+
+NB. row;cols table for differences:
+rct =: ((];"0{~)I.@(a:&~:)) <@I. a~:b
+
+NB. individual coordinate pairs suitable for passing to {
+xys =: ;/;(,"0&.>/)"1 rct
+xys,.<"0 xys { b
+
+NB. each row is x,y,val
+;@|."1(;"0~{&b) xys
+***** TODO redraw the changes:
+generate list of attributes of the changed cells.
+ideally you'd have rank 2 list: fg and bg.
+turn it into 2 boxes.
+
+anywhere the color changes from box to box, you issue a color change,
+otherwise ''.
+
+likewise, for the coordinates, if they're right next to each other,
+you don't need to issue a cursor move
+**** TODO [#9] representing the video buffer more compactly
+***** option 2: 32 bits per cell
+- 13 bit unicode char
+- 23 bits left over for bold/italic/underline
+- 256 fg, bg colors
+
+The trick to packing the unicode would
+be to use a code page prefix, and only
+allow a fixed number of code pages on
+the screen at one time. (like 64 or something)
+
+***** dealing with multi-codepoint characters?
+we could also track the individual characters
+we need. this might be useful because a cell on
+the screen might be filled with multiple unicode cells.
+
+#+begin_src j
+u:16ba00+_2 dfh\'2a281c3e2c40'
+ਪਨਜਾਬੀ
+punjabi ... seems like each vowel takes a half-space
+#+end_src
+
+***** rank 1 or 2?
+2d seems natural but operations are simpler in 1d
+and we can just apply the necessary calculations to
+map index positions to coordinates after we've
+selected for differences
+** TODO file browser                                           :widget:
+** TODO git status widget                                      :jkvm:files:
+** TODO terminal mode viewmat                                  :widget:
+
+these block drawing characters do the work:
+: >((u:32 16b2584 16b2580 16b2588){~#.@|:) L:0 ] _2<\  (0,~])^:(#%2) n=: |:#:i.32
+
+for a black and white matrix this is fine.
+but we can have true color now.
+** TODO editor file commands
+*** TODO load file: T =: fread path
+*** TODO save file: text fwrite path
+** TODO Text Editor Component                                  :widget:
+*** TODO text editor
+**** state vars:
+  - T: text as a whole
+  - P: current page
+  - L: current line(s)
+  - C: cursor(s) (per line)
+  - B: line buffer
+
+**** line editor commands
+  - insert char
+  - delete char
+  - delete word/token
+  - swap (in either direction)
+
+**** page editor
+  - insert page
+  - delete page
+  - join pages
+*** TODO keyboard commands
+**** insert char
+**** delete char
+**** cut
+**** copy
+**** paste
+**** backspace
+**** move cursor
+**** undo
+*** TODO draw fake cursor(s) in vt buffer
+*** TODO [#2] syntax highlighting
+** TODO [#9] elastic tabstops
+https://nickgravgaard.com/elastic-tabstops/
 ** [4/16] token editor
 *** TODO connect buffer editor to the slide
 *** DONE make the editor into a widget
@@ -194,195 +402,6 @@ rather than just extracting the range.
 **** TODO add cut/copy/paste/clipboard
 **** TODO add keys to expand/contract selection
 *** TODO record keyboard events (with timing)
-
-** [2/24] small bugfixes/enhancements
-*** TODO colorize input history for standalone repl
-*** TODO decide whether curs 0 should be part of loop_kvm_, and if so, how to use cursors?
-*** TODO re-arrange mje.ijs so that open'' isn't in the middle of the file
-*** TODO make A=:1  the default for widgets
-*** TODO bug: cmd pane is not scrolling correctly
-*** TODO bug: 'world' suffixes are leaking into error messages
-*** TODO use numeric prefix for multi-commands
-*** TODO cut, copy, paste
-*** TODO toggle selection mode
-*** TODO highlight the selection
-*** TODO allow setting vim or emacs keys
-*** TODO alt-d to delete next word
-*** TODO alt-backspace to delete previous word
-
-*** TODO stop/ restart macros
-*** TODO app: emit color codes only when they change
-*** TODO app: emit only changed cells
-*** TODO app: define applications' widget in a table with x,y,class,args
-*** TODO in the repl, if i print out a non-noun, syntax highlight it.
-*** TODO add word-wrap mode
-*** TODO extract UiComponent from UiApp (component=widget+container) (??)
-have a list of children and auto-provide the ability to draw all of them with extra code.
-(probably can factor this out of ui/app.ijs)
-
-*** TODO add ability to run arbitrary verbs on every frame
-
-*** TODO bug: open quote breaks the lexer
-
-** TODO repl widget (enhanced shell for J, b4, etc)            :widget:
-*** TODO edit j function
-*** TODO preserve source code
-**** integrate with JOD?
-*** TODO repl widget
-**** TODO up/down: history
-** TODO outliner widget (for presentations)                    :widget:
-** TODO stack widget                                           :widget:
-** j-kvm
-*** [0/4] parse escape codes
-**** TODO make a 'vid' decorator that understands escape codes
-**** TODO [5/12] have =puts= recognize escape codes
-https://www2.ccs.neu.edu/research/gpc/VonaUtils/vona/terminal/vtansi.htm
-***** DONE home/goxy:  ~CSI (row? ; col?)? H~
-***** TODO cursor shift: ~CSI count? A|B|C|D~ # A=up B=dn C=rt D=lf
-***** TODO erase down: ~CSI J~
-***** DONE erase screen: ~CSI 2J~
-***** DONE clear to eol: ~CSI K~
-***** DONE show cursor: ~CSI ?25 h~
-***** DONE hide cursor: ~CSI ?25 l~
-***** TODO [0/9] ansi color: ~CSI (attr (;attr)*)* m~
-****** TODO 0=reset attrs
-****** TODO 1=bright
-****** TODO 30-37 → krgybmcw fg
-****** TODO 40-47 → krgybmcw bg
-****** TODO 38;5 → 256-color fg
-****** TODO 48;5 → 256-color bg
-****** TODO 38;2 → 24-bit fg
-****** TODO 48;2 → 24-bit bg
-***** TODO scrolling
-***** TODO enable line wrap: ~CSI 7h~
-***** TODO disable line wrap: ~CSI 7l~
-***** TODO query cursor position: ~CSI 6n~  (responds with =CSI ROW;COL R=)
-'0123456789' e.~ s=:'1234;1234234x42342'
-
-
-*** TODO document and port cwio
-*** TODO [2/9] missing kvm features
-**** DONE fetch real terminal dimensions
-  hw =. _".}: 2!:0 'stty size'
-**** TODO make sure i can fill entire screen
-**** TODO disable ^C on linux
-**** TODO [#9] mouse events
-**** TODO [#9] show console in jqt
-: jshowconsole_j_ 1  NB. doesn't seem to work in jqt
-**** TODO blit subwindows
-: {{ (u x {y) x } y }}  NB. from bob t.
-: ix _:"0 {{ (u x {y) x } y }} i.10 10 [ (ix=.<2 3 4; 5 6)
-https://stackoverflow.com/questions/68362425/amend-a-subarray-in-place-in-j
-**** TODO [3/5] virtual terminal buffer
-***** DONE state variables for terminal
-***** DONE write a character to video ram
-***** DONE draw entire buffer
-***** TODO increment cursor position
-***** TODO [#2] handle end of line behavior
-**** DONE [2/2] termstack
-***** DONE wrap putc, goxy, etc
-***** DONE push/pop term
-**** TODO [#9] [0/3] low priority terminal enhancements
-***** TODO [#9] on redraw, compare buf vs cached
-****** TODO check for runs of same fg,bg colors
-****** etc
-a =: 8 32 $ a.i.'.'
-b =: 95 (0 3;3 24; 3 26; 4 18)}a
-(draw =: [: puts cls, a.{~ ])
-draw b
-
-NB. row;cols table for differences:
-rct =: ((];"0{~)I.@(a:&~:)) <@I. a~:b
-
-NB. individual coordinate pairs suitable for passing to {
-xys =: ;/;(,"0&.>/)"1 rct
-xys,.<"0 xys { b
-
-NB. each row is x,y,val
-;@|."1(;"0~{&b) xys
-****** TODO redraw the changes:
-generate list of attributes of the changed cells.
-ideally you'd have rank 2 list: fg and bg.
-turn it into 2 boxes.
-
-anywhere the color changes from box to box, you issue a color change,
-otherwise ''.
-
-likewise, for the coordinates, if they're right next to each other,
-you don't need to issue a cursor move
-***** TODO [#9] representing the video buffer more compactly
-****** option 2: 32 bits per cell
-- 13 bit unicode char
-- 23 bits left over for bold/italic/underline
-- 256 fg, bg colors
-
-The trick to packing the unicode would
-be to use a code page prefix, and only
-allow a fixed number of code pages on
-the screen at one time. (like 64 or something)
-
-****** dealing with multi-codepoint characters?
-we could also track the individual characters
-we need. this might be useful because a cell on
-the screen might be filled with multiple unicode cells.
-
-#+begin_src j
-u:16ba00+_2 dfh\'2a281c3e2c40'
-ਪਨਜਾਬੀ
-punjabi ... seems like each vowel takes a half-space
-#+end_src
-
-****** rank 1 or 2?
-2d seems natural but operations are simpler in 1d
-and we can just apply the necessary calculations to
-map index positions to coordinates after we've
-selected for differences
-*** TODO file browser                                         :widget:
-**** TODO git status
-
-** TODO terminal mode viewmat                                  :widget:
-
-these block drawing characters do the work:
-: >((u:32 16b2584 16b2580 16b2588){~#.@|:) L:0 ] _2<\  (0,~])^:(#%2) n=: |:#:i.32
-
-for a black and white matrix this is fine.
-but we can have true color now.
-** TODO file commands
-*** TODO load file: T =: fread path
-*** TODO save file: text fwrite path
-
-** TODO Text Editor Component                                  :widget:
-*** TODO text editor
-**** state vars:
-  - T: text as a whole
-  - P: current page
-  - L: current line(s)
-  - C: cursor(s) (per line)
-  - B: line buffer
-
-**** line editor commands
-  - insert char
-  - delete char
-  - delete word/token
-  - swap (in either direction)
-
-**** page editor
-  - insert page
-  - delete page
-  - join pages
-*** TODO keyboard commands
-**** insert char
-**** delete char
-**** cut
-**** copy
-**** paste
-**** backspace
-**** move cursor
-**** undo
-*** TODO draw fake cursor(s) in vt buffer
-*** TODO [#2] syntax highlighting
-*** TODO [#9] elastic tabstops
-https://nickgravgaard.com/elastic-tabstops/
 ** [1/2] j wishlist (ask for on j list)
 *** TODO {.@E. special form (string "startswith") .. also &.|. for endswith
 *** DONE if name==main:
