@@ -1,8 +1,21 @@
 #+TITLE: kanban for rejms (the ridiculously early j morning show)
 #+TODO: BUG TODO | DONE
 
-* current
+* inbox (for triage)
+- ^c should be copy, not "break"
+- also ^c / in line-editor should not break whole application
+- ctrl-space should not break whole application
+- =render_UiListWidget_= could use some golfing
+- fill in old git tags for older episodes
+- script to automate these tags ??
+
+* current sprint
+** DONE "focus color" for cursors in list, edit, repl          :feature:jprez:jkvm:
 ** BUG inserting repl->script mis-manages start state          :bug:jprez:
+** BUG reorganize mje so that all keybindings map to named verb
+(instead of verb definition)
+** TODO learn how to use org-clock org-clock-report            :learn:
+** TODO learn how to use level of effort                      :learn:
 ** BUG I set TSV=0 in macro player. it should be 1.            :jprez:
 ** TODO [#A] backspace key in editor
 ** TODO [#A] tie repl to the command history                   :jrepl:
@@ -14,14 +27,15 @@ This history is provided by worlds.ijs.
 ** TODO start repl cursor at top of the screen                 :jprez:
 ** TODO run the command and show the output in the repl        :jprez:
 ** TODO learn to clock time with org-mode                      :learn:
-** TODO learn how to use org-clock org-clock-report            :learn:
-** TODO learn how to use level of effort                      :learn:
-** TODO "focus color" for cursors in list, edit, repl
 ** TODO allow wrapping long output lines                   :jkvm:
 ** TODO support the escape codes to toggle wrapping            :jkvm:
 ** TODO make sure R=:0 in =render__repl= (in update, copy R from ed)
 
 * backlog
+** TODO stop/ restart macros during playback
+important because it can take a long time while you're using jprez
+also you don't want other keys to fire the macro or it'll screw up
+** TODO cut, copy, paste                                       :jkvm:edit:
 ** TODO [#A] optimize output of render/blit
 :PROPERTIES:
 :Effort:   1h
@@ -77,7 +91,6 @@ maybe this is just a flag.
 ** TODO [#C] re-arrange mje.ijs so that open'' isn't in the middle of the file :jprez:techdebt:
 ** TODO [#C] allow setting vim or emacs keys                   :jkvm:edit:
 ** TODO use numeric prefix for multi-commands                  :jkvm:edit:
-** TODO cut, copy, paste                                       :jkvm:edit:
 ** TODO toggle selection mode                                  :jkvm:edit:
 ** TODO highlight the selection                                :jkvm:edit:
 ** ----------------------
@@ -293,7 +306,6 @@ best i have so far is this:
 {{ y }}^:('repl.ijs' {.@E.&.|. >{.}.ARGV)'')
 #+end_src
 * canceled
-** DONE stop/ restart macros during playback
 * finished
 ** [3/3] app framework
 *** DONE render multiple widgets to buffer
