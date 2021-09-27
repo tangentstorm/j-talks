@@ -1,0 +1,18 @@
+#+title: j enhancement proposals
+(suggest these on github:jsoftware/jsource)
+
+* DONE {.@E. special form (string "startswith") .. also &.|. for endswith
+https://github.com/jsoftware/jsource/issues/28
+
+* TODO suggest  =..= as a statement separator
+
+* TODO suggest 'nesting counter' in =load= for handling name==main:
+best i have so far is this:
+#+begin_src j
+{{ y }}^:('repl.ijs' {.@E.&.|. >{.}.ARGV)'')
+#+end_src
+have a counter called =loading= incremented and decremented by =load=
+so that we can just test for
+: {{ 'startup code' }}^:ifmain
+
+* TODO suggest nested namespaces / =::= in names for namespaces?
