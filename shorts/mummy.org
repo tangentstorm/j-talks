@@ -1,79 +1,104 @@
 
-* Mummy
 
-# show "APL: a glimpse of heaven. scroll down."
+* Mummy
+# show "APL: a glimpse of heaven." scroll down.
 http://archive.vector.org.uk/art10011550
 According to Bernard Legrand, this APL phrase is so common that users parse it as a single word.
 
 # R ← ((VιV)=ιρV)/V
-
 "just like the word “MUMMY” is fixed in our mind without having to read and interpret it letter by letter"
 
-
 * literal translation
-
 : NB. R ←  ((V ι V ) = ι  ρ V) / V
+: . ? ?_? ?_? ?_? ?__?R?__? ?__?=?_?:?__? ?___?)?__X__?(?_?(?__?V?__? ?_?i?_?.?_? ?__?V?__?)?__? ?___?=?_? ?_?i?_?.?__? ?__?#?__? ?__?V?__?)?_? ?__?#?_? ?__?#?
+:     R =: ((V i. V) = i. # V) # V
+: 
+: 
+* narrative
 
-:     R =: ((V i. V) = i. $ V) # V   NB. from Ian Clark's J Wiki translation
-
-J descends from APL, and while it's clear how the simbols translate, I'd never seen this pattern before in J.
+J descends from APL, and while it's clear how the symbols translate, I'd never seen this pattern before in J.
 
 It's some operation on a vector v being assigned to R.
 
 We don't need the assignment:
 
-: ((V i. V) = i. $ V) # V
+: . kkk_0___x__x_x_x_x_x_x_x__x__$
+: ((V i. V) = i. # V) # V
+: 
 
 But do need to define v:
-
-: ((V i. V) = i. $ V) # V =: i. 10
+: . kk__? ?__?=: i.? _ ?10?
+: ((V i. V) = i. # V) # V =: i. 10
+: 
 
 only that did nothing:
 
 : V
+: 
 
 * Investigating
 
+** i.
 So let's see. The indices of V in V are the first occurrences of the elements.
 
+: . ?V?_? i.?_? V?
 : V i. V
+: 
 
 It's more useful if the input has duplicates:
 
+: . kk__?i.?_?V?
 : V i. V  =: 'Mississippi'
+: 
 
-Counting up to the shape of V just gives an index.
+** i. #
+Counting up to the length of V just gives an index.
 
-: i. $ V
-
-That seems weird to me though. Probably 'length' is a better translation in this case.
-
-: NB. '#' ("length") works better than '$' ("shape") for multi-dimensional arrays.
+: . ?i.?_? #?_? V?
 : i. # V
+: 
 
-Anyway, when you ask where the /first/ index equals the index, you get this bitmask:
+When you ask where the /first/ index equals the index, you get this bitmask:
 
+: . k_0?(?_?V ?_?i.?_? V?_?)?_? = ?
 : (V i. V) = i. # V
+: 
 
 And now it's obvious why you never see this idiom in J.
+
+** ~:
 That operation is so common, it's assigned to a primitive.
 It's called the nub sieve.
 
+: . ?~?_?:?_?V?
 : ~: V
+: 
 
 Using it to copy the items of V yields the nub:
 
+: . k_?(?_$?)?_?#?_? ?_?V?
 : (~: V) # V
+: 
 
-And we have a word for that too:
+** ~.
+And J has a word for that too:
 
 : ~. V
+: 
 
-What good is the sieve? It's great when you use one list to select from others, like when querying columns in a database:
+** neat
+What good is the sieve? It's great when you use one list to select from others,
+like when querying columns in a database:
 
-: (~: V) # 'MISSISSIPPI'   NB. use one array to select from another
+: . kkk$_X?n?_?e?_?a?_?r?_?s?_?i?_?g?_?h?_?t?_?e?_?d?
+: (~: V) # 'nearsighted'
+: 
 
-# highlight "Is the language readable?" on-screen, and "a linear function of a variable is equal to the sum of a constant and of the product of a variable and a second constant”.
+** jumbles
+
+# highlight "Is the language readable?" on-screen, and
+# "a linear function of a variable is equal to the sum
+# of a constant and of the product of a variable and a second constant”.
 
 As Legrand implies, symbolic notation evolves to express common patterns more concisely.
 
@@ -81,8 +106,8 @@ You'd never use this jumble of English words to express the general formula for 
 
 But you'd also never use this jumble of J words to express the nub:
 
-: ((V i. V) = i. $ V) # V
+:                ((V i. V) = i. $ V) # V
 
-: ~. V
+:                ~. V
 
 * end
