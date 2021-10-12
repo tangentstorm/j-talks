@@ -1,21 +1,25 @@
 
 
 * Mummy
+: NB. R ←  ((V ι V ) = ι  ρ V) / V
+
 # show "APL: a glimpse of heaven." scroll down.
 http://archive.vector.org.uk/art10011550
-According to Bernard Legrand, this APL phrase is so common that users parse it as a single word.
-
+According to Bernard Legrand, this APL phrase
+is so common that users parse it as a single word.
+** sub-headline
 # R ← ((VιV)=ιρV)/V
-"just like the word “MUMMY” is fixed in our mind without having to read and interpret it letter by letter"
-
+"just like the word “MUMMY” is fixed in our mind
+without having to read and interpret it letter by letter"
+** new headline
 * literal translation
-: NB. R ←  ((V ι V ) = ι  ρ V) / V
 : . ___? ?_? ?_? ?_? ?__?R?__? ?__?=?__?:?_? ?__?()?__h__?(?_?)?__h__?V?__? ?_?i?_?.?_? ?__?V?__? ?__X__l__? ?_?=?_? ?__?i?_?.?_? ?__?#?_? ?__?V?__$__? ?__?#?_? ?__?v?__X__?V?
 :     R =: ((V i. V) = i. # V) # V
 : 
 * narrative
 
-J descends from APL, and while it's clear how the symbols translate, I'd never seen this pattern before in J.
+J descends from APL, and while it's clear how the symbols translate,
+I'd never seen this pattern before in J.
 
 It's some operation on a vector v being assigned to R.
 
@@ -38,7 +42,8 @@ only that did nothing:
 * Investigating
 
 ** i.
-So let's see. The indices of V in V are the first occurrences of the elements.
+So let's see. The indices of V in V
+are the first occurrences of the elements.
 
 : . ?V?_? i.?_? V?
 : V i. V
@@ -57,7 +62,8 @@ Counting up to the length of V just gives an index.
 : i. # V
 : 
 
-When you ask where the /first/ index equals the index, you get this bitmask:
+When you ask where the /first/ index equals the index,
+you get this bitmask:
 
 : . kk_0?(?_?V ?_?i.?_? V?_?)?_? = ?
 : (V i. V) = i. # V
@@ -87,8 +93,9 @@ And J has a word for that too:
 : 
 
 ** neat
-What good is the sieve? It's great when you use one list to select from others,
-like when querying columns in a database:
+What good is the sieve?
+It's great when you use one list to select from others,
+like when filtering multiple columns in a database:
 
 : . kk__kk_$_X?'ne?_?a?_?r?_?s?_?i?__?ght?__?e?_?d'?
 : (~: V) # 'nearsighted'
@@ -100,11 +107,15 @@ like when querying columns in a database:
 # "a linear function of a variable is equal to the sum
 # of a constant and of the product of a variable and a second constant”.
 
-As Legrand implies, symbolic notation evolves to express common patterns more concisely.
+As Legrand implies, symbolic notation evolves to
+express common patterns more concisely.
 
-You'd never use this jumble of English words to express the general formula for a line.
+You'd never use this jumble of English words
+to express the general formula for a line.
 
-But you'd also never use this jumble of J words to express the nub:
+But you also never need to use
+this jumble of J words
+to express the nub:
 
 :                ((V i. V) = i. $ V) # V
 
