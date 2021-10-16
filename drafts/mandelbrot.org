@@ -103,10 +103,17 @@ And to see the interemediate results, we can put a box around the number 5.
 : . ^^bbb<?(<?>?)?
 : {{ (y^2) + z0 }}^:(<5) z0 =: 1
 
+Notice that we have five results, but the first one is just the original number.
+So if we want to actually see the result of doing this 5 times, we need to pass in 6.
+
+: . ^___<__<_<_<_<_<_<_<_<_<__x__?6?
+: {{ (y^2) + z0 }}^:(<6) z0 =: 1
+
+
 Again, j executes right to left so we can drop these parentheses by swapping the arguments to plus:
 
 : . ^bbbbXXXXXX<<<X?z0 + ?
-: {{ z0 + y^2 }}^:(<5) z0 =: 1
+: {{ z0 + y^2 }}^:(<6) z0 =: 1
 
 So here y is like an accumulator, and z0 is the initial value. Whenever you've got this
 pattern where you need an accumululator and and a constant, you can put the
@@ -114,33 +121,33 @@ constant on the left, call it x inside the function, and the power conjunction
 will do what you want:
 
 : . ^bbbbbbXX?x?0 ?z0 ?
-: z0 {{ x + y^2 }}^:(<5) z0 =: 1
+: z0 {{ x + y^2 }}^:(<6) z0 =: 1
 
 And whenever you have the same argument on  the left and right, you can just put a tilde after the verb
 rather than specifying the argument twice.
 
 : . ^bbb?~?0xxx
-: {{ x + y^2 }}^:(<5)~ z0 =: 1
+: {{ x + y^2 }}^:(<6)~ z0 =: 1
 
 And now we don't even need to give z0 a name.
 
 : 
 : NB. 'v~ y' means 'y v y'
 : . ^^^bbbxxxxxx
-: {{ x + y^2 }}^:(<5)~ 1
+: {{ x + y^2 }}^:(<6)~ 1
 
 Better yet, whenever you have this pattern of a constant plus some verb applied to the y argument, you can use a hook.
 So first, let's use the special verb for square:
 
 : 
 : NB. '*:y' means 'y*y'
-: . ^^^
-: {{ x + *: y }}^:(<5)~ 1
+: . ^^^bbXXb>?*: ?
+: {{ x + *: y }}^:(<6)~ 1
 
 : 
 : NB. 'x (u v) y'  means 'x u (v y)'
-: . ^^^
-: (+ *:)^:(<5)~ 1
+: . ^^^bbxxx?)?bxxbbbxx0xxx?(
+: (+ *:)^:(<6)~ 1
 
 *** examples
 Okay, so that's the formula used in the mandelbrot set.
@@ -150,25 +157,25 @@ Notice how starting with one very quickly takes you to a big number.
 With zero you get a different story:
 
 : . ^__X__?0?0>>x
-: (+*:)^:(<5)~ 0
+: (+*:)^:(<6)~ 0
 
 It just stays zero forever.
 
 With negative one, it bounces back and forth between zero and negative one.
 
 : . ^_X_?_1?
-: (+*:)^:(<5)~ _1
+: (+*:)^:(<6)~ _1
 
 And with negative two, you get a never-ending sequence of twos.
 Two squared is four, plus negative two is two, and so on forever.
 
 : . ^__X_?2?
-: (+*:)^:(<5)~ _2
+: (+*:)^:(<6)~ _2
 
 With negative 3, it's straight back to infinity.
 
 : . ^__X_?3?
-: (+*:)^:(<5)~ _3
+: (+*:)^:(<6)~ _3
 
 The mandelbrot set is just the part of the complex plane
 that works like these numbers,
@@ -178,7 +185,7 @@ Sometimes it's a little hard to tell. 0.3, looks like it's staying pretty small,
 it a little more time, and it's out of here.
 
 : . ^__X___?9?__X_X_?0?_?.?__?3?
-: (+*:)^:(<5)~ 0.3
+: (+*:)^:(<6)~ 0.3
 : . ^___h_h_h_h_h_h_h__x___?1?_?5?
 : (+*:)^:(<15)~ 0.3
 
