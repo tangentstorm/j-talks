@@ -23,6 +23,7 @@ Normally it pops up a new window but I've got my own version that puts the resul
 So then we change viewmat to vm,
 and also we have fewer pixels to work with, so I'll reduce these two numbers to change the resolution.
 
+: . ^^bbK__XX?6?__<<<<<<<x__bbbb__ww__b___xxxxxxxx_? vm?_0__xxxx$
 : (16b221111*i.8) vm |:+/2<|(+*:)^:(<9)~_1+j./~ 0.1*i:16
 
 Other than that, it's the same image.
@@ -32,35 +33,33 @@ Other than that, it's the same image.
 
 lowercase i-colon generates a range of numbers in both the positive and negative directions.
 
-: . !___? ?__X__X_X____?i?__?:?__?4?
+: . ?i:4?
 : i:4
 
 The asterisk is just plain old multiplication.
 
-: . k__0___?0?__?.?___?1?_? ?__?*?_? ?
+: . ^0?0.1 * ?
 : 0.1 * i:4
 
 J-dot goes between two numbers to create a complex number.
 Forward slash tilde creates a table. So this is like an addition table
 using our range as input, but the right argument is imaginary.
 
-: . k__0___?j?__?.?_?/?__?~?_? ?
+: . ^0_?j./~ ?
 : j./~ 0.1 * i:4
-: . 
-: 
 : . 
 : 
 
 If we visualize that with viewmat, we see this rainbow circle.
 
-: . k___0___?v?_?m?_? ?
+: . ^^_0___?vm ?
 : vm j./~ 0.1 * i:4
 
 [ actually the real viewmat draws nice flow arrows for complex numbers, but the terminal doesn't do that ]
 
 We can make it bigger:
 
-: . k___X__?1?__?6?
+: . ^_X__?16?
 : vm j./~ 0.1 * i:16
 
 ** colors
@@ -68,15 +67,15 @@ We can make it bigger:
 Viewmat can take a palette on the left. The bytes are in blue-green-red order,
 so this makes some shades of blue.
 
-: . k__0___?(?_?)?__? ?__h_h___?1?__?6?__?b?__?221111?___? ?___?*?_? ?__?i?_?.?__?8?
-: . 
+: . ^_0_?()?__? ?<<___?16b221111 ?_?* i.8?
 : (16b221111 * i.8) vm j./~ 0.1 * i:16
 
 Lowercase I-dot is just another range, but doesn't include the negatives.
 And we just multiply by this hex number to get the gradient.
-
-: 16b221111 * i. 8
-: vm 16b221111 * i. 8
+: . ^0?hfd ?xwwwxXK
+: hfd 16b221111 * i.8
+: . ^^bbbbK? i.8?
+: (16b221111 * i.8) vm i.8
 
 ** the mandlebrot set
 *** repeated powers
@@ -95,41 +94,49 @@ So when you square one and add one you get two.
 
 To do it multiple times, we can use the power conjunction:
 
+: . ^bbb?^:5?
 : {{ (y^2) + z0 }}^:5 z0 =: 1
 
 And to see the interemediate results, we can put a box around the number 5.
 
 : <5
+: . ^^bbb<?(<?>?)?
 : {{ (y^2) + z0 }}^:(<5) z0 =: 1
 
 Again, j executes right to left so we can drop these parentheses by swapping the arguments to plus:
 
-: {{ z0 + y^2 }}^:(<5) z0 =: 1
+: . 
+: : {{ z0 + y^2 }}^:(<5) z0 =: 1
 
 So here y is like an accumulator, and z0 is the initial value. Whenever you've got this
 pattern where you need an accumululator and and a constant, you can put the
 constant on the left, call it x inside the function, and the power conjunction
 will do what you want:
 
-: z0 {{ x + y^2 }}^:(<5) z0 =: 1
+: . 
+: . ^bbbbb
 
 And whenever you have the same argument on  the left and right, you can just put a tilde after the verb
 rather than specifying the argument twice.
 
+: . 
 : {{ x + y^2 }}^:(<5)~ z0 =: 1
 
 And now we don't even need to give z0 a name.
 
 : NB. 'v~ y' means 'y v y'
+: . 
 : {{ x + y^2 }}^:(<5)~ 1
 
 Better yet, whenever you have this pattern of a constant plus some verb applied to the y argument, you can use a hook.
 So first, let's use the special verb for square:
 
 : NB. '*:y' means 'y*y'
+: . 
 : {{ x + *: y }}^:(<5)~ 1
 
 : NB. 'x (u v) y'  means 'x u (v y)'
+: . 
 : (+ *:)^:(<5)~ 1
 
 *** examples
@@ -139,26 +146,26 @@ Notice how starting with one very quickly takes you to a big number.
 
 With zero you get a different story:
 
-: . k__X__?0?
+: . ^__X__?0?
 : (+*:)^:(<5)~ 0
 
 It just stays zero forever.
 
 With negative one, it bounces back and forth between zero and negative one.
 
-: . k__X__?_?__?1?
+: . ^__X__?_?__?1?
 : (+*:)^:(<5)~ _1
 
 And with negative two, you get a never-ending sequence of twos.
 Two squared is four, plus negative two is two, and so on forever.
 
-: . k__X_?2?
+: . ^__X_?2?
 : (+*:)^:(<5)~ _2
-: . k__X___?9?__X_X_?0?_?.?__?3?
+: . ^__X___?9?__X_X_?0?_?.?__?3?
 
 With negative 3, it's straight back to infinity.
 
-: . k__X_?3?
+: . ^__X_?3?
 : (+*:)^:(<5)~ _3
 
 The mandelbrot set is just the part of the complex plane
@@ -168,9 +175,9 @@ and not the ones that go off to infinity.
 Sometimes it's a little hard to tell. 0.3, looks like it's staying pretty small, but give
 it a little more time, and it's out of here.
 
-: . k__X___?9?__X_X_?0?_?.?__?3?
+: . ^__X___?9?__X_X_?0?_?.?__?3?
 : (+*:)^:(<5)~ 0.3
-: . k___h_h_h_h_h_h_h__x___?1?_?5?
+: . ^___h_h_h_h_h_h_h__x___?1?_?5?
 : (+*:)^:(<15)~ 0.3
 
 *** convergence / divergence
@@ -178,48 +185,47 @@ it a little more time, and it's out of here.
 So a decent test is to let the function run a few times for each point,
 and then check whether the value is greater than 2.
 
-: . k___0___?2?____?<?
+: . ^___0___?2?____?<?
 : 2<(+*:)^:(<15)~ 0.3
 
 Of course you can't just compare complex numbers because they're not well ordered.
 
-: . k___X_X__?j?__?1?
+: . ^___X_X__?j?__?1?
 : 2<(+*:)^:(<15)~ 0j1
 
-: . k__0__l_l__?|?
+: . ^__0__l_l__?|?
 : 2<|(+*:)^:(<15)~ 0j1
-: . k___0__x__x_x
+: . ^___0__x__x_x
 : (+*:)^:(<15)~ 0j1
 
 But we can use the distance from the origin, which is the vertical bar:
 
-: . k__0__?|?
+: . ^__0__?|?
 : |(+*:)^:(<15)~ 0j1
+: . 
 : 2<|(+*:)^:(<15)~ 0j1
-: . k___h__h_h_h_h_h_h_h_h_h_h_h_h_h___?z?__?=?__?.?__h_h_h_h_h_h_h_h_h___?(?__?z?__?+?__l_l__?)?
-: . k__0_l_l_l
-: . 0__l_l_l_l_l_l_l___x__h_h_h__x__?<?__l__l_l_l_l_l_l_l_l___l___x_x__x___$
 
 So that's the mandelbrot function. I tend to run it 9 times in J, even though it's not as precise,
 just because otherwise you start hitting infinity and then you have to deal with that.
 
 And now we can apply this same sequence to that entire table of complex numbers we created earlier.
 
+: . 
 : vm 2<|(+*:)^:9~ j./~ 0.1 * i:16
-: . k__0__l_l_l__?|?_?:?
 
 So there's the mandelbrot set.
 The comparison always gives us either a one or zero, and so viewmat just draws it in black and white.
 
 And our table is oriented the wrong way, so let's transpose it.
 
+: . 
 : vm |:2<|(+*:)^:9~ j./~ 0.1 * i:16
-: . k___h__h_h_h_h_h_h_h_h_h_h_h_h__h_h___?_?__?0?_?.?_?5?__?+?__? ?
 
 It's actually still upside down, but since it happens to be symmetrical, we won't worry about it.
 
 But we can move the camera left just by subtracting one from all the values.
 
+: . 
 : vm |:2<|(+*:)^:9~ _1+ j./~ 0.1 * i:16
 
 *** sprite sheet
@@ -238,31 +244,38 @@ That's going to give us a 3 dimensional array - nine of these tables.
 Viewmat doesn't know how to draw a rank 3 array, but we can use dollar
 sign to see the shape:
 
+: . 
 : $ |:2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
 
 Well that's not what we want. The transpose is screwing it up.
 So let's remove that for a moment.
 
+: . 
 : $ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
 
 Now let's reshape that list of 9 tables into a 3x3 table of tables.
 
+: . 
 : $ 3 3 $ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
 
 And now we can use comma dot between each array to stitch them together.
 
+: . 
 : $ ,./ 3 3 $ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
 
 And again to get a single image with all 9 sub-images.
 
+: . 
 : $ ,./,./ 3 3 $ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
 
 And now we can visualize it again:
 
+: . 
 : vm ,./,./ 3 3 $ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
 
 And put the transpose back:
 
+: . 
 : vm |: ,./,./ 3 3 $ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
 
 But now that we can see the intermediate steps,
@@ -275,14 +288,17 @@ we add all 9 layers, these should wind up as 9, and the parts in the middle that
 are close to zero should be 0, and then the parts that change should have different
 numbers in between.
 
+: . ^0__xx_x__l_l__l___x__x_x__x__x___?+?__l_l__x__x___x__x__x__x
 : |: +/ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
 
 All that's left is to render the image...
 
+: . 
 : vm |: +/ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
 
 And pick whatever color scheme we'd like.
 
+: . 
 : (16b221111 * i.8) vm |: +/ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
 
 * end
