@@ -219,9 +219,9 @@ it a little more time, and it's out of here.
 
 : . ^__X___?9?__X_X_?0?_?.?__?3?
 : (+*:)^:(<6)~ 0.3
-: . ^___h_h_h_h_h_h_h__x___?1?_?5?
+: . ^___<<<<<<<x?15?
 : (+*:)^:(<15)~ 0.3
-
+: 
 *** convergence / divergence
 
 So a decent test is to let the function
@@ -229,7 +229,7 @@ run a few times for each point,
 and then check whether the value
 is greater than 2.
 
-: . ^___0___?2?____?<?
+: . ^^___0___?2?____?<?
 : 2<(+*:)^:(<15)~ 0.3
 
 Of course you can't just compare complex numbers
@@ -261,7 +261,7 @@ And now we can apply this same sequence to
 that entire table of complex numbers we
 created earlier.
 
-: . ^0?vm ?w<XXXXX?9?>>K?j./~ 0.1 * i:16?
+: . ^0?vm ?w<XXXXX?9?>>__________K?j./~ 0.1 * i:16?
 : vm 2<|(+*:)^:9~ j./~ 0.1 * i:16
 
 So there's the mandelbrot set.
