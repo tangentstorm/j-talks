@@ -1,0 +1,22 @@
+* forager
+recently i spent some time playing a game called forager.
+it's a really fun game about collecting and crafting and automation and expanding your territory.
+you start out mining resources by hand on this one tiny island
+and before long you're buying more and more islands until you have a whole world to discover.
+each island has something different on it. Sometimes it's an NPC that gives you a quest, sometimes it's a dungeon to explore. Sometimes it's a puzzle.
+like this one.
+
+* lights out
+this is a lights out puzzle.
+# named after a 1995 tiger electronics.
+# image: http://www.thepcmuseum.net/games_details.php?RECORD_KEY%28games%29=id&id(games)=236&PHPSESSID=jsrsyzjz
+
+when you press one of the lights (or in this case hit it with a pickaxe) it toggles between on and off.
+but it also toggles its neighbors.
+
+It's pretty easy to implement.
+
+You can watch the sprite editor video to see how this drawing code works.
+This just says that x should clear the board,
+and clicking a cell toggles that cell, and also toggles its neighbors.
+

@@ -1,0 +1,11 @@
+*first* import the raw media into davinci, to get the frame rate for the project set up right.
+
+export from descript as adobe premiere xml.
+if necessary, change filenames in the exported xml in a text editor.
+
+then "import timeline" in the davinci project.
+it seems to import the stereo audio as mono, so:
+  - select all clips in the timline
+  - right click and change the clip attributes
+  - change the audio track to stereo
+
