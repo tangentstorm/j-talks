@@ -1,0 +1,33 @@
+#+title: old preztool
+
+This is an old presentation tool I made with jQt.
+
+It reads screens ful of j code ('slides') and the text for me to say
+out loud from *.org files, and displays them on-screen, along with a
+little teleprompter window.
+
+In my recording software, the teleprompter gets covered with my video
+camera, so I know not to use that space, and the camera is arranged
+so that when I'm looking at the prompter, it looks like I'm actually
+looking towards the camera and/or slides.
+
+I never quite the hang of using the teleprompter (especially when I
+had to talk and type at the same time) and eventually decided it
+would be nice to just pre-record both as much as possible.
+
+So: I no longer really use this, and instead either just record
+live without a script and try to edit it into something sensible later,
+or I build the presentation in https://github.com/tangentstorm/jprez
+
+(see /wip for examples)
+
+Anyway, here's an overview of the code. If there's something you find
+worth re-using here, you're welcome to it.
+
+- org.ijs :: org parser
+- jcw.html :: j code window
+- tpw.html :: teleprompter window
+- jlex.js :: lexer for j source code (predates direct definitions)
+- jlang.js :: metadata about all predefined tokens (for j 8.x)
+
+
