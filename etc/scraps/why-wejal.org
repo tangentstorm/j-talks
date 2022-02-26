@@ -1,0 +1,10 @@
+It is almost trivial these days to write code that is portable between
+operating systems, but it is next to impossible to write code that is
+portable between applications or programming environments.
+
+One solution is microservices, where you have 15 interpreters running
+at the same time and all talking to each other. It's not a bad
+situation, but sometimes I just want a little library that has all my
+stuff in it no matter which language I happen to be working in.
+
+So, how about a little tiny language you can take with you everywhere?
