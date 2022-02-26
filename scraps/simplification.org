@@ -1,0 +1,23 @@
+#+title: boolean simplification
+
+# (working from random AST 322 from fnarbmlyx)
+# leftmost part looks like:
+
+#+begin_src j
+(((0 *. x1) *. 0) ~: (x0 ~: ((0 +. 1) *. x2))) NB. ...
+#+end_src
+
+to simplify, we walk the twigs from left to right,
+and look for situations where the twigs can be simplified.
+
+possibilities for twig = f(x,y)
+
+  x = 0
+  x = 1
+  y = 0
+  y = 1
+  x = y
+  x = -.y
+  x = -.e
+  y = -.e
+  x > y (x,y constant)... mostly asthetic but might help with caching/normalization

@@ -1,9 +1,0 @@
-#+TITLE: kanban for rejms (the ridiculously early j morning show)
-
-* TODO transparent round window to control the obs overlay
-maybe should go in its own repo?
-  - use websockets to control obs overlay position
-  - remotely from round window
-  - can also trigger different backgrounds
-
-* TODO generate backgrounds for greenscreen

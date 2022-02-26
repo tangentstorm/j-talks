@@ -1,0 +1,8 @@
+
+
+#+begin_src haskell
+let lit = \c s@(h:t) -> if c==h then (True, t) else (False, s)
+#+end_src
+
+
+
