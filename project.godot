@@ -34,7 +34,6 @@ _global_script_class_icons={
 
 config/name="j-talks"
 run/main_scene="res://j-talks.tscn"
-config/icon="res://visinterp/icon.png"
 
 [display]
 
