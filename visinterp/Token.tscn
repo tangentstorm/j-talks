@@ -3,7 +3,7 @@
 [ext_resource path="res://visinterp/Token.gd" type="Script" id=1]
 
 [sub_resource type="DynamicFontData" id=1]
-font_path = "res://visinterp/DroidSansMono.ttf"
+font_path = "res://fonts/DroidSansMono.ttf"
 
 [sub_resource type="DynamicFont" id=2]
 size = 24
