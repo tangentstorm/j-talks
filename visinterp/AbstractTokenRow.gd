@@ -2,8 +2,8 @@
 
 extends ColorRect
 
-const Token = preload("res://Token.tscn")
-const JTYPE = preload("res://JTYPE.gd").JTYPE
+const Token = preload("res://visinterp/Token.tscn")
+const JTYPE = preload("res://visinterp/JTYPE.gd").JTYPE
 
 var gw = 0
 var ty = 5

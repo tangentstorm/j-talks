@@ -1,11 +1,12 @@
 tool extends ColorRect
-const JTYPE = preload("res://JTYPE.gd").JTYPE
+const JTYPE = preload("res://visinterp/JTYPE.gd").JTYPE
 
 export (String) var text = ""  setget set_text
 export (JTYPE) var type = JTYPE.edge setget set_type
 
 func set_text(t):
 	text = t
+	if not is_inside_tree(): return # TODO: clean this up!
 	if $text != null:
 		$text.rect_size.x = 0   # reset to 0 width
 		$text.text = t          # this changes the size, too
