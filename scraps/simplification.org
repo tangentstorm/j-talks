@@ -1,5 +1,6 @@
 #+title: boolean simplification
 
+* example AST
 # (working from random AST 322 from fnarbmlyx)
 # leftmost part looks like:
 
@@ -7,17 +8,97 @@
 (((0 *. x1) *. 0) ~: (x0 ~: ((0 +. 1) *. x2))) NB. ...
 #+end_src
 
+* simplifying the binary functions ("dyads")
+
+** projection (partial application)
+
 to simplify, we walk the twigs from left to right,
 and look for situations where the twigs can be simplified.
 
-possibilities for twig = f(x,y)
+simplification possibilities for twig = (x f y)
+break truth table into 4 chunks, and take 2 of them:
 
-  x = 0
-  x = 1
-  y = 0
-  y = 1
-  x = y
-  x = -.y
-  x = -.e
-  y = -.e
-  x > y (x,y constant)... mostly asthetic but might help with caching/normalization
+  x = 0     ->  1100  so: abcd -> ab
+  x = 1     ->  0011      abcd -> cd
+  y = 0     ->  1010      abcd -> ac
+  y = 1     ->  0101      abcd -> bd
+  x = y     ->  1001      abcd -> ad
+  x = -.y   ->  0110      abcd -> bc
+
+** some further simplifications require thinking in permutations
+
+to remove the negation symbol around some expression:
+
+  x = -.e   -> abcd -> cdab
+  y = -.e   -> abcd -> badc
+  nid(x) > nid(y) NB. mostly aesthetic, but may help with caching/normalization
+
+basically the goal is to factor out all constants (by applying them and getting a function of one less variable), and all negations (by changing the top level dyad to another dyad)
+
+* the decomposition operator (if/then/else)
+
+of the 256 triadic ("ternary") operators, one stands out:
+
+: if[z;x;y] -> ((z=0) *. x) +. ((z=1) *. y)  NB. can use ~: instead of +.
+
+actually, there are many ternary operators:
+
+denerate cases
+  - (2*3) -> 6 * 10 = 60 non-degenerate dyads  (< > <: >: = ~: +. +: *. *:)
+  - (1!3) -> 3 * 2  =  6 monads    (x;-.x; y; -.y; z; -.z)
+  - (0!3) -> 1 * 2  =  2 constants (niladic functions)
+
+that seems to leave 256-68 = 188 ternary operators.
+
+anyway, one of them is what we call =if-then-else=, and its truth table looks
+something like this:
+
+: 01010011  NB. x2 ? x0 : x1
+
+
+* next step: solving
+** solving is more than simplification...
+simplification still leaves you with an expression, but a simpler one.
+solving (to me) means:
+  - EITHER producing all input configurations where the expression evaluates to 1.
+  - OR showing that no such configuration exists.
+
+A slightly simpler request is to provide one SATISFYING configuration. However, since it's possible that no configuration exists, this has the same 2^n search requirement in the worst case.
+
+** to solve, focus on decomposition
+- choose a variable on which to branch
+- substitute xn->0 and xn->1 into the expression of n+1 vars
+- now you have two smaller expressions of n vars.
+- do this recursively and you will eventually reach constants
+- unfortunately this process winds up taking 2^n steps.
+- but we can at least try different strategies to speed up the process.
+
+** strategies (tactics?)
+*** note that pretty much anything works for small functions
+(you have to constantly ask how does this scale with number of inputs)
+it's easier to visualize the algorithm on small inputs
+really try to visualize how huge these get
+
+*** simple/naive decomposition
+- make two complete copies of the expression
+- wastes a lot of spacetime copying intermediate nodes
+- if depth first, has the advantage of reaching the first truth value in n steps
+*** bottom-up bdd conversion
+- turns out to be terribly terribly slow
+*** top-down bdd conversion
+**** advantages
+**** implementation: bdd sub solver
+**** implementation: swap solver
+- many times faster
+*** "world solver"
+- bottom up solver
+- only have to track the fringes
+*** "clock solver"
+- top down solver but again considering the whole ast
+- solve leftmost value of every node
+- find next change point of every node
+- use each node's truth table to decide what changes actually make a difference
+- fast forward to changes that matter
+*** does zdd or anf make a difference?
+*** what about using functions of more than 2 inputs? (to reduce the size of the AST)
+*** special case: sat solver (input in CNF)
