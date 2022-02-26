@@ -1,8 +1,8 @@
 [gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://FiraCode-Medium.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://KulimPark-Bold.ttf" type="DynamicFontData" id=2]
-[ext_resource path="res://main.gd" type="Script" id=3]
+[ext_resource path="res://wip/mandelbrot/FiraCode-Medium.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://slides/fonts/KulimPark-Bold.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://wip/mandelbrot/main.gd" type="Script" id=3]
 
 [sub_resource type="Animation" id=1]
 resource_name = "sign_all"
