@@ -1,7 +1,7 @@
 tool extends Node2D
 
 export (String) var text setget set_text
-export (float) var text_len setget set_text_len
+export (int) var text_len setget set_text_len
 export var stripe_x = 0 setget set_stripe_x
 export var stripe_y = 0 setget set_stripe_y
 export var stripe_w = 0 setget set_stripe_w

@@ -197,10 +197,17 @@ margin_right = 914.0
 margin_bottom = 378.0
 custom_fonts/font = SubResource( 4 )
 text = "sandpiles"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="shutter" type="ColorRect" parent="text title"]
-margin_left = -2.20154
-margin_top = 4.40295
-margin_right = 1917.8
-margin_bottom = 1084.4
+visible = false
+margin_left = 2653.52
+margin_top = 416.887
+margin_right = 4573.52
+margin_bottom = 1496.88
 color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
