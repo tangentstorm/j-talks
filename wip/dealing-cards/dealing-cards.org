@@ -1,0 +1,46 @@
+#+title: dealing cards in j
+
+* setup
+hello
+: 9!:7 [ (16+i.11){a.  NB. box drawing characters
+
+* testing
+# res://audio/one-two-three.wav
+testing one two three
+
+* simple
+
+# res://audio/generate.wav
+let's generate a random poker hand.
+
+: NB. generate a random poker hand
+: 5 {. (52 ? 52) { , {'A23456789TJQK';'hsdc'
+
+* permutations
+
+# res://audio/here-is-a-string.wav
+: 'abcd'
+
+# res://audio/its-length.wav
+: #'abcd'
+its length
+
+# res://audio/four-factorial.wav
+: !#'abcd'
+here's four factorial
+
+
+# res://audio/count.wav
+count to the factorial of the length
+: i.!#'abcd'
+
+# res://audio/howmany.wav
+this tells us how many permutations there are
+
+# res://audio/a-dot.wav
+And now... A-dot gives us the anagrams.
+: (A.~!@i.@#)'abcd'
+
+
+* okay?
+what now?
