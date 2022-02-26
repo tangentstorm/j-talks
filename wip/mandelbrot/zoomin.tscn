@@ -1,0 +1,48 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://mandelbrot.shader" type="Shader" id=1]
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 1 )
+shader_param/shift = Vector2( -0.892518, 0 )
+shader_param/scale = 1.03124
+
+[sub_resource type="Animation" id=2]
+resource_name = "zoomin"
+length = 10.0
+loop = true
+tracks/0/type = "bezier"
+tracks/0/path = NodePath(".:material:shader_param/scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 5, -0.25, 0, 0.25, 0, 0.625, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 10 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath(".:material:shader_param/shift:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 0.05, -0.25, 0, 0.25, 0, -1, 0, 0, 0, 0 ),
+"times": PoolRealArray( 0, 10 )
+}
+
+[node name="ColorRect" type="ColorRect"]
+material = SubResource( 1 )
+margin_left = -282.843
+margin_top = -463.862
+margin_right = 2717.16
+margin_bottom = 1536.14
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "zoomin"
+anims/zoomin = SubResource( 2 )

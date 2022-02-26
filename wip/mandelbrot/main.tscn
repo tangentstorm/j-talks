@@ -1,0 +1,418 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://FiraCode-Medium.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://KulimPark-Bold.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://main.gd" type="Script" id=3]
+
+[sub_resource type="Animation" id=1]
+resource_name = "sign_all"
+tracks/0/type = "value"
+tracks/0/path = NodePath("signposts/viewmat:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("signposts/complexplane:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("signposts/mandelbrot:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("signposts/gradient:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "sign_clear"
+tracks/0/type = "value"
+tracks/0/path = NodePath("signposts/viewmat:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("signposts/complexplane:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("signposts/mandelbrot:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("signposts/gradient:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+
+[sub_resource type="DynamicFont" id=3]
+size = 98
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 32
+font_data = ExtResource( 1 )
+
+[node name="Scene" type="Node2D"]
+script = ExtResource( 3 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/sign_all = SubResource( 1 )
+anims/sign_clear = SubResource( 2 )
+
+[node name="background" type="ColorRect" parent="."]
+margin_left = 1.0
+margin_top = -149.0
+margin_right = 2094.0
+margin_bottom = 1615.0
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="signposts" type="Node2D" parent="."]
+position = Vector2( 1, -149 )
+
+[node name="viewmat" type="Node2D" parent="signposts"]
+visible = false
+position = Vector2( -6.3335, 458.333 )
+
+[node name="vm0" type="ColorRect" parent="signposts/viewmat"]
+margin_left = 1430.0
+margin_top = 120.0
+margin_right = 1754.0
+margin_bottom = 170.0
+color = Color( 0.101961, 0.168627, 0.121569, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="vm3" type="ColorRect" parent="signposts/viewmat"]
+margin_left = 600.0
+margin_top = 194.0
+margin_right = 1540.0
+margin_bottom = 216.0
+color = Color( 0.101961, 0.168627, 0.121569, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="vm4" type="ColorRect" parent="signposts/viewmat"]
+margin_left = 600.0
+margin_top = 161.0
+margin_right = 622.0
+margin_bottom = 215.0
+color = Color( 0.101961, 0.168627, 0.121569, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="vm6" type="ColorRect" parent="signposts/viewmat"]
+margin_left = 656.0
+margin_top = 213.0
+margin_right = 678.0
+margin_bottom = 301.0
+color = Color( 0.101961, 0.168627, 0.121569, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="vm5" type="ColorRect" parent="signposts/viewmat"]
+margin_left = 1517.7
+margin_top = 160.886
+margin_right = 1539.7
+margin_bottom = 214.886
+color = Color( 0.101961, 0.168627, 0.121569, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="vm1" type="ColorRect" parent="signposts/viewmat"]
+margin_left = 506.0
+margin_top = 120.0
+margin_right = 677.0
+margin_bottom = 170.0
+color = Color( 0.101961, 0.168627, 0.121569, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bg" type="ColorRect" parent="signposts/viewmat"]
+margin_left = 479.31
+margin_top = 255.602
+margin_right = 917.31
+margin_bottom = 355.602
+color = Color( 0.101961, 0.168627, 0.121569, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="label" type="Label" parent="signposts/viewmat"]
+margin_left = 499.31
+margin_top = 249.602
+margin_right = 894.31
+margin_bottom = 361.602
+custom_fonts/font = SubResource( 3 )
+text = "viewmat"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="complexplane" type="Node2D" parent="signposts"]
+visible = false
+position = Vector2( -6.3335, 458.333 )
+
+[node name="cp" type="ColorRect" parent="signposts/complexplane"]
+margin_left = 1054.0
+margin_top = 120.0
+margin_right = 1431.0
+margin_bottom = 170.0
+color = Color( 0.105882, 0.235294, 0.392157, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="cpx" type="ColorRect" parent="signposts/complexplane"]
+margin_left = 1309.74
+margin_top = 11.5101
+margin_right = 1331.74
+margin_bottom = 165.51
+color = Color( 0.105882, 0.235294, 0.392157, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bg" type="ColorRect" parent="signposts/complexplane"]
+margin_left = 1159.0
+margin_top = -45.0
+margin_right = 1823.0
+margin_bottom = 55.0
+color = Color( 0.105882, 0.235294, 0.392157, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="complex plane" type="Label" parent="signposts/complexplane"]
+margin_left = 1169.36
+margin_top = -61.7085
+margin_right = 1813.36
+margin_bottom = 50.2915
+custom_fonts/font = SubResource( 3 )
+text = "complex plane"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="mandelbrot" type="Node2D" parent="signposts"]
+visible = false
+position = Vector2( -6.3335, 458.333 )
+
+[node name="mb" type="ColorRect" parent="signposts/mandelbrot"]
+margin_left = 813.0
+margin_top = 120.0
+margin_right = 1056.0
+margin_bottom = 170.0
+color = Color( 0.160784, 0.133333, 0.258824, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bg" type="ColorRect" parent="signposts/mandelbrot"]
+margin_left = 589.0
+margin_top = -202.0
+margin_right = 1305.0
+margin_bottom = -102.0
+color = Color( 0.160784, 0.133333, 0.258824, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="mb3" type="ColorRect" parent="signposts/mandelbrot"]
+margin_left = 925.0
+margin_top = -199.0
+margin_right = 947.0
+margin_bottom = 146.0
+color = Color( 0.160784, 0.133333, 0.258824, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="mandelbrot" type="Label" parent="signposts/mandelbrot"]
+margin_left = 614.621
+margin_top = -209.558
+margin_right = 1286.62
+margin_bottom = -97.5579
+custom_fonts/font = SubResource( 3 )
+text = "mandelbrot set"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="gradient" type="Node2D" parent="signposts"]
+visible = false
+position = Vector2( -6.3335, 458.333 )
+
+[node name="gr" type="ColorRect" parent="signposts/gradient"]
+margin_left = 675.0
+margin_top = 120.0
+margin_right = 817.0
+margin_bottom = 170.0
+color = Color( 0.223529, 0.0431373, 0.0980392, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="gr2" type="ColorRect" parent="signposts/gradient"]
+margin_left = 188.0
+margin_top = 120.0
+margin_right = 513.0
+margin_bottom = 170.0
+color = Color( 0.223529, 0.0431373, 0.0980392, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="gr3" type="ColorRect" parent="signposts/gradient"]
+margin_left = 974.0
+margin_top = 120.0
+margin_right = 996.0
+margin_bottom = 170.0
+color = Color( 0.223529, 0.0431373, 0.0980392, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="gr4" type="ColorRect" parent="signposts/gradient"]
+margin_left = 974.0
+margin_top = 16.0
+margin_right = 996.0
+margin_bottom = 121.0
+color = Color( 0.223529, 0.0431373, 0.0980392, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="gr5" type="ColorRect" parent="signposts/gradient"]
+margin_left = 735.0
+margin_top = 20.0
+margin_right = 757.0
+margin_bottom = 170.0
+color = Color( 0.223529, 0.0431373, 0.0980392, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="gr6" type="ColorRect" parent="signposts/gradient"]
+margin_left = 278.799
+margin_top = 26.0
+margin_right = 300.799
+margin_bottom = 170.0
+color = Color( 0.223529, 0.0431373, 0.0980392, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="gr7" type="ColorRect" parent="signposts/gradient"]
+margin_left = 262.0
+margin_right = 996.0
+margin_bottom = 22.0
+color = Color( 0.223529, 0.0431373, 0.0980392, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bg" type="ColorRect" parent="signposts/gradient"]
+margin_left = 162.347
+margin_top = -45.0
+margin_right = 560.347
+margin_bottom = 55.0
+color = Color( 0.223529, 0.0431373, 0.0980392, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="label" type="Label" parent="signposts/gradient"]
+margin_left = 173.331
+margin_top = -61.2507
+margin_right = 549.331
+margin_bottom = 50.7493
+custom_fonts/font = SubResource( 3 )
+text = "gradient"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="RichTextLabel" parent="signposts"]
+margin_left = -1.0
+margin_top = 585.0
+margin_right = 1919.0
+margin_bottom = 665.0
+custom_fonts/normal_font = SubResource( 4 )
+bbcode_enabled = true
+bbcode_text = "[center][color=#555555]([/color][color=#f984e5]16b221111[/color][color=#ffd700]*[/color][color=#ffd700]i.[/color][color=#f984e5]8[/color][color=#555555])[/color][color=#999999] [/color][color=#ffffff]viewmat[/color][color=#999999] [/color][color=#ffd700]|:[/color][color=#ffd700]+[/color][color=#c78243]/[/color][color=#f984e5]2[/color][color=#ffd700]<[/color][color=#ffd700]|[/color][color=#555555]([/color][color=#ffd700]+[/color][color=#ffd700]*:[/color][color=#555555])[/color][color=#ff4500]^:[/color][color=#555555]([/color][color=#ffd700]<[/color][color=#f984e5]9[/color][color=#555555])[/color][color=#c78243]~[/color][color=#f984e5]_1[/color][color=#ffd700]+[/color][color=#ffd700]j.[/color][color=#c78243]/[/color][color=#c78243]~[/color][color=#999999] [/color][color=#f984e5]0.01[/color][color=#ffd700]*[/color][color=#ffd700]i:[/color][color=#f984e5]175[/color][color=#999999] [/color][color=#ffd700][[/color][color=#999999] [/color][color=#ffffff]load[/color][color=#2dabfc]'viewmat'[/color][/center]"
+text = "(16b221111*i.8) viewmat |:+/2<|(+*:)^:(<9)~_1+j./~ 0.01*i:175 [ load'viewmat'"
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
