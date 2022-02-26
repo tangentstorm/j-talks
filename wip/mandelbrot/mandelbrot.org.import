@@ -1,0 +1,13 @@
+[remap]
+
+importer="org.jprez"
+type="Resource"
+path="res://.import/mandelbrot.org-89d5979eefbd5fc52ee8f44fc781e28e.res"
+
+[deps]
+
+source_file="res://wip/mandelbrot/mandelbrot.org"
+dest_files=[ "res://.import/mandelbrot.org-89d5979eefbd5fc52ee8f44fc781e28e.res" ]
+
+[params]
+
