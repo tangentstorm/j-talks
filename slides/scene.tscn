@@ -1,8 +1,8 @@
 [gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://scene.gd" type="Script" id=1]
-[ext_resource path="res://text title.gd" type="Script" id=2]
-[ext_resource path="res://fonts/KulimPark-Bold.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://slides/scene.gd" type="Script" id=1]
+[ext_resource path="res://slides/SceneTitle.gd" type="Script" id=2]
+[ext_resource path="res://slides/fonts/KulimPark-Bold.ttf" type="DynamicFontData" id=3]
 
 [sub_resource type="CanvasItemMaterial" id=1]
 

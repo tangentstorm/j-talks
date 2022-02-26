@@ -9,21 +9,25 @@ export var stripe_h = 0 setget set_stripe_h
 
 func set_stripe_y(y):
 	stripe_y = y
+	if not is_inside_tree(): return # TODO: clean this up
 	if $stripe != null:
 		$stripe.rect_position.y = y
 	
 func set_stripe_x(x):
 	stripe_x = x
+	if not is_inside_tree(): return # TODO: clean this up
 	if $stripe != null:
 		$stripe.rect_position.x = x
 
 func set_stripe_w(w):
 	stripe_w = w
+	if not is_inside_tree(): return # TODO: clean this up
 	if $stripe != null:
 		$stripe.rect_size.x = w
 	
 func set_stripe_h(h):
 	stripe_h = h
+	if not is_inside_tree(): return # TODO: clean this up
 	if $stripe != null:
 		$stripe.rect_size.y = h
 
@@ -34,6 +38,7 @@ func set_text(t):
 func set_text_len(n):
 	text_len = int(n)
 	if text == null or text == '': return
+	if not is_inside_tree(): return # TODO: clean this up
 	if $label == null: return
 	if n > 0: $label.text = text.substr(0,n)
 	else: $label.text = ""
