@@ -1,0 +1,34 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[  ]
+_global_script_class_icons={
+}
+
+[application]
+
+config/name="j-talks"
+run/main_scene="res://j-talks.tscn"
+config/icon="res://visinterp/icon.png"
+
+[display]
+
+window/size/width=1920
+window/size/height=1080
+window/size/resizable=false
+window/size/borderless=true
+
+[global]
+
+color=false
+
+[rendering]
+
+environment/default_clear_color=Color( 0.176471, 0.247059, 0.34902, 1 )
