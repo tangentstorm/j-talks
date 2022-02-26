@@ -1,19 +1,12 @@
-0:00 demo
-1:00 planning
 
-bug on save
+** DONE 8:00 "my goal is to film the screenplay"
+explain  "one more thing"
+(need to explain scroll so i can read the text)
 
-* 1:44 "playing back the macro"
 
-- where to put the handler?
-reactive feedback
-update repl
 
-*  5:10 "the way this is supposed to work"
+* TODO 5:10 "the way this is supposed to work"
 (creating the blank line)
-
-*  6:48 the two kinds of pauses
-tempo character
 
 * fix right side of outline so it scrolls
 * make sure i can save
@@ -28,7 +21,7 @@ tempo character
 episode 11 - how the outliner works
 * 9am - finish up the bugfix... thinking about what to film here
 
-* productive session
+* "tickets"
 ** DONE bug: text added from repl gets discarded
    |(fix was to use insline instead of ins__cmd)
 ** DONE do not show macros in the repl
@@ -40,6 +33,7 @@ episode 11 - how the outliner works
 ** DONE =goz_UiList_= does not scroll correctly (cursor hidden when entering from bottom)
    |fixed by adding bounds checking to goz
    |
+
 
 * TODO i set TSV=0 istead of 1 after deciding on 1
 
@@ -55,36 +49,63 @@ episode 11 - how the outliner works
 
 
 
+* commits
+https://github.com/tangentstorm/jprez/commits/rejms-11
+https://github.com/tangentstorm/j-kvm/commits/rejms-11
+
+** mje.ijs: record macros, fix reload, shorten index           :jprez:
+7601b956d75c00d3af26eb3a5cb71abe1cad6f80
+** worlds.ijs: put ii,ihist,ehist in init                      :jprez:
+7304f073d39fd9acacf64460abae0c9c73604a8e
+** mje: extract inscmd verb                                    :jprez:
+013cfd0a905b76931e034ca4a1e911424e513c05
+** mje: don't show macros in repl                              :jprez:
+c6b26645fe8e0bf3a6cea84d3499dc7a2d665fa7
+** mje: fixed height of commands                               :jprez:
+418e9c8e8f0d9e703830dadf0b35e6fa173bec13
+** mje: play current macro on 'N' key                          :jprez:
+3198ff44a3cf8abff2d942055c68e517054699a8
+** mje: record repl state for each cmd on open                 :jprez:
+36bb6617e4375977435c818f823f17aa659a8e6d
+** mje: use macro start states                                 :jprez:
+d81a0b88edeb591bc5f80cfbdc4ae7865c23e312
+** ui/list: fix scroll position for goz                        :kvm:
+2cb3e2f897a8daaead343aea429e8eed8a28c667
+** ui/eidt: getstate/setstate                                  :kvm:
+9b5295af1bb46b185d0322aaf8accd4a7541b6f1
+
+
+* outline
+** starting point
+** spent some time planning
+** problems right off the bat
+** 
+
+
+
 * what actually happened
-0:00-0:42
-1:00 planning
-2:00 two kinds of pauses
-3:00 problem - need the starting point
-4:20 - test framework
- - actually ahave a decent plan
-but cut the 5:00 planning
-5:20-6:20 - ignore the cursor ui problems for now
 
-7:00 < can gloss over  the future worlds stuff >
 
-8:00 "my goal is to film the screenplay"
-explain  "one more thing"
-(need to explain scroll so i can read the text)
 
  but first i have to save...
- 10:15 or so .. "hrm" because ctrl-o doesn't work
+
+** first bug : ctrl-o doesn't reload
+@12:26 10:08 .. "hrm" because ctrl-o doesn't work
 11:17 not doing anything to r-open
 
-restore the
 
+** 
 14:58 - not clearing the history...
+@12:34 "this should not be here"
 15:20 showing the wrong history problem
+
+
 16:00 < trying to explain the index but it confuses me  >
 17:00 - "15 lines?!?"
 18:00 begin code review of 'open'
   25:10 finally understand what's actually happening
   27:00 interval index demo is too rambly
-  32:00 finally hit 9:00am
+@1am  32:00 finally hit 9:00am
   33: planning inside code review (to enter macro)
 36:00 end code review.
 36:20 reflections: how to make livecoding interesting?? (long silences)
@@ -94,7 +115,8 @@ restore the
 
 40:00 tmux config (cut this)
 
-43:00 fix right side until it scrolls
+
+** 43:00 fix right side until it scrolls
 44:19 shows recording a macro (is this a repeat?)
 
 45:32 (13:21 on clock) <new bug - it doesn't save>
@@ -102,6 +124,7 @@ restore the
   52:47 finally fix this bug
 54:00 demo it saves (@13:30 clock)
 
+** 
 55:23 / @13:31 don't show macro in repl
 57:41 - done
 
@@ -149,5 +172,26 @@ restore the
 (not exactly necessary for recording a movie but ought to be there)
 
 
-* next episode : code review
-start with I.
+
+
+* clips at end
+
+** starting point - keep
+** planning - keep
+**  "hit that line and the animation starts" -> <went back and forth>
+** typing speed / two kinds of pauses (part of goal)
+** can't just land on a macro line - these are stateful (going back and forth)
+** need to know the start config the minute we land there
+** "here is some bad code" - clear statement of the problem
+** you want that stepping motion
+** if somebody has edited the macro... (tests - but i didn't test this yet)
+** more planning
+** "and once we have this"... right side works / gola to film a screenplay
+** why i need to fix scrolling
+** 'fix scrolling' on plan
+** first i want to save this
+** ^s to save ... undo with git and ^o to load
+** (demo the bug)
+** demo again it's not reverting the file
+** fix - fwd/back fixes it (keep the fix but cut itdown)
+** but the next slide is screwy
