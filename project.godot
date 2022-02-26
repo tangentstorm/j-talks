@@ -8,8 +8,26 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "Control",
+"class": "JKVM",
+"language": "GDScript",
+"path": "res://addons/jprez/JKVM.gd"
+}, {
+"base": "Reference",
+"class": "Org",
+"language": "GDScript",
+"path": "res://addons/jprez/Org.gd"
+}, {
+"base": "Resource",
+"class": "OrgNode",
+"language": "GDScript",
+"path": "res://addons/jprez/OrgNode.gd"
+} ]
 _global_script_class_icons={
+"JKVM": "",
+"Org": "",
+"OrgNode": ""
 }
 
 [application]
@@ -23,6 +41,10 @@ config/icon="res://visinterp/icon.png"
 window/size/width=1920
 window/size/height=1080
 window/size/resizable=false
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/jprez/plugin.cfg", "res://addons/waveform/plugin.cfg" )
 
 [global]
 

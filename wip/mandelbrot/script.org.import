@@ -1,0 +1,13 @@
+[remap]
+
+importer="org.jprez"
+type="Resource"
+path="res://.import/script.org-cd31a86340eb3aacc093140d61ba0f64.res"
+
+[deps]
+
+source_file="res://wip/mandelbrot/script.org"
+dest_files=[ "res://.import/script.org-cd31a86340eb3aacc093140d61ba0f64.res" ]
+
+[params]
+
