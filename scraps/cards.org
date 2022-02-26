@@ -1,0 +1,52 @@
+
+* generating a deck
+
+: deck=:,{'23456789TJQKA';'cdhs'
+: |: 13 4 $ deck
+
+* shuffle and deal
+
+this shuffles any array:
+
+: ({~[:?~#)
+
+* do we need the array?
+maybe easier to just deal with the numbers:
+
+:  5{.?~52
+
+** mapping ints->cards
+
+use antibase
+
+:  13 4 #: i. 52
+
+and to go the other way:
+
+: 13 4 #. 12 3 NB. maps back to 51
+
+* solitaire
+- piles of cards
+- face up vs face down
+
+operations:
+- draw from deck
+- place card on "normal" pile
+  - place any king on blank pile
+    - otherwise, need (rank-1) to add to work pile
+- place card on "final" pile
+  - an ace can go on any free slot
+  - otherwise, must have same suit, and rank(new) must be rank(top)+1
+
+
+* poker hands
+these are just patterns someone saw in the cards
+some patterns are common, some are rare.
+some ranks are equally common but stronger because of the ranks.
+(aces and kings aren't any rarer than twos and threes)
+
+the patterns:
+- duplicate cards (pairs, trips, quads)
+- 5 cards of one suit
+- 5 cards in sequence
+- straight+flush

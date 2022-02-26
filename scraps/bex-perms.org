@@ -1,0 +1,67 @@
+#+begin_src j
+
+(0 : 0)
+NB. demonstration of the technique
+NB. swapping order swaps the two inner items
+   #.|: 0 0 1 1,:0 1 0 1
+0 1 2 3
+   #.|: 0 0 1 1,:~0 1 0 1
+0 2 1 3
+)
+
+NB. declare five bit vectors
+'a b c d e' =. ,:"1|.|:#:i.32
+
+NB. retrieve the numbers:
+#.|:|. a,b,c,d,e
+perm =. {{#.|:|. y}}
+perm =. #.@|:@|.
+
+NB. the simple way:
+perm b,a,c,d,e
+perm a,c,b,d,e
+perm a,b,d,c,e
+perm a,b,c,e,d
+
+NB. put commas between the values:
+csv =: {{x,',',y}}/@:(":"0)
+csv perm b,a,c,d,e
+csv perm a,c,b,d,e
+csv perm a,b,d,c,e
+csv perm a,b,c,e,d
+
+
+
+NB. what about flipping each input bit?
+perm (-.a),b,c,d,e
+perm a,(-.b),c,d,e
+perm a,b,(-.c),d,e
+perm a,b,c,(-.d),e
+perm a,b,c,d,(-.e)
+
+NB. permute them in 5 different ways
+(0 : 0)
+NB. name the four permutations we want
+NB. looks like it's numbered like }.!i.5
+   A. 1 0 2 3 4   NB. 0 1 -> 1 0
+24
+   A. 0 2 1 3 4   NB. 1 2 -> 2 1
+6
+   A. 0 1 3 2 4   NB. 2 3 -> 3 2
+2
+   A. 0 1 2 4 3   NB. 3 4 -> 4 3
+1
+   /:'acdbe'
+0 3 1 2 4
+   A./:'acdbe'
+12
+   12 A. 'abcde'
+adbce
+)
+
+NB. Now use those numbers.
+(|.}.!i.5) A."0 1 'abcde'
+
+#+end_src
+
+0x43210

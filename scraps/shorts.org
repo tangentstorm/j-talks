@@ -1,0 +1,7 @@
+- mandelbrot set
+- k-means clustering
+- draw a cube
+- 2048 game
+- game of life
+- floodfind / minesweeper
+
