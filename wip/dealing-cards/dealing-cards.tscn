@@ -1,40 +1,43 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://addons/jprez/JKVM.gd" type="Script" id=1]
-[ext_resource path="res://addons/jprez/jprez.gd" type="Script" id=2]
+[ext_resource path="res://addons/jprez/JPrezPlayer.gd" type="Script" id=2]
 [ext_resource path="res://addons/jlang-rs-gd/jlang-rs-gd.gdns" type="Script" id=3]
+[ext_resource path="res://fonts/noto-20.tres" type="DynamicFont" id=4]
+[ext_resource path="res://wip/dealing-cards/dealing-cards.org" type="Resource" id=5]
 
-[node name="JPrez" type="Control"]
+[node name="JPrezPlayer" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = 40.0
-margin_bottom = 40.0
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+org = ExtResource( 5 )
 
 [node name="JLang" type="Node" parent="."]
 script = ExtResource( 3 )
 
 [node name="jp-repl" type="Control" parent="."]
-margin_right = 1080.0
-margin_bottom = 480.0
-rect_min_size = Vector2( 1080, 480 )
+margin_right = 2420.0
+margin_bottom = 1080.0
+rect_min_size = Vector2( 2420, 1080 )
 focus_mode = 1
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-font_base = Vector2( 0, 15 )
+font = ExtResource( 4 )
+font_base = Vector2( 0, 20 )
 j_widget = "repl"
-grid_wh = Vector2( 120, 24 )
-cell_wh = Vector2( 9, 20 )
+grid_wh = Vector2( 220, 45 )
+cell_wh = Vector2( 11, 24 )
 
 [node name="jp-editor" type="Control" parent="."]
-margin_left = 1115.0
-margin_right = 1745.0
-margin_bottom = 480.0
+margin_left = 950.981
+margin_top = -538.62
+margin_right = 1580.98
+margin_bottom = -58.62
 rect_min_size = Vector2( 630, 480 )
 focus_mode = 1
 script = ExtResource( 1 )

@@ -139,7 +139,7 @@ This monadic form is called "roll" and it's like rolling five five-sided dice.
 
 So probably for cards, if you needed duplicates, you'd just take multiple copies of the deck:
 
-: 4 # deck  NB. four copies of the every card
+: 52 {. 4 # deck  NB. 4 copies of every card (truncated for display)
 
 In any case, you can shuffle one deck like so:
 
