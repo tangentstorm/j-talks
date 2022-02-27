@@ -1,46 +1,257 @@
-#+title: dealing cards in j
+#+title: beginner j : dealing cards
 
-* setup
-hello
-: 9!:7 [ (16+i.11){a.  NB. box drawing characters
+* the deck
 
-* testing
-# res://audio/one-two-three.wav
-testing one two three
+Let's say you want to deal some cards.
 
-* simple
+A standard deck has four suits: clubs, diamonds, hearts, and spades.
 
-# res://audio/generate.wav
-let's generate a random poker hand.
+: suits =: 'cdhs'
 
-: NB. generate a random poker hand
-: 5 {. (52 ? 52) { , {'A23456789TJQK';'hsdc'
+Then there are thirteen ranks: deuce through ten, jack, queen, king, and Ace.
+
+: ranks =: '23456789TJQKA'
+
+We can use the catalog operator (that's the left curly brace) to see every combination:
+
+: |: { ranks; suits
+
+The semicolon there puts the two strings into boxes,
+
+: ranks ; suits
+
+Then catalog takes every combination of those values.
+
+: { ranks ; suits
+
+And that's kind of big so I used transpose to turn it on its side:
+
+: |: { ranks ; suits
+
+Okay, so let's convert those boxed strings to symbols...
+
+: s: |: { ranks ; suits
+
+... flatten it with ravel ...
+
+: , s: |: { ranks ; suits
+
+and give it a name:
+
+: by_suit =: , s: |: { ranks ; suits
+: by_suit
+
+If you'd prefer to have it sorted by rank instead of suit, just remove the transpose:
+
+: by_rank =: , s: { ranks ; suits
+: by_rank
+
+Anyway, let's call that the deck.
+
+: deck =: by_rank
+
+* enumeration
+
+If we did that right, we'd expect to have 52 cards:
+
+: # deck
+
+We can take four cards off the top:
+
+: 4 {. deck
+
+Or deal from the bottom of the deck:
+
+: _4 {. deck
+
+If we want to know what card number 23 is, we just take a single card:
+
+: 23 { deck
+
+Note that the lowest card is number 0 and the highest is 51:
+
+: 0 51 { deck
+
+If you try to ask for number 52 it'll just give you an error:
+
+: 52 { deck
+
+You can ask for negative one and negative 52 though:
+
+: _1 _52 { deck
+
+* names -> numbers
+
+So now we can map numbers to cards. What if we want to go the other way?
+
+Let's say we want to find the queen of hearts:
+
+: 'Qh'
+
+J doesn't have a literal syntax for symbols, but we can just box this string and use s:
+
+: s:<'Qh'
+
+Or you can put a space at the start of the string and forget the boxing:
+
+: s:' Qh'
+
+That space is a cut character, so you can make a bunch of symbols from one string:
+
+: s:' Qh As 3d'
+
+Anyway, now we have the symbols, we can use i-dot to find them in the deck:
+
+: deck i. s:' Qh As 3d'
+
+: 42 51 5 { deck
+
+* shuffling
+
+We can pick a card at random with the question mark:
+
+: ? 52
+
+And then extract it from the deck:
+
+: (? 52) { deck
+
+If you want to avoid the parentheses there, you can use tilde to swap the arguments:
+
+: deck {~ ? 52
+
+If we add an argument to the left of the question mark, we can deal as many cards as we like:
+
+: 5 ? 52
+
+This dyadic form is called "deal", and it guarantees we won't get any duplicates.
+
+So if we say 5 deal 5, you can see that all the values are unique.
+
+: 5 ? 5
+
+If you wanted to allow duplicates, you could pass the more than one number in on the right.
+
+: 5 # 5
+: ? 5 # 5
+
+This monadic form is called "roll" and it's like rolling five five-sided dice.
+
+So probably for cards, if you needed duplicates, you'd just take multiple copies of the deck:
+
+: 4 # deck  NB. four copies of the every card
+
+In any case, you can shuffle one deck like so:
+
+: 52 ? 52
+: deck {~ 52 ? 52
+
+Whenever you want to pass the same argument to both sides of a verb, you can use the tilde:
+
+: deck {~ ?~ 52
+
+So the tilde on the question mark here is making it a "reflexive deal", passing 52 on both sides.
+That's because theres no noun on the left.
+
+But the curly brace has a noun on the left, so instead of copying the left argument,
+it swaps the left and right arguments.
+
+Anyway, here's how I'd deal cards:
+
+: deal =: {{ deck {~ y ? 52 }}
+: deal 5 NB. a random poker hand
+
+And to shuffle the whole deck, just deal 52 cards:
+
+: deal 52
 
 * permutations
 
-# res://audio/here-is-a-string.wav
-: 'abcd'
+There is another way to think about shuffling in J.
 
-# res://audio/its-length.wav
-: #'abcd'
-its length
+There are 52 factorial ways to arrange a deck of cards.
 
-# res://audio/four-factorial.wav
-: !#'abcd'
-here's four factorial
+: !52
 
+That's eight times ten to the 67th power.
 
-# res://audio/count.wav
-count to the factorial of the length
-: i.!#'abcd'
+Here's what that number looks like if you write it out:
 
-# res://audio/howmany.wav
-this tells us how many permutations there are
+: !52x
 
-# res://audio/a-dot.wav
-And now... A-dot gives us the anagrams.
-: (A.~!@i.@#)'abcd'
+What does that mean, exactly?
 
+Well, you have 52 choices for the first card, 51 for the second, and so on.
 
-* okay?
-what now?
+: |.1+i.52
+
+And you just multiply all those numbers together:
+
+: */|.1+i.52
+
+The x at the end makes J use extendend precision integers so you get the exact value:
+
+: */|.1+i.52x
+
+: !52x
+
+Anyway this is how many permutations there are.
+
+If we wanted, we could enumerate every possible way to shuffle the cards.
+
+So arrangement 0 would be the same as the original deck,
+
+and arrangement this giant number minus one would be the deck completely reversed,
+
+and any every other permutation would get some number in between.
+
+: <:!52x
+
+We don't actually need to generate the list of permutations, we just need some
+algorithm for mapping between the index in the hypothetical list a and the
+corresponding permutation.
+
+J provides such an algorithm, by way of the anagram primitive.
+
+: deck = 0 A. deck
+
+: deck = |. (<:!52x) A. deck
+
+If we have some permutation of the numbers 0..n, the monadic form can tell us its index.
+
+: A. ?~52
+: A. ?~52
+: A. ?~52
+
+If we have the card symbols rather than just the numbers, we just need to map back to the numbers first:
+
+: by_suit
+: A. deck i. by_suit
+
+With a smaller list, we could use this form to actually list all the permutations:
+
+: (i.!4) A. i.4
+
+With 52 items, my computer will have crumbled to dust before it finished generating
+the list, but that's the point of capital A-dot. It lets us imagine we have this giant
+table of permutations available.
+
+So, instead of making 51 random choices to order our deck,
+we could just pick one of the fity-two factorial permutations:
+
+: (?!52x) A. deck
+: deck A.~ ?!52x
+
+* the end
+#+begin_src j
+suits =: 'cdhs'
+ranks =: '23456789TJQKA'
+by_suit =: , s: |: { ranks ; suits
+by_rank =: , s: { ranks ; suits
+deck =: by_rank
+deal =: {{ deck {~ y ? 52 }}
+#+end_src
+
+Anyway, that's dealing cards in J.
+
+Thanks for watching, and I hope to see you again soon.
