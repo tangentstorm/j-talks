@@ -1,10 +1,15 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://addons/jprez/JKVM.gd" type="Script" id=1]
 [ext_resource path="res://addons/jprez/JPrezPlayer.gd" type="Script" id=2]
 [ext_resource path="res://addons/jlang-rs-gd/jlang-rs-gd.gdns" type="Script" id=3]
 [ext_resource path="res://fonts/noto-20.tres" type="DynamicFont" id=4]
 [ext_resource path="res://wip/dealing-cards/dealing-cards.org" type="Resource" id=5]
+[ext_resource path="res://fonts/FiraSansCondensed-Regular.ttf" type="DynamicFontData" id=6]
+
+[sub_resource type="DynamicFont" id=1]
+size = 20
+font_data = ExtResource( 6 )
 
 [node name="JPrezPlayer" type="Control"]
 anchor_right = 1.0
@@ -48,6 +53,26 @@ font_base = Vector2( 0, 15 )
 j_widget = "editor"
 grid_wh = Vector2( 70, 24 )
 cell_wh = Vector2( 9, 20 )
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+modulate = Color( 1, 1, 1, 0.486275 )
+margin_left = 578.399
+margin_top = 28.2717
+margin_right = 2392.4
+margin_bottom = 95.2717
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CurrentCmd" type="Label" parent="PanelContainer"]
+margin_left = 7.0
+margin_top = 21.0
+margin_right = 1807.0
+margin_bottom = 46.0
+custom_fonts/font = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [connection signal="keypress" from="jp-repl" to="." method="_on_JKVM_keypress"]
 [connection signal="keypress" from="jp-editor" to="." method="_on_JKVM_keypress"]
