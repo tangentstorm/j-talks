@@ -27,8 +27,10 @@ func _ready():
 	var cur = OrgCursor.new(org)
 	var i = 0
 	var total = 0
+	var track_names = Org.Track.keys()
 	while true:
 		var chunk = cur.next_chunk()
+		if chunk: print("chunk:", track_names[chunk.track])
 		if chunk == null: break
 		if chunk.track != Org.Track.AUDIO: continue
 		if chunk.file_exists(dir):
@@ -41,7 +43,7 @@ func _ready():
 			rect.timeScale = 512
 			timeline.add_child(rect)
 			total += sam.data.size()
-			print(wav, ' ', hms(sam.data.size()))
+			print(chunk.index, ' ', wav, ' ', hms(sam.data.size()))
 		else: print("not there: ", chunk.suggest_path())
 
 	var wav = Waveform.new()
