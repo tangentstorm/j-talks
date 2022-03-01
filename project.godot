@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Reference",
+"class": "AudioLoader",
+"language": "GDScript",
+"path": "res://addons/waveform/AudioLoader.gd"
+}, {
 "base": "Control",
 "class": "JKVM",
 "language": "GDScript",
@@ -24,6 +29,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/jprez/OrgChunk.gd"
 }, {
+"base": "Reference",
+"class": "OrgCursor",
+"language": "GDScript",
+"path": "res://addons/jprez/OrgCursor.gd"
+}, {
 "base": "Resource",
 "class": "OrgNode",
 "language": "GDScript",
@@ -34,17 +44,25 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/jprez/OrgTime.gd"
 }, {
+"base": "ColorRect",
+"class": "Waveform",
+"language": "GDScript",
+"path": "res://addons/waveform/Waveform.gd"
+}, {
 "base": "PanelContainer",
 "class": "WaveformPanel",
 "language": "GDScript",
 "path": "res://addons/waveform/WaveformPanel.gd"
 } ]
 _global_script_class_icons={
+"AudioLoader": "",
 "JKVM": "",
 "Org": "",
 "OrgChunk": "",
+"OrgCursor": "",
 "OrgNode": "",
 "OrgTime": "",
+"Waveform": "",
 "WaveformPanel": ""
 }
 
