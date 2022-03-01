@@ -7,9 +7,49 @@ onready var outline = $HBox/Outline
 onready var editor = $HBox/Editor
 onready var prompter = $Panel/Prompter
 onready var wavepanel = $WaveformPanel
+onready var timeline = $TimeLine/HBox
+
+const bytesPerSample = 2
+const channels = 2
+const mixRate = 44100.0
+func hms(samples)->String:
+	# time in seconds:
+	var time = samples/(channels * bytesPerSample * mixRate)
+	var mm = int(floor(time/60))
+	var hh = int(floor(mm/60)); mm %= 60
+	var ss = fmod(time,60)
+	return "%02d:%02d:%02.3f" % [hh,mm,ss]
 
 func _ready():
-	var org = Org.from_path("res://wip/dealing-cards/dealing-cards.org")
+	var dir = "res://wip/dealing-cards/"
+	var org = Org.from_path(dir+"dealing-cards.org")
+	print("DIR:",dir)
+	var cur = OrgCursor.new(org)
+	var i = 0
+	var total = 0
+	while true:
+		var chunk = cur.next_chunk()
+		if chunk == null: break
+		if chunk.track != Org.Track.AUDIO: continue
+		if chunk.file_exists(dir):
+			var wav = dir+chunk.suggest_path()
+			var sam : AudioStreamSample = AudioLoader.loadfile(wav)
+			var rect = Waveform.new()
+			rect.color = Color.beige if i % 2 else Color.bisque; i += 1
+			rect.rect_min_size = Vector2(sam.data.size() * 0.0005,64)
+			if i < 10: rect.sample = sam
+			rect.timeScale = 512
+			timeline.add_child(rect)
+			total += sam.data.size()
+			print(wav, ' ', hms(sam.data.size()))
+		else: print("not there: ", chunk.suggest_path())
+
+	var wav = Waveform.new()
+	print("total size: ", total)
+	var timeScale = 128
+	var bytesPerSample = 4
+	print("total length: ", hms(total))
+
 	var f = File.new()
 	f.open("res://wip/dealing-cards/dealing-cards.txt", File.WRITE)
 	f.store_string(org.to_string())
