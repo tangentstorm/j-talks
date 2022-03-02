@@ -60,11 +60,10 @@ cell_wh = Vector2( 9, 20 )
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 modulate = Color( 1, 1, 1, 0.623529 )
-margin_left = 578.399
-margin_top = 28.2717
-margin_right = 2392.4
-margin_bottom = 95.2717
-rect_min_size = Vector2( 0, 100 )
+margin_left = 1396.3
+margin_top = 127.797
+margin_right = 1810.3
+margin_bottom = 166.797
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -72,33 +71,16 @@ __meta__ = {
 [node name="VBox" type="VBoxContainer" parent="PanelContainer"]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 1807.0
-margin_bottom = 93.0
+margin_right = 407.0
+margin_bottom = 32.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="counts" type="Label" parent="PanelContainer/VBox"]
-margin_right = 1800.0
+[node name="status" type="Label" parent="PanelContainer/VBox"]
+margin_right = 400.0
 margin_bottom = 25.0
-custom_fonts/font = SubResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="CurrentCmd" type="Label" parent="PanelContainer/VBox"]
-margin_top = 29.0
-margin_right = 1800.0
-margin_bottom = 54.0
-custom_fonts/font = SubResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="jcmd" type="Label" parent="PanelContainer/VBox"]
-margin_top = 58.0
-margin_right = 1800.0
-margin_bottom = 83.0
+rect_min_size = Vector2( 400, 20 )
 custom_fonts/font = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -128,5 +110,36 @@ stripe_y = -32
 stripe_w = 32
 stripe_h = 32
 
+[node name="ToolBar" type="PanelContainer" parent="."]
+margin_left = 1289.33
+margin_top = 132.451
+margin_right = 1385.33
+margin_bottom = 168.451
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBox" type="HBoxContainer" parent="ToolBar"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 89.0
+margin_bottom = 29.0
+
+[node name="PlayButton" type="ToolButton" parent="ToolBar/HBox"]
+margin_right = 38.0
+margin_bottom = 22.0
+custom_colors/font_color_pressed = Color( 0.145098, 0.631373, 1, 1 )
+toggle_mode = true
+text = "play"
+
+[node name="StepButton" type="ToolButton" parent="ToolBar/HBox"]
+margin_left = 42.0
+margin_right = 82.0
+margin_bottom = 22.0
+text = "step"
+
 [connection signal="keypress" from="jp-repl" to="." method="_on_JKVM_keypress"]
 [connection signal="keypress" from="jp-editor" to="." method="_on_JKVM_keypress"]
+[connection signal="chunk_selected" from="ChunkList" to="." method="_on_ChunkList_chunk_selected"]
+[connection signal="pressed" from="ToolBar/HBox/PlayButton" to="." method="_on_PlayButton_pressed"]
+[connection signal="pressed" from="ToolBar/HBox/StepButton" to="." method="_on_StepButton_pressed"]
