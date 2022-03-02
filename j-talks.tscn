@@ -28,7 +28,7 @@ __meta__ = {
 
 [node name="HBox" type="HBoxContainer" parent="."]
 margin_right = 1920.0
-margin_bottom = 575.0
+margin_bottom = 643.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -36,7 +36,7 @@ size_flags_vertical = 3
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 256.0
-margin_bottom = 575.0
+margin_bottom = 643.0
 rect_min_size = Vector2( 256, 0 )
 size_flags_vertical = 3
 
@@ -45,19 +45,20 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 260.0
 margin_right = 1276.0
-margin_bottom = 575.0
+margin_bottom = 643.0
 size_flags_horizontal = 3
 
 [node name="Editor" type="TextEdit" parent="HBox"]
 margin_left = 1280.0
 margin_right = 1920.0
-margin_bottom = 575.0
+margin_bottom = 643.0
 rect_min_size = Vector2( 640, 0 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="TimeLine" type="ScrollContainer" parent="."]
+visible = false
 margin_top = 579.0
 margin_right = 1920.0
 margin_bottom = 643.0

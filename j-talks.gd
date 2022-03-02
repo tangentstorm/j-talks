@@ -1,5 +1,6 @@
 extends Control
 
+var org: OrgNode
 var org_dir = 'res://wip/dealing-cards/'
 
 onready var chunks = $HBox/ChunkList
@@ -21,20 +22,28 @@ func hms(samples)->String:
 	return "%02d:%02d:%02.3f" % [hh,mm,ss]
 
 func _ready():
-	var dir = "res://wip/dealing-cards/"
-	var org = Org.from_path(dir+"dealing-cards.org")
-	print("DIR:",dir)
-	var cur = OrgCursor.new(org)
+	org = Org.from_path(org_dir+"dealing-cards.org")
+	chunks.org_dir = org_dir
+	chunks.connect("audio_chunk_selected", self, "_on_audio_chunk_selected")
+	outline.connect("node_selected", self, "_on_headline_selected")
+	outline.set_org(org)
+	# load_timeline()
+	# dump_org_file()
+
+func load_timeline():
+	# visually show all the clips in a timeline view
+	# (disabled for now because it's very slow)
 	var i = 0
 	var total = 0
+	var cur = OrgCursor.new(org)
 	var track_names = Org.Track.keys()
 	while true:
 		var chunk = cur.next_chunk()
 		if chunk: print("chunk:", track_names[chunk.track])
 		if chunk == null: break
 		if chunk.track != Org.Track.AUDIO: continue
-		if chunk.file_exists(dir):
-			var wav = dir+chunk.suggest_path()
+		if chunk.file_exists(org_dir):
+			var wav = org_dir+chunk.suggest_path()
 			var sam : AudioStreamSample = AudioLoader.loadfile(wav)
 			var rect = Waveform.new()
 			rect.color = Color.beige if i % 2 else Color.bisque; i += 1
@@ -52,15 +61,13 @@ func _ready():
 	var bytesPerSample = 4
 	print("total length: ", hms(total))
 
+func dump_org_file():
+	# for testing that the file has not changed
 	var f = File.new()
 	f.open("res://wip/dealing-cards/dealing-cards.txt", File.WRITE)
 	f.store_string(org.to_string())
 	f.close()
 
-	chunks.org_dir = org_dir
-	chunks.connect("audio_chunk_selected", self, "_on_audio_chunk_selected")
-	outline.connect("node_selected", self, "_on_headline_selected")
-	outline.set_org(org)
 
 func _on_headline_selected(org):
 	chunks.set_org(org)
