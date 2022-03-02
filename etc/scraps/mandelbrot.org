@@ -1,5 +1,24 @@
 #+title: mandelbrot set demo
 
+* TODO intro
+
+not as complicated as it looks.
+
+first you need a chunk of the complex plane.
+
+then for each pixel we're going to take the complex number at that point and apply a formula repeatedly.
+
+eventually, the result is either going to bounce around inside this circle forever, or it's going to zoom off to infinity...
+
+the mandelbrot set consists of the points that stay close to zero, so that's the black part.
+
+the colored parts all go off to infinity, but sometimes it takes a while to figure that out. With this particular color scheme, the lighter the shade, the longer it took to figure out.
+
+so going back to our code, this chunk sets up the complex plane, this part does the calculation, these bits figure out the coloring, and these put the actual pixels on the screen.
+
+* TODO really need ::_:"0 in there or it cuts out after only a few iterations.
+
+
 * promise
 Here it is. One line of code to generaAte this picture of the mandelbrot set in J.
 
