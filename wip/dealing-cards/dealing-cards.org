@@ -2,21 +2,23 @@
 
 * the deck
 
+@title("the deck")
+
 Let's say you want to deal some cards.
 
 A standard deck has four suits: clubs, diamonds, hearts, and spades.
 
-: . ?s?_?u?_?i?_?t?_?s?__? ?__?=?_?:?_? ?__?'?_?c?_?d?__?h?_?s?_?'?
+: . ?suits?__? ?__?=: ?__?'cd?__?hs'?
 : suits =: 'cdhs'
 
 Then there are thirteen ranks: deuce through ten, jack, queen, king, and Ace.
 
-: . ?r?_?a?_?n?_?k?_?s?__? ?_?=?_?:?_? ?__?'?__?1?_?2?_?3?__X_X_X_?2?_?3?_?4?__?5?__?6?__?7?_?8?_?9?___?T?_?J?__?Q?__?K?__?A?__?'?
+: . ?ranks?__? =: ?__?'?__?123?__X_X_X_?234?__?5?__?6?__?789?___?TJ?__?Q?__?K?__?A?__?'?
 : ranks =: '23456789TJQKA'
 
 We can use the catalog operator (that's the left curly brace) to see every combination:
 
-: . ?|?__?:?__? ?__?{?_? ?__?r?_?a?_?n?_?k?_?s?__?;?_? ?__?s?_?u?_?it?_?s?
+: . ?|?__?:?__? ?__?{ ?__?ranks?__?; ?__?suits?
 : |: { ranks; suits
 
 The semicolon there puts the two strings into boxes,
@@ -55,6 +57,8 @@ Anyway, let's call that the deck.
 
 * enumeration
 
+@title("enumeration")
+
 If we did that right, we'd expect to have 52 cards:
 
 : # deck
@@ -85,6 +89,8 @@ You can ask for negative one and negative 52 though:
 
 * names -> numbers
 
+@title("card lookup")
+
 So now we can map numbers to cards. What if we want to go the other way?
 
 Let's say we want to find the queen of hearts:
@@ -110,6 +116,8 @@ Anyway, now we have the symbols, we can use i-dot to find them in the deck:
 : 42 51 5 { deck
 
 * shuffling
+
+@title("shuffling")
 
 We can pick a card at random with the question mark:
 
@@ -169,6 +177,8 @@ And to shuffle the whole deck, just deal 52 cards:
 : deal 52
 
 * permutations
+
+@title("anagram")
 
 There is another way to think about shuffling in J.
 
