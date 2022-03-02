@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://addons/jprez/JKVM.gd" type="Script" id=1]
 [ext_resource path="res://addons/jprez/JPrezPlayer.gd" type="Script" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://wip/dealing-cards/0129-andyoujustmultiplyallthosen.wav" type="AudioStream" id=7]
 [ext_resource path="res://addons/jprez/Outline.tscn" type="PackedScene" id=8]
 [ext_resource path="res://addons/jprez/jp-chunklist.tscn" type="PackedScene" id=9]
+[ext_resource path="res://assets/SceneTitle.tscn" type="PackedScene" id=10]
 
 [sub_resource type="DynamicFont" id=1]
 size = 20
@@ -119,6 +120,13 @@ margin_left = 1285.99
 margin_top = 177.248
 margin_right = -34.0071
 margin_bottom = -102.752
+
+[node name="SceneTitle" parent="." instance=ExtResource( 10 )]
+text_len = 0
+stripe_x = 128
+stripe_y = -32
+stripe_w = 32
+stripe_h = 32
 
 [connection signal="keypress" from="jp-repl" to="." method="_on_JKVM_keypress"]
 [connection signal="keypress" from="jp-editor" to="." method="_on_JKVM_keypress"]

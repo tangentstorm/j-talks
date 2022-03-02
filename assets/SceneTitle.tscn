@@ -1,12 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://fonts/KulimPark-Bold.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://assets/scene.gd" type="Script" id=2]
-[ext_resource path="res://assets/SceneTitle.gd" type="Script" id=3]
+[ext_resource path="res://assets/SceneTitle.gd" type="Script" id=2]
 
-[sub_resource type="CanvasItemMaterial" id=1]
-
-[sub_resource type="Animation" id=2]
+[sub_resource type="Animation" id=1]
 resource_name = "init"
 length = 0.5
 step = 0.05
@@ -71,7 +68,7 @@ tracks/4/keys = {
 "values": [ 128 ]
 }
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=2]
 length = 2.0
 step = 0.05
 tracks/0/type = "value"
@@ -135,40 +132,25 @@ tracks/4/keys = {
 "values": [ 128, 128, 0 ]
 }
 
-[sub_resource type="DynamicFont" id=4]
+[sub_resource type="DynamicFont" id=3]
 size = 108
 font_data = ExtResource( 1 )
 
-[node name="scene" type="Node2D"]
-material = SubResource( 1 )
+[node name="SceneTitle" type="Node2D"]
 script = ExtResource( 2 )
-titles = [ "starting point", "planning", "reload bug", "??", "??" ]
-
-[node name="background" type="ColorRect" parent="."]
-margin_left = -2.20154
-margin_top = 4.40295
-margin_right = 1917.8
-margin_bottom = 1084.4
-color = Color( 0.0666667, 0.0666667, 0.133333, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="text title" type="Node2D" parent="."]
-script = ExtResource( 3 )
 text = "sandpiles"
 text_len = 16
 stripe_y = 256
 stripe_w = 1920
 stripe_h = 136
 
-[node name="animation" type="AnimationPlayer" parent="text title"]
+[node name="animation" type="AnimationPlayer" parent="."]
 autoplay = "init"
-anims/init = SubResource( 2 )
-anims/reveal = SubResource( 3 )
+anims/init = SubResource( 1 )
+anims/reveal = SubResource( 2 )
 next/reveal = "init"
 
-[node name="stripe" type="ColorRect" parent="text title"]
+[node name="stripe" type="ColorRect" parent="."]
 margin_top = 256.0
 margin_right = 1920.0
 margin_bottom = 392.0
@@ -178,12 +160,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="label" type="Label" parent="text title"]
+[node name="label" type="Label" parent="."]
 margin_left = 128.0
 margin_top = 254.0
 margin_right = 914.0
 margin_bottom = 378.0
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 3 )
 text = "sandpiles"
 __meta__ = {
 "_edit_use_anchors_": false
