@@ -1,0 +1,43 @@
+#+title: diagram system
+
+* sketches contain:
+** text
+** lines / curves
+** groups (sketch == group?)
+** layouts?
+** arbitrary lines and polygons?
+** sprites?
+** layers?
+** modifiers (clones, etc)
+** control widgets(??)
+** charts?
+
+* tool decides what happens when you click/drag the canvas
+tools should be clasess added to a 'tools' section
+
+
+* diagrams (graphs) have nodes, edges, text
+** nodes
+*** draggable
+*** labels
+*** may contain text, groups, other nodes
+*** theme
+**** fill color
+**** label font
+**** optional stroke width, color, pattern
+** edges
+*** attach to nodes
+*** may be curved
+
+* -- features --
+** TODO tool to create new nodes
+** TODO dragging a node causes its edges to update
+** TODO selecting a node spawns draggable controls
+** TODO selectangle
+
+* --- demos to create ---
+** TODO binary tree
+** TODO binary decision diagram
+** TODO random boolean expression trees
+** TODO petri demo (interactive)
+** TODO draw a hypercube ( for hasse diagram of boolean functions )

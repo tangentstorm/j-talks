@@ -1,0 +1,60 @@
+#+title: a simple proof assistant
+
+* COMMENT notes
+:PROPERTIES:
+:TS:       <2021-11-08 05:00PM>
+:ID:       83wdabh0l9j0
+:END:
+
+https://github.com/leanprover/lean/blob/master/doc/export_format.md
+
+The rust parser for this is no longer used:
+
+https://github.com/ammkrn/nanoda/blob/master/OLD_README.md
+
+"rust implementation of lean kernel"
+https://github.com/yatima-inc/radiya
+
+* General Scheme
+** language
+- 1 symbol for 'True'
+- logical connectives (∧, ∨, →, ¬)
+- variables
+
+** inference rules
+derive new statement from 1 or more statements
+
+** context
+- a database of true statements
+- local context created whenever assumptions are introduced
+- allow for namespaces and whatnot
+
+** unification algorithm
+
+** substitution
+- bind metalinguistic variables to local variables
+
+** proof
+- state assumptions and goal
+  - goal can be an inference, or just 'T'
+- sequence/tree of substitutions / rule applications
+
+** verifier
+- simply apply the steps of the proof in order
+
+* the "assistant" part:
+- keep track of proof goals
+- attempt to suggest proofs
+- rich library of tactics
+
+
+* use case: bex
+** write proofs about data structures
+- specify properties that must always hold and prove they hold after each transformation
+- prove general features of bdds regardless of how nodes are stored
+- verify that swapping variables in a bdd works
+
+** compile to rust using multiple strategies
+pointers vs indirect references.
+that is: what would it take to replace NID with pointers?
+or convert back and forth?

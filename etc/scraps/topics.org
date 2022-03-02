@@ -1,0 +1,278 @@
+#+title: tangentcode S1 : Interactive J
+
+* symbolic.ijs
+maybe incorporate extra symbolic stuff from the matrices lab.
+
+* [0/13] quick topics (<3 mins)
+** TODO k-means
+** TODO euler's identity (and tolerance)
+: _1=^0j1p1
+
+** TODO odometer
+: ([: |:@:>@,@{ <@i."0) 5 5
+
+   ([: |:@:>@,@{ <@i."0) 5 5
+0 0 0 0 0 1 1 1 1 1 2 2 2 2 2 3 3 3 3 3 4 4 4 4 4
+0 1 2 3 4 0 1 2 3 4 0 1 2 3 4 0 1 2 3 4 0 1 2 3 4
+
+   ([: |:@:>@,@{ <@i."0) 3 3 3
+0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2
+0 0 0 1 1 1 2 2 2 0 0 0 1 1 1 2 2 2 0 0 0 1 1 1 2 2 2
+0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2
+
+** TODO all subsets of an array
+:  (<@#~#:@i.@(2^#)) 'abcd'
+┌┬─┬─┬──┬─┬──┬──┬───┬─┬──┬──┬───┬──┬───┬───┬────┐
+││d│c│cd│b│bd│bc│bcd│a│ad│ac│acd│ab│abd│abc│abcd│
+└┴─┴─┴──┴─┴──┴──┴───┴─┴──┴──┴───┴──┴───┴───┴────┘
+
+** TODO all permutations of an array (easy version)
+
+simple version is just this:
+
+:   ({."1</.]) (i.A.~i.@!) 4
+┌───────┬───────┬───────┬───────┐
+│0 1 2 3│1 0 2 3│2 0 1 3│3 0 1 2│
+│0 1 3 2│1 0 3 2│2 0 3 1│3 0 2 1│
+│0 2 1 3│1 2 0 3│2 1 0 3│3 1 0 2│
+│0 2 3 1│1 2 3 0│2 1 3 0│3 1 2 0│
+│0 3 1 2│1 3 0 2│2 3 0 1│3 2 0 1│
+│0 3 2 1│1 3 2 0│2 3 1 0│3 2 1 0│
+└───────┴───────┴───────┴───────┘
+
+"cheat version" O(n^n)
+: {{ |: a #~ (y=#@~.)"1 a=. >,<"1 (#: i.)$~y}} 4
+   {{ |: a #~ (y=#@~.)"1 a=. >,<"1 (#: i.)$~y}} 4
+0 0 0 0 0 0 1 1 1 1 1 1 2 2 2 2 2 2 3 3 3 3 3 3
+1 1 2 2 3 3 0 0 2 2 3 3 0 0 1 1 3 3 0 0 1 1 2 2
+2 3 1 3 1 2 2 3 0 3 0 2 1 3 0 3 0 1 1 2 0 2 0 1
+3 2 3 1 2 1 3 2 3 0 2 0 3 1 3 0 1 0 2 1 2 0 1 0
+
+ recursive in k5:
+: +{$[1<#x;,/x,''o@'x^/:x; ,x]} @!4
+
+** TODO game of life
+
+: s =:{{ (3&=)`(e.&2 3)@.(4{y) +/ 1 3 5 7 { y }}@,
+: w =:{{ x,x,.x,~x,.~y }}
+: d =: {{ ('.x'{~])L:0<"2 y }}
+
+this isn't quite right, though:
+:  d {{ 3 3 (s;._3) 0 w y }}^:(<8) ?2$~,~ 5
+┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┐
+│x..xx│...xx│...xx│...xx│...xx│...xx│...xx│...xx│
+│x..xx│...xx│...xx│...xx│...xx│...xx│...xx│...xx│
+│..xxx│...xx│...xx│...xx│...xx│...xx│...xx│...xx│
+│xx..x│x..x.│.....│.....│.....│.....│.....│.....│
+│x..x.│.....│.....│.....│.....│.....│.....│.....│
+└─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┘
+
+: d =: {{ (' X'{~])L:0<"2 y }}
+
+: s =:{{ (3&=)`(e.&2 3)@.(4{y)+/(0)4}y }}@,
+
+working demo:
+
+: d 3 4 $3 3&(s;._3)@(0&w)^:(<12) a=.3<?5$~,~10
+
+┌──────────┬──────────┬──────────┬──────────┐
+│ X    XX  │          │          │          │
+│   X      │      X   │          │          │
+│     X    │          │          │          │
+│X       X │          │          │  X       │
+│ X    X   │ XX       │ XXX      │  XX X    │
+│  XX      │  XX XX   │   XXXX   │ X    XX  │
+│   XXX X  │  X  X    │  XXXX XX │  X    XX │
+│    X   X │       XXX│       X X│   XX  X X│
+│  X X   XX│   X    XX│       X X│          │
+│ X        │          │          │          │
+├──────────┼──────────┼──────────┼──────────┤
+│          │          │          │          │
+│          │          │          │          │
+│          │          │          │          │
+│  XX      │ X X      │  X       │ XXX      │
+│ XXX  X   │ X  X X   │XX XX XX  │ X  X XX  │
+│ X X  XXX │ X  X XX  │  X X X   │ XX X X   │
+│  XX      │   XX X X │    X X   │  X X     │
+│   X   X  │  XX      │  XXX     │   XXX    │
+│          │          │          │   X      │
+│          │          │          │          │
+├──────────┼──────────┼──────────┼──────────┤
+│          │          │          │          │
+│          │          │  X       │  X       │
+│  X       │ XXX      │ X X      │ XXX      │
+│ XXX      │ XXX      │X   X     │XX  XXX   │
+│X   X XX  │X   X XX  │X    XXX  │XX   XX   │
+│ XX X XX  │X X   XX  │ X        │    X     │
+│ XX       │     XX   │   X XXX  │  X   X   │
+│  X  X    │ XXX      │  X       │  XX  X   │
+│   X      │          │  X       │          │
+│          │          │          │          │
+└──────────┴──────────┴──────────┴──────────┘
+
+see also https://rosettacode.org/wiki/Conway%27s_Game_of_Life#J
+
+** TODO gray code
+https://github.com/tangentstorm/tangentlabs/blob/master/j/tiny/graycode.ijs.org
+
+- show binary digits:
+: |:#:i.2^6
+then show same for grey code
+
+** TODO 1d cellular automaton
+#+begin_src j
+seed =: ([,1,]) 31$0
+ca   =: 3 :'(0,0,~ 3&(((|._8{.#:y){~#.)\))^:(<10) seed'
+rule =: pb@ca
+Note rule 250
+              ▗▙
+             ▗▌▌▙
+            ▗▙▗▙▗▙
+           ▗▌▙▗▙▗▌▙
+          ▗▙  ▗▙  ▗▙
+)
+#+end_src
+
+** TODO partitions
+https://github.com/tangentstorm/tangentlabs/blob/master/j/partitions.ijs
+
+** TODO rpn calculator
+https://github.com/tangentstorm/tangentlabs/blob/master/j/rpn.ijs
+
+** TODO pythagorean triples
+https://github.com/tangentstorm/tangentlabs/blob/master/j/tiny/pythag-triples.ijs
+
+** TODO the boolean operations
+https://github.com/tangentstorm/tangentlabs/blob/master/j/tiny/pythag-triples.ijs
+
+* <15 mins
+** TODO mandelbrot set
+** TODO all permutations (THE HARD WAY)
+#+begin_src j
+
+ ([:<1(<\ ,. <@(   $:^:(1<#)    )\.)]) f. i.3
+┌───────────┐
+│┌─┬───────┐│
+││0│┌─────┐││
+││ ││┌─┬─┐│││
+││ │││1│2││││
+││ ││├─┼─┤│││
+││ │││2│1││││
+││ ││└─┴─┘│││
+││ │└─────┘││
+│├─┼───────┤│
+││1│┌─────┐││
+││ ││┌─┬─┐│││
+││ │││0│2││││
+││ ││├─┼─┤│││
+││ │││2│0││││
+││ ││└─┴─┘│││
+││ │└─────┘││
+│├─┼───────┤│
+││2│┌─────┐││
+││ ││┌─┬─┐│││
+││ │││0│1││││
+││ ││├─┼─┤│││
+││ │││1│0││││
+││ ││└─┴─┘│││
+││ │└─────┘││
+│└─┴───────┘│
+└───────────┘
+
+   ,.(1(<\ ,/&.> ( <`$:@.(1<#)    )\.)]) i.4
+┌───────┬───────┬───────┬───────┬───────┬───────┐
+│0 1 2 3│0 1 3 2│0 2 1 3│0 2 3 1│0 3 1 2│0 3 2 1│
+├───────┼───────┼───────┼───────┼───────┼───────┤
+│1 0 2 3│1 0 3 2│1 2 0 3│1 2 3 0│1 3 0 2│1 3 2 0│
+├───────┼───────┼───────┼───────┼───────┼───────┤
+│2 0 1 3│2 0 3 1│2 1 0 3│2 1 3 0│2 3 0 1│2 3 1 0│
+├───────┼───────┼───────┼───────┼───────┼───────┤
+│3 0 1 2│3 0 2 1│3 1 0 2│3 1 2 0│3 2 0 1│3 2 1 0│
+└───────┴───────┴───────┴───────┴───────┴───────┘
+
+#+end_src
+
+this is easy:
+
+:  (1(<\ ,. <\.)]) i.3
+
+but where do you go from there?
+
+aha! you don't want ]\ or <\ on the left but rather just ] or <"0,because
+: (,.i.5)-:1[\ i.5
+
+so:
+: (1 (] ,."_1 ]\.)]) i.3
+
+working: version
+:  >,(1&(],/&.>($:^:(1<#))\.))i.5
+then:
+
+: {{>,(1&(],/&.>($:^:(1<#))\.))i.y}} 5
+
+** floodfill
+https://github.com/tangentstorm/tangentlabs/blob/master/j/floodfill.ijs
+
+** factorial base
+https://github.com/tangentstorm/tangentlabs/blob/master/j/factorial-base.ijs.org
+
+** draw a cube / tesseract
+: https://github.com/tangentstorm/tangentlabs/blob/master/j/tesseract.ijs
+: https://github.com/tangentstorm/tangentlabs/blob/master/j/quadratic.ijs
+
+** p-adic numbers
+https://github.com/tangentstorm/tangentlabs/blob/master/j/partitions.ijs
+
+** hand ranking db
+** wireworld
+** marching cubes
+** binary number line
+* long-form ideas
+** logic in j
+https://www.reddit.com/r/logic/comments/1zf14x/how_i_use_j_to_learn_about_logic/
+
+** simple paint program
+** sandpiles  -- power, custom "animated power" adverb
+** visualize complex numbers (isidraw)
+** mandelbrowse
+** boids
+** knn
+** tetris
+
+** paritons and langlet's XOR game
+** learntris (highlights)
+** tesseract (3d)
+** basic tweening and animation
+** collatz conjecture
+** syntax directed editor?
+** drag and drop using isigraph
+* draw a diamond using oblique
+   (y,.~2 1)<;.3 [/.'*'$~y,y
+┌──────────┐
+│*         │
+├──────────┤
+│***       │
+├──────────┤
+│*****     │
+├──────────┤
+│*******   │
+├──────────┤
+│********* │
+├──────────┤
+│********* │
+├──────────┤
+│*******   │
+├──────────┤
+│*****     │
+├──────────┤
+│***       │
+├──────────┤
+│*         │
+└──────────┘
+* TODO are trains actually useful?
+- i feel like small ones are.
+* TODO make a font from my handwriting
+* TODO ipa text-to-speech / speech-to-text
+* ransacker / vector search
+https://github.com/sabren/sixthdev/tree/731ddc0b68e7fc0826e932eb5b6f46fd84efc405/ransacker 
+

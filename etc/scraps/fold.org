@@ -1,0 +1,12 @@
+
+* how else would you do this in j?
+:PROPERTIES:
+:TS:       <2021-12-17 05:33PM>
+:ID:       duggvv310bj0
+:END:
+
+#+begin_src j
+   0]F:.([*+) 1 1 1 0 1  0 1 1
+1 2 3 0 1 0 1 2
+#+end_src
+

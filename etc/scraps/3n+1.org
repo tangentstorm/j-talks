@@ -1,0 +1,20 @@
+sometimes when you want a number with very specific properties, you need a really big number.
+
+elijah stone's question:
+
+Generate the following permutation of i.64:
+
+0 1 8 9 2 3 10 11 16 17 24 25 18 19 26 27 4 5 12 13 6 7 14 15 20 21 28 29 22 23 30 31 32 33 40 41 34 35 42 43 48 49 56 57 50 51 58 59 36 37 44 45 38 39 46 47 52 53 60 61 54 55 62 63
+
+
+my answer:
+3095407370994948471047240243834227380014128274671274236806547771606007902171637453088x A. i.64
+
+
+
+(the point is it's a huge number, many many times greater than the space we've searched for 3x+1)
+
+
+veritasium just had an interview with Alex Kontorovich, who took the "it might be false" view:
+https://www.veritasium.com/videos/2021/7/30/the-simplest-math-problem-no-one-can-solve
+
