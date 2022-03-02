@@ -19,10 +19,10 @@ func _ready():
 	anim.play('init')
 	yield(anim, "animation_finished")
 
-func reveal(text):
+func reveal(new_text):
 	# does title animation and then emits 'animation_finished'
-	self.text = text
-	self.text_len = 0
+	text = new_text
+	text_len = 0
 	anim.play("reveal"); yield(anim, "animation_finished")
 	anim.play('init'); yield(anim, "animation_finished")
 	emit_signal('animation_finished')
