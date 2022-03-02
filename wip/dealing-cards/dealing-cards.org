@@ -71,30 +71,37 @@ Anyway, let's call that the deck.
 
 If we did that right, we'd expect to have 52 cards:
 
+: . ?# deck?
 : # deck
 
 We can take four cards off the top:
 
+: . ^0x?4 {.?$
 : 4 {. deck
 
 Or deal from the bottom of the deck:
 
+: . ^0?_?
 : _4 {. deck
 
 If we want to know what card number 23 is, we just take a single card:
 
+: . ^0xx?23?>>x
 : 23 { deck
 
 Note that the lowest card is number 0 and the highest is 51:
 
+: . ^0xx?0 51?
 : 0 51 { deck
 
 If you try to ask for number 52 it'll just give you an error:
 
+: . ^0xx>x?2?
 : 52 { deck
 
 You can ask for negative one and negative 52 though:
 
+: . ^0?_?w? _1?
 : _1 _52 { deck
 
 * names -> numbers
@@ -105,24 +112,30 @@ So now we can map numbers to cards. What if we want to go the other way?
 
 Let's say we want to find the queen of hearts:
 
+: . ?'Qh'
 : 'Qh'
 
 J doesn't have a literal syntax for symbols, but we can just box this string and use s:
 
+: . ^0?s:<?
 : s:<'Qh'
 
 Or you can put a space at the start of the string and forget the boxing:
 
+: . ^0>>x>? ?
 : s:' Qh'
 
 That space is a cut character, so you can make a bunch of symbols from one string:
 
+: . ^$<? As 3d?
 : s:' Qh As 3d'
 
 Anyway, now we have the symbols, we can use i-dot to find them in the deck:
 
+: . ^0?deck i. ?
 : deck i. s:' Qh As 3d'
 
+: . ?42 51 5 { deck?
 : 42 51 5 { deck
 
 * shuffling
@@ -131,44 +144,56 @@ Anyway, now we have the symbols, we can use i-dot to find them in the deck:
 
 We can pick a card at random with the question mark:
 
+: . ??? 52?
 : ? 52
 
 And then extract it from the deck:
 
+: . ^0?(?$?) { deck?
 : (? 52) { deck
 
 If you want to avoid the parentheses there, you can use tilde to swap the arguments:
 
+: . ^^0?deck {~ ?
 : deck {~ ? 52
 
 If we add an argument to the left of the question mark, we can deal as many cards as we like:
 
+: . ^^^0?5 ?
 : 5 ? 52
 
 This dyadic form is called "deal", and it guarantees we won't get any duplicates.
 
 So if we say 5 deal 5, you can see that all the values are unique.
 
+: . ^$X
 : 5 ? 5
 
 If you wanted to allow duplicates, you could pass the more than one number in on the right.
 
+: . ?5 # 5?
 : 5 # 5
+
+: . ^0??? ?
 : ? 5 # 5
 
 This monadic form is called "roll" and it's like rolling five five-sided dice.
 
 So probably for cards, if you needed duplicates, you'd just take multiple copies of the deck:
 
+: . ?52 {. 4 # deck  ?
 : 52 {. 4 # deck  NB. 4 copies of every card (truncated for display)
 
 In any case, you can shuffle one deck like so:
 
+: . ?52 ?? 52?
 : 52 ? 52
+: . ^0?deck {~ ?
 : deck {~ 52 ? 52
 
 Whenever you want to pass the same argument to both sides of a verb, you can use the tilde:
 
+: . ^bbbxxxw?~?
 : deck {~ ?~ 52
 
 So the tilde on the question mark here is making it a "reflexive deal", passing 52 on both sides.
@@ -179,11 +204,15 @@ it swaps the left and right arguments.
 
 Anyway, here's how I'd deal cards:
 
+: . ^0?deal =: {{ ?$? }}?bb<x<?y ?
 : deal =: {{ deck {~ y ? 52 }}
+
+: . ?deal 5 ?
 : deal 5 NB. a random poker hand
 
 And to shuffle the whole deck, just deal 52 cards:
 
+: . ^0w>>?2?K
 : deal 52
 
 * permutations
@@ -194,28 +223,34 @@ There is another way to think about shuffling in J.
 
 There are 52 factorial ways to arrange a deck of cards.
 
+: . ?!52?
 : !52
 
 That's eight times ten to the 67th power.
 
 Here's what that number looks like if you write it out:
 
+: . ^?x?
 : !52x
 
 What does that mean, exactly?
 
 Well, you have 52 choices for the first card, 51 for the second, and so on.
 
+: . ?1+i.52?0?|.?
 : |.1+i.52
 
 And you just multiply all those numbers together:
 
+: . ^0?*/?
 : */|.1+i.52
 
 The x at the end makes J use extendend precision integers so you get the exact value:
 
+: . ^?x?
 : */|.1+i.52x
 
+: . ?!52x?
 : !52x
 
 Anyway this is how many permutations there are.
@@ -228,6 +263,7 @@ and arrangement this giant number minus one would be the deck completely reverse
 
 and any every other permutation would get some number in between.
 
+: . ^0?<:?
 : <:!52x
 
 We don't actually need to generate the list of permutations, we just need some
@@ -236,23 +272,35 @@ corresponding permutation.
 
 J provides such an algorithm, by way of the anagram primitive.
 
+* anagrams
+: . ?deck = 0 A. deck?
 : deck = 0 A. deck
 
+: . ^bbbxx? |. ()?<?<:!52x?
 : deck = |. (<:!52x) A. deck
 
 If we have some permutation of the numbers 0..n, the monadic form can tell us its index.
 
+: . ?A. ?? ?~52?
 : A. ?~52
+
+: . ^
 : A. ?~52
+
+: . ^
 : A. ?~52
 
 If we have the card symbols rather than just the numbers, we just need to map back to the numbers first:
 
+: . ?by_suit?
 : by_suit
+
+: . ^0?A. deck i. ?
 : A. deck i. by_suit
 
 With a smaller list, we could use this form to actually list all the permutations:
 
+: . ?(i.!4) A. i.4?
 : (i.!4) A. i.4
 
 With 52 items, my computer will have crumbled to dust before it finished generating
@@ -262,9 +310,11 @@ table of permutations available.
 So, instead of making 51 random choices to order our deck,
 we could just pick one of the fity-two factorial permutations:
 
+: . ?()?<??? ?!52x?$? A. deck?
 : (?!52x) A. deck
-: deck A.~ ?!52x
 
+: . ^bb<K0x?deck A.~ ?
+: deck A.~ ?!52x
 * the end
 #+begin_src j
 suits =: 'cdhs'
