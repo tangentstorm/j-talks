@@ -8,51 +8,61 @@ Let's say you want to deal some cards.
 
 A standard deck has four suits: clubs, diamonds, hearts, and spades.
 
-: . ?suits?__? ?__?=: ?__?'cd?__?hs'?
+: . ?suits =: 'cdhs'?
 : suits =: 'cdhs'
 
 Then there are thirteen ranks: deuce through ten, jack, queen, king, and Ace.
 
-: . ?ranks?__? =: ?__?'?__?123?__X_X_X_?234?__?5?__?6?__?789?___?TJ?__?Q?__?K?__?A?__?'?
+: . ?ranks =: '1?X?23456789T?_?JQKA'?
 : ranks =: '23456789TJQKA'
 
 We can use the catalog operator (that's the left curly brace) to see every combination:
 
-: . ?|?__?:?__? ?__?{ ?__?ranks?__?; ?__?suits?
+: . ?|: ?_?{?_? ranks;?_? suits?
 : |: { ranks; suits
 
 The semicolon there puts the two strings into boxes,
 
-: ranks ; suits
+: . ^bbbbXXXXX$
+: ranks; suits
 
 Then catalog takes every combination of those values.
 
-: { ranks ; suits
+: . ^bb?{ ?
+: { ranks; suits
 
 And that's kind of big so I used transpose to turn it on its side:
 
-: |: { ranks ; suits
+: . ^ bbb?|: ?
+: |: { ranks; suits
 
 Okay, so let's convert those boxed strings to symbols...
 
-: s: |: { ranks ; suits
+: . ^0?s: ?
+: s: |: { ranks; suits
 
 ... flatten it with ravel ...
 
-: , s: |: { ranks ; suits
+: . ^0?, ?$
+: , s: |: { ranks; suits
 
 and give it a name:
 
-: by_suit =: , s: |: { ranks ; suits
+: . ^0?by_suit =: ?$
+: by_suit =: , s: |: { ranks; suits
+: . ^0wK
 : by_suit
 
 If you'd prefer to have it sorted by rank instead of suit, just remove the transpose:
 
+: . ^^bbbbbbbb>>>xxxxi?rank?$
 : by_rank =: , s: { ranks ; suits
+: . ^0wK
 : by_rank
 
 Anyway, let's call that the deck.
 
+: . ^0?deck =: ?
 : deck =: by_rank
 
 * enumeration
