@@ -66,143 +66,253 @@ Anyway, let's call that the deck.
 : deck =: by_rank
 
 * enumeration
-
+: @cls
 @title("enumeration")
 
 If we did that right, we'd expect to have 52 cards:
 
+The hash symbol gives us the length of an array.
+
 : . ?# deck?
 : # deck
 
-We can take four cards off the top:
+Looks good.
+
+Let's take the first four cards using "take" or left-curly dot.
 
 : . ^0x?4 {.?$
 : 4 {. deck
 
-Or deal from the bottom of the deck:
+Since the deck is sorted by rank that gives us the twos or "deuces".
+
+If we want the aces we can deal from the bottom of the deck.
 
 : . ^0?_?
 : _4 {. deck
 
-If we want to know what card number 23 is, we just take a single card:
+The underscore there is a negative sign.
+
+If we want to know what card number 23 is, we can just extract it.
 
 : . ^0xx?23?>>x
 : 23 { deck
 
-Note that the lowest card is number 0 and the highest is 51:
+Array indices start at zero, so that two of clubs is card zero, and the ace of spades is 51.
 
 : . ^0xx?0 51?
 : 0 51 { deck
 
-If you try to ask for number 52 it'll just give you an error:
+J complains if you ask for an entry that's out of range.
 
 : . ^0xx>x?2?
 : 52 { deck
 
-You can ask for negative one and negative 52 though:
+You can ask for negative one and negative 52 though.
 
 : . ^0?_?w? _1?
 : _1 _52 { deck
 
 * names -> numbers
-
+: @cls
 @title("card lookup")
 
 So now we can map numbers to cards. What if we want to go the other way?
 
 Let's say we want to find the queen of hearts:
 
-: . ?'Qh'
+: . ?'Qh'?
 : 'Qh'
 
-J doesn't have a literal syntax for symbols, but we can just box this string and use s:
+This here is a string, but our deck is actually an array of symbols.
 
-: . ^0?s:<?
+We can't match strings and symbols directly, so we need a symbol.
+
+Unfortunately, J doesn't have a syntax for writing symbols, directly.
+
+But it's still pretty easy to construct them.
+
+We can either use less than to box the string,
+
+: . ^0?<?
+: <'Qh'
+
+and then pass it to s-colon...
+
+: . ^0?s:?
 : s:<'Qh'
 
-Or you can put a space at the start of the string and forget the boxing:
+Or we can put an extra character at the start of the string and forget the boxing:
 
 : . ^0>>x>? ?
 : s:' Qh'
 
-That space is a cut character, so you can make a bunch of symbols from one string:
+That extra space is called a fret character, and it acts like a delimiter for defining multiple symbols at once.
 
 : . ^$<? As 3d?
 : s:' Qh As 3d'
 
+It doesn't have to be a space. You can use anything.
+
+: . ^bx?.?bx?.?bx?.?
+: s:'.Qh.As.3d'
+
 Anyway, now we have the symbols, we can use i-dot to find them in the deck:
 
-: . ^0?deck i. ?
+: . ^^0?deck i. ?
 : deck i. s:' Qh As 3d'
+
+So it found all three cards, and if we extract those indices, those are the cards we should get.
 
 : . ?42 51 5 { deck?
 : 42 51 5 { deck
 
-* shuffling
+You might ask why bother with symbols instead of sticking with strings, or boxed strings.
 
+Boxed strings and symbols are about the same:
+
+: . ?(,{ranks;suits)i.<'Qh'?
+: (,{ranks;suits)i.<'Qh'
+
+Although you might wind up doing a little more typing.
+
+: .^<<<<X? ?$?;'As';'3d'?
+: (,{ranks;suits)i. 'Qh';'As';'3d'
+
+You don't normally have a list of unboxed strings in J because the arrays have to rectangular.
+
+Which means your strings all have to be the same length.
+
+In this particular case, our strings are all two characters long,
+
+: . ^b<<K0$X0x
+: ,{ranks;suits
+
+so we could model the deck as a fifty-two-by-two character array:
+
+: . ^0?>?
+: >,{ranks;suits
+
+: . ^0?(?$?) i. ?__?>'Qh';"?X?'?As';'?
+: (>,{ranks;suits) i. >'Qh';'As';'3d'
+
+I guess really I just kinda prefer symbols, so that's what I went with.
+
+* shuffling
+: @cls
 @title("shuffling")
 
-We can pick a card at random with the question mark:
+Okay, so if you want to pick a random number in J, use the question mark.
 
 : . ??? 52?
 : ? 52
 
-And then extract it from the deck:
+Of course, you'll get a different number each time:
 
-: . ^0?(?$?) { deck?
+: . ^
+: ? 52
+
+: . ^
+: ? 52
+
+There is also question mark dot that uses a fixed seed for the random number generator,
+in case you're testing things, but I'm not going to mess with that here.
+
+: . ^b?.?
+: ?. 52
+
+: . ^
+: ?. 52
+
+: . ^
+: ?. 52
+
+Okay, so given a random card number we can extract the card with take.
+
+: . ^0>x<?(?$?) { deck?
 : (? 52) { deck
 
-If you want to avoid the parentheses there, you can use tilde to swap the arguments:
+We need parentheses there because J executes left to right.
+
+It's actually a bit shorter to use tilde on the take operator, and swap the arguments:
 
 : . ^^0?deck {~ ?
 : deck {~ ? 52
 
-If we add an argument to the left of the question mark, we can deal as many cards as we like:
+So that's dealing one random card.
+
+If we add a number to the left of the question mark, we can deal as many cards as we like:
 
 : . ^^^0?5 ?
 : 5 ? 52
 
-This dyadic form is called "deal", and it guarantees we won't get any duplicates.
+This dyadic form of the question mark is called "deal", and it guarantees we won't get any duplicates.
 
 So if we say 5 deal 5, you can see that all the values are unique.
 
 : . ^$X
 : 5 ? 5
 
-If you wanted to allow duplicates, you could pass the more than one number in on the right.
+If you wanted to allow duplicates, you could use the monadic form, and pass the more than one number in on the right.
 
 : . ?5 # 5?
 : 5 # 5
 
+So 5 take 5 gives us five fives.
+
 : . ^0??? ?
 : ? 5 # 5
 
-This monadic form is called "roll" and it's like rolling five five-sided dice.
+The monadic form of the question mark is called "roll", and in this case it would be like rolling five five sided dice.
 
-So probably for cards, if you needed duplicates, you'd just take multiple copies of the deck:
+But for cards, we pretty much always want "deal" instead of "roll" and so we use the dyadic form.
 
-: . ?52 {. 4 # deck  ?
-: 52 {. 4 # deck  NB. 4 copies of every card (truncated for display)
+: . ?5 ?? 52?
+: 5 ? 52
 
-In any case, you can shuffle one deck like so:
+So here are five random card numbers.
 
-: . ?52 ?? 52?
-: 52 ? 52
 : . ^0?deck {~ ?
+: deck {~ 5 ? 52
+
+(Remember they're random every time so the numbers and the cards don't match.)
+
+: . ^
+: deck {~ 5 ? 52
+
+And finally if we want to shuffle the deck, we can just deal all 52 cards.
+
+: . ^$2
 : deck {~ 52 ? 52
+
+Notice that we're passing in 52 on both sides of the question mark.
 
 Whenever you want to pass the same argument to both sides of a verb, you can use the tilde:
 
-: . ^bbbxxxw?~?
+: . ^bbXXx>?~?
 : deck {~ ?~ 52
 
-So the tilde on the question mark here is making it a "reflexive deal", passing 52 on both sides.
-That's because theres no noun on the left.
+And that means the same thing.
 
-But the curly brace has a noun on the left, so instead of copying the left argument,
-it swaps the left and right arguments.
+So to recap, the tilde on the question mark makes it reflexive, so we're still passing in 52 on both sides.
 
-Anyway, here's how I'd deal cards:
+The tilde on the curly brace is swapping the arguments,
+so that we don't have to put parentheses around everything.
+
+The difference is that the question mark only has an argument on the right hand side,
+
+Whereas the curly brace has an argument on both sides.
+
+The deck is on the left and the shuffled indices are on the right.
+
+So going right to left, it says
+
+deal 52 numbers from a set of 52 numbers
+
+then extract the cards in those positions from the deck.
+
+Anyway, if I were going to write a function to deal cards,
+
+it would probably look something like this.
 
 : . ^0?deal =: {{ ?$? }}?bb<x<?y ?
 : deal =: {{ deck {~ y ? 52 }}
@@ -210,111 +320,310 @@ Anyway, here's how I'd deal cards:
 : . ?deal 5 ?
 : deal 5 NB. a random poker hand
 
-And to shuffle the whole deck, just deal 52 cards:
+And again to shuffle the whole deck, just deal 52:
 
-: . ^0w>>?2?K
-: deal 52
+: . ?shuffle =: deal @ 52?
+: shuffle =: deal @ 52
+
+: . ?shuffle''?
+: shuffle''
 
 * permutations
+: @cls
+@title("permutations")
 
-@title("anagram")
+There /is/ at least one other way to think about shuffling in J.
 
-There is another way to think about shuffling in J.
+If you're going to arrange a deck of cards in some order...
 
-There are 52 factorial ways to arrange a deck of cards.
-
-: . ?!52?
-: !52
-
-That's eight times ten to the 67th power.
-
-Here's what that number looks like if you write it out:
-
-: . ^?x?
-: !52x
-
-What does that mean, exactly?
-
-Well, you have 52 choices for the first card, 51 for the second, and so on.
+Well, you have 52 possible choices for the first card, 51 for the second, and so on.
 
 : . ?1+i.52?0?|.?
 : |.1+i.52
 
-And you just multiply all those numbers together:
+And then when you get to the last card, you have one choice left.
+
+So if you multiply all those numbers together:
 
 : . ^0?*/?
 : */|.1+i.52
 
-The x at the end makes J use extendend precision integers so you get the exact value:
+... then that's how many different possible ways there are to arrange the cards.
+
+You may recall learning at some point that this is called the factorial function.
+
+In math notation you could write that as 52 exclamation point,
+and in J you can write exclamation point 52:
+
+: . ?52!?___X<<?!?
+: !52
+
+That's about eight times ten to the 67th power.
+
+If you write that out that longhand, it looks like this:
 
 : . ^?x?
-: */|.1+i.52x
+: !52x
+
+The x at the end makes J use extendend precision integers so you get the exact value.
+
+And then it just happens to format it without scientific notation by default.
+
+Anyway this is how many permutations there are for a deck of cards.
+
+And the ideas is that instead of making a sequence of 52 random choices to shuffle the deck...
+
+We could say that there are 52 factorial shufflings out there in the universe,
+
+and we're going to pick /one of them/ at random.
+
+: . ^0??
+: ?!52x
+
+: . ^
+: ?!52x
+
+: . ^
+: ?!52x
+
+Of course, /now/ we need some way to take one of these numbers
+
+and map it to an actual arrangement.
+
+And it turns out that J has a primitive that does exactly that.
+
+* anagrams
+: @cls
+@title("listing permutations")
+
+Let's say we had a table of all our permutations:
+
+: . ?t =. (A.~i.@!@#) 'ABCD'?
+: t =. (A.~i.@!@#) 'ABCD'
+
+Don't worry about what this line means yet.
+
+We're just defining a table called 't'
+
+: . ?t?
+: t
+
+where every row is a permutation of the string 'ABCD'.
+
+That's four letters, so there should be four factorial permutations:
+
+: . ?!4?
+: !4
+
+Four factorial is 24, and there are 24 rows in the table.
+
+: . ?#t?
+: #t
+
+It's a little hard to read so let's format it a bit:
+
+: . ?<@,."1 t?
+: <@,."1 t
+
+That's itemizing and then boxing each row to make it vertical.
+
+So each column in this picture corresponds to a row in t.
+
+And you can kind of see there's a kind of a pattern there.
+
+So row 0 is just the original string.
+
+: . ?t{~0?
+: t{~0
+
+And then it swaps the last two characters.
+
+: . ^X?1?
+: t{~1
+
+And then it moves the C to the front.
+
+: . ^X?2?
+: t{~2
+
+And then it swaps the last two characters again.
+
+: . ^X?3?
+: t{~3
+
+Then if you look at the very last permutation, it's the reverse of the original string.
+
+: . ^X?_1?
+: t{~_1
+
+And the one before that is reversed except for the last two letters.
+
+: . ^X?_2?
+: t{~_2
+
+So there's a definite pattern here.
+
+It's not actually that hard to generate all the permutations of a list this way.
+
+I've been known to give this as an interview question.
+
+I like it because it seems a little daunting at first,
+
+but once I get the person talking about how they would do this by hand,
+
+they can usually put a recursive solution into words within a few minutes.
+
+Then it's just a matter of whether they can express the idea in code.
+
+So, I won't spoil the algorithm here. I'll leave it as a challenge for you.
+
+: . ?t {~ 0 _1?
+: t {~ 0 _1
+
+Meanwhile, if we want a particular permutation in J...
+
+: . ^0x?'ABCD'?>x?A.?
+: 'ABCD' A.~ 0 _1
+
+... we can use capital A-dot to generate permutations on demand.
+
+A is for anagram.
+
+* anagrams
+: @cls
+@title('anagrams')
+
+Let's take another look at how we defined t:
+
+: . ^^^^^^^^^
+: t =. (A.~i.@!@#) 'ABCD'
+
+This part in parentheses is a hook made of two verbs.
+
+: . ^0xxxxx>>>>><? ?
+: t =. (A.~i.@!@#) 'ABCD'
+
+A monadic hook is just another way to copy the right argument over to the left,
+
+so if we expand the hook it looks like this.
+
+: . ^0xxxxx?'ABCD' ?x>>>_? ?>>>>>>>X
+
+And the tilde is swapping the arguments, so we can expand that:
+
+: . ^0?(i.@!@# ?w?)?wX>xxxxxxx
+: (i.@!@# 'ABCD') A. 'ABCD'
+
+And now on the left we have the at signs composing three verbs together into a pipeline.
+
+But 'ABCD' is a noun and when you have a sequence of verbs applied directly to a noun,
+they form a pipeline anyway, so we can get rid of the at signs.
+
+: . ^0w<<x<<x
+: (i.!# 'ABCD') A. 'ABCD'
+
+So let's ignore the call to A-dot and just look at the part on the left.
+
+: . ^bb<K0x
+: i.!# 'ABCD'
+
+This says count to the factorial of the length of this string.
+
+So anagram takes some numbers on the left and a sequence on the right, and returns the permutation corresponding to that number.
+
+: . ?0 1 2 A. 'ABCD'?
+: 0 1 2 A. 'ABCD'
+
+It also takes the length of the sequence into account:
+
+: . ^<?E?
+: 0 1 2 A. 'ABCDE'
+
+So we can pass it a sequence of any length.
+
+: . ^<?FGH?
+: 0 1 2 A. 'ABCDEFGH'
+
+So "anagram" acts like it's pullling rows out of the table of permutations,
+
+but it doesn't have to actually construct the table.
+
+: . ^bK? deck?
+: 0 1 2 A. deck
+
+That's important, because generating the permutation table for a deck of cards
+would pretty much take forever.
 
 : . ?!52x?
 : !52x
 
-Anyway this is how many permutations there are.
+And yet, with the anagram primitive, we can just pretend that we have that
+table, and ask J for any row we want.
 
-If we wanted, we could enumerate every possible way to shuffle the cards.
+So, we should expect that anagram 0 gives us the original deck:
 
-So arrangement 0 would be the same as the original deck,
+: deck = deck A.~ 0
 
-and arrangement this giant number minus one would be the deck completely reversed,
+and this giant number ...
 
-and any every other permutation would get some number in between.
+: . ^^
+: !52x
+
+... minus one ...
 
 : . ^0?<:?
 : <:!52x
 
-We don't actually need to generate the list of permutations, we just need some
-algorithm for mapping between the index in the hypothetical list a and the
-corresponding permutation.
+... should give us the deck in reverse.
 
-J provides such an algorithm, by way of the anagram primitive.
+: . ^0?(|.deck) = deck A.~ ?
+: (|.deck) = deck A.~ <:!52x
 
-* anagrams
-: . ?deck = 0 A. deck?
-: deck = 0 A. deck
+If we wanted the numbers sorted by suit, there's a number for that.
 
-: . ^bbbxx? |. ()?<?<:!52x?
-: deck = |. (<:!52x) A. deck
+It's not at all obvious to me how to /derive/ that number,
 
-If we have some permutation of the numbers 0..n, the monadic form can tell us its index.
+but if we can show J what we're looking for,
 
-: . ?A. ?? ?~52?
-: A. ?~52
+: . ?deck i. by_suit?
+: deck i. by_suit
 
-: . ^
-: A. ?~52
+Then the monadic form of A-dot
+(called anagram index)
 
-: . ^
-: A. ?~52
-
-If we have the card symbols rather than just the numbers, we just need to map back to the numbers first:
-
-: . ?by_suit?
-: by_suit
-
-: . ^0?A. deck i. ?
+: . ^0?A. ?
 : A. deck i. by_suit
 
-With a smaller list, we could use this form to actually list all the permutations:
+can tell us where it is in the table.
 
-: . ?(i.!4) A. i.4?
-: (i.!4) A. i.4
+: . ^0?p =. ?
+: p =. A. deck i. by_suit
 
-With 52 items, my computer will have crumbled to dust before it finished generating
-the list, but that's the point of capital A-dot. It lets us imagine we have this giant
-table of permutations available.
+: . ?by_suit = deck A.~ p?
+: by_suit = deck A.~ p
 
-So, instead of making 51 random choices to order our deck,
-we could just pick one of the fity-two factorial permutations:
+And of course to bring this back where we started,
+if we want to shuffle the deck,
+can just extract a permutation from the table at random.
 
-: . ?()?<??? ?!52x?$? A. deck?
-: (?!52x) A. deck
+: . ^0?deck A.~ ?? ?
+: deck A.~ ? !52x
 
-: . ^bb<K0x?deck A.~ ?
-: deck A.~ ?!52x
+: . ^0?deck A.~ ?? ?
+: deck A.~ ? !52x
+
+: . ^
+: deck A.~ ? !52x
+
+: . ^
+: deck A.~ ? !52x
+
+: . ^0?shuffle2 =: {{ ?$?}}?
+: shuffle2 =: {{ deck A.~ ? !52x }}
+
+: . ______________________
+: @cls
+
 * the end
 #+begin_src j
 suits =: 'cdhs'
@@ -323,8 +632,17 @@ by_suit =: , s: |: { ranks ; suits
 by_rank =: , s: { ranks ; suits
 deck =: by_rank
 deal =: {{ deck {~ y ? 52 }}
+shuffle =: deal @ 52
+
+NB. -or-
+shuffle2 =: {{ deck A.~ ? !52x }}
+
 #+end_src
 
-Anyway, that's dealing cards in J.
+@show-editor 7
 
-Thanks for watching, and I hope to see you again soon.
+So that's dealing cards in J!
+
+If you enjoyed this, please do hit the like button and let youtube know.
+
+Either way, thanks for watching, and I hope to see you again soon.
