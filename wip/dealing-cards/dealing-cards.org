@@ -31,7 +31,7 @@ Then catalog takes every combination of those values.
 : . ^bb?{ ?
 : { ranks; suits
 
-And that's kind of big so I used transpose to turn it on its side:
+Then transpose turns that on it side just to make it look nicer.
 
 : . ^ bbb?|: ?
 : |: { ranks; suits
@@ -78,7 +78,7 @@ The hash symbol gives us the length of an array.
 
 Looks good.
 
-Let's take the first four cards using "take" or left-curly dot.
+We can grab the first four cards with "take" or left-curly dot.
 
 : . ^0x?4 {.?$
 : 4 {. deck
@@ -274,6 +274,8 @@ So here are five random card numbers.
 : . ^0?deck {~ ?
 : deck {~ 5 ? 52
 
+And here are five random cards.
+
 (Remember they're random every time so the numbers and the cards don't match.)
 
 : . ^
@@ -286,6 +288,8 @@ And finally if we want to shuffle the deck, we can just deal all 52 cards.
 
 Notice that we're passing in 52 on both sides of the question mark.
 
+We can simplify that.
+
 Whenever you want to pass the same argument to both sides of a verb, you can use the tilde:
 
 : . ^bbXXx>?~?
@@ -296,6 +300,7 @@ And that means the same thing.
 So to recap, the tilde on the question mark makes it reflexive, so we're still passing in 52 on both sides.
 
 The tilde on the curly brace is swapping the arguments,
+
 so that we don't have to put parentheses around everything.
 
 The difference is that the question mark only has an argument on the right hand side,
@@ -633,8 +638,6 @@ by_rank =: , s: { ranks ; suits
 deck =: by_rank
 deal =: {{ deck {~ y ? 52 }}
 shuffle =: deal @ 52
-
-NB. -or-
 shuffle2 =: {{ deck A.~ ? !52x }}
 
 #+end_src
