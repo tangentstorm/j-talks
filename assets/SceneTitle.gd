@@ -24,7 +24,7 @@ func reveal(new_text):
 	text = new_text
 	text_len = 0
 	anim.play("reveal"); yield(anim, "animation_finished")
-	anim.play('init'); yield(anim, "animation_finished")
+	anim.play('hide'); yield(anim, "animation_finished")
 	emit_signal('animation_finished')
 
 func set_stripe_y(y):
