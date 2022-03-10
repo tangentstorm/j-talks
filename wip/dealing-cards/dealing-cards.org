@@ -1,6 +1,57 @@
 #+title: beginner j : dealing cards
 
+* init
+: @cls
+
+@hide("jp-editor")
+
+@show("jp-editor")
+
+@move("jp-editor", 38, 570, 400)
+
+@move("jp-editor", 38, 1080, 400)
+
+# this just moves the cursor to the bottom of the repl.
+
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+: 
+
+
 * the deck
+: @cls
+
 @title("the deck")
 
 Let's say you want to deal some cards.
@@ -79,6 +130,8 @@ Anyway, let's call that our deck.
 
 : deck =: by_rank
 
+@sync
+
 * enumeration
 : @cls
 
@@ -134,10 +187,12 @@ You can ask for negative one through negative 52 though.
 
 : _1 _52 { deck
 
-* names -> numbers
+=@sync=
+
+* card lookup
 : @cls
 
-@title("card lookup")
+=@title("card lookup")=
 
 So now we can map numbers to cards. But what if we want to go the other way?
 
@@ -207,7 +262,7 @@ Boxed strings and symbols are about the same:
 
 Although you might wind up doing a little more typing with boxes.
 
-: .^<<<<X? ?$?;'As';'3d'?
+: . ^<<<<X? ?$?;'As';'3d'?
 
 : (,{ranks;suits)i. 'Qh';'As';'3d'
 
@@ -233,10 +288,12 @@ so we could have modeled the deck as a fifty-two-by-two character array:
 
 I guess really I just kinda prefer symbols, so that's what I went with.
 
+=@sync=
+
 * shuffling
 : @cls
 
-@title("shuffling")
+=@title("shuffling")=
 
 Okay, so if you want to pick a random number in J, use the question mark.
 
@@ -391,6 +448,8 @@ And again to shuffle the whole deck, just deal 52 cards.
 
 : shuffle''
 
+@sync
+
 * permutations
 : @cls
 
@@ -463,10 +522,12 @@ and map it to an actual arrangement.
 
 It turns out that J has a primitive that does exactly that.
 
-* anagrams
+=@sync=
+
+* permutation table
 : @cls
 
-@title("listing permutations")
+=@title("permutation table")=
 
 Imagine we had a table of all the permutations.
 
@@ -574,10 +635,12 @@ Meanwhile, if we want a particular permutation in J...
 
 The "A" is for anagram.
 
+@sync
+
 * anagrams
 : @cls
 
-@title('anagrams')
+@title("anagrams")
 
 Let's take another look at how we defined t:
 
@@ -729,9 +792,7 @@ can just extract a permutation from the table at random.
 
 : shuffle2 =: {{ deck A.~ ? !52x }}
 
-: . ______________________
-
-: @cls
+@sync
 
 * the end
 #+begin_src j
@@ -746,7 +807,15 @@ shuffle2 =: {{ deck A.~ ? !52x }}
 
 #+end_src
 
-@show-editor 7
+: @cls
+
+@editor_goxy(0, 8)
+
+@move("jp-editor", 38, 570, 400)
+
+@title("thanks for watching!")
+
+@editor_goxy(0, 8)
 
 So that's dealing cards in J!
 
