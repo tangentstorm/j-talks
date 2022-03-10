@@ -187,7 +187,7 @@ You can ask for negative one through negative 52 though.
 
 : _1 _52 { deck
 
-=@sync=
+@sync
 
 * card lookup
 : @cls
@@ -522,12 +522,12 @@ and map it to an actual arrangement.
 
 It turns out that J has a primitive that does exactly that.
 
-=@sync=
+@sync
 
 * permutation table
 : @cls
 
-=@title("permutation table")=
+@title("permutation table")
 
 Imagine we had a table of all the permutations.
 
