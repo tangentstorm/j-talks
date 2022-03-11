@@ -11,8 +11,7 @@
 
 @move("jp-editor", 38, 1080, 400)
 
-# this just moves the cursor to the bottom of the repl.
-
+: NB. kludge to move the cursor to the bottom of the repl.
 : 
 : 
 : 
@@ -192,7 +191,7 @@ You can ask for negative one through negative 52 though.
 * card lookup
 : @cls
 
-=@title("card lookup")=
+@title("card lookup")
 
 So now we can map numbers to cards. But what if we want to go the other way?
 
@@ -288,12 +287,12 @@ so we could have modeled the deck as a fifty-two-by-two character array:
 
 I guess really I just kinda prefer symbols, so that's what I went with.
 
-=@sync=
+@sync
 
 * shuffling
 : @cls
 
-=@title("shuffling")=
+@title("shuffling")
 
 Okay, so if you want to pick a random number in J, use the question mark.
 
@@ -804,7 +803,7 @@ deck =: by_rank
 deal =: {{ deck {~ y ? 52 }}
 shuffle =: deal @ 52
 shuffle2 =: {{ deck A.~ ? !52x }}
-
+ 
 #+end_src
 
 : @cls
