@@ -12,41 +12,74 @@
 @move("jp-editor", 38, 1080, 400)
 
 : NB. kludge to move the cursor to the bottom of the repl.
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
-: 
+
 : 
 
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
+
+: 
 
 * the deck
 : @cls
@@ -115,7 +148,7 @@ and then give it a name:
 
 If you'd prefer to have it sorted by rank instead of by suit, just remove the transpose:
 
-: . ^^bbbbbbbb>>>xxxxi?rank?$
+: . ^^bb0>>>xxxx?rank?www>xxx$
 
 : by_rank =: , s: { ranks ; suits
 
@@ -158,9 +191,7 @@ If we want the aces, we can deal from the bottom of the deck.
 
 : . ^0?_?
 
-: _4 {. deck
-
-That underscore there is a negative sign.
+: _4 {. deck     NB. _4 is negative four
 
 If we want to know what card is card number 23 is, we can just extract it.
 
@@ -225,7 +256,7 @@ Or we can put an extra character at the start of the string and forget the boxin
 
 : . ^0>>x>? ?
 
-: s:' Qh'
+: s:' Qh'   NB. ' ' as fret character
 
 That extra space is called a fret character, and it acts like a delimiter for defining multiple symbols at once.
 
@@ -237,7 +268,7 @@ That extra space is called a fret character, and it acts like a delimiter for de
 
 : . ^bx?.?bx?.?bx?.?
 
-: s:'.Qh.As.3d'
+: s:'.Qh.As.3d'   NB. '.' as fret
 
 Anyway, now we have the symbols, so we can use i-dot to find them in the deck:
 
@@ -315,7 +346,7 @@ There is also question mark dot that uses a fixed seed for the random number gen
 
 : . ^b?.?
 
-: ?. 52
+: ?. 52   NB. ?. uses a fixed seed
 
 : . ^
 
@@ -357,31 +388,31 @@ So if we say 5 deal 5, you can see that all of the values are unique.
 
 If you wanted to allow duplicates, you could use the monadic form, and pass the more than one number in on the right.
 
+So for example, 5 copy 5 gives us five fives.
+
 : . ?5 # 5?
 
 : 5 # 5
 
-So for example, 5 copy 5 gives us five fives.
+The monadic form of the question mark is called "roll", and in this case it would be like rolling five five sided dice.
 
 : . ^0??? ?
 
 : ? 5 # 5
 
-The monadic form of the question mark is called "roll", and in this case it would be like rolling five five sided dice.
-
 But for cards, we pretty much always want "deal" instead of "roll" and so we will use the dyadic form.
+
+So here are five random card numbers.
 
 : . ?5 ?? 52?
 
 : 5 ? 52
 
-So here are five random card numbers.
+And here are five random cards.
 
 : . ^0?deck {~ ?
 
 : deck {~ 5 ? 52
-
-And here are five random cards.
 
 (Remember they're random every time so the numbers and the cards don't match.)
 
@@ -399,11 +430,11 @@ Notice that we're passing in 52 on both sides of the question mark.
 
 We can simplify that a bit.
 
-Whenever you want to pass the same argument to both sides of a verb, you can use a tilde:
-
 : . ^bbXXx>?~?
 
 : deck {~ ?~ 52
+
+Whenever you want to pass the same argument to both sides of a verb, you can use a tilde:
 
 So that means the same thing.
 
@@ -479,7 +510,7 @@ You may recall learning at some point that this is called the factorial function
 In math notation you'd write that as 52 exclamation point,
  and in J, you write exclamation point 52:
 
-: . ?52!?___X<<?!?
+: . ?52!?_____________________________X<<?!?
 
 : !52
 
@@ -546,11 +577,11 @@ where each row is a permutation of the string 'ABCD'.
 
 That's four letters, so there should be four factorial permutations:
 
+Four factorial is 24, and there are 24 rows in the table.
+
 : . ?!4?
 
 : !4
-
-Four factorial is 24, and there are 24 rows in the table.
 
 : . ?#t?
 
@@ -600,7 +631,7 @@ When it gets to the very last permutation, it's the reverse of the original stri
 
 And the one before that is reversed except for the last two letters.
 
-: . ^X?_2?
+: . ^X?2?
 
 : t{~_2
 
@@ -643,7 +674,7 @@ The "A" is for anagram.
 
 Let's take another look at how we defined t:
 
-: . ^^^^^^^^^
+: . ^^^^^^^^^^^^^^
 
 : t =. (A.~i.@!@#) 'ABCD'
 
@@ -651,19 +682,25 @@ This part in parentheses is a hook made of two verbs.
 
 : . ^0xxxxx>>>>><? ?
 
-: t =. (A.~i.@!@#) 'ABCD'
+: (A.~ i.@!@#) 'ABCD'
 
 A monadic hook is just another way to copy the right argument over to the left,
 
 so if we expand the hook it looks like this.
 
-: . ^0xxxxx?'ABCD' ?x>>>_? ?>>>>>>>X
+: . ^0?'ABCD' ?x>>>wX$
+
+: 'ABCD' A.~ i.@!@# 'ABCD'
+
+@pause(2000)
 
 And the tilde is swapping the arguments, so we can expand that:
 
 : . ^0?(i.@!@# ?w?)?wX>xxxxxxx
 
 : (i.@!@# 'ABCD') A. 'ABCD'
+
+@pause(2000)
 
 And now on the left we have the at signs composing three verbs together into a pipeline.
 
@@ -682,11 +719,16 @@ So let's ignore the call to A-dot and just look at the part on the left.
 
 It says count to the factorial of the length of this string.
 
-So anagram takes some numbers on the left and a sequence on the right, and returns the permutation corresponding to that number.
+: . ^^0>xxxxxxxxxxx?0 1 2 ?_____?. . . ?_XXXXXX?22 23
 
-: . ?0 1 2 A. 'ABCD'?
+: (0 1 2 22 23) A. 'ABCD'
+
+: . ^0xwwwxxxxxxx
 
 : 0 1 2 A. 'ABCD'
+
+
+So anagram takes some numbers on the left and a sequence on the right, and returns the permutation corresponding to that number.
 
 It also takes the length of the sequence into account:
 
@@ -704,12 +746,12 @@ Anagram acts like it's pullling rows out of the table of permutations,
 
 but it doesn't have to actually construct the table.
 
+That's important, because generating the permutation table for a deck of cards
+ would pretty much take forever.
+
 : . ^bK? deck?
 
 : 0 1 2 A. deck
-
-That's important, because generating the permutation table for a deck of cards
- would pretty much take forever.
 
 : . ?!52x?
 
@@ -719,6 +761,8 @@ And yet, with the anagram primitive, we can just pretend that we have that
  table, and ask J for any row we want.
 
 So, we should expect that anagram 0 gives us the original deck:
+
+: . ^?deck = deck A.~ 0?
 
 : deck = deck A.~ 0
 
@@ -732,11 +776,11 @@ and this giant number ...
 
 : . ^0?<:?
 
-: <:!52x
+: <:!52x   NB. <:n is n-1
 
 ... should give us the deck in reverse.
 
-: . ^0?(|.deck) = deck A.~ ?
+: . ?(|.deck) = deck A.~ ?
 
 : (|.deck) = deck A.~ <:!52x
 
