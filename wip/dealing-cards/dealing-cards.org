@@ -220,7 +220,7 @@ You can ask for negative one through negative 52 though.
 
 : _1 _52 { deck
 
-@pause(1500)
+@pause(750)
 
 @sync
 
@@ -367,7 +367,7 @@ Okay, so given a random card number we can extract the card with from.
 
 : (? 52) { deck
 
-We need parentheses here because J executes left to right.
+We need parentheses here because J executes right to left.
 
 It's actually a bit shorter to use tilde on the from operator, and swap the arguments:
 
