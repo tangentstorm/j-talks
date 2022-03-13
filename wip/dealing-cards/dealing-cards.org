@@ -81,6 +81,9 @@
 
 : 
 
+@pause(5000)
+
+
 * the deck
 : @cls
 
@@ -142,7 +145,7 @@ and then give it a name:
 
 : by_suit =: , s: |: { ranks; suits
 
-: . ^0wK
+: . ?by_suit?
 
 : by_suit
 
@@ -152,7 +155,7 @@ If you'd prefer to have it sorted by rank instead of by suit, just remove the tr
 
 : by_rank =: , s: { ranks ; suits
 
-: . ^0wK
+: . ?by_rank?
 
 : by_rank
 
@@ -195,7 +198,7 @@ If we want the aces, we can deal from the bottom of the deck.
 
 If we want to know what card is card number 23 is, we can just extract it.
 
-: . ^0xx?23?>>x
+: . ?23 { deck?
 
 : 23 { deck
 
@@ -213,9 +216,11 @@ J complains if you ask for an entry that's out of range.
 
 You can ask for negative one through negative 52 though.
 
-: . ^0?_?w? _1?
+: . ^0?_1 _?w
 
 : _1 _52 { deck
+
+@pause(1500)
 
 @sync
 
@@ -256,23 +261,23 @@ Or we can put an extra character at the start of the string and forget the boxin
 
 : . ^0>>x>? ?
 
-: s:' Qh'   NB. ' ' as fret character
+: s:' Qh'
 
 That extra space is called a fret character, and it acts like a delimiter for defining multiple symbols at once.
 
 : . ^$<? As 3d?
 
-: s:' Qh As 3d'
+: s:' Qh As 3d'    NB. ' ' as fret
 
 ... And it doesn't have to be a space. You can use anything.
 
-: . ^bx?.?bx?.?bx?.?
+: . ^0wx?.?wx?.?wx?.?wwwwwwx?.?
 
-: s:'.Qh.As.3d'   NB. '.' as fret
+: s:'.Qh.As.3d'    NB. '.' as fret
 
 Anyway, now we have the symbols, so we can use i-dot to find them in the deck:
 
-: . ^^0?deck i. ?
+: . ^^bbbbbbbbK0?deck i. ?
 
 : deck i. s:' Qh As 3d'
 
@@ -348,7 +353,7 @@ There is also question mark dot that uses a fixed seed for the random number gen
 
 : ?. 52   NB. ?. uses a fixed seed
 
-: . ^
+: . ^b?.?
 
 : ?. 52
 
@@ -477,6 +482,8 @@ And again to shuffle the whole deck, just deal 52 cards.
 : . ?shuffle''?
 
 : shuffle''
+
+@pause(1500)
 
 @sync
 
@@ -680,55 +687,54 @@ Let's take another look at how we defined t:
 
 This part in parentheses is a hook made of two verbs.
 
-: . ^0xxxxx>>>>><? ?
+: . ^0ww>>>>>? ?
 
-: (A.~ i.@!@#) 'ABCD'
+: t =. (A.~ i.@!@#) 'ABCD'
 
 A monadic hook is just another way to copy the right argument over to the left,
 
 so if we expand the hook it looks like this.
 
-: . ^0?'ABCD' ?x>>>wX$
+: . ^0ww? 'ABCD'?>xwwX$
 
-: 'ABCD' A.~ i.@!@# 'ABCD'
+: t =. 'ABCD' A.~ i.@!@# 'ABCD'
 
-@pause(2000)
+@pause(1000)
 
 And the tilde is swapping the arguments, so we can expand that:
 
-: . ^0?(i.@!@# ?w?)?wX>xxxxxxx
+: . ^0ww? (i.@!@#?w?)?wX>xxxxxxx$
 
-: (i.@!@# 'ABCD') A. 'ABCD'
+: t =. (i.@!@# 'ABCD') A. 'ABCD'
 
-@pause(2000)
+@pause(1000)
 
 And now on the left we have the at signs composing three verbs together into a pipeline.
 
 But 'ABCD' is a noun and when you have a sequence of verbs applied directly to a noun,
 they form a pipeline anyway, so we can get rid of the at signs.
 
-: . ^0w<<x<<x
+: . ^0www<<x<<x
 
-: (i.!# 'ABCD') A. 'ABCD'
+: t =. (i.!# 'ABCD') A. 'ABCD'
 
 So let's ignore the call to A-dot and just look at the part on the left.
 
-: . ^bb<K0x
+: . ^bb<K0xxxxxx
 
 : i.!# 'ABCD'
 
 It says count to the factorial of the length of this string.
 
-: . ^^0>xxxxxxxxxxx?0 1 2 ?_____?. . . ?_XXXXXX?22 23
+: . ^^0xxxxx>xxxxxxxxxxx?0 1 2 . . . ?XXXXXX?22 23
 
 : (0 1 2 22 23) A. 'ABCD'
+
+So anagram takes some numbers on the left and a sequence on the right, and returns the permutation corresponding to that number.
 
 : . ^0xwwwxxxxxxx
 
 : 0 1 2 A. 'ABCD'
-
-
-So anagram takes some numbers on the left and a sequence on the right, and returns the permutation corresponding to that number.
 
 It also takes the length of the sequence into account:
 
@@ -762,9 +768,9 @@ And yet, with the anagram primitive, we can just pretend that we have that
 
 So, we should expect that anagram 0 gives us the original deck:
 
-: . ^?deck = deck A.~ 0?
+: . ?deck -: deck A.~ 0?
 
-: deck = deck A.~ 0
+: deck -: deck A.~ 0   NB. -: tests for match
 
 and this giant number ...
 
@@ -780,9 +786,9 @@ and this giant number ...
 
 ... should give us the deck in reverse.
 
-: . ?(|.deck) = deck A.~ ?
+: . ?(|.deck) -: deck A.~ ?
 
-: (|.deck) = deck A.~ <:!52x
+: (|.deck) -: deck A.~ <:!52x
 
 If we wanted the cards sorted by suit, there's a number for that.
 
@@ -799,7 +805,7 @@ Then the monadic form of A-dot
 
 : . ^0?A. ?
 
-: A. deck i. by_suit
+: A. deck i. by_suit   NB. A. y is 'anagram index'
 
 can tell us where it is in the table.
 
@@ -807,35 +813,33 @@ can tell us where it is in the table.
 
 : p =. A. deck i. by_suit
 
-: . ?by_suit = deck A.~ p?
+: . ?by_suit -: deck A.~ p?
 
-: by_suit = deck A.~ p
+: by_suit -: deck A.~ p
 
 And of course to bring this back where we started,
  if we want to shuffle the deck, we 
 can just extract a permutation from the table at random.
 
-: . ^0?deck A.~ ?? ?
+: . ?deck A.~ ?? ?!52x?
 
-: deck A.~ ? !52x
+: deck A.~ ? !52x   NB. random permutation
 
-: . ^0?deck A.~ ?? ?
-
-: deck A.~ ? !52x
-
-: . ^
+: . ^bbbbbK
 
 : deck A.~ ? !52x
 
 : . ^
 
 : deck A.~ ? !52x
+
+@pause(500)
 
 : . ^0?shuffle2 =: {{ ?$?}}?
 
 : shuffle2 =: {{ deck A.~ ? !52x }}
 
-@sync
+@pause(2000)
 
 * the end
 #+begin_src j
@@ -847,7 +851,7 @@ deck =: by_rank
 deal =: {{ deck {~ y ? 52 }}
 shuffle =: deal @ 52
 shuffle2 =: {{ deck A.~ ? !52x }}
- 
+
 #+end_src
 
 : @cls
@@ -856,8 +860,6 @@ shuffle2 =: {{ deck A.~ ? !52x }}
 
 @move("jp-editor", 38, 570, 400)
 
-@title("thanks for watching!")
-
 @editor_goxy(0, 8)
 
 So that's dealing cards in J!
@@ -865,4 +867,6 @@ So that's dealing cards in J!
 If you enjoyed this, please do hit the like button and let youtube know.
 
 Either way, thank you for watching, and I hope to see you again soon.
+
+@title("thanks for watching!")
 
