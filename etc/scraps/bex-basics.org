@@ -1,0 +1,18 @@
+
+* context: solve random boolean expression
+
+* bottom-up bdd solver
+why: basic feature. this is also how other packages do it.
+kinda the "standard model" for benchmarking.
+
+- draw the expression
+- in a bottom-up walk, normalize each sub-expression
+- draw the dual cache system (even if it's just a black box)
+- draw the bdd database structure (or portions of it)
+  - as a table
+  - as a graph
+
+
+
+
+* substitution solver

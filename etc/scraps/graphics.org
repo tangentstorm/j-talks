@@ -1,0 +1,71 @@
+#+title: graphics
+
+* "grammar of graphics" is a weird name, but it gives a good way to think about graphics.
+
+- data points
+  - key/nid
+  - label
+  - value
+- rules for translating those into:
+  - shape/mark/geometry
+  - color
+  - scale
+  - position (coordinate system)
+- "facets" / multiple views
+
+
+* not part of gog but:
+
+- animation
+- layers
+- topology (toroidal world)
+- camera motion
+
+* then there's the SQVID model from back of the napkin
+
+
+* how do you visualize foo?
+
+** bit strings
+- color/label for the digits
+- scale is uniform
+- position relates to index/place
+
+** state machine
+- states laid out using whatever graph layout you like
+- coordinate system is mapping from state value to its arbitrary position
+
+** parser
+- cursor viz: moves through "text space"
+- lexer viz: token moves through state machine space
+- parser viz: cursor with stack, scope
+
+** memory allocator
+- memory cells mapped by wrapping/stride coordinate system
+- colors and labels indicate state
+
+** simple apl/j/k operations
+- iota: linear arrays
+- reshape: animation of change to coordinate system (plus copies)
+- take/drop: animation of growing selection/box along main axis
+- where: map of each number to length in boxes
+- key: color coding by key?
+
+** boids
+- position tracked directly
+- each boid is drawn as a triangle
+- heading rotates the triangle
+
+** defender game
+- sprites represent states
+- coordinates are just tracked on each object
+- toroidal world
+- camera moves through the world
+
+** tetris
+- direct visualization of the matrix state
+- not essential, but nice to have:
+  - animation for clearing rows
+  - animation for falling rows when rows clear underneath
+- falling piece is direct visualization at coordinates
+

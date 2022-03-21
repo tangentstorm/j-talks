@@ -1,0 +1,38 @@
+solving boolean expressions with bdds
+
+* draw random expression
+we want to solve this
+
+* (not to scale)
+This is a tiny model of the real problem.
+Hard to fit a real problem on the screen.
+There’s only 10 inputs, so we can just try all 1024 combinations.
+The individual steps in brute force are very fast but it doesn’t scale.
+
+* animate walking the graph
+
+In a bottom-up walk, replace each literal node with a NID.
+We encode each node in our database so it’s just a number.
+Canonical so that we always get this same number (at least for this run)
+there are 2^2^n possible functions it could be
+but we’re unlikely to use all of them, so we can just give names to the ones we do encounter
+Canonical implies that we know instantly if it’s T or F or something else.
+It also means we have some hope of caching sub-expressions.
+
+* canonical representation
+There are various kinds, but we mostly deal with these two:
+
+Truth tables (canonical dnf with minterms)
+Bdds are compressed dnf
+Zdds
+Algebraic normal form
+
+AST is non-canonical:  simple examples (x+.y) vs (y+.x) vs (1*.y+.x)
+
+* benefits of canonical rep
+- can identify shared subnodes
+- reduce work
+
+* what bex does differently
+- put zero at the bottom (and then use table/function nids)
+- concurrency and short-circuiting

@@ -1,5 +1,6 @@
 #+title: collatz conjecture talk
 
+* definitions / terms
 #+begin_src J
 S =: 1 + 3 * ]                    NB. scale
 R =: -:^:(-.@(2&|))  NB. ^:_            NB. reduce
@@ -8,6 +9,10 @@ b6 =: 6 & #.^:_1                  NB. int to digits in base 6
 p6 =: (6 p.~ |.)@x:               NB. digits in base 6 to int
 odd =: >:@+:
 #+end_src
+
+- turbine :: the rightmost fixed-size window of bits (mod n). previously, "consumer"
+- accumulator :: the leftmost starting bit...  previously "emitter"
+- buffer :: anything between the accumulator and turbine
 
 
 * IDEA : track the carries for a given prefix in base xxx
@@ -377,3 +382,470 @@ Here's a nice visualization with that all on one line:
 #+begin_src j
 viewmat  (+:{.cc)+"1 cc =. #:  (2^n) * (2&^ %~ 3&^) i.n=.32x
 #+end_src
+
+
+
+
+* the +1 is a bit "paradoxical"
+:PROPERTIES:
+:TS:       <2022-03-15 01:19PM>
+:ID:       10ych0418ej0
+:END:
+
+if it were just 3x for odds vs 2x for evens, the odds would shoot through the roof.
+but the +1 which you would think would make it grow faster, causes it to hit too many of these "super-even" numbers.
+
+* dodging the raindrops
+:PROPERTIES:
+:TS:       <2022-03-15 01:16PM>
+:ID:       sw28sv318ej0
+:END:
+
+here's the number of times two appears as a factor for each number in the range 1..32:
+#+begin_src j
+ |. |: 2=q:}.i.32
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0
+0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0
+0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+#+end_src
+
+If you imagine the trajectory of a number moving around on this scale, it has to
+hit some even numbers, but about half the time, it hits a doubled odd number,
+and about half the time it hits a "super-even" number, which means you're going to
+divide by at least four.
+
+* search algorithm
+:PROPERTIES:
+:TS:       <2022-03-15 01:52PM>
+:ID:       4f0fuj518ej0
+:END:
+The thing we're searching for is the "minimal criminal": the smallest number involved in a cycle or a path to infinity.
+
+The "consumer" model tells us we can often prune entire bit patterns from the search, just by looking at the suffix in binary.
+
+Since we're only looking for the /smallest/ number, We don't have to memoize the the entire graph of trajectories. We only have to care about whether a particular suffix gets smaller.
+
+* How do we know we can only look at a suffix?
+Well, the 3x+1 step only ever sends information to the left, so that's completely determined by the suffix.
+Modulo arithmetic always behaves the same way.
+
+The divide by two step is affected by the state that has accumulated off to the left,
+but since the bits are only shifted one place, the only state that matters is the one
+bit that's next to the "turbine".
+
+* except now you have this notion of "input" into the turbine
+I guess this is why I called the accumulator the "emitter". It has to "emit" a sequence of bits into the buffer.
+
+The bits that we're branching on are inputs into the turbine, but this doesn't really tell us the number itself.
+
+
+* the state machine graph
+
+First you draw all the numbers mod 2. so 0 and 1.
+
+| 3x+1 mod 2 | can be mincrim?       |
+|------------+-----------------------|
+| 0 -> [0,1] | no, because it's even |
+| 1 -> 0     | maybe                 |
+
+So we discount half the numbers right away.
+
+Next step:
+
+| 3x+1 mod 4. | can it be mincrim?               |
+|-------------+----------------------------------|
+| ?0          | no, because it's even            |
+|-------------+----------------------------------|
+| 01 -> 00    | no, because 3x+1 followed by >>2 |
+| 11 -> 10    | maybe                            |
+
+Now we can discount another half.
+
+| 3x+1 mod 8. | can it be mincrim?               |               |
+|-------------+----------------------------------+---------------|
+| ??0         | no, because it's even            | (from before) |
+| ?01         | no, because 3x+1 followed by >>2 |               |
+|-------------+----------------------------------+---------------|
+| 011 ->  101 |                                  |               |
+| 111 -> 1011 |                                  |               |
+
+
+At each step, we need to expand the state machine diagram to include more possible numbers.
+
+
+* how to do the search
+
+"expanding the state machine" is all about adding one digit at a time to the start of the suffix.
+
+At each step, we disqualify certain suffixes as the starting number.
+
+But, we still have to keep the whole state machine around, because for each of the starting suffixes that we have not yet disqualified, we have to look at every possible sequence of bits and see if any of them are feasible.
+
+What does it mean to be feasible? Well, whenever we do the >> step, there's some number of bits that we will shift to the right.
+
+If we ever shift 2 bits on the first step, then we've got (3x+1)/4 which is 3/4x+1/4 and need this to be > x.
+
+3/4x+1/4 > x
+3x+1 > 4x
+1 > x     (subtract 3x both sides)
+x <= 1
+
+So this can only cause a cycle when x<=1, which in fact fits with our known cycles.
+
+But we can /occasionally/ do a >>2 step, or a >>n step, as long as we do enough 3x+1 steps first to accomodate it.
+
+According to (Eliahou, 1993), the minimal possible cycle length is 17,087,915, so that's plenty of time to go up before going down.
+
+
+* demonstrate the elimination process for mod 8, 16, 32, 64
+
+i have two ways of picturing all this in my head.
+
+view #1: we should be able to look only at the starting states, and only look whether there's an immediate >>2.
+
+view #2: we need to "follow the path" a few steps, and see if, by adding that bit, it is possible to reach a state where the number as a whole is still > starting number n.
+
+i think view #1 is completely wrong.
+
+basically, looking only at the 'turbine' window of size n bits, we can list all 2^n possible states,
+but because we've already done this analysis for n-1, n-2, etc... we've already discounted a bunch of those states.
+
+so now we look at the starting states that have not yet been disqualified.
+
+now we have a path defined by sequence of "input bits". the input bits depend on the starting number, but also on the transformations applied.
+
+so for example, we know all our starting states are odd, so the very first step is going to be a 3x+1.
+
+if that one is carried all the way to the end on the first step, then that means there's a bunch of zeros on the right, and we're going to immediately divide by two a bunch of times, and that's not going to work. (this is what disqualifies the evens and the ones that are = 1 when mod 4).
+
+Okay, so we know that whatever's in the buffer is just going to get multiplied by 3 (with no +1 carry at this step).
+
+So now we look at a window of the next m bits to the left, and consider all 2^m possibilities.
+
+At each step, the turbine takes an input of 1 bit, and moves to a new state.
+The state itself triggers either a forced (x>>s) action, or a (3x+1) followed by a (x>>s).
+Then the next state is determined by the next bit of the buffer.
+
+for each entry in the 2^m entries, we have to actually perform the operations (always some sequence of 3x, 3x+1 (if the state itself triggers a carry), and x>>s), so we can determine the last bit in the buffer at each step.
+
+so for each available "starting state", we take the 2^m items (we'll represent them by tokens), and we perform a sequence of steps.
+we start with all the tokens on the starting state, and based on their last bits, we move them into the appropriate next states.
+
+since all states are odd, this will always involve a 3x+1 followed by an x>>s, where s depends on the state.
+
+after the first round, the 3x+1 state may involve carrying some number of bits: 1 bit from the 3x+1 itself, and 1 bit because the leftmost bits of the suffix are ones, and the 3x will necessarily cause a carry.
+
+# i feel like this is very hard to keep in my head as i write, and probably very hard to understand as you read it.
+# this is exactly why i want to illustrate the points with an animation.
+
+anyway, the expectation is that the movement of the tokens allows us to disqualify more starting states:
+
+- it's the conditional that causes the problem to be "dynamical".
+- if we knew the series of 3x, 3x+1, and >>s steps that are applied, then we can collapse the steps into a single expression of x[0].
+- if path(x[0]) < x then we know x cannot be a minimal criminal.
+- the transformation steps are deterministic based on the rightmost bits, so it doesn't matter what's off to the left.
+- so once we know an initial path is invalid, that disqualifies the entire /suffix/
+
+we know that almost everything goes to 1, the hope is that the pruning process will prune pretty much everything!
+
+now, suppose that we have a situation where there's only 1 valid starting state (as is the case with mod 4... we have to start with x mod 4 = 3).
+
+when we "expand the window", we expand to suffixes  '011' and '111' (looking at x mod 8).
+
+but on the first step, these behave exactly like '11' did, mod 4.
+
+so in other words, each time we expand the window (and grow the corresponding state machine), we replace some nodes with
+new nodes that have a 0 or 1 to the left.
+
+i think we can remember all the steps that were forced by the initial state itself, and all the effects that would have happened to the buffer, and only consider the new digits.
+
+let's say we're starting at the 'mod 4 window', and we're going to consider the next 8 or 16 bits or whatever. so we have 256 or 65536 tokens, one per bit pattern.
+
+---
+
+I guess the idea is that every starting number that shares a suffix (that is, are equal mod 2^n) will follow the same path through the "smaller" versions of the turbine's state graph.
+
+The paths only diverge when we consider the next incoming bit.
+
+So when we look at the 2^m "tokens", we're going to take that pile of tokens and cut it in half on every step.
+
+Some of the tokens are going to follow a path that causes the next value of x to be less than x[0]. We mark those tokens as infeasible, and move on.
+
+The logic is something like this:
+
+- for a given suffix:
+  - some amount of the path is deterministic
+  - the deterministic part may disqualify the entire suffix.
+  - if it does not disqualify the suffix, should remember the initial path
+
+The way we remember the deterministic part of the path isn't too hard:
+
+  - the effect on the buffer and accumulator can be described as a polynomial.
+  - the effect on the turbine can be described just by labeling which of the states we're in.
+
+This makes me think there's no need to expand the 'size' of the turbine.
+
+Instead, we keep a truncated binary tree of initial input bits, so each path represents a starting suffix.
+
+The leaf nodes should either:
+  a. indicate that the suffix is not viable (it forces a path through the state machine that results in x[path]<x[0] for any x.)
+  b. indicate the state in the state machine, and a polynomial defining what will have happened to the buffer once we've fully processed the suffix.
+
+So now, for every one of the m-bit tokens, we evaluate the polynomial, and we get a new bit sequence, and a new polynomial for what has happened to the left of those tokens. (This is a bit fuzzy in my head, but I think it ought to be fairly easy to derive this by converting from binary, applying the polynomial, converting back to binary, and then looking at the carry bits that have moved outside the window. Possibly we have to apply the inverse of the polynomial to those bits? Not sure yet. But the point is I don't *think* this is too hard.)
+
+(maybe we need to subtract the token and then divide by two m times (m being number of bits in the tokens), and thus break "everything to the left" into the part we're looking at and the part we're not looking at yet...)
+
+But... If I can figure out how to do that, then I can apply the polynomial to the initial tokens, get a new set of bit patterns, and then simply look up what the next (state,polynomial) pair is for the given (state, token).
+
+Except: I don't want the result of fully walking the pattern... I want to find the "lowest point" in the pattern. So each step along the way is going to multiply my original number by some value and then add some value, and I have to know if that value is less than or greater than the starting value.
+
+For a given pair of polynomials, it is possible that a is always less than b for positive numbers (meaning the two lines are parallel or the intersection is to the left of the origin), or it may be that the two lines cross to the right of the origin, in which case there's a point at which the behavior changes.
+
+But at the very least, we should be able to cache the sequence of polynomial transformations that occur for every (token,start state) pair.
+
+After all, given all known past behavior, we can calculate how any prefix (left side) was affected and what state we're in mod 4 (or whatever).
+And we can do the same thing given a starting state.
+
+So all we have to track is the actual polynomials. Then given the starting state and the token, we can look up the path, and decide what happens to the bits off to the left at each step.
+
+The final step is to evaluate the polynomial for each token on (the number represented by the token followed by the suffix we're considering).
+/If the number is a fixed point for that polynomial, then we've found a collatz cycle./
+
+In other words, the polynomial is telling us the cumulative transformation we're going to perform on an input with these strings.
+
+I think it makes sense to calculate the point of intersection with f(x)=x, because if we can show that f(x)<x for all x greater than our starting number, then we know that this pattern is not viable.
+
+
+
+* NOTE . the 1-bit "accumulator" visualization is just a throwaway introductory idea
+:PROPERTIES:
+:TS:       <2022-03-17 06:39PM>
+:ID:       z1ecvg01bej0
+:END:
+
+The idea behind the accumulator is that that little number 1 is going to get modified until it becomes some big number, and then everything off to the left is going to eventually turn into all ones and do steep dive back to the original number.
+
+But that's just a very simple example of how it /might/ happen, and probably really hard to find.
+
+So probably you'd want to show the graph of the trajectory, and show that it would have to climb, climb, climb, and then go falling down all at once, and point out there's no reason at all it would have to happen this way.
+
+Also it's kind of nice because if your turbine size is 2 bits, and your 'emitter' is 1 bit, you know the leftmost and rightmost bits, and only need to ask "what's in the buffer?" (of course, there could be literally any sequence in the buffer)
+
+This also introduces the idea of dividing the bit string into three parts, which /is/ important to the idea.
+
+But it makes more sense to think of a finite buffer and a /small/ state machine, but not necessarily only 4 states.
+
+
+* NOTE . so what to visualize?
+:PROPERTIES:
+:TS:       <2022-03-17 06:52PM>
+:ID:       tvlav111bej0
+:END:
+
+Well, we definitely show different sized state machines, and point out this is one way to parameterize the search.
+Then, for a given state machine, we can just generate a file that has all the paths, final states, and polynomials pre-computed for each initial state.
+
+Then we have the binary tree of possible inputs. At each step, we're going to add m levels to the tree (again, m= number of bits in the tokens), and for each starting state we haven't disqualified, we will calculate and inspect the resulting end states and polynomials.
+
+So the pictures include:
+
+- the "state machines"
+- the tables of tokens -> paths
+- the binary tree (or portions thereof, since it's huge)
+
+
+* path lengths and Eliahou's cycle length (17,087,915 (1993))  (e silvia: 10,439,860,591 (2009))
+
+Our "path length" is not the length through the binary tree, but rather, the sum of the lengths of the paths travelled inside the state machine for the sequence of bits in the binary tree.
+
+(Actually, why should it be a binary tree? It could just be a 2^m - tree... Could experiment with that to see if there's any savings there. Kinda depends what kind of pruning factor we encounter.)
+
+Anyway, it /might/ be the case that once you get a patha of that length, cycles are common, so perhaps we should look at the longest path lengths we can find, and dig as deep as possible into the tree.
+
+I wonder if it's possible to say "in order to have a cycle this long, the minimum value must be xyz..."
+
+Like, shouldn't we be able to deduce that from the token table?
+
+* NOTE . e silvia's paper
+:PROPERTIES:
+:TS:       <2022-03-17 08:24PM>
+:ID:       p5r3db51bej0
+:END:
+
+The "ultimate challenge" book has a section by Thomas e Silvia from 2009 in which he outlines his verification algorithm.
+
+I feel like what I've come up with here is an improvement, because as far as I can tell, he's not using the idea of storing state as a polynomial. (It's not even a polynomial, it's just a plain linear equation.)
+
+There's a good chance you don't have to even evaluate the full path.
+
+If the final polynomial, applied to the starting number, is less than the starting number, then there's no need to evaluate the path unless you just want to find the exact point at which it stops.
+
+If the final number in the path is greater than the initial number, then definitely test each value along the path.
+
+Also, it may be possible to sort the lines somehow... Except we're applying the linear equations to other linear equations.
+
+Yeah, this is beyond my ability to visualize at the moment, I need to actually do it.
+
+I should just do the search for all numbers up to 2^16 or something, perhaps with 4 rounds of m=4.
+
+* other distributed verification projects:
+these are listed in https://en.wikipedia.org/wiki/Collatz_conjecture#External_links
+
+https://collatz-problem.org/
+
+http://sweet.ua.pt/tos/3x+1.html
+
+
+* NOTE . let's do it.
+:PROPERTIES:
+:TS:       <2022-03-17 08:41PM>
+:ID:       5isf1561bej0
+:END:
+
+okay, so let's say m=4, and our state machine is mod 2^4, so mod 16.
+
+I have this state machine on paper already, so that should make it easy.
+
+We will only look at odd numbers, so...
+
+:    >:+:i.2^3x
+: 1 3 5 7 9 11 13 15
+
+: [ states =: odd i.2^3x
+
+: S =: 1 + 3 * ]                    NB. scale
+: R =: -:^:(-.@(2&|))  NB. ^:_      NB. reduce
+: T =: R^:([:-.2&|)^:a:@S"0         NB. trace until next odd number
+
+so here are the traces:
+
+:    T states
+:    T each states
+:    (;T) each states
+:    >(;T) each states
+: ┌──┬──────────┐
+: │1 │4 2 1     │
+: ├──┼──────────┤
+: │3 │10 5      │
+: ├──┼──────────┤
+: │5 │16 8 4 2 1│
+: ├──┼──────────┤
+: │7 │22 11     │
+: ├──┼──────────┤
+: │9 │28 14 7   │
+: ├──┼──────────┤
+: │11│34 17     │
+: ├──┼──────────┤
+: │13│40 20 10 5│
+: ├──┼──────────┤
+: │15│46 23     │
+: └──┴──────────┘
+
+And here we can see the starting numbers, the 3x+1 values, the number of times divided by 2, and the final number.
+
+:   [ states =: >:+:i.128
+: 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33 35 37 39 41 43 45 47 49 51 53 55 57 59 61 63 65 67 69 71 73 75 77 79 81 83 85 87 89 91 93 95 97 99 101 103 105 107 109 111 113 115 117 119 121 123 125 127 129 131 133 135 137 139 141 143 145 147 149 151 153 155...
+
+: 'ndivs next' =: |:;([:,:<:@#,{:)@T each states
+:    ndivs
+: 2 1 4 1 2 1 3 1 2 1 6 1 2 1 3 1 2 1 4 1 2 1 3 1 2 1 5 1 2 1 3 1 2 1 4 1 2 1 3 1 2 1 8 1 2 1 3 1 2 1 4 1 2 1 3 1 2 1 5 1 2 1 3 1 2 1 4 1 2 1 3 1 2 1 6 1 2 1 3 1 2 1 4 1 2 1 3 1 2 1 5 1 2 1 3 1 2 1 4 1 2 1 3 1 2 1 7 1 2 1 3 1 2 1 4 1 2 1 3 1 2 1 5 1 2 1 3 1
+:    next
+: 1 5 1 11 7 17 5 23 13 29 1 35 19 41 11 47 25 53 7 59 31 65 17 71 37 77 5 83 43 89 23 95 49 101 13 107 55 113 29 119 61 125 1 131 67 137 35 143 73 149 19 155 79 161 41 167 85 173 11 179 91 185 47 191 97 197 25 203 103 209 53 215 109 221 7 227 115 233 59 239...
+
+
+maybe it makes sense to keep it to 3 bits in both the state and buffer, so 6 bits total=64 entries... or rather 5 because we only look at half the states.
+
+
+:  [ states =: >:+:i.4
+: 1 3 5 7
+
+:    toks =: >:+:i.7
+:   'ndivs next' =: |:;([:,:<:@#,{:)@T each toks
+:    toks,ndivs,:next
+: 1 3 5  7 9 11 13
+: 2 1 4  1 2  1  3
+: 1 5 1 11 7 17  5
+
+:    (8|toks),toks,ndivs,next,:(8|next)
+: 1 3 5  7 1  3  5
+: 1 3 5  7 9 11 13
+: 2 1 4  1 2  1  3
+: 1 5 1 11 7 17  5
+: 1 5 1  3 7  1  5
+
+well this is still not what i want. i'm not implementing the algorithm i described. what i want is:
+
+- for each of the initial possible states (even OR odd), look at each of the possible values in the buffer.
+
+The constraint is that we can only do one division per bit in the buffer.
+We always do at least one division, but we may do more than one.
+So, if the 'ndivs' line there says do 4 divisions, but the buffer is only 3 bits,
+then we really can only do 3 divisions, and we're going to land on an even number.
+
+So for x=5, we would have: 5 -(3x+1)-> 16 -(-:)-> 8 -(-:)-> 4 -(-:)-> 2
+
+But we should also be tracking all 8 possible inputs for each start state.
+
+We want to track a whole set of variables, per token:
+
+    a[t]: accumulator (polynomial)
+    p[t]: path (list of steps taken to derive the final polynomial)
+    b[t]: bit buffer
+    c[t]: count of bits remaining in b
+    s[t]: state (x mod k)
+
+The 'path' should contain a string of steps, in the following format:
+
+  'a': means add 1
+  'd': means divide by 2
+  'm': means multiply by 3
+
+Those are the only 3 operations we need.
+
+* NOTE . building the lookup tables
+:PROPERTIES:
+:TS:       <2022-03-18 01:11AM>
+:ID:       nvr1o140cej0
+:END:
+
+Basically, we break our inputs into sections (a,b,c).
+
+We need every combination of bits for b and c, but we can treat a algebraically.
+
+#+begin_src j
+NB. collatz search algorithm
+clear''
+S =: 1+3&*            NB. scale
+R =: -:               NB. reduce
+C =: R`S@.(2&|)"0     NB. collatz step
+T =: R@(S^:(2&|))"0   NB. bake in the division
+N =: 2                NB. bits per state
+M =: 2                NB. bits per token
+
+'n2 m2' =: 2^N,M
+s =: (n2*m2)$i.n2     NB. states per token
+t =: n2#i.m2          NB. tokens per state
+x0 =: s + t * n2      NB. init value
+cx =: C x0            NB. just for reference
+x1 =: T x0            NB. done value
+s0 =: n2 | x0         NB. init state
+s1 =: n2 | x1         NB. done state
+
+NB. display as table:
+(;:,:(,.@".&.>)@;:) 't s x0 cx x1 s0 s1'
+
+/:~~.s0,.s1           NB. unique state transitions
+#+end_src
+
+* NOTE . visualization of the "linear function" view
+:PROPERTIES:
+:TS:       <2022-03-19 09:19AM>
+:ID:       0v5e4q61dej0
+:END:
+
+- start with a binary tree superimposed on the number line.
+- draw a tracking dot for each integer
+- all integers start on the line y=x
+- every even number jumps to y=x/2, which is necessarily lower
+- every odd number jumps to y=(3x+1) and then y=(3x+1)/2

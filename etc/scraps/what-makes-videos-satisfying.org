@@ -1,0 +1,19 @@
+#+title: what makes videos satisfying to watch?
+
+- simple, step by step
+- usually physical
+- motion/transformation
+- sense of completion
+- illusion that "i could do that" (makes it look easy)
+
+- you see progress along the way
+- you can anticipate where it's going
+  (reminds me of [[https://www.youtube.com/watch?v=lIuUxFc8dB4&t=10s][this lego video]] ... it's kind of boring at first, not obvious why you're watching... until you get to the payoff)
+  "wait for it" videos suck (in my opnion) for this same reason.
+
+* can a programming video be satisfying?
+- often the interesting stuff is happening in the programmer's imagination
+- showing step by step REPL transformations gives some sense of the feeling
+- apl/j/k feel especially "satisfying" because they're so concise
+- but it might be better to show the data and flow transformations rather than just the code
+
