@@ -1,0 +1,48 @@
+#+title: j-talks queue
+
+* TODO #23 the editor component                                 :live:
+* TODO propositional logic in J
+- knights and knaves problem
+- propositional logic is complete and consistent
+- brute force: variables as bit-strings
+
+* TODO how to be a cartoon
+* TODO mandelbrot set
+* TODO gridpad code review                                      :live:
+* TODO collatz conjecture
+* TODO boids in J
+
+* - - - - - - - - - - - - -
+
+* ---- missing features
+- how to motivate / show why it's interesting?
+- code snippets without a repl
+- maybe just add the repl?
+- showing and animating bex graph structures
+
+* ---- idea phase
+* TODO lexer combinators
+* TODO virtual machine
+* TODO grammar combinators
+* TODO bootstrapping vm
+* TODO a vm in j
+* TODO reading j
+* TODO bex: algebraic normal form
+* TODO bex: solving with bdds
+* TODO bex: swarm concept
+* TODO knots
+* TODO deciphering gerard langlet
+* TODO lights-out
+* TODO blender: dodecahedron
+* TODO binaural beats
+
+* ---- footage (queue)
+* TODO #24 curse of mummy-nub                                   :live:
+* TODO #25 jkvm speedup                                         :live:
+* TODO #26a mandelbrot changes                                  :live:
+* TODO #26 macro debugger                                       :live:
+* TODO oK: defender clone                                       :live:
+* TODO oK: quick intro                                          :live:
+
+* ---- blocked
+* TODO sandpiles golf [blocked: editor macros]
