@@ -5,6 +5,10 @@
 :ID:       duggvv310bj0
 :END:
 
+https://stackoverflow.com/questions/69220358/how-can-i-mask-the-scan-operator-in-apl/69220714
+
+Assuming I have an array N ← 0 0 0 1 1 1 0 0 1, how can I apply the scan \ to achieve the array 0 0 0 1 2 3 0 0 1?
+
 #+begin_src j
    0]F:.([*+) 1 1 1 0 1  0 1 1
 1 2 3 0 1 0 1 2
