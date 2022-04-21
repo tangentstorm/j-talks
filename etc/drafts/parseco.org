@@ -1,0 +1,444 @@
+#+title: parser combinators in j
+
+* intro
+We often want to extract information from strings of text.
+
+Regular expressions can get us pretty far, but when the strings
+you want to recognize contain nested structures,
+then you need an actual parser.
+
+Often we can just use a standard notation for data, like JSON,
+YAML, lisp-style s-expressions, or XML. In that case, the parser
+is often provided for us.
+
+But often you really want a custom notation, and you'll need
+to write your own parser.
+
+There are lots of ways to make parsers, and even tools that
+can generate them for you from a grammar.
+
+Parser combinators are an approach to parsing that involves
+building up very complex parsers by combining smaller parsers.
+
+With this approach, parsers are just functions.
+
+This video is about how to implement parser combinators in J.
+
+* Parser Combinators
+
+** Parse State
+
+Our parsers are functions (J calls them verbs) that take a parse state and return a modified parse state.
+
+The parse state contains a bunch of different boxed fields.
+
+: NB. type s = (ix;ch;cb;nb;nt;na;wb)
+: NB.   mb = match bit
+: NB.   ix = current index into the input
+: NB.   ci = current item, or '' after ix>#S
+: NB.   cb = char buffer (grows as we match each char)
+: NB.   nt = node tag
+: NB.   na = node attributes
+: NB.   nb = node buffer (grows as we build rules)
+: NB.   wk = work stack (grows with recursive descent)
+: NB.   ib = input buffer
+
+We'll start with these four and work our way up:
+
+: NB.   mb = match bit
+: NB.   ix = current index into the input
+: NB.   ch = current character, or '' after ix>#S
+: NB.   ib = input buffer
+
+*** ib
+
+The =ib= field is the input buffer. That's the input we're parsing.
+
+*** mb
+
+=mb= is for 'match bit'. When a parser matches its pattern in the input,
+it sets the match bit to 1. 0 indicates there's no match yet, so it's
+0 by default.
+
+*** TODO ch and ix
+
+=ch= is the current item we're looking at in the input buffer.
+Generally the input buffer is a string, so ch would contain
+a single character.
+
+# ci for current item? / character sub i ..
+
+meanwhile =ix= represents the index of this value in the input.
+
+
+** TODO accessors
+
+There's an inital state called s0, and a bunch of accessor functions.
+
+: NB. s0 : s. initial parse state
+: s0 =: _ ; 0 ; '' ; 6#a:
+
+: NB. these names are the indices into the tuple:
+: 'MB IX CH CB NT NA NB WK IB' =: i.#s0
+
+: NB. accessor verbs: (v y) gets item from state,  (x v y) sets it.
+: AT =: {{ m&(>@{) : (<@[ m} ]) }}
+: (ix=:IX AT) (ch=:CH AT) (ib=:IB AT) (cb=:CB AT)
+: (nt=:NT AT) (na=:NA AT) (nb=:NB AT) (wk=:WK AT)
+: (I =:1&mb) (O =:0&mb) (mb=:MB AT)
+
+These are ambivalent (or ambi-valent) verbs, which means
+they can take either one or two arguments.
+
+Here's s0:
+
+: s0
+
+And here's the match bit:
+
+: mb s0
+
+Well okay that's the infinty symbol. Normally it would be 0 or 1.
+
+We can fix that by setting it:
+
+: 0 mb s0
+
+Note that this is a completely new state. s0 is still the same:
+
+: s0
+
+The plan is we never actually mutuate the state, we just pass around copies with modifications.
+
+** primitive parsers
+
+It's empty in s0, so if we want to parse something we need to load it into the state.
+
+We can set the =ib= to some string:
+
+: 'hello' ib s0
+
+And then we need to look at the first character:
+
+: 'h' ch 'hello' ib s0
+
+When it comes time to actually do the matching, this is always
+going to be our first step, so it's going to become our first
+primitive.
+
+The =on= primitive does that job.
+
+#+begin_src j
+NB. on: string -> s (initial parser state)
+NB. everything is stored explicitly inside
+NB. the state tuple, to make it easy to backtrack.
+on =: {{ ({.y) ch y ib s0 }}
+#+end_src
+
+Why is it called on? Because we're going to run the parser /on/ an an input.
+
+: NB. parserule on 'input'
+
+** nil
+
+To demonstrate, we need some parser rules.
+
+I should mention that the combinators I'm choosing loosely follow the
+presentation in Allesandro Warth's Ometa paper. It's his PhD thesis.
+
+Warth calls this rule 'empty', but I'm trying to follow the convention
+that all the primitive parser rules have cute three-letter names, so I
+call it =nil=.
+
+=nil= simply sets the match bit to 1, without consuming any input. So in effect,
+it matches any input, including the empty string.
+
+We can define it like this:
+
+: nil =: 1&mb
+
+The ampersand binds the 1 as the left argument to mb.
+
+now we can say:
+
+: nil on 'input'
+: nil on ''
+
+And they both match.
+
+** O and I
+
+The next function we need is the one that never matches anything.
+
+: 0&mb on ''
+
+Technically, it takes and consumes a state, so it's a parser combinator,
+but it's not a user facing combinator.
+
+The idea is that when we're done, we'll have a nice complete set of
+three-letter parser combinators that you can use to build whatever
+parser you want.
+
+This one gets used quite a bit inside those base combinators, but once
+we have those, we'll pretty much never need it again.
+
+So, my convention is that I call this thing O. The O doesn't stand
+for anything. It just looks like a zero, and it serves as a mnemonic
+for setting the match bit to 0.
+
+: O =: 0&mb
+
+And in fact, I prefer to define =nil= as an alias for 1 bound to mb.
+
+: I =: 1&mb
+: nil =: I
+
+Even though these have exactly the same semantics, I use =I= when I
+want to express the idea of "set the match bit to 1" and =nil= when
+I want to think of it as the parser combinator that never matches.
+
+** TODO microcode: nx
+
+There are a few more 'microcode' operations that work on the parse state.
+
+The most important one is nx, which reads one character of input and copies it to the character buffer.
+
+: nx =: {{'nx'] i ix (i{ ::'' ib y) ch ((ch y) AP cb) y [ i=. 1+ix y }}
+
+# removing AP saves a lot of typing:
+: nx =: {{'nx'] i ix (i{ ::'' ib y) ch y [ i=. 1+ix y }}
+
+# also we could clean it up a bit:
+: nx =: {{'nx'] (i{ ::'' ib y) ch (i=.1+ix y) ix y }}
+
+# and we don't really need the 'nx'] yet.. it's just for debugging:
+: nx =: {{ (i{ ::'' ib y) ch (i=.1+ix y) ix y }}
+: nx =: {{ (i{ ::'' ib y) ch (i=.1+ix y) ix y }}
+
+# now i'm just being silly :)
+: nx =: (1+ix) ( ([ { ::'' ib@]) ch ix) ]
+: nx =: (1+ix) ( ({ ::'' ib@]) ch ix) ]
+: nx =: >:@ix (({ ::''ib)ch ix) ]
+
+#+begin_src python
+  def nx(s:State)->State:
+      r = s.copy()
+      r.ix = i = r.ix + 1
+      r.ch = r.ib[i] if i<len(r.ib) else ''
+      return r
+#+end_src
+
+** TODO replace 'cb' with 'mk'=mark
+- then AP can be postponed until much later
+*** TODO microcode: AP
+
+AP is an adverb (there's a v in the definiton but no u or m)
+The mnemonic is 'APPEND'
+
+*** TODO microcode: AA
+
+: AA =: {{ (u v y) v y }}
+
+This is a funny one. The mnemonic means 'Apply At'. It's meant to be
+used with one of the accessor verbs.
+
+It's a conjunction.
+
+*** TODO elaborate:
+- i could have written  {{(u n{y) n} y}} and used the slot constants
+- but i'd prefer to have as little code as possible using them
+- (that way i could use alternate accessors, perhaps storing the state in an object or something)
+
+
+* matching combinators
+** TODO =any=
+now we can match a single character.
+
+: NB. any: s->s. matches one input item, unless out of bounds.
+: any =: {{ f mb nx^:f y [ f =. (#ib y)>ix y }}
+
+** TODO neg
+
+** TODO end = any neg
+this is why they're combinators!
+
+** TODO chr
+just an example. i generally don't use this one because =lit= is more general.
+
+** TODO =one=  -- maybe call this =chs= ?
+# chs could be "choose" or "chars"
+# one is a terrible name because it could mean "match exactly one, eg:
+: /x{1}/
+
+** TODO pos = neg neg?
+
+** TODO try =: ::O
+
+** TODO seq
+- note that this can be recursive!
+- but it would only match an infinite sequence
+- we need alt!
+
+: NB. m seq: s->s. match each rule in sequence m
+: seq =: {{'seq'] s=:y
+:   for_r. m do.
+:     if. -.mb s=. r`:6 s do. O y return. end.
+:   end. I s }}
+
+** TODO alt (prioritized choice / backtracking)
+
+: NB. m alt: s->s. try each rule in m until one matches.
+: NB. This is "Prioritized Choice" from PEG parsers.
+: NB. It removes some ambiguity, but means you have to think
+: NB. carefully about how to order your rules. For example,
+: NB. if your language allows simple strings of letters to be
+: NB. used as names but also reserves some strings of letters
+: NB. as keywords, then you must specify the keywords first.
+: alt =: {{'alt'] s=:y
+:   for_r. m do.
+:     if. mb  s=. r`:6 s do. I s return. end.
+:   end. O y }}
+
+now we have full recursive power:
+
+   foo on 'xxx'
+┌─┬─┬─┬┬┬┬┬┬───┐
+│0│0│x││││││xxx│
+└─┴─┴─┴┴┴┴┴┴───┘
+
+   foo =: ('x'lit)`(foo`nil alt) seq
+   foo on 'xxx'
+┌─┬─┬┬───┬┬┬┬┬───┐
+│1│3││xxx│││││xxx│
+└─┴─┴┴───┴┴┴┴┴───┘
+
+how does backtracking work?
+well you have the j call stack!
+
+* some extras
+
+** TODO opt = `nil alt  (regex question mark)
+** TODO rep (kleene +)
+
+because that second u really has to be the thing you want to call again
+you can say:
+
+:   aplus =: 'a'lit`(aplus opt) seq
+:   aplus on 'aaaaaaaaaaaa'
+: ┌─┬──┬┬────────────┬┬┬┬┬────────────┐
+: │1│12││aaaaaaaaaaaa│││││aaaaaaaaaaaa│
+: └─┴──┴┴────────────┴┴┴┴┴────────────┘
+
+this would  match exactly two copies:
+: rep =: {{ u`(u opt) seq }}
+
+so instead:
+
+: NB. u rep: s->s. match 1+ repetitions of u
+: rep =: {{ f=.0 while. mb y =. u y do. f=.1 end. f mb y }}
+: rep =: {{ s=.y while. mb s=.u s do.end. y (<&ix mb ])s }}
+: rep =: {{ y (<&ix mb ]) u^:mb^:_ I y }}
+
+
+: NB. while =: {{ u ^: v ^:_ y }}
+: NB. rep =: {{ y (<&ix mb ]) u while mb I y }}
+
+** TODO orp (kleene *)
+: NB. u orp: s->s. optionally repeat (match 0+ repetitions of u)}}
+: orp =: rep opt
+
+** TODO lit  (fw,la)
+-  an optimization (sequence of chr)
+- y fw n is nx^:n y
+- fw allows simplifying chr, one
+
+
+: NB. m lit: s->s like seq for literals only.
+: NB. this just matches the whole sequence directly vs S.
+: NB. ,m is so we can match a single character.
+: lit =: {{'lit'] f mb nx^:(f*#m) y [ f=.m-:(ib y){~(ix y)+i.#m=.,m }} try
+
+: fw =: {{ (*y) mb nx^:y x }}
+
+: (X =: @[) (Y =: @])
+: NB. lookahead
+: la =: {{ (ib y) {~ (ix y) + (i. x) }}
+: la =: ib@] {~ ix@] + i.@[
+: la =: ib Y {~ ix Y + i. X
+: lit =: {{ y fw (#m) * m-: (#m=.,m) la y }} try
+
+** TODO not
+
+: NB. u not: s->s. match anything but u.
+: NB. fail if u matches or end of input, otherwise consume 1 input.
+: not =:{{
+:   if. (#ib y) <: ix y do. O y
+:   elseif.mb u y do. O y
+:   else. I nx y end. }}
+
+: not =: {{ (u neg)`any seq }}
+
+** TODO sep
+
+: NB. u sep v: s->s. match 1 or more u, separated by v
+: sep =: {{ u`(v`u seq orp) seq f. }}
+
+
+
+* TODO grouping / tokenizing
+- mk: (moves when you emit)
+
+so far we've been matching some (possibly complete) prefix
+but all we ever get back is a match bit!
+
+we're ahead of the game compared to regex because we have recursion
+but also behind regex because we can't extract the matched values.
+so let's fix that.
+
+** TODO ifu : do something if u matches
+
+** TODO tok
+# i'm imagining a 2-pass parser
+# maybe 'grp' instead? seg for segment?
+# that would free 'tok' up to be a token matcher.
+# or 'tok' could be 'lit grp' since i rarely use 'sym'
+
+*** TODO sym?  -> probably ditch this
+
+
+* TODO tree-building
+- nb: node buffer
+- emit gives you tokens
+- node gives you nesting
+- done
+
+and then the combinators:
+
+- elm
+- tag
+
+-- atttributes:
+- attr
+- atr
+
+
+
+* TODO multi-pass parsers
+
+
+
+* scrap on tacit [. ]. ]:
+
+i was expecting the mere presence of these tokens
+to turn a train into an adverb or conjunction,
+the way the mere presence of u/x/m/n/y transforms
+an explicit definition, but that's not the case.
+
+it might be kind of neat to have something like that.
+
+* idea: verb to add a field + accessor to an object
+- would define the accessor
+- then the accessor scheme could itself be parameterized
+- you would only have to add the fields you wanted
+- at the very least, fields could be added from the prompt
+
