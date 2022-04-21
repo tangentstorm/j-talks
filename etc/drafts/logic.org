@@ -1,0 +1,130 @@
+
+* knights and knaves
+- a:one of us is a knight!
+
+* how to solve?
+- break it into cases (binary tree)
+  - p: A is telling the truth
+  - q: A or B is a knight
+
+* plan
+- framework: knights and knaves problem
+- propositional logic is complete and consistent
+- brute force: variables as bit-strings
+
+* files
+- [[~/ver/tangentlabs/j/logic.ijs]]
+- [[~/ver/tangentlabs/j/tiny/logic-ops.ijs]]
+- [[~/ver/tangentlabs/j/nornand.ijs]]
+- [[~/ver/tangentlabs/j/j-fun.ijs.org]] (knight/knave problem)
+
+* DRAFT: [[https://www.reddit.com/r/logic/comments/1zf14x/how_i_use_j_to_learn_about_logic/][reddit essay]]
+
+How I use J for Learning about Logic
+
+J is a rather unusual programming language and mathematical notation.
+
+If you hang out in the ##logic IRC channel (see the sidebar here in r/logic), you may have seen me using the j evaluator bot to demonstrate or experiment with propositional or modal logic.
+
+The logic.ijs library I use is up on my github account, but the two most interesting lines are the definition of given and the declaration of five boolean arrays:
+
+: given =: ,@([: _:^:(2=#)@ ~."1  [ #"1~ *./@])
+: 'p q r s t' =: |: #: ,. i. 2 ^ 5
+I told you it was an unusual language. :)
+
+These two lines, combined with a handful of J's primiives are all you need to experiment with and solve many different problems in propositional logic.
+
+I'd be happy to explain the code in another post, but for now I just want to show how you can use them.
+
+J Crash course: J is open source, and you can download it from jsoftware.com. Just run jconsole and copy and paste the two lines above if you want to follow along. The text I'm typing in is indented 3 spaces, and J's response for each input follows below. The word NB. marks the start of a comment.
+
+:    p,q,r,s,t               NB. every combination of 5 boolean values
+: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+: 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1
+: 0 0 0 0 1 1 1 1 0 0 0 0 1 1 1 1 0 0 0 0 1 1 1 1 0 0 0 0 1 1 1 1
+: 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1
+: 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1
+
+Each of the variables I defined is an array of 32 bits. (Actually, they're 1x32 matrices, so they line up nice when you use the comma).
+
+In the example above, the first result line is the value of p, the second line is the value of q, and so on. You might notice that the columns correspond to the binary representation of the range (0..32]. Basically, these cover every possible combination of 5 boolean variables.
+
+:    p <: q                   NB. 'p implies q'. (Can also be written 'p ! q')
+: 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1
+
+
+:    p +. q                   NB. 'p or q'
+: 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+
+:    p *. q                   NB. 'p and q'
+: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1
+
+
+:    p *. -.q                 NB. 'p and not-q'
+: 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+
+
+:    (-.p) *. q               NB. 'not-p and q'
+: 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+
+:    -. p *. q                NB. 'not (p and q)'
+: 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0
+
+
+:    p *: q                   NB. 'p nand q'
+: 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0
+
+
+:    p +. -.p                 NB. some things are always true
+: 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+
+
+:    p *. -.p                 NB. some things are never true
+: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+
+:    (p *. -.p) given ''      NB. 'given' can summarize the results
+: 0
+
+:    p given ''               NB. If it can't deduce an answer, it shows '_'.
+: _
+
+:    (p,q) given ''           NB. You can query multiple variables.
+: _ _
+
+
+:    (p,q) given p            NB. Given p, it knows p=1, but q is still unknown.
+: 1 _
+
+
+:    (p,q) given p,q          NB. Commas on the right are treated as 'AND'.
+: 1 1
+
+
+:   (p,q) given p, p <: q     NB. Given p=1 and p implies q, it can deduce q : for you.
+: 1 1
+
+:                             NB. But, it needn't be so simple:
+:   (p,q,r,s,t) given ((-.s) <: q), (q <: (r *. t)), (-.t), (p=r), q~:p
+: 1 0 1 1 0
+
+I find that (+. , *, -. , <: , =, ~:, !) are the primitives I use most often, but you can write all 16 logical connectives quite easily.
+
+The symbols <: and ! (literally, "less than or equal to" and "combinations") are both equivalent to logical implication given boolean arguments. Likewise, <. and >. ("min" and "max") are standins for *. and .+ ("and" and "or"), respectively.
+
+Having two symbols is nice because you can use one for propositions and the other for inference rules:
+
+:    ((p<:q) *. (q<:r)) ! (p <:r)    NB. this says if (p->q) and (q->r), then you can deduce (p->r)
+: 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+
+Together, the boolean primitives, the canned variables, and the given verb make solving many basic logic problems a snap.
+
+For example, you can solve knights and knaves puzzles simply by figuring out how to restate the facts in J.
+
+I'm happy to demonstrate if anyone would like, but I thought I'd give someone else a chance to try it first. :)
+
+Edit: made it show all 5 values and described how to read the results.
+
+* 
+http://discrete.openmathbooks.org/dmoi3/
