@@ -1,20 +1,19 @@
 #+title: j-talks queue
 
 * TODO #23 the editor component                                 :live:
+- trim last section
+* - - - - - - - - - - - - -
+
 * TODO propositional logic in J
-- knights and knaves problem
-- propositional logic is complete and consistent
-- brute force: variables as bit-strings
-
-* TODO how to be a cartoon
 * TODO mandelbrot set
-* TODO gridpad code review                                      :live:
 * TODO collatz conjecture
-* TODO boids in J
-
+* TODO boids in J and K
+* TODO how to be a cartoon!
+* TODO gridpad code review                                      :live:
 * - - - - - - - - - - - - -
 
 * ---- missing features
+- ability to write directly in jprez
 - how to motivate / show why it's interesting?
 - code snippets without a repl
 - maybe just add the repl?
@@ -35,6 +34,8 @@
 * TODO lights-out
 * TODO blender: dodecahedron
 * TODO binaural beats
+* TODO rubik's cube
+* TODO [[~/ver/b4/web/apljk/wireworld.ijs.org][wireworld]]
 
 * ---- footage (queue)
 * TODO #24 curse of mummy-nub                                   :live:
@@ -46,3 +47,4 @@
 
 * ---- blocked
 * TODO sandpiles golf [blocked: editor macros]
+* TODO quadratic equation [blocked: token animations]
