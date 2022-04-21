@@ -257,22 +257,61 @@ now we can match a single character.
 : NB. any: s->s. matches one input item, unless out of bounds.
 : any =: {{ f mb nx^:f y [ f =. (#ib y)>ix y }}
 
-** TODO neg
+: any on 'hello'
 
-** TODO end = any neg
+
+** TODO neg, end
+
+: any neg on 'hello'
+
+: end =: any neg
 this is why they're combinators!
+
+: end on 'x'
+: end on ''
 
 ** TODO chr
 just an example. i generally don't use this one because =lit= is more general.
 
-** TODO =one=  -- maybe call this =chs= ?
+: chr =: {{'chr'] p mb nx^:p y [ p =. m  -: ch y }}
+
+: 'a' chr on 'abc'
+: 'a' chr on 'xyz'
+
+
+** TODO try =: ::O
+
+# need to articulate why we need try.
+# i don't actually have a failing test for chr
+# probably because nx does this already.
+# removing try from chs does seem to trigger a test failure.
+: chr =: {{'chr'] p mb nx^:p y [ p =. m  -: ch y }} try
+
+** TODO =chs=  -- maybe call this =chs= ?
 # chs could be "choose" or "chars"
 # one is a terrible name because it could mean "match exactly one, eg:
 : /x{1}/
 
+- y fw n is nx^:n y
+- fw allows simplifying chr, one
+
+: chs =: {{'chs'] p mb nx^:p y [ p =. m e.~ ch y }} try
+
+** fw
+: fw =: {{ (*y) mb nx^:y x }}
+: chs =: {{'chs'] p mb nx^:p y [ p =. m e.~ ch y }} try
+: chr =: {{ p mb nx^:p y [ p =. m  -: ch y }} try
+: chs =: {{ p mb nx^:p y [ p =. m e.~ ch y }} try
+: chs =: {{ y fw m e.~ ch y }} try
+: chr =: {{ y fw m  -: ch y }} try
+
+
+: F 'abc' chs on 'xyz'
+: T 'abc' chs on 'cab'
+
+
 ** TODO pos = neg neg?
 
-** TODO try =: ::O
 
 ** TODO seq
 - note that this can be recursive!
@@ -284,6 +323,10 @@ just an example. i generally don't use this one because =lit= is more general.
 :   for_r. m do.
 :     if. -.mb s=. r`:6 s do. O y return. end.
 :   end. I s }}
+
+
+T ('a'chr)`('b'chr)`('c'chr) seq on 'abc'
+
 
 ** TODO alt (prioritized choice / backtracking)
 
@@ -315,9 +358,19 @@ now we have full recursive power:
 how does backtracking work?
 well you have the j call stack!
 
+: F ('a'chr)`('b'chr)`('c'chr) alt on 'xyz'
+: T ('a'chr)`('b'chr)`('c'chr) alt on 'abc'
+
+
+
 * some extras
 
 ** TODO opt = `nil alt  (regex question mark)
+
+: opt =: {{ I u y }}
+: opt =: I@:
+: opt =: `nil alt
+
 ** TODO rep (kleene +)
 
 because that second u really has to be the thing you want to call again
@@ -347,25 +400,32 @@ so instead:
 : NB. u orp: s->s. optionally repeat (match 0+ repetitions of u)}}
 : orp =: rep opt
 
-** TODO lit  (fw,la)
+** TODO lit  (la)
 -  an optimization (sequence of chr)
-- y fw n is nx^:n y
-- fw allows simplifying chr, one
 
 
 : NB. m lit: s->s like seq for literals only.
 : NB. this just matches the whole sequence directly vs S.
 : NB. ,m is so we can match a single character.
-: lit =: {{'lit'] f mb nx^:(f*#m) y [ f=.m-:(ib y){~(ix y)+i.#m=.,m }} try
+: lit =: {{ f mb nx^:(f*#m) y [ f=.m-:(ib y){~(ix y)+i.#m=.,m }} try
 
-: fw =: {{ (*y) mb nx^:y x }}
+** TODO write lit with fw but without la
 
-: (X =: @[) (Y =: @])
+: lit =: {{ y fw (#m) * m-: (#m=.,m) la y }} try
+
+** TODO la
 : NB. lookahead
 : la =: {{ (ib y) {~ (ix y) + (i. x) }}
 : la =: ib@] {~ ix@] + i.@[
+: (X =: @[) (Y =: @])
 : la =: ib Y {~ ix Y + i. X
 : lit =: {{ y fw (#m) * m-: (#m=.,m) la y }} try
+
+*** TODO demonstrate la on its own
+
+: T 'ab' lit on 'abc'
+
+
 
 ** TODO not
 
@@ -395,32 +455,94 @@ we're ahead of the game compared to regex because we have recursion
 but also behind regex because we can't extract the matched values.
 so let's fix that.
 
-** TODO ifu : do something if u matches
-
-** TODO tok
+** TODO tok : motivate 'ifu'
 # i'm imagining a 2-pass parser
 # maybe 'grp' instead? seg for segment?
 # that would free 'tok' up to be a token matcher.
 # or 'tok' could be 'lit grp' since i rarely use 'sym'
 
+: tok =: ifu({{ '' cb (cb y) (AP nb) y }}@])
+
+once we have 'emit', this becomes:
+
+: tok =: ifu {{x] '' cb (cb y) emit y }}
+: tok =: ifu ('' cb cb@] emit ])
+
+
 *** TODO sym?  -> probably ditch this
+
+*** TODO ifu : do something if u matches
+
+: NB. u ifu v: s->s. if u matches, return 1;<(s_old) v (s_new)
+: ifu =: {{ if.f=.mb s=.u y do. s=.y v s end. f mb s }}
+: ifu =: {{ f mb y v^:f s [ f=.mb s=.u y }}
+
+
+
+** TODO zap
+: NB. u zap: s->s match if u matches, but drop any generated nodes
+: NB. the only effect that persists is the current char and index.
+: zap =: ifu {{'zap'] (ch y) ch (ix y) ix x }}
+: zap =: ifu(ch@] ch ix@] ix [)
 
 
 * TODO tree-building
+
+** basic tree builder
 - nb: node buffer
 - emit gives you tokens
 - node gives you nesting
-- done
 
-and then the combinators:
+*** TODO emit
+*** TODO node
+*** TODO replace ntup with an ambivalent verb
+(we don't want to expose the structure of s0)
 
-- elm
-- tag
 
--- atttributes:
+*** TODO done / tk:
+
+: NB. x tk: s->(item;<s). pop the last item from buffer x in state y.
+: tk =: {{ item ; < }: AA u y [ item =. ({: u y) }}
+: tk =: {{ ({:u y) ;< (}: AA u) y }}
+: NB. ^looks like a fork without the parens around (AA u) (but it's not)
+
+
+# this actually does require a parse state, so it's a parser combinator
+# more like macro-code than micro-code?
+
+: done =: {{
+:   new =. ntup { y       NB. temp storage for the node we're closing.
+:   'old s' =. wk tk y    NB. pop the previous context
+:   s =. (>old) ntup } s  NB. insert it into the state
+:   new emit s }}         NB. and append new node to the node buffer.
+
+: done =: {{ (ntup{y) emit (>old) ntup} s [ 'old s'=.wk tk y }}
+
+
+** and then tree-building combinators:
+
+*** TODO elm
+
+: NB. u elm n : s->s. create node element tagged with n if u matches
+: elm =: {{ if.mb  s=.u n node y do. I done s else. O y end. }}
+: elm =: {{ f mb y[`(done@])@.f s [ f=.mb s=.u n node y }}
+
+*** TODO tag
+: NB. u tag: s->s. move the last token in node buffer to be the node's tag.
+: NB. helpful for rewriting infix notation, eg  (a head(+) b) -> (+ (a b))
+: tag =: {{'tag' if.mb  s=. u y do. I tok NT } s['tok s' =. nb tk y else. O y end. }}
+
+** atttributes
 - attr
 - atr
 
+: NB. m attr n: s->s. append (m=key;n=value) pair to the attribute dictionary.
+: NB. initialize dict if needed
+: attr =: {{ if. a:-:NA{y do. y=. (0 2$a:) na s end. (m;n) AP na y }}
+: attr =: {{ (m;n) AP na ((0 2$a:)&na)^:(''-:na) y }}
+
+: NB. u atr n : s->s. if u matched, move last item to node attribute n.
+: atr =: {{ if.mb  s=. u y do. I n attr it s [ 'it s'=. nb tk s else. O y end. }}
 
 
 * TODO multi-pass parsers
