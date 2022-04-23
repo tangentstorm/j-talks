@@ -488,6 +488,58 @@ once we have 'emit', this becomes:
 
 * TODO tree-building
 
+** 'tm' combinator
+
+this was pretty confusing for me at first, but writing the specification first
+made it easier to reason out how it should be constructed:
+
+: tm =: {{ y ts~ x (m,'__t')~ ts y [ t =. tb y }}
+
+
+
+x node ts -> ts : start new node with tag x
+x head ts -> ts : reset current node's tag to x
+x emit ts -> ts : emit item x into current node
+m attr n  -> ts : set (attrs[m] =. n) in current node
+  done ts -> ts : return to previous node
+
+we have to take and return a parse state.
+
+: s' = x (m in_tree) s
+
+ex:
+
+: s' = (x=.k,v) ('attr'in_tree)  s
+
+NB. x is argument. y is parse state.
+NB. t is the tree builder locale.
+NB. (the tb field is just a static reference to the builder)
+NB. m is the name of a method, so (m,'__t') is a string.
+NB. the tilde is therefore 'evoke', and gives the actual verb.
+NB. this is then applied to x.
+
+NB. a tree method 'm' takes arg x and state y and returns a new state:
+NB.
+NB.  ts' = (x:arg) tm ts
+NB.  m :: tree 'a -> ts -> ts
+NB.
+
+tm is a method so it's attached to some object (locale).
+the problem is that both tm and ts are stored in parse state y:S.
+
+so.. we have to extract them both separately:
+
+tm =: {{ y ts~ x (m,'__t')~ ts y [ t =. tb y }}
+
+now: ('attr'tm) should do what we want.
+
+node =: 'node'tm
+attr =: 'attr'tm
+emit =: 'emit'tm
+head =: 'head'tm
+
+
+
 ** basic tree builder
 - nb: node buffer
 - emit gives you tokens
@@ -517,6 +569,20 @@ once we have 'emit', this becomes:
 :   new emit s }}         NB. and append new node to the node buffer.
 
 : done =: {{ (ntup{y) emit (>old) ntup} s [ 'old s'=.wk tk y }}
+
+
+*** TODO demo  node/emit/done at the prompt
+
+                                                          s0
+                                                  'n'node s0
+                                         'e' emit 'n'node s0
+                              'n2' node  'e' emit 'n'node s0
+                    'e2' emit 'n2' node  'e' emit 'n'node s0
+               done 'e2' emit 'n2' node  'e' emit 'n'node s0
+     'e3' emit done 'e2' emit 'n2' node  'e' emit 'n'node s0
+done 'e3' emit done 'e2' emit 'n2' node  'e' emit 'n'node s0
+
+
 
 
 ** and then tree-building combinators:
@@ -563,4 +629,10 @@ it might be kind of neat to have something like that.
 - then the accessor scheme could itself be parameterized
 - you would only have to add the fields you wanted
 - at the very least, fields could be added from the prompt
+
+* TODO idea: 'tok' should just be 'cut' surrounded by 'SKIP'
+where SKIP is a special lexer you can override to tell it what to skip.
+(defaults to nil)
+
+* TODO re-introduce 'token buffer' concept
 
