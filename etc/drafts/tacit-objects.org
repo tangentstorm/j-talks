@@ -1,0 +1,111 @@
+* notes from my discord rant
+
+really liking this:
+#+begin_src j
+NB. sg =. m AT: constructor for setter/getter verbs (accessors).
+NB. (sg y) gets item m from struct y
+NB. (x sg y) returns copy of y with with m set to x
+AT =: {{ m&{:: : (<@[ m} ]) }}
+
+NB. m struct y : create verbs for struct with name m and fields y
+NB. m is quoted name, y is space-delimited names
+struct =: {{
+  NB. constructor for empty struct:
+  ". m,'=: (a:"0)@fs' [ fs =. cut y
+  NB. accessors for each field:
+  ({{ ". x,'=:',(":y),' AT' }}&>"0 i.@#) fs
+  0 0$0}}
+#+end_src
+
+example:
+
+#+begin_src j
+NB. --- parse state --------------------------------------------
+
+NB.   mb = match bit
+NB.   ix = current index into the input
+NB.   ch = current character, or '' after ix>#S
+NB.   cb = char buffer (grows as we match characters)
+NB.   nt = node tag
+NB.   na = node attributes
+NB.   nb = node buffer (grows as we build rules)
+NB.   wk = work stack (grows with recursive descent)
+NB.   ib = input buffer
+'S' struct 'mb ix ch cb nt na nb wk ib'
+
+NB. s0 : S. initial parse state
+s0 =: 0 mb  0 ix  ' 'ch  S''
+
+NB. extra functions that set the match bit
+I =: 1&mb
+O =: 0&mb
+#+end_src
+
+when you inspect the generated constructor, it shows you the field names:
+
+#+begin_src j
+   S
+a:"0@(<;._1 ' mb ix ch cb nt na nb wk ib')
+tangentstorm — Today at 3:06 AM
+small improvement to the constructor template, so invoking dyadically gives you the fields:
+   S
+(a: #~ 10"_) :('mb ix ch mk ib nt na nb wk ib'"_)
+   S''
+┌┬┬┬┬┬┬┬┬┬┐
+│││││││││││
+└┴┴┴┴┴┴┴┴┴┘
+   S~''
+mb ix ch mk ib nt na nb wk ib
+#+end_src
+
+hrm.. maybe i should ;:@y that...
+
+oh, that's really nice because you can use the tilde to choose a template filled in with the field names rather than just empty boxes.
+
+#+begin_src j
+   'hello' mb S~''
+┌─────┬──┬──┬──┬──┬──┬──┬──┬──┬──┐
+│hello│ix│ch│mk│ib│nt│na│nb│wk│ib│
+└─────┴──┴──┴──┴──┴──┴──┴──┴──┴──┘
+#+end_src
+
+i feel a "tacit object-oriented-programming" video coming on.
+
+
+* crosspost to #main:
+
+structs for j :  (rambling about it in #j-edi-counsel )
+
+#+begin_src j
+   'S' struct 'mb ix ch cb nt na nb wk ib'
+   s0 =: [0 mb] [0 ix] [' 'ch] [0 mk] S''
+   s0
+┌─┬─┬─┬─┬┬┬┬┬┐
+│0│0│ │0││││││
+└─┴─┴─┴─┴┴┴┴┴┘
+   (mk~ 1+mk) s0
+┌─┬─┬─┬─┬┬┬┬┬┐
+│0│0│ │1││││││
+└─┴─┴─┴─┴┴┴┴┴┘
+#+end_src
+
+that's some good forkin' right there.
+
+no... THIS is good forkin':
+
+#+begin_src j
+   s0
+┌─┬─┬─┬─┬┬┬┬┬┐
+│0│0│ │0││││││
+└─┴─┴─┴─┴┴┴┴┴┘
+   Alpha_j_ ib s0
+┌─┬─┬─┬─┬┬┬┬┬────────────────────────────────────────────────────┐
+│0│0│ │0│││││ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz│
+└─┴─┴─┴─┴┴┴┴┴────────────────────────────────────────────────────┘
+   (ib {~ mk + [: i.ix-mk) 3 mk 10 ix Alpha_j_ ib s0
+DEFGHIJ
+#+end_src
+
+that part on the left is  a fork with 9 members... unreadable mess?
+
+(maybe it is a mess to you guys... i dunno.  i think it's really clean and readable)
