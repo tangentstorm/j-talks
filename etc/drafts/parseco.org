@@ -598,6 +598,9 @@ done 'e3' emit done 'e2' emit 'n2' node  'e' emit 'n'node s0
 : NB. helpful for rewriting infix notation, eg  (a head(+) b) -> (+ (a b))
 : tag =: {{'tag' if.mb  s=. u y do. I tok NT } s['tok s' =. nb tk y else. O y end. }}
 
+
+
+
 ** atttributes
 - attr
 - atr
@@ -609,6 +612,8 @@ done 'e3' emit done 'e2' emit 'n2' node  'e' emit 'n'node s0
 
 : NB. u atr n : s->s. if u matched, move last item to node attribute n.
 : atr =: {{ if.mb  s=. u y do. I n attr it s [ 'it s'=. nb tk s else. O y end. }}
+
+
 
 
 * TODO multi-pass parsers
@@ -636,3 +641,5 @@ where SKIP is a special lexer you can override to tell it what to skip.
 
 * TODO re-introduce 'token buffer' concept
 
+* TODO can i make an =els= to go with =ifu= ? (ifO =: {{ `(neg ifI u) alt }} ? )
+- then i could simplify =parse= and probably others

@@ -109,3 +109,76 @@ DEFGHIJ
 that part on the left is  a fork with 9 members... unreadable mess?
 
 (maybe it is a mess to you guys... i dunno.  i think it's really clean and readable)
+
+* returning arguments
+
+#+begin_src j
+NB. x tk: s->(item;<s). pop the last item from buffer x in state y.
+tk =: {{ ({:u y) ;< (}: AA u) y }}
+
+t_head =: {{ it t_nt s [ 'it s' =. t_nb tk y }}
+t_head =: {{    t_nt &>/          (t_nb tk) y }}
+t_head =: [: t_nt &>/ (t_nb tk)
+#+end_src
+
+
+
+* TODO  anecdote about factoring out a sub-struct
+#+begin_src j
+NB. ts_s (y:S) -> TS
+ts_s =:  nt t_nt    na t_na    nb t_nb   wk t_wk ts0"_
+
+NB. (x:TS) s_ts (y:S) -> S
+s_ts =: t_nt@[nt  t_na@[na  t_nb@[nb t_wk@[wk ]
+
+NB. these should cancel each other (but can't check because tag isn't defined yet)
+NB. assert (-: ts_s s_ts ]) aa tag`aa`aa seq on 'banana'
+
+NB. prior version (using old fields and the translators)
+tbm1 =: {{ y s_ts~   (m,'__t')~ ts_s y [ t =. tb y}}
+tbm2 =: {{ y s_ts~ x (m,'__t')~ ts_s y [ t =. tb y}}
+
+NB. m tbm1 s -> s. execute tree builder method m on the tree state
+tbm1 =: {{ y ts~   (m,'__t')~ ts y [ t =. tb y}}
+tbm2 =: {{ y ts~ x (m,'__t')~ ts y [ t =. tb y}}
+
+#+end_src
+
+# 4/24/2022 in the syndir repo main branch
+I used the above combinators to extract a bunch of fields on my parse state
+into a new field (ts for tree state).
+
+tb is the tree builder, which is just a single locale reference. all the
+state stays in ts, but where it actually executes depends on tb.
+
+so basically, i made this wrapper that constructed the new state from the old state,
+called a method, and then put it back in the old state.
+
+then i translated each tacit method one by one until it only used the new struct.
+
+then once everything depended on the new state, i just updated tbm1.
+
+
+actually first i took all the old verbs and made two versions:
+
+#+begin_src j
+NB. node =: {{ x nt a: ntup } (<ntup{y) AP wk y }}
+t_node =: {{ x t_nt   tna0 t_na   ''t_nb  (<t_ntup{y) AP t_wk y }}
+
+node =: {{ y s_ts~ x t_node ts_s y }}
+
+NB. then later this became:
+node =: 't_node'tbm2
+
+NB. then eventually i just replaced all calls to node with 't_node'tbm2
+
+#+end_src
+
+
+
+* TODO another 'tacit polymorphism' example: vt commands
+** does "tacit" mean "global" in that case?
+- sort of, but there's a stack to manage it.
+- you're not directly talking to some global value that might break elsewhere.
+- you're still managing it with a stack to prevent non-local effects.
+
