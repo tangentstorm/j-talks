@@ -1,0 +1,120 @@
+#+title: collatz search : polynomials in j (#SoME2)
+
+* COMMENT SoME2 = summer of math exposition 2
+:PROPERTIES:
+:TS:       <2022-07-19 01:02PM>
+:ID:       ri417y81uij0
+:END:
+
+* intro - recap collatz conjecture
+- explain collatz's motivations from dynamical systems book
+
+* animate a bunch of different trajectories, superimposed
+- looks like chaos
+* animate the number line all at once, so we can see polynomials
+- but there is some structure here
+- we'll come back to this
+
+* talk about findings / what a proof would look like
+
+** solution paper templates
+*** undecidable + proof
+**** conway
+*** true + proof
+**** plenty of broken proofs (even published, according to wirsching ch 1)
+*** false:
+**** cycle exists:  how it was found
+**** infinite chain: proof that it's infinite
+
+** quick quotes about it being too hard
+
+** what we do know
+*** mention the two books
+*** recent work by tao (40 pages) and the sat guy
+*** 3n-1 has a cycle
+*** cycle length is related to its lowest number
+*** computer verified up to 2^n
+
+* TODO transition from verifiers -> counterexamples
+
+** ???
+- nonetheless, a solution eludes us
+- possibly because it's uncediable or because it's not true
+- how to look for a counterexample?
+- verifiers might stumble on to one, but can we try anything else?
+
+
+** verified is ~ 2^68 = show a 8 x 8 grid with 2 extra pixels.
+- linear vs exponential scale
+
+** and yet think about how long it would take to search that space
+- how big is 2^68 if you did it manually?
+- you don't do the whole chain, because you can remember earlier results
+- but even just counting to 2^68 would take a long time
+- so you have to prune
+
+** pruning : minimal criminals
+- only search for the lowest number in a cycle
+- if it drops below the start, it's wrong
+- note: it doesn't have to be the lowest cycle, just the lowest in the cycle
+- for a verifier, you can get a stronger result by going sequentially:
+  everything below 'n' is known to go to 0
+- but if you're just fishing around with really huge numbers, maybe they're more common.
+
+** now we can cut out numbers mod k
+- briefly show binary / mod-k stuff?
+- or just skip over this?
+
+** introduce the polynomial tree
+- cut back to the line-splitting visualization
+- demonstrate that everything starts at y=x
+- make that the root node
+- divide by two means it's under the line, so it can't be minimal criminal
+- doing 3x+1 is allowed
+
+* higher order polynomials
+** explain polynomials in j
+
+* what it means to be on or under y=x after so many steps
+it's not strictly "under" unless they're parallel.
+so you find the intercept.
+if the intercept is n, and you know everything <= n goes to 1, prune.
+
+* note that the intersection with y=x is special and may reveal a loop!
+
+* does parallel to y=x mean an infinite sequence?
+- it's not a cycle because the numbers go /up/.
+- only if a number that follows that path is transformed into another number that also follows that path
+- in other words, the increase in the y-incercept would have to be a whole
+  number k such that n and n+k followed the same path in the polynomial tree
+- (i think this means k would have to be a power of two, since the useful equivalence classes are x mod (power of two))
+- <could it also be more complicated and cycle between more than one equivalence class?>
+
+* anyway, now we have our tree, and we can prune it
+
+* verifiers walk this tree breadth first
+
+* what if we were to look for a counterexample?
+- walk depth first, pruning and backtracking if necessary until we find a viable branch, and then we descend.
+
+* the cycle length theorem
+- a cycle of length k will have integer interepcts with y=x on row k of tree
+- cycles length k = very big
+- so they'll be spread out across a line
+- but even though k is big, the row in the tree is 2^k
+
+* what happens when we prune?
+- we pruned a whole lot of that in the rows above k
+- however, the pruned branches contain parts of the cycle
+- we'll never follow branch that is pruned
+- so only the minimal criminal(s) remain
+- but what if there are many of them?
+- even if there is only one more cycle, pruning makes the target "bigger"
+- if many cycles exist, we might find one
+- even though extremely rare, they become half as rare at each step
+- number line is infinite but we keep discarding the half where they can't be
+- (does that argument hold water? infinity is weird)
+
+* maybe demonstrate that we can find the extra cycle for 3n-1?
+* if you want to try it for yourself...
+* thanks' for watching
