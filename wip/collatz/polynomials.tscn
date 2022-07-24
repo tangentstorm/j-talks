@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://wip/collatz/LinePlot.gd" type="Script" id=1]
+[ext_resource path="res://wip/collatz/Axes.gd" type="Script" id=2]
+
+[node name="graph" type="ColorRect"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Axes" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 40.0
+margin_top = 40.0
+margin_right = -40.0
+margin_bottom = -40.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LinePlot" type="Control" parent="Axes"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_clip_content = true
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
