@@ -1,0 +1,133 @@
+#+title: thomas oliveira e silva's paper on verifying the 3x+1 conjecture. (2010)
+# p.189 in lagrarias
+
+
+* his binary tree is on equivalance classes, not polynomials
+
+but i'm pretty sure the two ideas are isomorphic.
+
+- n0
+  - 2 n1 + 0 ->   n1 + 0  (cut)
+  - 2 n1 + 1 -> 3 n1 + 2
+    - 4 n2 + 1 -> 3 n2 + 1 (cut)
+    - 4 n2 + 3 -> 9 n2 + 8
+      - 8 n3 + 3 -> 9 n3 + 4
+        - 16 n4 + 3  -> 9 n4 + 2 (cut)
+        - 16 n4 + 11 -> 27 n4 + 20
+      - 8 n3 + 7 -> 27 n3 + 26
+        - 16 n4 + 7  -> 27 n4 + 13
+        - 16 n4 + 15 -> 81 n4 + 80
+
+
+
+* NOTE . so what's the difference?
+:PROPERTIES:
+:TS:       <2022-07-27 12:41AM>
+:ID:       s4odbb214jj0
+:END:
+
+so silva does his binary pruning on the equivalance classes,
+
+whereas i'm doing something with the polynomials on which the answers fall.
+
+- he does not continue to grow his tree, but rather caps it at depth=40 because
+  3^40 fits inside a 64-bit register.
+
+- the rest of the testing is done in blocks of sequential values after the initial
+  filter is performed... but as  far as i can tell, they are then done by brute force.
+
+- (this is how the latest searches are also done)
+
+the 'equivalance class' is also a polynomial.
+
+
+* they don't grow the tree as they descend
+they look at one number and follow it "all the way" until they find the glide / stopping time
+but they don't look for further equivalance classes mod 2^k where k>46 or whatever the fixed depth is.
+
+* working with contiguous number ranges
+:PROPERTIES:
+:TS:       <2022-07-27 01:08AM>
+:ID:       ard6bk314jj0
+:END:
+these guys always want to fill in the complete range of numbers from 1 to n.
+
+a breadth-first walk of the tree acts live a sieve and cuts out large swaths
+of this range, but for some, you wind up having to go quite deep.
+
+For example, if we were to keep it in the range 1 > n > 256, the base tree would
+only have to be 8 bits deep, since 2^8+k covers every possible case.
+
+but: the collatz path for the number 27 takes 96 steps, which means you have to descend all the way to level 96.
+
+* TODO test this idea to see if i understand correctly:
+I suspect this means that any number of the form 2^96+27 also has a stopping time of 96.
+
+
+* NOTE . the "two polynomials"
+:PROPERTIES:
+:TS:       <2022-07-27 01:20AM>
+:ID:       ggad15414jj0
+:END:
+
+- "my" polynomial is the line on which the output lives after performing that many steps.
+  ex: the even numbers get mapped to the line  n/2
+      the odd numbers get mapped to the line 1+3n
+
+- "their" polynomial is the equivalance class... it maps the natural numbers to examples of that class.
+  ex: the even numbers are on the line 0+2n
+      the odd numbers are on the line  1+2n
+
+my numbers are going to have weird fractions.
+their numbers are always simple powers of two + some number.
+(and always map to powers of 3 + some number)
+
+
+* NOTE . coefficient stopping time
+:PROPERTIES:
+:TS:       <2022-07-27 01:36AM>
+:ID:       ouzequ414jj0
+:END:
+my polynomials consist of a coefficient and a y-intercept.
+the conjecture is that the stopping time (glide) is the same as the "coefficient stopping time"
+which is the number of steps it takes until the slope (coefficient) is <1.
+
+everybody (following Lynn Garner's work ( https://www.ams.org/journals/proc/1981-082-01/S0002-9939-1981-0603593-2/S0002-9939-1981-0603593-2.pdf ))
+seems to suspect that the stopping time and coefficient stopping time are the same.
+
+if that is always true, then there's only the one trivial cycle (per Garner).
+
+but if you had enough odd branches, then it could be the case that the y intercept (constant term)
+might grow to make a difference.
+
+according to silva, he tested and it doesn't make the difference for n<2^46.
+
+
+* NOTE . so can i reconcile these two ideas?
+:PROPERTIES:
+:TS:       <2022-07-27 01:45AM>
+:ID:       p2cgz9514jj0
+:END:
+i think i can.
+the binary tree can track /both/ the polynomial and the equivalance class.
+(we ought to be able to compose the two to see the resulting values on that line)
+
+the breadth first walk acts like a sieve,
+but to make it filter /all/ the numbers up to whatever our goal is,
+we will have to descend to the depth of of the next number's stopping time.
+ex:    3  = 6 levels deep
+       7  = 11 levels deep
+      96  = 703 levels deep
+
+i will present this by looking at the numbers up to 256, and applying the sieve.
+
+since the breadth-first approach doesn't give complete coverage of the input domain,
+it's unlikely that we can use it to make a "feedback loop", where we know something
+has to descend to depth=<big number following Garner or Elihou's formulas>, and thus
+the "loop" can't be on levels above that.
+
+it does suggest that we could consider an alternate way to explore: via the polynomial tree.
+
+also: having both the "output" (my thing) and "input" polynomials (their thing) means that
+when we look at the intercept for my thing with f(x)=x, and we see an integer, we can test
+whether that integer is a member of the equivalance class.
