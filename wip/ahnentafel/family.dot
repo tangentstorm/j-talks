@@ -1,0 +1,28 @@
+// ahnentafel for my daughters
+digraph {
+  bgcolor="#193549"; rankdir = LR; splines=ortho;
+  node[shape=box;style=filled;fillcolor="#eeeeee";fontname="kulim park"; width="1.3"];
+
+  // this chunk uses groups to attempt to organize by row
+  node[group=r0] You Daddy Grandpa
+  node[group=r1] Mommy Grandma
+  node[group=r2] NanaJi
+  node[group=r3] NaniJi
+
+  // subgraphs to organize by columns (generations)
+  // (delete the extra attributes to make the nodes appear)
+  subgraph c0 { rank=same;
+    You[label="" x="You";style=invis] }
+  subgraph c1 { rank=same;
+    Daddy[label="" x="Daddy";style=invis]
+    Mommy[label="" x="Mommy";style=invis] }
+  subgraph c2 { rank=same;
+    Grandpa[label="" x="Grandpa";style=invis]
+    Grandma[label="" x="Grandma";style=invis]
+    NanaJi[label="" x="ਨਾਨਾ ਜੀ";style=invis]
+    NaniJi[label="" x="ਨਾਨੀ ਜੀ";style=invis] }
+
+  // edges: corrupt the color to make them appear
+  You->{Daddy Mommy}[color=transparent]
+  Daddy->{Grandma Grandpa}[color=transparent]
+  Mommy->{NanaJi NaniJi}[color=transparent] }
