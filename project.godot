@@ -22,52 +22,62 @@ _global_script_classes=[ {
 "base": "Control",
 "class": "JPrezApp",
 "language": "GDScript",
-"path": "res://addons/jprez/JPrezApp.gd"
-}, {
-"base": "VBoxContainer",
-"class": "JPrezAudioTab",
-"language": "GDScript",
-"path": "res://addons/jprez/JPrezAudioTab.gd"
+"path": "res://addons/orgprez/OrgPrezRuntime.gd"
 }, {
 "base": "Node",
 "class": "JPrezPlayer",
 "language": "GDScript",
 "path": "res://addons/jprez/JPrezPlayer.gd"
 }, {
-"base": "Node",
-"class": "JPrezScriptEngine",
-"language": "GDScript",
-"path": "res://addons/jprez/JPrezScriptEngine.gd"
-}, {
-"base": "WindowDialog",
-"class": "JPrezStepper",
-"language": "GDScript",
-"path": "res://addons/jprez/JPrezStepper.gd"
-}, {
 "base": "Reference",
 "class": "Org",
 "language": "GDScript",
-"path": "res://addons/jprez/Org.gd"
+"path": "res://addons/orgprez/Org.gd"
 }, {
 "base": "Resource",
 "class": "OrgChunk",
 "language": "GDScript",
-"path": "res://addons/jprez/OrgChunk.gd"
+"path": "res://addons/orgprez/OrgChunk.gd"
 }, {
 "base": "Reference",
 "class": "OrgCursor",
 "language": "GDScript",
-"path": "res://addons/jprez/OrgCursor.gd"
+"path": "res://addons/orgprez/OrgCursor.gd"
+}, {
+"base": "Node",
+"class": "OrgDeck",
+"language": "GDScript",
+"path": "res://addons/orgprez/OrgDeck.gd"
 }, {
 "base": "Resource",
 "class": "OrgNode",
 "language": "GDScript",
-"path": "res://addons/jprez/OrgNode.gd"
+"path": "res://addons/orgprez/OrgNode.gd"
+}, {
+"base": "VBoxContainer",
+"class": "OrgPrezAudioTab",
+"language": "GDScript",
+"path": "res://addons/orgprez/OrgPrezAudioTab.gd"
+}, {
+"base": "Node",
+"class": "OrgPrezScriptEngine",
+"language": "GDScript",
+"path": "res://addons/orgprez/OrgPrezScriptEngine.gd"
+}, {
+"base": "WindowDialog",
+"class": "OrgPrezStepper",
+"language": "GDScript",
+"path": "res://addons/orgprez/OrgPrezStepper.gd"
 }, {
 "base": "Resource",
 "class": "OrgTime",
 "language": "GDScript",
-"path": "res://addons/jprez/OrgTime.gd"
+"path": "res://addons/orgprez/OrgTime.gd"
+}, {
+"base": "Node",
+"class": "Rhubarb",
+"language": "GDScript",
+"path": "res://assets/michal/Rhubarb.gd"
 }, {
 "base": "ColorRect",
 "class": "Waveform",
@@ -83,15 +93,17 @@ _global_script_class_icons={
 "AudioLoader": "",
 "JKVM": "",
 "JPrezApp": "",
-"JPrezAudioTab": "",
 "JPrezPlayer": "",
-"JPrezScriptEngine": "",
-"JPrezStepper": "",
 "Org": "",
 "OrgChunk": "",
 "OrgCursor": "",
+"OrgDeck": "",
 "OrgNode": "",
+"OrgPrezAudioTab": "",
+"OrgPrezScriptEngine": "",
+"OrgPrezStepper": "",
 "OrgTime": "",
+"Rhubarb": "",
 "Waveform": "",
 "WaveformPanel": ""
 }
@@ -99,7 +111,7 @@ _global_script_class_icons={
 [application]
 
 config/name="j-talks"
-run/main_scene="res://addons/jprez/JPrezApp.tscn"
+run/main_scene="res://addons/orgprez/OrgPrezRuntime.tscn"
 
 [audio]
 
@@ -114,32 +126,32 @@ window/size/resizable=false
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/jprez/plugin.cfg", "res://addons/waveform/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/orgprez/plugin.cfg", "res://addons/waveform/plugin.cfg" )
 
 [global]
 
-color=false
+default_org_file="res://wip/binary-signal-space/binary-signal-space.org"
 
 [input]
 
 toggle1={
 "deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":49,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":49,"unicode":0,"echo":false,"script":null)
  ]
 }
 toggle2={
 "deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":50,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":50,"unicode":0,"echo":false,"script":null)
  ]
 }
 toggle3={
 "deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":51,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":51,"unicode":0,"echo":false,"script":null)
  ]
 }
 toggle4={
 "deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":52,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":52,"unicode":0,"echo":false,"script":null)
  ]
 }
 
