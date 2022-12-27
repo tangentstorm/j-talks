@@ -1,0 +1,49 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://fonts/noto-24.tres" type="DynamicFont" id=1]
+[ext_resource path="res://wip/binary-signal-space/tens.png" type="Texture" id=2]
+[ext_resource path="res://wip/binary-signal-space/sierpinski.png" type="Texture" id=3]
+[ext_resource path="res://addons/orgprez/OrgDeck.gd" type="Script" id=4]
+[ext_resource path="res://wip/binary-signal-space/twos.png" type="Texture" id=5]
+[ext_resource path="res://wip/binary-signal-space/tree.png" type="Texture" id=6]
+
+[node name="scene" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+margin_left = 10.6786
+margin_top = -19.5776
+margin_right = 528.679
+margin_bottom = 53.4224
+rect_scale = Vector2( 4.28223, 4.28223 )
+custom_fonts/font = ExtResource( 1 )
+text = "binary signal space"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OrgDeck" type="Node2D" parent="."]
+script = ExtResource( 4 )
+
+[node name="tens" type="Sprite" parent="OrgDeck"]
+visible = false
+position = Vector2( 786, 548.5 )
+texture = ExtResource( 2 )
+
+[node name="sierpinski" type="Sprite" parent="OrgDeck"]
+visible = false
+position = Vector2( 747.001, 598.001 )
+texture = ExtResource( 3 )
+
+[node name="tree" type="Sprite" parent="OrgDeck"]
+visible = false
+position = Vector2( 430.501, 617.501 )
+texture = ExtResource( 6 )
+
+[node name="twos" type="Sprite" parent="OrgDeck"]
+position = Vector2( 834.001, 548.501 )
+texture = ExtResource( 5 )
