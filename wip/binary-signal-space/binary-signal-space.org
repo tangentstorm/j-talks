@@ -1,6 +1,7 @@
 #+title: binary signal space
 
 * number line
+
 you remember this from kindergarten
 
 start at zero
@@ -12,6 +13,7 @@ then two then three and so on
 and negative numbers go off to the left
 
 * digits
+#+scene: tens
 #+begin_src j
 load 'viewmat'
 viewmat |: 10 10 10 #: i.200
@@ -24,6 +26,8 @@ every tenth one we change the second digit
 and so you have these groups of ten
 
 * binary number line
+#+scene: twos
+
 well with binary numbers, it's the same but you only have two digits.
 
 so you write two in binary the way you write ten in decimal
@@ -33,6 +37,7 @@ so a binary number line would look like the normal number line
 but it's actually this pattern up here that's more interesting.
 
 * binary tree as decision diagram
+#+scene: tree
 
 the mental model is a brute force attempt to solve a boolean expression
 
@@ -51,6 +56,7 @@ then for 3
 and so on
 
 * prime signals
+#+scene: twos
 
 so every line of this chart corresponds to the changes in one input bit
 over the course of a brute force solution
@@ -73,6 +79,7 @@ likewise, any binary signal can be composed of these simple signals.
 however, it's not just a sum, but a sum of products product.
 
 * secondary signals
+#+scene: sierpinski
 #+begin_src j
 viewmat 1,~" _ }: |.=/\^:(<32) 32$0
 #+end_src

@@ -40,10 +40,10 @@ position = Vector2( 747.001, 598.001 )
 texture = ExtResource( 3 )
 
 [node name="tree" type="Sprite" parent="OrgDeck"]
-visible = false
 position = Vector2( 430.501, 617.501 )
 texture = ExtResource( 6 )
 
 [node name="twos" type="Sprite" parent="OrgDeck"]
+visible = false
 position = Vector2( 834.001, 548.501 )
 texture = ExtResource( 5 )
