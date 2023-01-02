@@ -14,25 +14,25 @@ digraph {
   // subgraphs to organize by columns (generations)
   // (delete the extra attributes to make the nodes appear)
   subgraph c0 { rank=same;
-    You[label="1.\l" labelx="1. You\l" style=invis] }
+    You[label="1.\l" label="1. You\l" stylex=invis] }
   subgraph c1 { rank=same;
-    Daddy[label="2.\l" labelx="2. Daddy\l" style=invis]
-    Mommy[label="3.\l" labelx="3. Mommy\l" style=invis] }
+    Daddy[label="2.\l" label="2. Daddy\l" stylex=invis]
+    Mommy[label="3.\l" label="3. Mommy\l" stylex=invis] }
   subgraph c2 { rank=same;
-    Grandpa[label="4.\l" labelx="4. Grandpa\l" style=invis]
-    Grandma[label="5.\l" labelx="5. Grandma\l" style=invis]
-    NanaJi[label="6.\l"  labelx="6. ਨਾਨਾ ਜੀ\l"  style=invis]
-    NaniJi[label="7.\l"  labelx="7. ਨਾਨੀ ਜੀ\l"  style=invis] }
+    Grandpa[label="4.\l" label="4. Grandpa\l" stylex=invis]
+    Grandma[label="5.\l" label="5. Grandma\l" stylex=invis]
+    NanaJi[label="6.\l"  label="6. ਨਾਨਾ ਜੀ\l"  stylex=invis]
+    NaniJi[label="7.\l"  label="7. ਨਾਨੀ ਜੀ\l"  stylex=invis] }
 
   // edges: remove the the color to make them appear
   // fathers
-  edge[style=solid; color=transparent; constraintx=none]
+  edge[style=solid; color=xtransparent; xconstraint=none]
   You->Daddy
   Daddy->Grandpa
   Mommy->NanaJi
 
   // mothers
-  edge[style=dashed; color=transparent]
+  edge[style=dashed; color=xtransparent]
   You->Mommy
   Daddy->Grandma
   Mommy->NaniJi
