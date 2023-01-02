@@ -19,11 +19,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/jprez/JKVM.gd"
 }, {
-"base": "Control",
-"class": "JPrezApp",
-"language": "GDScript",
-"path": "res://addons/orgprez/OrgPrezRuntime.gd"
-}, {
 "base": "Node",
 "class": "JPrezPlayer",
 "language": "GDScript",
@@ -59,6 +54,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/orgprez/OrgPrezAudioTab.gd"
 }, {
+"base": "VBoxContainer",
+"class": "OrgPrezOutline",
+"language": "GDScript",
+"path": "res://addons/orgprez/OrgPrezOutline.gd"
+}, {
+"base": "Control",
+"class": "OrgPrezRuntime",
+"language": "GDScript",
+"path": "res://addons/orgprez/OrgPrezRuntime.gd"
+}, {
 "base": "Node",
 "class": "OrgPrezScriptEngine",
 "language": "GDScript",
@@ -74,11 +79,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/orgprez/OrgTime.gd"
 }, {
-"base": "Node",
-"class": "Rhubarb",
-"language": "GDScript",
-"path": "res://assets/michal/Rhubarb.gd"
-}, {
 "base": "ColorRect",
 "class": "Waveform",
 "language": "GDScript",
@@ -92,7 +92,6 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "AudioLoader": "",
 "JKVM": "",
-"JPrezApp": "",
 "JPrezPlayer": "",
 "Org": "",
 "OrgChunk": "",
@@ -100,10 +99,11 @@ _global_script_class_icons={
 "OrgDeck": "",
 "OrgNode": "",
 "OrgPrezAudioTab": "",
+"OrgPrezOutline": "",
+"OrgPrezRuntime": "",
 "OrgPrezScriptEngine": "",
 "OrgPrezStepper": "",
 "OrgTime": "",
-"Rhubarb": "",
 "Waveform": "",
 "WaveformPanel": ""
 }
@@ -136,22 +136,22 @@ default_org_file="res://wip/binary-signal-space/binary-signal-space.org"
 
 toggle1={
 "deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":49,"unicode":0,"echo":false,"script":null)
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":49,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
  ]
 }
 toggle2={
 "deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":50,"unicode":0,"echo":false,"script":null)
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":50,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
  ]
 }
 toggle3={
 "deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":51,"unicode":0,"echo":false,"script":null)
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":51,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
  ]
 }
 toggle4={
 "deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":52,"unicode":0,"echo":false,"script":null)
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":52,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
  ]
 }
 
