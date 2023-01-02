@@ -1,22 +1,144 @@
 #+title: collatz search : polynomials in j (#SoME2)
 
+
+
 * COMMENT SoME2 = summer of math exposition 2
 :PROPERTIES:
 :TS:       <2022-07-19 01:02PM>
 :ID:       ri417y81uij0
 :END:
 
-* intro - recap collatz conjecture
-- explain collatz's motivations from dynamical systems book
+japanese company posted a 120 million yen reward:
+
+https://mathprize.net/posts/collatz-conjecture/
+https://www.bing.com/search?q=120+million+JPY&PC=U316&FORM=CHROMN  $870,360 as of 7/21/2022
+
+
+* intro
+
+:  NB. python: def C(n): return 3*n+1 if n%2 else n/2
+:  C =: -: ` (1 + 3 & *) @. (2&|)
+
+take any positive integer, and if it's even, divide it by two.
+if it's odd, multiply by three and then add one.
+
+keep doing that, and eventually you'll probably find yourself in the cycle 1-2-4-1-2-4
+
+the collatz conjecture states that any positive integer, no matter how large,
+eventually gets sucked into this cycle if you keep applying this function.
+
+Now this conjecture has never been proven.
+At least not to the satisfaction of the mathematics community.
+
+But it has been tested. At last count, it's been verified by computer for every whole number up to 2^69.
+
+Now on the one hand, that's a massive number,
+that took a huge amount of time and electricity and computing power.
+( http://www.ericr.nl/wondrous/search.html )
+
+On the other hand, numbers don't really stop.
+And a huge number divided by infinity is basically zero.
+
+So in this video, I want to talk about that search.
+
+So why bother?
+
+How do you even go about it?
+
+
+* TODO why bother?
+- find a counterexample (polya conjecture)
+- raise the bounds of the cycle length
+- other examples might have failed
+
+
+* What does 2^69 mean?
+
+Well here's a canvas with 69 squares.
+
+So also exactly the number of 69-bit unsigned integers,
+which is to say, the number of black and white pixel
+drawings you could make on a canvas this big:
+
+: _ * 69 <: 9 8 $ i.72
+
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 _ _ _
+
+Think of it as an 8x8 chessboard with 5 extra squares.
+
+if we set all the bits to one, that's 2^69 minus one.
+
+
+: #. 69$1x
+
+: 590295810358705651712
+
+So to recap, you can make any arrangement of bits you like in this space,
+and when you treat that as a number in binary, you can be sure it's already
+been run through a collatz checker, and eventually it did indeed run down to 1.
+
+* TODO something about the duality of exponential functions
+
+
+
+* <exact value>
+
+: 590295810358705651712
+: 590 quintillion 295 quadrillion 810 trillion 358 billion 705 million 651 thousand 712
+
+Now don't get me wrong, that's a huge number.
+
+That's somewhere between one and a half to three billion times the number of stars in our galaxy.
+
+https://www.wolframalpha.com/input?i=2%5E69+divided+by+the+number+of+stars+in+the+milky+way
+
+But on the other hand,
+
+
+* TODO actually test that number
+2^64   -> it just goes down to 1 immediately, because you keep dividing by two
+2^64-1 -> hopefully more interesting
+
+* brute force
+
+* TODO transition to modern day
+around 1952, Collatz was working at the university of hamburg,
+he shared the problem with his colleagues, and it went viral.
+
+nobody could solve it.
+
+even today, nobody has solved it. At least, not to the satisfaction of the mathematical community.
+
+We do have computers, and 
+
+
+
+* introduce the idea of search, and how it works
 
 * animate a bunch of different trajectories, superimposed
+If you just try to check the numbers one at a time.
+
+
+If you just trace the path of individual numbers, it looks pretty chaotic.
+
 - looks like chaos
+
 * animate the number line all at once, so we can see polynomials
 - but there is some structure here
+- start with the line y=x
+- all the even numbers get cut in half, so they all move down to this line
+- for the odd numbers, we multiply by three and add one, so they move up here
 - we'll come back to this
 
 * talk about findings / what a proof would look like
-
 ** solution paper templates
 *** undecidable + proof
 **** conway
@@ -39,10 +161,9 @@
 
 ** ???
 - nonetheless, a solution eludes us
-- possibly because it's uncediable or because it's not true
+- possibly because it's undeciable or because it's not true
 - how to look for a counterexample?
 - verifiers might stumble on to one, but can we try anything else?
-
 
 ** verified is ~ 2^68 = show a 8 x 8 grid with 2 extra pixels.
 - linear vs exponential scale
@@ -74,6 +195,13 @@
 
 * higher order polynomials
 ** explain polynomials in j
+** calculations on polynomials
+  1 + 3 * (b + ax)
+= 1 + 3b + 3ax
+
+or : (b + ax)/2
+
+at any step, a is always of the form 3^n/2^m ... so it will never again be a straight line.
 
 * what it means to be on or under y=x after so many steps
 it's not strictly "under" unless they're parallel.
@@ -118,3 +246,55 @@ if the intercept is n, and you know everything <= n goes to 1, prune.
 * maybe demonstrate that we can find the extra cycle for 3n-1?
 * if you want to try it for yourself...
 * thanks' for watching
+
+
+
+* COMMENT (cut) quick recap collatz conjecture
+- explain collatz's motivations (p 241 in lagrarias)
+
+In the early 1930's, when the mathematician Lothar Collatz
+was still a student, he took an interest in the relationship
+between elementary number theory and graphs.
+
+picture of somewhat younger collatz:
+
+https://www.math.uni-hamburg.de/home/collatz/album/pictures/seite25-bild3.jpg
+
+
+
+In his mind, any function on the natural numbers
+could be thought of as a graph, with an edge leading
+from the input to the function to its result.
+
+So for example, f(n)=n+1 would just be an infinite chain.
+
+He was looking for functions that would produce cycles.
+
+In other words, sometimes the function would have to increase a the value of n,
+and sometimes it would decrease it. That would allow the possibility of a loop.
+
+For example:
+
+  n/2 for even
+  n+1 for odd
+
+This produced the cycle 2->1->2...
+
+But the dividing by two is too strong.
+
+
+With 2n+1 there are no cycles, since it just maps each odd number to a bigger odd number.
+
+
+So he tried 3n+1, and quickly found another cycle.
+This time it wasn't so obvious that there aren't any other cycles.
+
+With 3n+1, it looked like every whole number would eventually walk back to one.
+
+
+And if you allow negative numbers, there's several more cycles.
+
+Or if you change the plus to a minus, you quickly find the cycle 1-2-1-2 but there's also this second cycle.
+
+
+Every number he tried seemed to be connected to that cycle.

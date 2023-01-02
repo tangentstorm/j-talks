@@ -1,0 +1,59 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://BitModel.gd" type="Script" id=1]
+[ext_resource path="res://BitView.gd" type="Script" id=2]
+
+[node name="scene" type="Node2D"]
+
+[node name="BitView" type="Node2D" parent="."]
+script = ExtResource( 2 )
+
+[node name="bit" type="CheckBox" parent="BitView"]
+visible = false
+margin_right = 28.0
+margin_bottom = 24.0
+text = "0"
+clip_text = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="value" type="LineEdit" parent="BitView"]
+margin_left = 172.834
+margin_top = 2.96967
+margin_right = 230.834
+margin_bottom = 26.9697
+align = 2
+placeholder_text = "0"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="hbox" type="HBoxContainer" parent="BitView"]
+margin_left = 3.75143
+margin_top = 31.6184
+margin_right = 229.751
+margin_bottom = 71.6184
+custom_constants/separation = -2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="btn_step" type="Button" parent="."]
+margin_left = 244.7
+margin_top = 6.53329
+margin_right = 264.7
+margin_bottom = 26.5333
+text = ">"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BitModel" type="Node" parent="."]
+script = ExtResource( 1 )
+
+[connection signal="bit_changed" from="BitView" to="BitModel" method="_on_BitView_bit_changed"]
+[connection signal="int_changed" from="BitView" to="BitModel" method="_on_BitView_int_changed"]
+[connection signal="text_entered" from="BitView/value" to="BitView" method="_on_value_text_entered"]
+[connection signal="pressed" from="btn_step" to="BitModel" method="_on_btn_step_pressed"]
+[connection signal="changed" from="BitModel" to="BitView" method="_on_BitModel_changed"]

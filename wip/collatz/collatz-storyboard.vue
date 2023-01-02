@@ -1,14 +1,14 @@
 <!-- Tufts VUE 3.3.0 concept-map (collatz-storyboard.vue) 2022-07-30 -->
 <!-- Tufts VUE: http://vue.tufts.edu/ -->
 <!-- Do Not Remove: VUE mapping @version(1.1) jar:file:/C:/Program%20Files%20(x86)/VUE/VUE.jar!/tufts/vue/resources/lw_mapping_1_1.xml -->
-<!-- Do Not Remove: Saved date Sat Jul 30 14:48:28 EDT 2022 by michal on platform Windows 8 6.2 in JVM 1.7.0_21-b11 -->
+<!-- Do Not Remove: Saved date Sat Jul 30 14:52:02 EDT 2022 by michal on platform Windows 8 6.2 in JVM 1.7.0_21-b11 -->
 <!-- Do Not Remove: Saving version @(#)VUE: built October 8 2015 at 1658 by tomadm on Linux 2.6.32-504.23.4.el6.x86_64 i386 JVM 1.7.0_21-b11(bits=32) -->
 <?xml version="1.0" encoding="US-ASCII"?>
 <LW-MAP xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="none" ID="0"
     label="collatz-storyboard.vue" created="1647580440322" x="0.0"
     y="0.0" width="1.4E-45" height="1.4E-45" strokeWidth="0.0" autoSized="false">
-    <resource referenceCreated="1659206908563"
+    <resource referenceCreated="1659207122794" size="434911"
         spec="d:\ver\j-talks\wip\collatz\collatz-storyboard.vue"
         type="1" xsi:type="URLResource">
         <title>collatz-storyboard.vue</title>

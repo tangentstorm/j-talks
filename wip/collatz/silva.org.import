@@ -1,0 +1,13 @@
+[remap]
+
+importer="org.prez"
+type="Resource"
+path="res://.import/silva.org-24a0c60d1358068ec00b5dadaee95506.res"
+
+[deps]
+
+source_file="res://wip/collatz/silva.org"
+dest_files=[ "res://.import/silva.org-24a0c60d1358068ec00b5dadaee95506.res" ]
+
+[params]
+
