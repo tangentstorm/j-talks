@@ -1,0 +1,173 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://fonts/noto-24.tres" type="DynamicFont" id=1]
+[ext_resource path="res://wip/binary-signal-space/point.svg" type="Texture" id=2]
+[ext_resource path="res://wip/binary-signal-space/FnPlot.gd" type="Script" id=3]
+
+[sub_resource type="Animation" id=8]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 35.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Particles2D:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Origin/FnPlot:stops")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( -1, 0 ) ]
+}
+
+[sub_resource type="Animation" id=9]
+resource_name = "init"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 35.0, 0.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Particles2D:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Origin/FnPlot:stops")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 1, 2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( -1, 0 ), Vector2( -1, 100 ) ]
+}
+
+[sub_resource type="Gradient" id=2]
+interpolation_mode = 2
+colors = PoolColorArray( 1, 1, 1, 0, 0.901961, 0.901961, 0.901961, 0.705882 )
+
+[sub_resource type="GradientTexture" id=3]
+gradient = SubResource( 2 )
+
+[sub_resource type="Curve" id=5]
+_data = [ Vector2( 0, 0 ), 0.0, 4.22435, 0, 0, Vector2( 0.730337, 0.645842 ), -0.564482, -0.564482, 0, 0, Vector2( 1, 0 ), -5.81048, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=6]
+curve = SubResource( 5 )
+
+[sub_resource type="ParticlesMaterial" id=4]
+emission_shape = 2
+emission_box_extents = Vector3( 1920, 1080, 0 )
+flag_disable_z = true
+gravity = Vector3( 0, 0, 0 )
+angular_velocity = 5.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale_random = 0.1
+scale_curve = SubResource( 6 )
+color_ramp = SubResource( 3 )
+
+[sub_resource type="Curve" id=7]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.866667, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.245455 ), 0.0, 0.0, 0, 0 ]
+
+[node name="number-line" type="Node2D"]
+__meta__ = {
+"_edit_horizontal_guides_": [ 540.0 ]
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("../scene")
+autoplay = "init"
+anims/RESET = SubResource( 8 )
+anims/init = SubResource( 9 )
+
+[node name="scene" type="Node2D" parent="."]
+position = Vector2( 950, 540 )
+rotation = 0.610865
+
+[node name="Particles2D" type="Particles2D" parent="scene"]
+amount = 200
+preprocess = 2.0
+process_material = SubResource( 4 )
+texture = ExtResource( 2 )
+
+[node name="Origin" type="Node2D" parent="scene"]
+position = Vector2( -520, -100 )
+
+[node name="FnPlot" type="Line2D" parent="scene/Origin"]
+width = 16.0
+width_curve = SubResource( 7 )
+joint_mode = 2
+script = ExtResource( 3 )
+canvas_size = Vector2( 320, 200 )
+steps = 100
+stops = Vector2( -1, 0 )
+x_range = Vector2( 0, 32 )
+y_range = Vector2( -2, 2 )
+
+[node name="Point-0" type="Sprite" parent="scene/Origin"]
+position = Vector2( 0, 100 )
+texture = ExtResource( 2 )
+
+[node name="Point-1" type="Sprite" parent="scene"]
+position = Vector2( -360, 0 )
+texture = ExtResource( 2 )
+
+[node name="zero-text" type="Label" parent="scene"]
+visible = false
+margin_left = -623.0
+margin_top = -233.0
+margin_right = -609.0
+margin_bottom = -199.0
+custom_fonts/font = ExtResource( 1 )
+text = "0"
+
+[node name="one-text" type="Label" parent="scene"]
+visible = false
+margin_left = -495.0
+margin_top = -233.0
+margin_right = -481.0
+margin_bottom = -199.0
+custom_fonts/font = ExtResource( 1 )
+text = "1"
