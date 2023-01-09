@@ -1,0 +1,110 @@
+#+title: bex swarms
+
+* background stuff not about swarms
+** intro
+- so bex is a tool for working with large boolean expressions.
+
+- a boolean expression a formula written in the language of propositional logic.
+- so you have two constant values (0 and 1), false and true, bottom and top
+  in bex we call them O and I, just picking the capital letters that look the most like 0 and 1.
+
+- then we have variables, which can take either one of those values,
+- and then you have various operations for combining them.
+
+  - p        -> variable
+  - not p    -> I if p is O, O if p is I
+  - p and q  -> true if both are true
+  - p or q   -> true if either is true or both are true
+
+There are lots and lots of others.
+
+And actually, this list is sufficient to represent any boolean expression.
+
+But there are others. For example on that's not on this list is called
+exclusive or, and it's written in various ways:
+
+   - p [unicode xor] q
+   - p [circled plus] q
+   - p [not equal] q
+   - p xor q
+   - p ^ q
+   - p ~: q
+
+it means either is true but not both.
+but you can just write that out directly:
+
+  - (p or q) and not (p and q)
+
+or you could say:
+
+  - (p and not q) or (q and not p)
+
+But you could also say:
+
+  - I and (p and not (q or q)) or (q and not p) or O
+
+or even:
+
+  - <insert gigantic thing here>
+
+So you can see there are an infinite number of ways you
+can write the same thing.
+
+** COMMENT scrap: implication
+# And if you were taking a basic course in logic, you'd probably only need one or two other combining form:
+# Usually
+
+  - p --> q   -> the word is a little unintuitive but it means p <: q  (true when p is false or they're both true)
+
+Or
+
+  - p xor q  -> true if either is true but not when both are true
+
+
+But you can see just from the definitions that we can derive those from the other list.
+
+  p <: q :  (not p) or (p and q)
+  p ~: q :  (p and not q) or (q and not p)
+
+** many expressions for each function
+(like wrapping them in a (\lambda abcdefgh. ...)
+
+- we treat them as functions from some number of bits to one output bit.
+- you have a bunch of inputs that are each one bit (so they're either zero or one)
+- and then you can combine them together in different ways
+- and then for every possible configuriation of the inputs, there's one output bit.
+- then you can have a bunch of these expressions
+
+** but there are only 16 functions with 2 inputs
+
+proof by decomposition
+
+- branch on first variable
+  - now you have 2 functions of 1 variable
+
+- branch on second variable
+  - now you have 4 functions of 0 variables
+
+these could still be huge complicated expressions
+but when you evaluate them, they're going to be 0 or 1
+
+# demonstrate general inductive proof
+
+# assume there are k functions of n inputs
+# then a function of n + 1 bits  is just picking k when x=0 and k when x=1
+# so there are  k*k functios of n+1 bits.
+# 0 inputs: either 0 or 1
+# so: 2 -> 4=2^2 -> 16=4^2 -> 256=16^2 -> 65,536=256^2 -> 4,294,967,296
+
+* swarms
+- you start with a simple recursive procedure
+- but exponential blowup
+- so instead you put it in a queue
+- then finish with a callback
+- but then: short circuiting (especially for ite)
+
+
+* possible improvements:
+- make and/xor/etc instead of just (ite)
+- make it use async functions
+- dashmap? https://github.com/xacrimon/dashmap/

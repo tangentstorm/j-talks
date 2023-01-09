@@ -1,0 +1,65 @@
+#+title: world solver
+
+psuedocode written on the train.
+what follows is the basic idea, but i haven't done anything
+about actually encoding the representation, or tracking which
+nodes in the expression have plain variables as direct inputs.
+
+
+#+BEGIN_SRC python
+  class NID:
+
+      def __init__(self, n):
+          self.n = n
+
+      def __str__(self):
+          return f"v{-self.n}" if self.n<0 else f"x{self.n}"
+
+  class Node:
+
+      def __init__(self, fn, xs):
+          self.fn = fn # the function (bitmap/whatever)
+          self.xs = xs # arguments [nid]
+
+      def when(self, x, k):
+          """copy of self with input x set to const k"""
+          raise NotImplemented
+
+  class World:
+
+      def __init__(self):
+          self.inputs = []
+          self.consts = {}
+          self.nodes = {}  # { nid -> Node }
+
+      def copy(self):
+          res = World()
+          res.inputs = self.inputs.copy()
+          res.consts = self.consts.copy()
+          res.nodes = self.nodes.copy()
+
+      def assign(self,var,val):
+          res = self.copy()
+          res.inputs -= {var}
+          res.consts[var] = val
+          for nid in res.var_twigs(var):
+              res.nodes[nid] = res.nodes[nid].when(var,val)
+          return res
+
+      def choose_var(self):
+          return self.inputs[0]
+
+      def is_const(self):
+          return len(self.inputs) == 0
+
+      def solve(self):
+          # TODO: make parallel
+          v = self.choose_var()
+          for val in [0,1]:
+              w = self.assign(v, val)
+              if w.is_true():
+                  yield w.consts
+              elif not w.is_const():
+                  yield from w.solve()
+
+#+END_SRC
