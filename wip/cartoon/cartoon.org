@@ -1,0 +1,55 @@
+#+title: how to be a cartoon: lip syncing
+
+* tooning
+Anyone can be a cartoon.
+You just have to believe in yourself!
+
+* motivation (live video)
+- hard to record one shot
+- so video tends to have lots of jump cuts
+
+* is it feasible?
+basic problem: match pictures to phonemes
+but how to get phonemes?
+forced alignment: when you know the text beforehand
+(of course you have to know that a given series of letters might be two different words "project")
+rotoscoping?
+video capture?
+
+* how lipsync works
+- papagayo
+- rhubarb
+  - optional mouth shapes
+
+* pixel art
+- changing grid sizes (or just using bigger brushes)
+
+* layers for the rig
+- shoulders
+- head
+- mouth
+- eyes
+- eyebrows and forehead
+- (arms and legs if you want)
+- export layers at full size just so everything lines up
+
+* godot
+- animation
+- setting up the scene
+- drag and drop the items
+animatedsprite
+
+* quick and dirty godot integration
+godot extremely customizable
+waveform plugin to record
+animation trees
+
+* obs
+record the window
+desktop audio delay
+
+show lipsync issue side by side
+
+* misc
+
+https://oldetinkererstudio.com/how-to-make-animations-in-blender-using-a-sprite-sheet-blender-2-9/
