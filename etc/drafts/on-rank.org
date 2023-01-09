@@ -1,0 +1,296 @@
+* apl farm chat about rank
+:PROPERTIES:
+:TS:       <2022-07-16 12:20AM>
+:ID:       j7baryb0qij0
+:END:
+
+
+sampersand — Yesterday at 10:53 PM
+monadic ~ i get on how it makes dydadic into monadic (edited)
+
+tangentstorm — Yesterday at 10:54 PM
+pushing down 1 rank is like saying... for each item in y do whatever.
+[10:54 PM]
+so (I.0);(I.1);(I.2)
+
+sampersand — Yesterday at 10:54 PM
+8 see
+[10:54 PM]
+so maybe like
+
+tangentstorm — Yesterday at 10:55 PM
+(which you already pointed out makes y copies of 0)
+
+sampersand — Yesterday at 10:55 PM
+(I.@[) 1 2 3
+[10:55 PM]
+wait no not right
+[10:56 PM]
+I. each 1 2 3
+
+tangentstorm — Yesterday at 10:56 PM
+yes but 0 1 2
+
+sampersand — Yesterday at 10:56 PM
+is (I."0) ?
+
+tangentstorm — Yesterday at 10:57 PM
+   i. each 1 2 3
+┌─┬───┬─────┐
+│0│0 1│0 1 2│
+└─┴───┴─────┘
+
+I need to think a bit about why this is happening. 
+
+sampersand — Yesterday at 10:57 PM
+so f"0 is f each
+
+tangentstorm — Yesterday at 10:57 PM
+oh duh. hang on. sorry. I was confusing I. and i.
+
+sampersand — Yesterday at 10:57 PM
+oh lol
+
+tangentstorm — Yesterday at 10:57 PM
+   I. each 1 2 3
+┌─┬───┬─────┐
+│0│0 0│0 0 0│
+└─┴───┴─────┘
+
+^ this makes sense to me. 
+
+sampersand — Yesterday at 10:58 PM
+so f"0 is f each
+
+tangentstorm — Yesterday at 10:58 PM
+no.
+
+sampersand — Yesterday at 10:58 PM
+or f every
+[10:58 PM]
+i always get those backwards
+
+tangentstorm — Yesterday at 10:58 PM
+   each
+&.>
+[10:58 PM]
+   every
+&>
+
+sampersand — Yesterday at 10:58 PM
+yeah
+[10:59 PM]
+so f"0 is f&>
+
+tangentstorm — Yesterday at 11:00 PM
+nope.  each and every are all about boxes. rank is different.
+[11:00 PM]
+<thinking>
+
+sampersand — Yesterday at 11:00 PM
+i heard you use every to just "map" values
+
+tangentstorm — Yesterday at 11:01 PM
+The key idea is that in J, arrays are always of a uniform type and always "rectangular".
+
+sampersand — Yesterday at 11:01 PM
+like if i have an arbitrary monadic f and i just want to apply it to each element in a list i use each
+
+tangentstorm — Yesterday at 11:03 PM
+if you have an arbitrary monadic f and you want to apply it to each box in a list of boxes you use each (edited)
+
+sampersand — Yesterday at 11:03 PM
+i see
+[11:04 PM]
+i think that kinda makes sense. i'm still not exactly sure how (3&+) (ie supply one parameter to a dydadic function so it becomes modadic) relates to the & in &> (edited)
+
+tangentstorm — Yesterday at 11:05 PM
+basically there are two different structuring mechanisms:  adding an extra dimension to your vector / matrix / rectanglular array / cuboid / orthotope ... whatever you want to call it (this is rank for nouns), and then there is the boxing structure for nesting things of different shapes.
+
+sampersand — Yesterday at 11:06 PM
+side note does J have hash maps
+
+tangentstorm — Yesterday at 11:06 PM
+& is overloaded.    u & v   (composing two verbs in a certain way) has a different meaning from m & v  or u & n  (binding a left or right argument)
+
+sampersand — Yesterday at 11:06 PM
+i see. what's m vs x
+
+tangentstorm — Yesterday at 11:08 PM
+j doesn't have syntax for hashmaps with arbitrary keys, but it does have namespaces... ("locales")
+
+sampersand — Yesterday at 11:08 PM
+ah. i'll learn about that later
+
+tangentstorm — Yesterday at 11:09 PM
+the arguments to a verb are  x and y... the arguments to an adverb (which takes one argument on the left) is called  u but you can use m instead if you want to specify that it should be a noun.
+
+sampersand — Yesterday at 11:09 PM
+i see
+
+tangentstorm — Yesterday at 11:10 PM
+the adverb can return a function, and that function can take arguments x and y.
+[11:10 PM]
+conjunctions take both a left and right argument, so you have  u/m on the left and n/v on the right.
+[11:12 PM]
+conjunctions can produce verbs, so you often need to refer to the arguments of the verb you're building, and those are again x and y
+[11:12 PM]
+okay, so i think we answered why I. doesn't have rank 0, but why rank 1?
+
+sampersand — Yesterday at 11:13 PM
+wait what
+[11:13 PM]
+oh yeah
+
+tangentstorm — Yesterday at 11:13 PM
+the most common ranks are 0,  _ (infinity), and  _1 (negative one)
+
+sampersand — Yesterday at 11:13 PM
+what i've never seen _1
+
+tangentstorm — Yesterday at 11:13 PM
+so rank 1 is actually kind of rare.
+
+sampersand — Yesterday at 11:13 PM
+rank _1
+[11:13 PM]
+can you make arbitrary ranks?
+[11:13 PM]
+also is +"0 identical to +
+
+tangentstorm — Yesterday at 11:15 PM
+yes. (edited)
+[11:16 PM]
+   + b. 0
+0 0 0
+
+sampersand — Yesterday at 11:16 PM
+why theee numbers brr
+[11:16 PM]
+btw*
+
+tangentstorm — Yesterday at 11:16 PM
+because + has rank 0 already. i initially said "for monadic +" because i wasn't sure about the other two numbers.
+[11:17 PM]
+verbs can often be used as both a monad and a dyad. ("ambivalent verbs")
+
+sampersand — Yesterday at 11:17 PM
+yeah i've done that before
+[11:17 PM]
+like <
+
+tangentstorm — Yesterday at 11:18 PM
+the first number is the rank of y that  f y operates on... the second and third are the ranks of x and y that x f y operates on.
+[11:18 PM]
+https://code.jsoftware.com/wiki/Essays/Rank_Table
+Rank Table
+
+sampersand — Yesterday at 11:19 PM
+ah i see
+[11:19 PM]
+any rank twos? also what's rank -1?
+
+tangentstorm — Yesterday at 11:21 PM
+determinant . y was rank 2 but it's no longer defined in j9 (edited)
+
+sampersand — Yesterday at 11:21 PM
+ah that makes sense
+[11:21 PM]
+i wonder why it's not defined anymore
+
+tangentstorm — Yesterday at 11:22 PM
+i don't know.. they moved a bunch of math stuff to the libraries, but i thought it was mostly calculus stuff.
+[11:22 PM]
+oh ok matrix inverse and matrix divide have rank 2
+[11:23 PM]
+(just searching for 2 on that page)
+
+sampersand — Yesterday at 11:23 PM
+hm alrighty
+[11:23 PM]
+what's rank _1
+
+tangentstorm — Yesterday at 11:24 PM
+i really expected some of the primitives to have _1 but i guess they don't. it just means work on the next to last rank.
+[11:24 PM]
+_ is the outermost rank, and _1 is just one rank inside that.
+[11:24 PM]
+_2 is two ranks below, and so on.
+
+sampersand — Yesterday at 11:27 PM
+huh?
+[11:27 PM]
+watre some examples of those
+
+tangentstorm — Yesterday at 11:30 PM
+i feel like i do this quite often but am having a hard time thinking of an example. 
+[11:31 PM]
+perhaps i just have a habit of over-generalizing my code.
+
+South — Yesterday at 11:31 PM
+   +/"_1 5 5 $ i.25
+50 55 60 65 70
+   +/"_1 5 5 $ i.25
+25
+
+i guess something like this
+
+tangentstorm — Yesterday at 11:32 PM
+the general idea is that maybe you want to do something with each item in your array, but you want to generalize it to to work on any number of dimensions.
+[11:33 PM]
+@South i don't think that does what you think it does. 
+[11:33 PM]
+you need parens or ] after the _1
+
+South — Yesterday at 11:33 PM
+its not a very good example lmao
+
+tangentstorm — Yesterday at 11:33 PM
+otherwise the 5 5 is part of the rank you're assigning to +/ (edited)
+
+South — Yesterday at 11:33 PM
+gotcha
+[11:34 PM]
+yeah you were right
+
+@tangentstorm
+the general idea is that maybe you want to do something with each item in your array, but you want to generalize it to to work on any number of dimensions.
+
+sampersand — Yesterday at 11:34 PM
+i do want that often lol
+
+tangentstorm — Yesterday at 11:34 PM
+when i say "each item" i mean "each row in a table" or "each table in a rank 3 array"...
+
+South — Yesterday at 11:35 PM
+oh wait yeah thats what i was going for, each row
+
+tangentstorm — Yesterday at 11:35 PM
+"each atom" would be rank 0, "each item" would be rank _1
+[11:35 PM]
+if you know you have a table (rank 2), you could just specify rank 1, but then it's only doing "for each item" when you're talking about tables.
+[11:36 PM]
+sometimes you want to explicitly give the rank from the bottom up.... ( I. only makes sense when applied to a vector, so it's rank 1.   Matrix inverse only makes sense when given a matrix, so it's rank 2)
+[11:38 PM]
+when you give a rank 1 verb an array with a higher rank, it just does the equivalent of however many nested for-each loops would be required to drill down to rank 1.
+[11:38 PM]
+which is why I.  3 3 $   1 2 3     3 2 1    2 1 3  gives back 3 rows
+[11:40 PM]
+but if you wanted to do something like "box each item" (where again, "item" means the rank n-1 arrays inside a rank n array) then you use "_1
+[11:40 PM]
+is that making sense?
+
+@tangentstorm
+is that making sense?
+
+sampersand — Yesterday at 11:49 PM
+i'm totally brain fried at this point for the day. i tried but i won't be able to retain it lol
+[11:49 PM]
+ima try it in the am
+
+tangentstorm — Yesterday at 11:49 PM
+ np. seeya.
+
+
+
+

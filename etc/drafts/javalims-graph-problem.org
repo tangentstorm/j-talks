@@ -1,0 +1,38 @@
+JavaLim — Yesterday at 11:48 PM
+Define the neighbours of a graph's vertex, N(v) as the set of all vertices adjacent to v. 
+Suppose that a simple graph has an odd vertex. Show that there exist two vertices a, b such that |N(a) intersect N(b)| is even.
+
+
+--------------
+
+
+type:  graph of T = { V : Set of T,  E : Set of (V,V) }
+
+proof by induction on graph G
+
+  - base case: graph "x -- y" (smallest graph with an odd vertex)
+    =>  a=x, b=y so |N a ∩ N a| = 0
+  - induction on graph G
+    assume ∃ a, b:T where |N a ∩ N b| is even
+    assume ∃ o:T where o is odd vertex (i.e, | N o | is odd)
+    split on possible construction steps:
+      case: add vertex => ok   # 'ok' means nothing changes, so a'=a, b'=b
+      case: add edge {p,q}
+        if {p,q} ∩ {a,b} = {} => ok
+        elif {p,q} = {a,b}:  -- new edge between a,b
+           => ok # nothing changes to (N a ∩ N b) because N is not reflexive
+        else: # new neighbor added to one of {a,b}
+           let {v} = {p,q} ∩ {a,b} -- the old vertex v ∈ {a,b}
+           let {u} = {a,b} - {v}   -- whichever of {a,b} is not v
+           let {w} = {p,q} - {v}   -- the new neighbor w ∉ {a,b}
+           if {u,w} ∉ G.E: => ok  # |N v| +=1 but |N v ∩ N u| is unchanged
+           else: # {u,w} ∈ G.E:
+             # w is now a neighbor to both, so |N v ∩ N u| +=1
+             # so we need to find a different pair.
+
+
+      => nothing changes
+
+       # sorry
+    - case: new edge {p,q} where p in {a,b} and q not in {a,b}
+       # sorry
