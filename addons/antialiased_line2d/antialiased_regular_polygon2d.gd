@@ -1,18 +1,18 @@
 # This is a convenience node that automatically synchronizes an AntialiasedLine2D
 # with a Polygon2D, while also generating a regular Polygon2D shape (hexagon, octagon, …).
-tool
-class_name AntialiasedRegularPolygon2D, "antialiased_regular_polygon2d.svg"
+@tool
+class_name AntialiasedRegularPolygon2D #, "antialiased_regular_polygon2d.svg"
 extends Polygon2D
 
-export var size := Vector2(64, 64) setget set_size
-export(int, 3, 128) var sides := 32 setget set_sides
-export(float, 0.0, 360.0) var angle_degrees := 360.0 setget set_angle_degrees
+@export var size := Vector2(64, 64) : set=set_size
+@export var sides : int = 32 : set=set_sides # (int, 3, 128)
+@export var angle_degrees := 360.0 : set=set_angle_degrees # (float, 0.0, 360.0)
 
-export var stroke_color := Color(0.4, 0.5, 1.0) setget set_stroke_color
-export(float, 0.0, 1000.0) var stroke_width := 10.0 setget set_stroke_width
-export(int, "Sharp", "Bevel", "Round") var stroke_joint_mode := Line2D.LINE_JOINT_SHARP setget set_stroke_joint_mode
-export(float, 0.0, 1000.0) var stroke_sharp_limit := 2.0 setget set_stroke_sharp_limit
-export(int, 1, 32) var stroke_round_precision := 8 setget set_stroke_round_precision
+@export var stroke_color := Color(0.4, 0.5, 1.0) : set = set_stroke_color
+@export var stroke_width := 10.0 : set=set_stroke_width # (float, 0.0, 1000.0)
+@export var stroke_joint_mode := Line2D.LINE_JOINT_SHARP : set=set_stroke_joint_mode # (int, "Sharp", "Bevel", "Round")
+@export var stroke_sharp_limit := 2.0 : set=set_stroke_sharp_limit # (float, 0.0, 1000.0)
+@export var stroke_round_precision := 8 : set=set_stroke_round_precision # (int, 1, 32)
 
 var line_2d := Line2D.new()
 
@@ -24,16 +24,16 @@ func _ready() -> void:
 	add_child(line_2d)
 
 
-func _set(property: String, value) -> bool:
+func _set(property: StringName, value) -> bool:
 	if property == "polygon":
 		line_2d.points = AntialiasedLine2D.construct_closed_line(polygon)
 	return false
 
 
 func update_points() -> void:
-	var points := PoolVector2Array()
+	var points := PackedVector2Array()
 	for side in sides:
-		points.push_back(Vector2(0, -1).rotated(side / float(sides) * deg2rad(angle_degrees)) * size * 0.5)
+		points.push_back(Vector2(0, -1).rotated(side / float(sides) * deg_to_rad(angle_degrees)) * size * 0.5)
 	if not is_equal_approx(angle_degrees, 360.0):
 		points.push_back(Vector2.ZERO)
 	polygon = points

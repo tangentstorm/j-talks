@@ -1,14 +1,14 @@
 # This is a convenience node that automatically synchronizes an AntialiasedLine2D
 # with a Polygon2D.
-tool
-class_name AntialiasedPolygon2D, "antialiased_polygon2d.svg"
+@tool
+class_name AntialiasedPolygon2D #, "antialiased_polygon2d.svg"
 extends Polygon2D
 
-export var stroke_color := Color(0.4, 0.5, 1.0) setget set_stroke_color
-export(float, 0.0, 1000.0) var stroke_width := 10.0 setget set_stroke_width
-export(int, "Sharp", "Bevel", "Round") var stroke_joint_mode := Line2D.LINE_JOINT_SHARP setget set_stroke_joint_mode
-export(float, 0.0, 1000.0) var stroke_sharp_limit := 2.0 setget set_stroke_sharp_limit
-export(int, 1, 32) var stroke_round_precision := 8 setget set_stroke_round_precision
+@export var stroke_color := Color(0.4, 0.5, 1.0) : set = set_stroke_color
+@export var stroke_width := 10.0 : set = set_stroke_width # (float, 0.0, 1000.0)
+@export var stroke_joint_mode := Line2D.LINE_JOINT_SHARP : set = set_stroke_joint_mode # (int, "Sharp", "Bevel", "Round")
+@export var stroke_sharp_limit := 2.0 : set =  set_stroke_sharp_limit # (float, 0.0, 1000.0)
+@export var stroke_round_precision := 8 : set = set_stroke_round_precision # (int, 1, 32)
 
 var line_2d := Line2D.new()
 
@@ -21,7 +21,7 @@ func _ready() -> void:
 	add_child(line_2d)
 
 
-func _set(property: String, value) -> bool:
+func _set(property: StringName, value) -> bool:
 	if property == "polygon":
 		line_2d.points = AntialiasedLine2D.construct_closed_line(polygon)
 	return false
