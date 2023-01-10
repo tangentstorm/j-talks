@@ -1,13 +1,14 @@
 [remap]
 
-importer="org.jprez"
+importer="org.prez"
 type="Resource"
-path="res://.import/reading-j.org-06dbb8517211d865e2ad0c365edc223b.res"
+uid="uid://2fpwcvt3rh1w"
+path="res://.godot/imported/reading-j.org-06dbb8517211d865e2ad0c365edc223b.res"
 
 [deps]
 
 source_file="res://wip/reading-j/reading-j.org"
-dest_files=[ "res://.import/reading-j.org-06dbb8517211d865e2ad0c365edc223b.res" ]
+dest_files=["res://.godot/imported/reading-j.org-06dbb8517211d865e2ad0c365edc223b.res"]
 
 [params]
 

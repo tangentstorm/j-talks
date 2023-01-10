@@ -134,6 +134,8 @@ config/features=PackedStringArray("4.0")
 
 [audio]
 
+buses/default_bus_layout="res://addons/waveform/waveform_bus_layout.tres"
+driver/enable_input=true
 default_bus_layout="res://addons/waveform/waveform_bus_layout.tres"
 enable_audio_input=true
 
@@ -151,7 +153,7 @@ window/size/fullscreen=true
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/antialiased_line2d/plugin.cfg", "res://addons/orgprez/plugin.cfg", "res://addons/waveform/plugin.cfg")
+enabled=PackedStringArray("res://addons/antialiased_line2d/plugin.cfg", "res://addons/waveform/plugin.cfg", "res://addons/orgprez/plugin.cfg")
 
 [global]
 
@@ -186,4 +188,5 @@ limits/debugger_stdout/max_chars_per_second=65536
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 environment/default_clear_color=Color(0.176471, 0.247059, 0.34902, 1)

@@ -1,13 +1,14 @@
 [remap]
 
-importer="org.jprez"
+importer="org.prez"
 type="Resource"
-path="res://.import/sandpiles-j.org-2e1763c55e38d3d13d911a879a20b870.res"
+uid="uid://chup8wvr1g2w5"
+path="res://.godot/imported/sandpiles-j.org-2e1763c55e38d3d13d911a879a20b870.res"
 
 [deps]
 
 source_file="res://wip/sandpiles-in-j/sandpiles-j.org"
-dest_files=[ "res://.import/sandpiles-j.org-2e1763c55e38d3d13d911a879a20b870.res" ]
+dest_files=["res://.godot/imported/sandpiles-j.org-2e1763c55e38d3d13d911a879a20b870.res"]
 
 [params]
 

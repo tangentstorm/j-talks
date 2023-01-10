@@ -1,13 +1,14 @@
 [remap]
 
-importer="org.jprez"
+importer="org.prez"
 type="Resource"
-path="res://.import/dealing-cards.org-ccc5fff1791522d5aabe2fc448b94d9c.res"
+uid="uid://d6p2xvhbok68"
+path="res://.godot/imported/dealing-cards.org-ccc5fff1791522d5aabe2fc448b94d9c.res"
 
 [deps]
 
 source_file="res://wip/dealing-cards/dealing-cards.org"
-dest_files=[ "res://.import/dealing-cards.org-ccc5fff1791522d5aabe2fc448b94d9c.res" ]
+dest_files=["res://.godot/imported/dealing-cards.org-ccc5fff1791522d5aabe2fc448b94d9c.res"]
 
 [params]
 

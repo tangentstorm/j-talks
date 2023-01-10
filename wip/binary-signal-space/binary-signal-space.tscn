@@ -16,7 +16,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Label" type="Label" parent="."]
-layout_mode = 0
 text = "binary signal space"
 
 [node name="OrgDeck" type="Node2D" parent="."]
