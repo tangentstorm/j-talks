@@ -13,8 +13,8 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
 "update": 0,
 "values": [ Vector2( 25, 25 ) ]
 }
@@ -25,8 +25,8 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
 "update": 0,
 "values": [ 0 ]
 }
@@ -37,8 +37,8 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
 "update": 0,
 "values": [ 1 ]
 }
@@ -49,8 +49,8 @@ tracks/3/loop_wrap = true
 tracks/3/imported = false
 tracks/3/enabled = true
 tracks/3/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
 "update": 0,
 "values": [ 0.0 ]
 }
@@ -61,8 +61,8 @@ tracks/4/loop_wrap = true
 tracks/4/imported = false
 tracks/4/enabled = true
 tracks/4/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
 "update": 0,
 "values": [ 1.0 ]
 }
@@ -73,8 +73,8 @@ tracks/5/loop_wrap = true
 tracks/5/imported = false
 tracks/5/enabled = true
 tracks/5/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
 "update": 0,
 "values": [ 0.0 ]
 }
@@ -85,8 +85,8 @@ tracks/6/loop_wrap = true
 tracks/6/imported = false
 tracks/6/enabled = true
 tracks/6/keys = {
-"points": PoolRealArray( 0.39, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"points": PackedFloat32Array( 0.39, -0.25, 0, 0.25, 0 ),
+"times": PackedFloat32Array( 0 )
 }
 tracks/7/type = "bezier"
 tracks/7/path = NodePath(".:color:g")
@@ -95,8 +95,8 @@ tracks/7/loop_wrap = true
 tracks/7/imported = false
 tracks/7/enabled = true
 tracks/7/keys = {
-"points": PoolRealArray( 0.58, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"points": PackedFloat32Array( 0.58, -0.25, 0, 0.25, 0 ),
+"times": PackedFloat32Array( 0 )
 }
 tracks/8/type = "bezier"
 tracks/8/path = NodePath(".:color:b")
@@ -105,8 +105,8 @@ tracks/8/loop_wrap = true
 tracks/8/imported = false
 tracks/8/enabled = true
 tracks/8/keys = {
-"points": PoolRealArray( 0.93, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"points": PackedFloat32Array( 0.93, -0.25, 0, 0.25, 0 ),
+"times": PackedFloat32Array( 0 )
 }
 tracks/9/type = "bezier"
 tracks/9/path = NodePath(".:color:a")
@@ -115,8 +115,8 @@ tracks/9/loop_wrap = true
 tracks/9/imported = false
 tracks/9/enabled = true
 tracks/9/keys = {
-"points": PoolRealArray( 1, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"points": PackedFloat32Array( 1, -0.25, 0, 0.25, 0 ),
+"times": PackedFloat32Array( 0 )
 }
 tracks/10/type = "bezier"
 tracks/10/path = NodePath("../2n+1:color:r")
@@ -125,8 +125,8 @@ tracks/10/loop_wrap = true
 tracks/10/imported = false
 tracks/10/enabled = true
 tracks/10/keys = {
-"points": PoolRealArray( 0.39, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"points": PackedFloat32Array( 0.39, -0.25, 0, 0.25, 0 ),
+"times": PackedFloat32Array( 0 )
 }
 tracks/11/type = "bezier"
 tracks/11/path = NodePath("../2n+1:color:g")
@@ -135,8 +135,8 @@ tracks/11/loop_wrap = true
 tracks/11/imported = false
 tracks/11/enabled = true
 tracks/11/keys = {
-"points": PoolRealArray( 0.58, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"points": PackedFloat32Array( 0.58, -0.25, 0, 0.25, 0 ),
+"times": PackedFloat32Array( 0 )
 }
 tracks/12/type = "bezier"
 tracks/12/path = NodePath("../2n+1:color:b")
@@ -145,8 +145,8 @@ tracks/12/loop_wrap = true
 tracks/12/imported = false
 tracks/12/enabled = true
 tracks/12/keys = {
-"points": PoolRealArray( 0.93, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"points": PackedFloat32Array( 0.93, -0.25, 0, 0.25, 0 ),
+"times": PackedFloat32Array( 0 )
 }
 tracks/13/type = "bezier"
 tracks/13/path = NodePath("../2n+1:color:a")
@@ -155,8 +155,8 @@ tracks/13/loop_wrap = true
 tracks/13/imported = false
 tracks/13/enabled = true
 tracks/13/keys = {
-"points": PoolRealArray( 1, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"points": PackedFloat32Array( 1, -0.25, 0, 0.25, 0 ),
+"times": PackedFloat32Array( 0 )
 }
 
 [sub_resource type="Animation" id=2]
@@ -169,8 +169,8 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
 "update": 0,
 "values": [ Vector2( 25, 25 ) ]
 }
@@ -181,8 +181,8 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 1.3, 2.6 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array( 1.3, 2.6 ),
+"transitions": PackedFloat32Array( 1, 1 ),
 "update": 0,
 "values": [ 0.0, 1.0 ]
 }
@@ -193,8 +193,8 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 1.3, 2.6 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array( 1.3, 2.6 ),
+"transitions": PackedFloat32Array( 1, 1 ),
 "update": 0,
 "values": [ 1.0, 3.0 ]
 }
@@ -205,8 +205,8 @@ tracks/3/loop_wrap = true
 tracks/3/imported = false
 tracks/3/enabled = true
 tracks/3/keys = {
-"times": PoolRealArray( 2.6, 3.8 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array( 2.6, 3.8 ),
+"transitions": PackedFloat32Array( 1, 1 ),
 "update": 0,
 "values": [ 0.0, 55.0 ]
 }
@@ -217,8 +217,8 @@ tracks/4/loop_wrap = true
 tracks/4/imported = false
 tracks/4/enabled = true
 tracks/4/keys = {
-"times": PoolRealArray(  ),
-"transitions": PoolRealArray(  ),
+"times": PackedFloat32Array(  ),
+"transitions": PackedFloat32Array(  ),
 "update": 0,
 "values": [  ]
 }
@@ -229,8 +229,8 @@ tracks/5/loop_wrap = true
 tracks/5/imported = false
 tracks/5/enabled = true
 tracks/5/keys = {
-"times": PoolRealArray( 1.3, 2.6 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array( 1.3, 2.6 ),
+"transitions": PackedFloat32Array( 1, 1 ),
 "update": 0,
 "values": [ 1.0, 0.5 ]
 }
@@ -241,8 +241,8 @@ tracks/6/loop_wrap = true
 tracks/6/imported = false
 tracks/6/enabled = true
 tracks/6/keys = {
-"times": PoolRealArray( 0, 2.7, 3.8 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
+"times": PackedFloat32Array( 0, 2.7, 3.8 ),
+"transitions": PackedFloat32Array( 1, 1, 1 ),
 "update": 0,
 "values": [ 0.0, 0.0, 55.0 ]
 }
@@ -253,8 +253,8 @@ tracks/7/loop_wrap = true
 tracks/7/imported = false
 tracks/7/enabled = true
 tracks/7/keys = {
-"points": PoolRealArray( 0.39, -0.25, 0, 0.25, 0, 0.0627451, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0, 1.3 )
+"points": PackedFloat32Array( 0.39, -0.25, 0, 0.25, 0, 0.0627451, -0.25, 0, 0.25, 0 ),
+"times": PackedFloat32Array( 0, 1.3 )
 }
 tracks/8/type = "bezier"
 tracks/8/path = NodePath(".:color:g")
@@ -263,8 +263,8 @@ tracks/8/loop_wrap = true
 tracks/8/imported = false
 tracks/8/enabled = true
 tracks/8/keys = {
-"points": PoolRealArray( 0.58, -0.25, 0, 0.25, 0, 0.172549, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0, 1.3 )
+"points": PackedFloat32Array( 0.58, -0.25, 0, 0.25, 0, 0.172549, -0.25, 0, 0.25, 0 ),
+"times": PackedFloat32Array( 0, 1.3 )
 }
 tracks/9/type = "bezier"
 tracks/9/path = NodePath(".:color:b")
@@ -273,8 +273,8 @@ tracks/9/loop_wrap = true
 tracks/9/imported = false
 tracks/9/enabled = true
 tracks/9/keys = {
-"points": PoolRealArray( 0.93, -0.25, 0, 0.25, 0, 0.384314, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0, 1.3 )
+"points": PackedFloat32Array( 0.93, -0.25, 0, 0.25, 0, 0.384314, -0.25, 0, 0.25, 0 ),
+"times": PackedFloat32Array( 0, 1.3 )
 }
 tracks/10/type = "bezier"
 tracks/10/path = NodePath(".:color:a")
@@ -283,8 +283,8 @@ tracks/10/loop_wrap = true
 tracks/10/imported = false
 tracks/10/enabled = true
 tracks/10/keys = {
-"points": PoolRealArray( 1, -0.25, 0, 0.25, 0, 1, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0, 1.3 )
+"points": PackedFloat32Array( 1, -0.25, 0, 0.25, 0, 1, -0.25, 0, 0.25, 0 ),
+"times": PackedFloat32Array( 0, 1.3 )
 }
 tracks/11/type = "bezier"
 tracks/11/path = NodePath("../2n+1:color:r")
@@ -293,8 +293,8 @@ tracks/11/loop_wrap = true
 tracks/11/imported = false
 tracks/11/enabled = true
 tracks/11/keys = {
-"points": PoolRealArray( 0.39, -0.25, 0, 0.25, 0, 0.709804, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0, 1.3 )
+"points": PackedFloat32Array( 0.39, -0.25, 0, 0.25, 0, 0.709804, -0.25, 0, 0.25, 0 ),
+"times": PackedFloat32Array( 0, 1.3 )
 }
 tracks/12/type = "bezier"
 tracks/12/path = NodePath("../2n+1:color:g")
@@ -303,8 +303,8 @@ tracks/12/loop_wrap = true
 tracks/12/imported = false
 tracks/12/enabled = true
 tracks/12/keys = {
-"points": PoolRealArray( 0.58, -0.25, 0, 0.25, 0, 0.619608, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0, 1.3 )
+"points": PackedFloat32Array( 0.58, -0.25, 0, 0.25, 0, 0.619608, -0.25, 0, 0.25, 0 ),
+"times": PackedFloat32Array( 0, 1.3 )
 }
 tracks/13/type = "bezier"
 tracks/13/path = NodePath("../2n+1:color:b")
@@ -313,8 +313,8 @@ tracks/13/loop_wrap = true
 tracks/13/imported = false
 tracks/13/enabled = true
 tracks/13/keys = {
-"points": PoolRealArray( 0.93, -0.25, 0, 0.25, 0, 0.301961, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0, 1.3 )
+"points": PackedFloat32Array( 0.93, -0.25, 0, 0.25, 0, 0.301961, -0.25, 0, 0.25, 0 ),
+"times": PackedFloat32Array( 0, 1.3 )
 }
 tracks/14/type = "bezier"
 tracks/14/path = NodePath("../2n+1:color:a")
@@ -323,17 +323,17 @@ tracks/14/loop_wrap = true
 tracks/14/imported = false
 tracks/14/enabled = true
 tracks/14/keys = {
-"points": PoolRealArray( 1, -0.25, 0, 0.25, 0, 1, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0, 1.3 )
+"points": PackedFloat32Array( 1, -0.25, 0, 0.25, 0, 1, -0.25, 0, 0.25, 0 ),
+"times": PackedFloat32Array( 0, 1.3 )
 }
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -463.33
-margin_top = 21.3469
-margin_right = -463.33
-margin_bottom = 21.3469
+offset_left = -463.33
+offset_top = 21.3469
+offset_right = -463.33
+offset_bottom = 21.3469
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -366,10 +366,10 @@ __meta__ = {
 [node name="Axes" type="Control" parent="graph"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 40.0
-margin_top = 40.0
-margin_right = -40.0
-margin_bottom = -40.0
+offset_left = 40.0
+offset_top = 40.0
+offset_right = -40.0
+offset_bottom = -40.0
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -380,7 +380,7 @@ unit = Vector2( 25, 25 )
 [node name="y=x" type="Control" parent="graph/Axes"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_clip_content = true
+clip_contents = true
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -392,7 +392,7 @@ color = Color( 0.509804, 0.627451, 0.768627, 1 )
 [node name="2n+0" type="Control" parent="graph/Axes"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_clip_content = true
+clip_contents = true
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -403,7 +403,7 @@ color = Color( 0.39, 0.58, 0.93, 1 )
 [node name="2n+1" type="Control" parent="graph/Axes"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_clip_content = true
+clip_contents = true
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -415,10 +415,10 @@ color = Color( 0.39, 0.58, 0.93, 1 )
 
 [node name="NumberLine" type="VBoxContainer" parent="graph/node"]
 anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 223.0
-margin_right = 36.0
-margin_bottom = 1047.0
+offset_left = 4.0
+offset_top = 223.0
+offset_right = 36.0
+offset_bottom = 1047.0
 custom_constants/separation = 1
 __meta__ = {
 "_edit_group_": true,
@@ -426,14 +426,14 @@ __meta__ = {
 }
 
 [node name="n01" type="ColorRect" parent="graph/node/NumberLine"]
-margin_right = 32.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 32.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n01"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "32"
 align = 1
@@ -443,15 +443,15 @@ __meta__ = {
 }
 
 [node name="n02" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 25.0
-margin_right = 32.0
-margin_bottom = 49.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 25.0
+offset_right = 32.0
+offset_bottom = 49.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n02"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "31"
 align = 1
@@ -461,15 +461,15 @@ __meta__ = {
 }
 
 [node name="n03" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 50.0
-margin_right = 32.0
-margin_bottom = 74.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 50.0
+offset_right = 32.0
+offset_bottom = 74.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n03"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "30	"
 align = 1
@@ -479,15 +479,15 @@ __meta__ = {
 }
 
 [node name="n04" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 75.0
-margin_right = 32.0
-margin_bottom = 99.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 75.0
+offset_right = 32.0
+offset_bottom = 99.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n04"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "29"
 align = 1
@@ -497,15 +497,15 @@ __meta__ = {
 }
 
 [node name="n05" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 100.0
-margin_right = 32.0
-margin_bottom = 124.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 100.0
+offset_right = 32.0
+offset_bottom = 124.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n05"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "28"
 align = 1
@@ -515,15 +515,15 @@ __meta__ = {
 }
 
 [node name="n06" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 125.0
-margin_right = 32.0
-margin_bottom = 149.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 125.0
+offset_right = 32.0
+offset_bottom = 149.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n06"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "27"
 align = 1
@@ -533,15 +533,15 @@ __meta__ = {
 }
 
 [node name="n07" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 150.0
-margin_right = 32.0
-margin_bottom = 174.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 150.0
+offset_right = 32.0
+offset_bottom = 174.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n07"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "26"
 align = 1
@@ -551,15 +551,15 @@ __meta__ = {
 }
 
 [node name="n08" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 175.0
-margin_right = 32.0
-margin_bottom = 199.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 175.0
+offset_right = 32.0
+offset_bottom = 199.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n08"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "25"
 align = 1
@@ -569,15 +569,15 @@ __meta__ = {
 }
 
 [node name="n09" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 200.0
-margin_right = 32.0
-margin_bottom = 224.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 200.0
+offset_right = 32.0
+offset_bottom = 224.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n09"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "24"
 align = 1
@@ -587,15 +587,15 @@ __meta__ = {
 }
 
 [node name="n10" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 225.0
-margin_right = 32.0
-margin_bottom = 249.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 225.0
+offset_right = 32.0
+offset_bottom = 249.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n10"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "23"
 align = 1
@@ -605,15 +605,15 @@ __meta__ = {
 }
 
 [node name="n11" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 250.0
-margin_right = 32.0
-margin_bottom = 274.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 250.0
+offset_right = 32.0
+offset_bottom = 274.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n11"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "22"
 align = 1
@@ -623,15 +623,15 @@ __meta__ = {
 }
 
 [node name="n12" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 275.0
-margin_right = 32.0
-margin_bottom = 299.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 275.0
+offset_right = 32.0
+offset_bottom = 299.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n12"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "21"
 align = 1
@@ -641,15 +641,15 @@ __meta__ = {
 }
 
 [node name="n13" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 300.0
-margin_right = 32.0
-margin_bottom = 324.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 300.0
+offset_right = 32.0
+offset_bottom = 324.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n13"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "20"
 align = 1
@@ -659,15 +659,15 @@ __meta__ = {
 }
 
 [node name="n14" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 325.0
-margin_right = 32.0
-margin_bottom = 349.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 325.0
+offset_right = 32.0
+offset_bottom = 349.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n14"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "19"
 align = 1
@@ -677,15 +677,15 @@ __meta__ = {
 }
 
 [node name="n15" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 350.0
-margin_right = 32.0
-margin_bottom = 374.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 350.0
+offset_right = 32.0
+offset_bottom = 374.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n15"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "18	"
 align = 1
@@ -695,15 +695,15 @@ __meta__ = {
 }
 
 [node name="n16" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 375.0
-margin_right = 32.0
-margin_bottom = 399.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 375.0
+offset_right = 32.0
+offset_bottom = 399.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n16"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "17"
 align = 1
@@ -713,15 +713,15 @@ __meta__ = {
 }
 
 [node name="n17" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 400.0
-margin_right = 32.0
-margin_bottom = 424.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 400.0
+offset_right = 32.0
+offset_bottom = 424.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n17"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "16"
 align = 1
@@ -731,15 +731,15 @@ __meta__ = {
 }
 
 [node name="n18" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 425.0
-margin_right = 32.0
-margin_bottom = 449.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 425.0
+offset_right = 32.0
+offset_bottom = 449.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n18"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "15"
 align = 1
@@ -749,15 +749,15 @@ __meta__ = {
 }
 
 [node name="n19" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 450.0
-margin_right = 32.0
-margin_bottom = 474.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 450.0
+offset_right = 32.0
+offset_bottom = 474.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n19"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "14"
 align = 1
@@ -767,15 +767,15 @@ __meta__ = {
 }
 
 [node name="n20" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 475.0
-margin_right = 32.0
-margin_bottom = 499.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 475.0
+offset_right = 32.0
+offset_bottom = 499.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n20"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "13"
 align = 1
@@ -785,15 +785,15 @@ __meta__ = {
 }
 
 [node name="n21" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 500.0
-margin_right = 32.0
-margin_bottom = 524.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 500.0
+offset_right = 32.0
+offset_bottom = 524.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n21"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "12"
 align = 1
@@ -803,15 +803,15 @@ __meta__ = {
 }
 
 [node name="n22" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 525.0
-margin_right = 32.0
-margin_bottom = 549.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 525.0
+offset_right = 32.0
+offset_bottom = 549.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n22"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "11"
 align = 1
@@ -821,15 +821,15 @@ __meta__ = {
 }
 
 [node name="n23" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 550.0
-margin_right = 32.0
-margin_bottom = 574.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 550.0
+offset_right = 32.0
+offset_bottom = 574.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n23"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "10"
 align = 1
@@ -839,15 +839,15 @@ __meta__ = {
 }
 
 [node name="n24" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 575.0
-margin_right = 32.0
-margin_bottom = 599.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 575.0
+offset_right = 32.0
+offset_bottom = 599.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n24"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "09"
 align = 1
@@ -857,15 +857,15 @@ __meta__ = {
 }
 
 [node name="n25" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 600.0
-margin_right = 32.0
-margin_bottom = 624.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 600.0
+offset_right = 32.0
+offset_bottom = 624.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n25"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "08"
 align = 1
@@ -875,15 +875,15 @@ __meta__ = {
 }
 
 [node name="n26" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 625.0
-margin_right = 32.0
-margin_bottom = 649.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 625.0
+offset_right = 32.0
+offset_bottom = 649.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n26"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "07"
 align = 1
@@ -893,15 +893,15 @@ __meta__ = {
 }
 
 [node name="n27" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 650.0
-margin_right = 32.0
-margin_bottom = 674.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 650.0
+offset_right = 32.0
+offset_bottom = 674.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n27"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "06"
 align = 1
@@ -911,15 +911,15 @@ __meta__ = {
 }
 
 [node name="n28" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 675.0
-margin_right = 32.0
-margin_bottom = 699.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 675.0
+offset_right = 32.0
+offset_bottom = 699.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n28"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "05"
 align = 1
@@ -929,15 +929,15 @@ __meta__ = {
 }
 
 [node name="n29" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 700.0
-margin_right = 32.0
-margin_bottom = 724.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 700.0
+offset_right = 32.0
+offset_bottom = 724.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n29"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "04"
 align = 1
@@ -947,15 +947,15 @@ __meta__ = {
 }
 
 [node name="n30" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 725.0
-margin_right = 32.0
-margin_bottom = 749.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 725.0
+offset_right = 32.0
+offset_bottom = 749.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n30"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "03"
 align = 1
@@ -965,15 +965,15 @@ __meta__ = {
 }
 
 [node name="n31" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 750.0
-margin_right = 32.0
-margin_bottom = 774.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 750.0
+offset_right = 32.0
+offset_bottom = 774.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n31"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "02"
 align = 1
@@ -983,15 +983,15 @@ __meta__ = {
 }
 
 [node name="n32" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 775.0
-margin_right = 32.0
-margin_bottom = 799.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 775.0
+offset_right = 32.0
+offset_bottom = 799.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n32"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "01"
 align = 1
@@ -1001,15 +1001,15 @@ __meta__ = {
 }
 
 [node name="n33" type="ColorRect" parent="graph/node/NumberLine"]
-margin_top = 800.0
-margin_right = 32.0
-margin_bottom = 824.0
-rect_min_size = Vector2( 24, 24 )
+offset_top = 800.0
+offset_right = 32.0
+offset_bottom = 824.0
+minimum_size = Vector2( 24, 24 )
 
 [node name="Label" type="Label" parent="graph/node/NumberLine/n33"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
+offset_right = 24.0
+offset_bottom = 24.0
+minimum_size = Vector2( 24, 24 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "00"
 align = 1

@@ -1,7 +1,7 @@
 extends Node2D
 
 func toggle(node_name):
-	var object = find_node(node_name)
+	var object = find_child(node_name)
 	if object == null:
 		print("not found:", node_name)
 		return

@@ -10,8 +10,8 @@ func _on_BitModel_changed(bits, as_int):
 	for i in range(48, -1, -1):
 		var dup = $bit.duplicate()
 		dup.visible = true
-		dup.connect("pressed", self, "_on_bit_changed", [i])
-		if i < len(bits) and bits[i]: dup.pressed = true
+		dup.connect("pressed",Callable(self,"_on_bit_changed").bind(i))
+		if i < len(bits) and bits[i]: dup.button_pressed = true
 		$hbox.add_child(dup)
 
 func _on_value_text_entered(new_text):

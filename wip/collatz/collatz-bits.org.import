@@ -2,12 +2,13 @@
 
 importer="org.prez"
 type="Resource"
-path="res://.import/collatz-bits.org-13e94eab900480887fc89ff9d9662c77.res"
+uid="uid://cl72k0u3poilb"
+path="res://.godot/imported/collatz-bits.org-13e94eab900480887fc89ff9d9662c77.res"
 
 [deps]
 
 source_file="res://wip/collatz/collatz-bits.org"
-dest_files=[ "res://.import/collatz-bits.org-13e94eab900480887fc89ff9d9662c77.res" ]
+dest_files=["res://.godot/imported/collatz-bits.org-13e94eab900480887fc89ff9d9662c77.res"]
 
 [params]
 

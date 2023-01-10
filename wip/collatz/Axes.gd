@@ -1,8 +1,8 @@
-tool extends Control
+@tool extends Control
 
-export var line_color:Color = Color.cyan setget set_line_color
-export var axis_color:Color = Color.blue setget set_axis_color
-export var unit: Vector2 = Vector2(30,30) setget set_unit
+@export var line_color:Color = Color.CYAN : set = set_line_color
+@export var axis_color:Color = Color.BLUE : set = set_axis_color
+@export var unit: Vector2 = Vector2(30,30) : set = set_unit
 
 
 
@@ -31,9 +31,9 @@ var xmin
 var xmax
 
 func _ready():
-	gymax = floor(rect_size.y / unit.y)
-	gxmax = floor(rect_size.x / unit.x)
-	ymax = floor(rect_size.y)
+	gymax = floor(size.y / unit.y)
+	gxmax = floor(size.x / unit.x)
+	ymax = floor(size.y)
 	ymin = ymax - (gymax * unit.y)
 	xmin = 0
 	xmax = gxmax * unit.x

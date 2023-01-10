@@ -1,47 +1,47 @@
-tool extends Node2D
+@tool extends Node2D
 # Animated Scene Title
 
 signal animation_finished
 
-export (String) var text setget set_text
-export (int) var text_len setget set_text_len
-export var stripe_x = 0 setget set_stripe_x
-export var stripe_y = 0 setget set_stripe_y
-export var stripe_w = 0 setget set_stripe_w
-export var stripe_h = 0 setget set_stripe_h
-export (Color) var stripe_color = Color.silver setget set_stripe_color
+@export (String) var text : set = set_text
+@export (int) var text_len : set = set_text_len
+@export var stripe_x = 0 : set = set_stripe_x
+@export var stripe_y = 0 : set = set_stripe_y
+@export var stripe_w = 0 : set = set_stripe_w
+@export var stripe_h = 0 : set = set_stripe_h
+@export (Color) var stripe_color = Color.SILVER : set = set_stripe_color
 
-onready var anim = $"animation"
-onready var stripe = $stripe
-onready var label = $label
+@onready var anim = $"animation"
+@onready var stripe = $stripe
+@onready var label = $label
 
 func _ready():
 	anim.play('init')
-	yield(anim, "animation_finished")
+	await anim.animation_finished
 
 func reveal(new_text):
 	# does title animation and then emits 'animation_finished'
 	text = new_text
 	text_len = 0
-	anim.play("reveal"); yield(anim, "animation_finished")
-	anim.play('hide'); yield(anim, "animation_finished")
+	anim.play("reveal"); await anim.animation_finished
+	anim.play('hide'); await anim.animation_finished
 	emit_signal('animation_finished')
 
 func set_stripe_y(y):
 	stripe_y = y
-	if stripe: stripe.rect_position.y = y
+	if stripe: stripe.position.y = y
 	
 func set_stripe_x(x):
 	stripe_x = x
-	if stripe: stripe.rect_position.x = x
+	if stripe: stripe.position.x = x
 
 func set_stripe_w(w):
 	stripe_w = w
-	if stripe: stripe.rect_size.x = w
+	if stripe: stripe.size.x = w
 	
 func set_stripe_h(h):
 	stripe_h = h
-	if stripe: stripe.rect_size.y = h
+	if stripe: stripe.size.y = h
 
 func set_stripe_color(c):
 	stripe_color = c

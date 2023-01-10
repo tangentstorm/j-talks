@@ -1,13 +1,13 @@
 [gd_scene load_steps=7 format=2]
 
 [sub_resource type="Gradient" id=1]
-offsets = PoolRealArray( 0, 0.992366 )
-colors = PoolColorArray( 0.675829, 0.135407, 0.949219, 1, 0.697266, 0.109513, 0.405685, 1 )
+offsets = PackedFloat32Array( 0, 0.992366 )
+colors = PackedColorArray( 0.675829, 0.135407, 0.949219, 1, 0.697266, 0.109513, 0.405685, 1 )
 
-[sub_resource type="GradientTexture" id=2]
+[sub_resource type="GradientTexture2D" id=2]
 gradient = SubResource( 1 )
 
-[sub_resource type="ParticlesMaterial" id=3]
+[sub_resource type="ParticleProcessMaterial" id=3]
 lifetime_randomness = 1.0
 trail_divisor = 5
 emission_shape = 1
@@ -34,7 +34,7 @@ _data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.303681 ), 0.61721, 0.0,
 [sub_resource type="CurveTexture" id=5]
 curve = SubResource( 4 )
 
-[sub_resource type="ParticlesMaterial" id=6]
+[sub_resource type="ParticleProcessMaterial" id=6]
 lifetime_randomness = 0.5
 emission_shape = 2
 emission_box_extents = Vector3( 32, 1, 0 )
@@ -61,11 +61,11 @@ hue_variation_random = 1.0
 [node name="Node2D" type="ColorRect"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = -1.25989
-margin_bottom = -1.25989
+offset_top = -1.25989
+offset_bottom = -1.25989
 color = Color( 0, 0, 0, 1 )
 
-[node name="fireball" type="Particles2D" parent="."]
+[node name="fireball" type="GPUParticles2D" parent="."]
 position = Vector2( 1519.59, 641.906 )
 scale = Vector2( 8, 8 )
 amount = 5000
@@ -73,7 +73,7 @@ lifetime = 2.0
 speed_scale = 0.5
 process_material = SubResource( 3 )
 
-[node name="neon beam" type="Particles2D" parent="."]
+[node name="neon beam" type="GPUParticles2D" parent="."]
 position = Vector2( 1145.44, -43.7885 )
 rotation = -2.09439
 scale = Vector2( 1, 20 )

@@ -5,18 +5,18 @@ var data = []
 var chart_scale = Vector2(5,-5)
 var chart_xy = Vector2(20, 1000)
 var count = 512
-export var radius = 2
-export(Color) var color = Color.white
+@export var radius = 2
+@export var color: Color = Color.WHITE
 var paused = false
 
-onready var timer = Timer.new()
+@onready var timer = Timer.new()
 
 func _ready():
-	VisualServer.set_default_clear_color(Color.royalblue)
+	RenderingServer.set_default_clear_color(Color.ROYAL_BLUE)
 	timer.autostart = 1
 	timer.wait_time = 0.08
 	timer.paused = true
-	timer.connect("timeout", self, "step")
+	timer.connect("timeout",Callable(self,"step"))
 	add_child(timer)
 	reset_data()
 

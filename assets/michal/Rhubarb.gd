@@ -1,16 +1,16 @@
-tool class_name Rhubarb extends Node
+@tool class_name Rhubarb extends Node
 
-export(NodePath) var animation_player_nodepath = '..'
-export(NodePath) var stream_player_nodepath = '../AudioStreamPlayer2D'
-export(NodePath) var character_nodepath = '../Michal'
-export(AudioStreamSample) var clip
-export(String, MULTILINE) var text
-export(String, MULTILINE) var codes
-export(bool) var rhubarb_flag = false setget set_rhubarb_flag
-export(bool) var script_flag = false setget set_script_flag
-export(String, DIR, GLOBAL) var rhubarb_dir = "d:/Rhubarb-Lip-Sync-1.12.0-Windows/"
-export(String, DIR, GLOBAL) var temp_dir = "d:/tmp/"
-export(String) var animation_name = 'lipsync.000'
+@export var animation_player_nodepath: NodePath = '..'
+@export var stream_player_nodepath: NodePath = '../AudioStreamPlayer2D'
+@export var character_nodepath: NodePath = '../Michal'
+@export var clip: AudioStreamWAV
+@export var text # (String, MULTILINE)
+@export var codes # (String, MULTILINE)
+@export var rhubarb_flag: bool = false : set = set_rhubarb_flag
+@export var script_flag: bool = false : set = set_script_flag
+@export var rhubarb_dir = "d:/Rhubarb-Lip-Sync-1.12.0-Windows/" # (String, DIR, GLOBAL)
+@export var temp_dir = "d:/tmp/" # (String, DIR, GLOBAL)
+@export var animation_name: String = 'lipsync.000'
 
 
 func rhubarb():
@@ -45,17 +45,17 @@ func build_animation():
 	if t_sp == -1: return printerr('todo: add sp track')
 	if t_ch == -1: return printerr('todo: add ch track')
 	
-	assert(1 == anim.track_get_key_count(t_sp), " no key on audio track")
-	assert(0 == anim.track_get_key_time(t_sp, 0), "audio track not on frame 0")
+	assert(1 == anim.track_get_key_count(t_sp)) #," no key checked audio track")
+	assert(0 == anim.track_get_key_time(t_sp, 0)) #,"audio track not checked frame 0")
 	anim.audio_track_set_key_stream(t_sp, 0, clip)
 	var rp = anim.audio_track_get_key_stream(t_sp, 0).resource_path
-	assert(rp == clip.resource_path, "audio track had wrong clip")
+	assert(rp == clip.resource_path) #,"audio track had wrong clip")
 
 	# clear out the old phoneme track
 	#print('key indices:', anim.track_get_path(t_sp))
 	for i in range(anim.track_get_key_count(t_ch)):
 		anim.track_remove_key(t_ch, 0)
-	var lines:PoolStringArray = codes.trim_suffix('\n').split('\n')
+	var lines:PackedStringArray = codes.trim_suffix('\n').split('\n')
 	for line in lines:
 		var x = line.split('\t')
 		var t = float(x[0]) # timecode
@@ -63,4 +63,4 @@ func build_animation():
 		print(t,'->',f)
 		anim.track_insert_key(t_ch, t, f)
 	
-	assert(len(lines) == anim.track_get_key_count(t_ch), 'should have cleared out all the keys.?')
+	assert(len(lines) == anim.track_get_key_count(t_ch)) #,'should have cleared out all the keys.?')

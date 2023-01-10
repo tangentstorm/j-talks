@@ -16,12 +16,12 @@ func clear_tokens():
 		node.queue_free()
 
 func add_token(text, type):
-	var t = Token.instance()
+	var t = Token.instantiate()
 	add_child(t)
-	t.rect_position.x = tx
-	t.rect_position.y = ty
+	t.position.x = tx
+	t.position.y = ty
 	t.text = text
 	t.type = type
-	tx += max(24, t.rect_size.x) + gw
+	tx += max(24, t.size.x) + gw
 	if is_inside_tree():
 		t.set_owner(get_tree().edited_scene_root)

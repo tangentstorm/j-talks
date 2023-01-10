@@ -9,73 +9,73 @@ script = ExtResource( 2 )
 pattern = "CAVN"
 
 [node name="Token" parent="." index="0" instance=ExtResource( 3 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.690196, 0.368627, 0.133333, 1 )
 text = "C"
 type = 3
 
 [node name="Token2" parent="." index="1" instance=ExtResource( 3 )]
-margin_left = 29.0
-margin_top = 5.0
-margin_right = 40.0
-margin_bottom = 37.0
+offset_left = 29.0
+offset_top = 5.0
+offset_right = 40.0
+offset_bottom = 37.0
 color = Color( 0.690196, 0.576471, 0.133333, 1 )
 text = "A"
 type = 2
 
 [node name="Token3" parent="." index="2" instance=ExtResource( 3 )]
-margin_left = 53.0
-margin_top = 5.0
-margin_right = 64.0
-margin_bottom = 37.0
+offset_left = 53.0
+offset_top = 5.0
+offset_right = 64.0
+offset_bottom = 37.0
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "V"
 type = 1
 
 [node name="Token4" parent="." index="3" instance=ExtResource( 3 )]
-margin_left = 77.0
-margin_top = 5.0
-margin_right = 88.0
-margin_bottom = 37.0
+offset_left = 77.0
+offset_top = 5.0
+offset_right = 88.0
+offset_bottom = 37.0
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "N"
 type = 0
 
 [node name="Token" parent="." index="4" instance=ExtResource( 3 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.690196, 0.368627, 0.133333, 1 )
 text = "C"
 type = 3
 
 [node name="Token2" parent="." index="5" instance=ExtResource( 3 )]
-margin_left = 29.0
-margin_top = 5.0
-margin_right = 40.0
-margin_bottom = 37.0
+offset_left = 29.0
+offset_top = 5.0
+offset_right = 40.0
+offset_bottom = 37.0
 color = Color( 0.690196, 0.576471, 0.133333, 1 )
 text = "A"
 type = 2
 
 [node name="Token3" parent="." index="6" instance=ExtResource( 3 )]
-margin_left = 53.0
-margin_top = 5.0
-margin_right = 64.0
-margin_bottom = 37.0
+offset_left = 53.0
+offset_top = 5.0
+offset_right = 64.0
+offset_bottom = 37.0
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "V"
 type = 1
 
 [node name="Token4" parent="." index="7" instance=ExtResource( 3 )]
-margin_left = 77.0
-margin_top = 5.0
-margin_right = 88.0
-margin_bottom = 37.0
+offset_left = 77.0
+offset_top = 5.0
+offset_right = 88.0
+offset_bottom = 37.0
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "N"
 type = 0

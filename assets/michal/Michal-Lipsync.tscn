@@ -16,8 +16,8 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"clips": PoolStringArray( "RESET", "E", "F", "D", "[stop]" ),
-"times": PoolRealArray( 0, 0.001, 0.002, 0.1, 0.3 )
+"clips": PackedStringArray( "RESET", "E", "F", "D", "[stop]" ),
+"times": PackedFloat32Array( 0, 0.001, 0.002, 0.1, 0.3 )
 }
 tracks/1/type = "audio"
 tracks/1/path = NodePath("Michal-Lipsync/AudioStreamPlayer2D")
@@ -31,7 +31,7 @@ tracks/1/keys = {
 "start_offset": 0.0,
 "stream": ExtResource( 2 )
 } ],
-"times": PoolRealArray( 0 )
+"times": PackedFloat32Array( 0 )
 }
 
 [sub_resource type="Animation" id=4]
@@ -44,12 +44,12 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"clips": PoolStringArray( "eyes-closed", "eyes-open" ),
-"times": PoolRealArray( 0, 0.1 )
+"clips": PackedStringArray( "eyes-closed", "eyes-open" ),
+"times": PackedFloat32Array( 0, 0.1 )
 }
 
 [sub_resource type="Animation" id=5]
-resource_name = "eyebrow-raise"
+resource_name = "eyebrow-move_to_front"
 length = 0.1
 tracks/0/type = "animation"
 tracks/0/path = NodePath("Michal-Lipsync/Michal")
@@ -58,8 +58,8 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"clips": PoolStringArray( "eyebrows-up" ),
-"times": PoolRealArray( 0 )
+"clips": PackedStringArray( "eyebrows-up" ),
+"times": PackedFloat32Array( 0 )
 }
 
 [sub_resource type="Animation" id=2]
@@ -72,8 +72,8 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"clips": PoolStringArray( "X", "C", "B", "F", "C", "A", "B", "D", "F", "B", "X" ),
-"times": PoolRealArray( 0, 0.17, 0.24, 0.37, 0.44, 0.65, 0.73, 0.89, 1.03, 1.45, 1.73 )
+"clips": PackedStringArray( "X", "C", "B", "F", "C", "A", "B", "D", "F", "B", "X" ),
+"times": PackedFloat32Array( 0, 0.17, 0.24, 0.37, 0.44, 0.65, 0.73, 0.89, 1.03, 1.45, 1.73 )
 }
 tracks/1/type = "audio"
 tracks/1/path = NodePath("Michal-Lipsync/AudioStreamPlayer2D")
@@ -87,7 +87,7 @@ tracks/1/keys = {
 "start_offset": 0.0,
 "stream": ExtResource( 2 )
 } ],
-"times": PoolRealArray( 0 )
+"times": PackedFloat32Array( 0 )
 }
 
 [sub_resource type="Animation" id=3]
@@ -100,8 +100,8 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"clips": PoolStringArray( "X", "F", "B", "C", "F", "A", "B", "G", "B", "C", "E", "B", "C", "H", "G", "X", "X" ),
-"times": PoolRealArray( 0, 0.24, 0.32, 0.53, 0.74, 0.81, 0.89, 1.28, 1.35, 1.45, 1.51, 1.56, 1.63, 1.77, 1.84, 2.05, 2.47 )
+"clips": PackedStringArray( "X", "F", "B", "C", "F", "A", "B", "G", "B", "C", "E", "B", "C", "H", "G", "X", "X" ),
+"times": PackedFloat32Array( 0, 0.24, 0.32, 0.53, 0.74, 0.81, 0.89, 1.28, 1.35, 1.45, 1.51, 1.56, 1.63, 1.77, 1.84, 2.05, 2.47 )
 }
 tracks/1/type = "audio"
 tracks/1/path = NodePath("Michal-Lipsync/AudioStreamPlayer2D")
@@ -115,13 +115,13 @@ tracks/1/keys = {
 "start_offset": 0.0,
 "stream": ExtResource( 4 )
 } ],
-"times": PoolRealArray( 0 )
+"times": PackedFloat32Array( 0 )
 }
 
 [node name="Michal-Lipsync" type="AnimationPlayer"]
 anims/animatic = SubResource( 1 )
 anims/blink = SubResource( 4 )
-anims/eyebrow-raise = SubResource( 5 )
+anims/eyebrow-move_to_front = SubResource( 5 )
 anims/lipsync.000 = SubResource( 2 )
 anims/lipsync.001 = SubResource( 3 )
 script = ExtResource( 5 )

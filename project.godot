@@ -6,121 +6,110 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
-config_version=4
+config_version=5
 
-_global_script_classes=[ {
+_global_script_classes=[{
 "base": "Line2D",
-"class": "AntialiasedLine2D",
-"language": "GDScript",
+"class": &"AntialiasedLine2D",
+"language": &"GDScript",
 "path": "res://addons/antialiased_line2d/antialiased_line2d.gd"
 }, {
 "base": "Polygon2D",
-"class": "AntialiasedPolygon2D",
-"language": "GDScript",
+"class": &"AntialiasedPolygon2D",
+"language": &"GDScript",
 "path": "res://addons/antialiased_line2d/antialiased_polygon2d.gd"
 }, {
 "base": "Polygon2D",
-"class": "AntialiasedRegularPolygon2D",
-"language": "GDScript",
+"class": &"AntialiasedRegularPolygon2D",
+"language": &"GDScript",
 "path": "res://addons/antialiased_line2d/antialiased_regular_polygon2d.gd"
 }, {
-"base": "Reference",
-"class": "AudioLoader",
-"language": "GDScript",
+"base": "RefCounted",
+"class": &"AudioLoader",
+"language": &"GDScript",
 "path": "res://addons/waveform/AudioLoader.gd"
 }, {
 "base": "AntialiasedLine2D",
-"class": "FnPlot",
-"language": "GDScript",
+"class": &"FnPlot",
+"language": &"GDScript",
 "path": "res://wip/binary-signal-space/FnPlot.gd"
 }, {
-"base": "Control",
-"class": "JKVM",
-"language": "GDScript",
-"path": "res://addons/jprez/JKVM.gd"
-}, {
 "base": "Node",
-"class": "JPrezPlayer",
-"language": "GDScript",
+"class": &"JPrezPlayer",
+"language": &"GDScript",
 "path": "res://addons/jprez/JPrezPlayer.gd"
 }, {
-"base": "Reference",
-"class": "Org",
-"language": "GDScript",
+"base": "RefCounted",
+"class": &"Org",
+"language": &"GDScript",
 "path": "res://addons/orgprez/Org.gd"
 }, {
 "base": "Resource",
-"class": "OrgChunk",
-"language": "GDScript",
+"class": &"OrgChunk",
+"language": &"GDScript",
 "path": "res://addons/orgprez/OrgChunk.gd"
 }, {
-"base": "Reference",
-"class": "OrgCursor",
-"language": "GDScript",
+"base": "RefCounted",
+"class": &"OrgCursor",
+"language": &"GDScript",
 "path": "res://addons/orgprez/OrgCursor.gd"
 }, {
 "base": "Node",
-"class": "OrgDeck",
-"language": "GDScript",
+"class": &"OrgDeck",
+"language": &"GDScript",
 "path": "res://addons/orgprez/OrgDeck.gd"
 }, {
 "base": "Resource",
-"class": "OrgNode",
-"language": "GDScript",
+"class": &"OrgNode",
+"language": &"GDScript",
 "path": "res://addons/orgprez/OrgNode.gd"
 }, {
 "base": "VBoxContainer",
-"class": "OrgPrezAudioTab",
-"language": "GDScript",
+"class": &"OrgPrezAudioTab",
+"language": &"GDScript",
 "path": "res://addons/orgprez/OrgPrezAudioTab.gd"
 }, {
 "base": "VBoxContainer",
-"class": "OrgPrezOutline",
-"language": "GDScript",
+"class": &"OrgPrezOutline",
+"language": &"GDScript",
 "path": "res://addons/orgprez/OrgPrezOutline.gd"
 }, {
 "base": "Control",
-"class": "OrgPrezRuntime",
-"language": "GDScript",
+"class": &"OrgPrezRuntime",
+"language": &"GDScript",
 "path": "res://addons/orgprez/OrgPrezRuntime.gd"
 }, {
 "base": "Node",
-"class": "OrgPrezScriptEngine",
-"language": "GDScript",
+"class": &"OrgPrezScriptEngine",
+"language": &"GDScript",
 "path": "res://addons/orgprez/OrgPrezScriptEngine.gd"
 }, {
-"base": "WindowDialog",
-"class": "OrgPrezStepper",
-"language": "GDScript",
+"base": "Window",
+"class": &"OrgPrezStepper",
+"language": &"GDScript",
 "path": "res://addons/orgprez/OrgPrezStepper.gd"
 }, {
 "base": "Resource",
-"class": "OrgTime",
-"language": "GDScript",
+"class": &"OrgTime",
+"language": &"GDScript",
 "path": "res://addons/orgprez/OrgTime.gd"
 }, {
-"base": "Node",
-"class": "Rhubarb",
-"language": "GDScript",
-"path": "res://assets/michal/Rhubarb.gd"
-}, {
 "base": "ColorRect",
-"class": "Waveform",
-"language": "GDScript",
+"class": &"Waveform",
+"language": &"GDScript",
 "path": "res://addons/waveform/Waveform.gd"
 }, {
 "base": "PanelContainer",
-"class": "WaveformPanel",
-"language": "GDScript",
+"class": &"WaveformPanel",
+"language": &"GDScript",
 "path": "res://addons/waveform/WaveformPanel.gd"
-} ]
+}]
 _global_script_class_icons={
-"AntialiasedLine2D": "res://addons/antialiased_line2d/antialiased_line2d.svg",
-"AntialiasedPolygon2D": "res://addons/antialiased_line2d/antialiased_polygon2d.svg",
-"AntialiasedRegularPolygon2D": "res://addons/antialiased_line2d/antialiased_regular_polygon2d.svg",
+"AntialiasedLine2D": "",
+"AntialiasedPolygon2D": "",
+"AntialiasedRegularPolygon2D": "",
 "AudioLoader": "",
 "FnPlot": "",
-"JKVM": "",
 "JPrezPlayer": "",
 "Org": "",
 "OrgChunk": "",
@@ -133,7 +122,6 @@ _global_script_class_icons={
 "OrgPrezScriptEngine": "",
 "OrgPrezStepper": "",
 "OrgTime": "",
-"Rhubarb": "",
 "Waveform": "",
 "WaveformPanel": ""
 }
@@ -142,6 +130,7 @@ _global_script_class_icons={
 
 config/name="j-talks"
 run/main_scene="res://addons/orgprez/OrgPrezRuntime.tscn"
+config/features=PackedStringArray("4.0")
 
 [audio]
 
@@ -154,17 +143,15 @@ AntialiasedLine2DTexture="*res://addons/antialiased_line2d/texture.gd"
 
 [display]
 
+window/size/resizable=false
+window/stretch/mode="2d"
 window/size/width=1920
 window/size/height=1080
-window/size/resizable=false
 window/size/fullscreen=true
-window/dpi/allow_hidpi=true
-window/stretch/mode="2d"
-window/stretch/aspect="keep"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/antialiased_line2d/plugin.cfg", "res://addons/orgprez/plugin.cfg", "res://addons/waveform/plugin.cfg" )
+enabled=PackedStringArray("res://addons/antialiased_line2d/plugin.cfg", "res://addons/orgprez/plugin.cfg", "res://addons/waveform/plugin.cfg")
 
 [global]
 
@@ -174,23 +161,23 @@ default_org_file="res://wip/binary-signal-space/binary-signal-space.org"
 
 toggle1={
 "deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":49,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
- ]
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":0,"unicode":0,"echo":false,"script":null)
+]
 }
 toggle2={
 "deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":50,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
- ]
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":0,"unicode":0,"echo":false,"script":null)
+]
 }
 toggle3={
 "deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":51,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
- ]
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":0,"unicode":0,"echo":false,"script":null)
+]
 }
 toggle4={
 "deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":52,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
- ]
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":0,"unicode":0,"echo":false,"script":null)
+]
 }
 
 [network]
@@ -199,4 +186,4 @@ limits/debugger_stdout/max_chars_per_second=65536
 
 [rendering]
 
-environment/default_clear_color=Color( 0.176471, 0.247059, 0.34902, 1 )
+environment/default_clear_color=Color(0.176471, 0.247059, 0.34902, 1)

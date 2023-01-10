@@ -4,7 +4,7 @@ const gw = 64
 const gh = 32
 
 var size : int
-var mem : PoolIntArray
+var mem : PackedInt32Array
 
 const NULL = -1
 const HEAP = 0 # start address of heap
@@ -21,7 +21,7 @@ const WORTH_SPLITTING = 10
 func _ready():
 	$ColorGrid.grid_size = Vector2(gw,gh)
 	size = gw * gh
-	mem = PoolIntArray([]); mem.resize(size)
+	mem = PackedInt32Array([]); mem.resize(size)
 	$ColorGrid.data.resize(size)
 	mem[NEXT] = NULL # start of chain
 	mem[SIZE] = size - DATA
@@ -40,7 +40,7 @@ const FREE_COLOR = 1 # gray
 const HEAD_COLOR = 0 # black
 const USED_COLOR = 10 # white
 
-# updates the values on the ColorGrid
+# updates the values checked the ColorGrid
 func render():
 	var d = $ColorGrid.data
 	var p = HEAP

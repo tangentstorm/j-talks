@@ -1,20 +1,20 @@
 # function plot node. plot an arbitrary gdscript expression
 # over a given range. extends AntiAliasedLine2d so you can
 # control line width, etc
-tool
+@tool
 class_name FnPlot
 extends AntialiasedLine2D
 
-export var expr : String = "0" setget _set_expr
+@export var expr : String = "0" : set = _set_expr
 
 # canvas size (in unscaled pixels)
-export var canvas_size : Vector2 = Vector2(640, 480) setget _set_canvas_size
-export var steps : int = 64 setget _set_steps
-export var stops : Vector2 = Vector2(-1,-1) setget _set_stops
+@export var canvas_size : Vector2 = Vector2(640, 480) : set = _set_canvas_size
+@export var steps : int = 64 : set = _set_steps
+@export var stops : Vector2 = Vector2(-1,-1) : set = _set_stops
 
 # domain and codomain of the function
-export var x_range : Vector2 = Vector2(-1, 1) setget _set_x_range
-export var y_range : Vector2 = Vector2(0, 10) setget _set_y_range
+@export var x_range : Vector2 = Vector2(-1, 1) : set = _set_x_range
+@export var y_range : Vector2 = Vector2(0, 10) : set = _set_y_range
 
 func _set_expr(x):
 	expr = x; _rebuild()
@@ -48,7 +48,7 @@ func _rebuild():
 	# 'steps' is the number of segments
 	# so 'steps + 1' gives the number of distinct points
 	var s = steps + 1
-	var res = PoolVector2Array()
+	var res = PackedVector2Array()
 	var x_dist = x_range.y - x_range.x
 	var x_step = x_dist/s
 	var x_scale = canvas_size.x / steps

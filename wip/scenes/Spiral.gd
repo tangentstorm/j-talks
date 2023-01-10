@@ -1,9 +1,9 @@
-extends Path
+extends Path3D
 
-onready var swivel = $"../SwivelCam"
-onready var camera = $"../SwivelCam/Camera"
-onready var label = $"../Label"
-onready var ig:ImmediateGeometry = ImmediateGeometry.new()
+@onready var swivel = $"../SwivelCam"
+@onready var camera = $"../SwivelCam/Camera3D"
+@onready var label = $"../Label"
+@onready var ig:ImmediateMesh = ImmediateMesh.new()
 
 func _ready():
 	var c:Curve3D = curve
@@ -15,12 +15,12 @@ func _ready():
 	self.curve = c
 	
 	
-	var m = SpatialMaterial.new()
+	var m = StandardMaterial3D.new()
 	m.flags_use_point_size = true
 	m.flags_unshaded = true # flat color
 	m.params_point_size = 5
 	m.vertex_color_use_as_albedo = true
-	m.albedo_color = Color.white
+	m.albedo_color = Color.WHITE
 	ig.set_material_override(m)
 	get_tree().root.call_deferred('add_child', ig)
 
@@ -30,20 +30,20 @@ func _input(e):
 	if e is InputEventKey and e.pressed:
 		toggle = not toggle
 		if toggle:
-			camera.projection = Camera.PROJECTION_ORTHOGONAL
+			camera.projection = Camera3D.PROJECTION_ORTHOGONAL
 			label.text = "Orthographic"
-			camera.environment.background_color = Color.teal
+			camera.environment.background_color = Color.TEAL
 		else:
-			camera.projection = Camera.PROJECTION_PERSPECTIVE
+			camera.projection = Camera3D.PROJECTION_PERSPECTIVE
 			label.text = "Perspective"
-			camera.environment.background_color = Color.steelblue
+			camera.environment.background_color = Color.STEEL_BLUE
 			
 
 
 # https://godotengine.org/qa/62948/how-is-the-path3d-visualized-in-the-editor
 func _process(_dt):
 	swivel.rotation.y += PI/128
-	camera.look_at(self.translation, Vector3.UP)
+	camera.look_at(self.position, Vector3.UP)
 
 	ig.clear()
 	ig.begin(Mesh.PRIMITIVE_LINE_STRIP)

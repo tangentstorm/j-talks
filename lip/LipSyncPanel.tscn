@@ -1,7 +1,7 @@
 [gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://wip/dealing-cards/322f-letssayyouwanttodealsomecar.wav" type="AudioStream" id=1]
-[ext_resource path="res://assets/lipsync/blue-sheet.png" type="Texture" id=11]
+[ext_resource path="res://assets/lipsync/blue-sheet.png" type="Texture2D" id=11]
 [ext_resource path="res://LipSyncPanel.gd" type="Script" id=12]
 
 [sub_resource type="AtlasTexture" id=5]
@@ -40,7 +40,7 @@ region = Rect2( 96, 0, 16, 16 )
 atlas = ExtResource( 11 )
 region = Rect2( 128, 0, 16, 16 )
 
-[sub_resource type="StreamTexture" id=16]
+[sub_resource type="CompressedTexture2D" id=16]
 load_path = "res://.import/blue-sheet.png-429c21338be9eb96e2ea8ae64a131e88.stex"
 
 [sub_resource type="AtlasTexture" id=17]
@@ -122,13 +122,13 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.2, 0.36, 0.43, 0.57, 0.64, 0.78, 0.85, 0.93, 1.1, 1.14, 1.47 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"times": PackedFloat32Array( 0, 0.2, 0.36, 0.43, 0.57, 0.64, 0.78, 0.85, 0.93, 1.1, 1.14, 1.47 ),
+"transitions": PackedFloat32Array( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
 "update": 1,
 "values": [ "X", "B", "C", "F", "D", "F", "B", "A", "D", "C", "B", "X" ]
 }
 tracks/1/type = "audio"
-tracks/1/path = NodePath("../ViewportContainer/AudioStreamPlayer2D")
+tracks/1/path = NodePath("../SubViewportContainer/AudioStreamPlayer2D")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -139,46 +139,46 @@ tracks/1/keys = {
 "start_offset": 0.0,
 "stream": ExtResource( 1 )
 } ],
-"times": PoolRealArray( 0 )
+"times": PackedFloat32Array( 0 )
 }
 
 [node name="LipSync" type="HBoxContainer"]
-margin_right = 494.0
-margin_bottom = 384.0
-rect_min_size = Vector2( 512, 384 )
+offset_right = 494.0
+offset_bottom = 384.0
+minimum_size = Vector2( 512, 384 )
 script = ExtResource( 12 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ViewportContainer" type="ViewportContainer" parent="."]
-margin_right = 384.0
-margin_bottom = 384.0
-rect_min_size = Vector2( 384, 384 )
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+offset_right = 384.0
+offset_bottom = 384.0
+minimum_size = Vector2( 384, 384 )
 
-[node name="blue" type="AnimatedSprite" parent="ViewportContainer"]
+[node name="blue" type="AnimatedSprite2D" parent="SubViewportContainer"]
 scale = Vector2( 24, 24 )
 frames = SubResource( 18 )
 animation = "X"
 centered = false
 
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="ViewportContainer/blue"]
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="SubViewportContainer/blue"]
 scale = Vector2( 0.0416667, 0.0416667 )
 stream = ExtResource( 1 )
 volume_db = 8.889
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="ViewportContainer/blue"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="SubViewportContainer/blue"]
 anims/RESET = SubResource( 2 )
 "anims/lipsync wav-only" = SubResource( 4 )
 
 [node name="vbox" type="VBoxContainer" parent="."]
-margin_left = 388.0
-margin_right = 449.0
-margin_bottom = 384.0
+offset_left = 388.0
+offset_right = 449.0
+offset_bottom = 384.0
 
 [node name="Button" type="Button" parent="vbox"]
-margin_right = 61.0
-margin_bottom = 20.0
+offset_right = 61.0
+offset_bottom = 20.0
 text = "rhubarb"
 __meta__ = {
 "_edit_use_anchors_": false

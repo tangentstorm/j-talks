@@ -2,12 +2,13 @@
 
 importer="org.prez"
 type="Resource"
-path="res://.import/collatz.org-83a73931a7fbde24df99eddb8ce61e5a.res"
+uid="uid://hn2kqsypnyyx"
+path="res://.godot/imported/collatz.org-83a73931a7fbde24df99eddb8ce61e5a.res"
 
 [deps]
 
 source_file="res://wip/collatz/collatz.org"
-dest_files=[ "res://.import/collatz.org-83a73931a7fbde24df99eddb8ce61e5a.res" ]
+dest_files=["res://.godot/imported/collatz.org-83a73931a7fbde24df99eddb8ce61e5a.res"]
 
 [params]
 

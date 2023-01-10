@@ -1,10 +1,10 @@
-tool extends Control
+@tool extends Control
 
-export var b:float = 0.0 setget set_b
-export var m:float = 1.0 setget set_m
-export var dist:float = 0 setget set_dist
-export var nk: Vector2 = Vector2(1, 0) setget set_nk   # when to draw dots (ex: 2 1 = odd)
-export var color:Color = Color.cornflower setget set_color
+@export var b:float = 0.0 : set = set_b
+@export var m:float = 1.0 : set = set_m
+@export var dist:float = 0 : set = set_dist
+@export var nk: Vector2 = Vector2(1, 0) setget set_nk   # when to draw dots (ex: 2 1 = odd)
+@export var color:Color = Color.cornflower : set = set_color
 
 func set_color(c):
 	color = c

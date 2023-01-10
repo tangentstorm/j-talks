@@ -2,12 +2,13 @@
 
 importer="org.prez"
 type="Resource"
-path="res://.import/collatz-polynomial-tree.org-f2ce7745abbbe4e8e52565585c350265.res"
+uid="uid://d2fl2dv03snt7"
+path="res://.godot/imported/collatz-polynomial-tree.org-f2ce7745abbbe4e8e52565585c350265.res"
 
 [deps]
 
 source_file="res://wip/collatz/collatz-polynomial-tree.org"
-dest_files=[ "res://.import/collatz-polynomial-tree.org-f2ce7745abbbe4e8e52565585c350265.res" ]
+dest_files=["res://.godot/imported/collatz-polynomial-tree.org-f2ce7745abbbe4e8e52565585c350265.res"]
 
 [params]
 

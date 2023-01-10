@@ -1,7 +1,7 @@
 extends Control
 
 var text : String
-var clip : AudioStreamSample
+var clip : AudioStreamWAV
 var player : AnimationPlayer
 
 
@@ -11,6 +11,6 @@ func get_phonemes():
 	pass
 
 func build():
-	player.remove_animation(temp_animation_name)
+	player.remove_animation_library(temp_animation_name)
 	var anim = Animation.new()
-	player.add_animation(temp_animation_name, anim)
+	player.add_animation_library(temp_animation_name, anim)

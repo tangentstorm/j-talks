@@ -1,12 +1,12 @@
 extends Node
 
 # the value as a 64 (32?) bit integer
-export var as_int: int = 1
+@export var as_int: int = 1
 
 # the value as an array of bits
 # bits[i] corresponds to the 2^i bit.
 # (e.g., value="8" corresponds to bits=[0,0,0,1])
-export var bits:Array = [1]
+@export var bits:Array = [1]
 
 signal changed(bits, as_int)
 

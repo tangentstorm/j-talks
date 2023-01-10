@@ -4,7 +4,7 @@ class_name B4vm extends Object
 var ip = 0
 var ds = []
 var rs = []
-var mem = PoolByteArray()
+var mem = PackedByteArray()
 var xx = 0
 var zz = 0
 var yy = 0

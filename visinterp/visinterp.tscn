@@ -7,14 +7,14 @@
 [ext_resource path="res://visinterp/KeyHandler.gd" type="Script" id=5]
 [ext_resource path="res://visinterp/MatchSlider.gd" type="Script" id=6]
 
-[sub_resource type="DynamicFontData" id=1]
+[sub_resource type="FontFile" id=1]
 font_path = "res://DroidSansMono.ttf"
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="FontFile" id=2]
 size = 24
 font_data = SubResource( 1 )
 
-[sub_resource type="DynamicFont" id=3]
+[sub_resource type="FontFile" id=3]
 size = 32
 font_data = SubResource( 1 )
 
@@ -28,8 +28,8 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
 "update": 0,
 "values": [ Vector2( 340, 842 ) ]
 }
@@ -44,8 +44,8 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.2 ),
-"transitions": PoolRealArray( 1, 0.420448 ),
+"times": PackedFloat32Array( 0, 0.2 ),
+"transitions": PackedFloat32Array( 1, 0.420448 ),
 "update": 0,
 "values": [ Vector2( 340, 842 ), Vector2( 340, 593 ) ]
 }
@@ -66,10 +66,10 @@ __meta__ = {
 }
 
 [node name="legend" type="ColorRect" parent="."]
-margin_left = 1633.0
-margin_top = 30.0
-margin_right = 1840.0
-margin_bottom = 240.0
+offset_left = 1633.0
+offset_top = 30.0
+offset_right = 1840.0
+offset_bottom = 240.0
 color = Color( 0.266667, 0.360784, 0.454902, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -77,120 +77,120 @@ __meta__ = {
 
 [node name="VBoxContainer" type="VBoxContainer" parent="legend"]
 anchor_right = 0.49
-margin_left = 10.0
-margin_top = 10.0
+offset_left = 10.0
+offset_top = 10.0
 custom_constants/separation = 10
 
 [node name="LegendLabel" type="Label" parent="legend/VBoxContainer"]
-margin_right = 186.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 0, 24 )
+offset_right = 186.0
+offset_bottom = 24.0
+minimum_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Legend"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="legend/VBoxContainer"]
-margin_top = 34.0
-margin_right = 186.0
-margin_bottom = 174.0
+offset_top = 34.0
+offset_right = 186.0
+offset_bottom = 174.0
 custom_constants/separation = 10
 
 [node name="VBox" type="VBoxContainer" parent="legend/VBoxContainer/HBoxContainer"]
-margin_right = 88.0
-margin_bottom = 140.0
-rect_min_size = Vector2( 88, 0 )
+offset_right = 88.0
+offset_bottom = 140.0
+minimum_size = Vector2( 88, 0 )
 
 [node name="noun" parent="legend/VBoxContainer/HBoxContainer/VBox" instance=ExtResource( 1 )]
-margin_right = 88.0
+offset_right = 88.0
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "Noun"
 type = 0
 
 [node name="verb" parent="legend/VBoxContainer/HBoxContainer/VBox" instance=ExtResource( 1 )]
-margin_top = 36.0
-margin_right = 88.0
-margin_bottom = 68.0
+offset_top = 36.0
+offset_right = 88.0
+offset_bottom = 68.0
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "Verb"
 type = 1
 
 [node name="adv" parent="legend/VBoxContainer/HBoxContainer/VBox" instance=ExtResource( 1 )]
-margin_top = 72.0
-margin_right = 88.0
-margin_bottom = 104.0
+offset_top = 72.0
+offset_right = 88.0
+offset_bottom = 104.0
 color = Color( 0.690196, 0.576471, 0.133333, 1 )
 text = "Adv "
 type = 2
 
 [node name="conj" parent="legend/VBoxContainer/HBoxContainer/VBox" instance=ExtResource( 1 )]
-margin_top = 108.0
-margin_right = 88.0
-margin_bottom = 140.0
+offset_top = 108.0
+offset_right = 88.0
+offset_bottom = 140.0
 color = Color( 0.690196, 0.368627, 0.133333, 1 )
 text = "Conj"
 type = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="legend/VBoxContainer/HBoxContainer"]
-margin_left = 98.0
-margin_right = 186.0
-margin_bottom = 140.0
-rect_min_size = Vector2( 72, 0 )
+offset_left = 98.0
+offset_right = 186.0
+offset_bottom = 140.0
+minimum_size = Vector2( 72, 0 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="legend/VBoxContainer/HBoxContainer/VBoxContainer"]
-margin_right = 88.0
-margin_bottom = 32.0
+offset_right = 88.0
+offset_bottom = 32.0
 
 [node name="lpar" parent="legend/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 1 )]
-margin_right = 24.0
-rect_min_size = Vector2( 24, 32 )
+offset_right = 24.0
+minimum_size = Vector2( 24, 32 )
 color = Color( 0.721569, 0.631373, 0.772549, 1 )
 text = "("
 type = 4
 
 [node name="cop" parent="legend/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 1 )]
-margin_left = 28.0
-margin_right = 60.0
-rect_min_size = Vector2( 32, 32 )
+offset_left = 28.0
+offset_right = 60.0
+minimum_size = Vector2( 32, 32 )
 color = Color( 0.67451, 0.756863, 0.780392, 1 )
 text = "=."
 type = 7
 
 [node name="rpar" parent="legend/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 1 )]
-margin_left = 64.0
-margin_right = 88.0
-rect_min_size = Vector2( 24, 32 )
+offset_left = 64.0
+offset_right = 88.0
+minimum_size = Vector2( 24, 32 )
 color = Color( 0.835294, 0.286275, 0.72549, 1 )
 text = ")"
 type = 5
 
 [node name="iden" parent="legend/VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource( 1 )]
-margin_top = 36.0
-margin_right = 88.0
-margin_bottom = 68.0
+offset_top = 36.0
+offset_right = 88.0
+offset_bottom = 68.0
 color = Color( 0.4, 0.533333, 0.890196, 1 )
 text = "Iden"
 type = 6
 
 [node name="none" parent="legend/VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource( 1 )]
-margin_top = 72.0
-margin_right = 88.0
-margin_bottom = 104.0
+offset_top = 72.0
+offset_right = 88.0
+offset_bottom = 104.0
 text = "Edge"
 
 [node name="nb" parent="legend/VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource( 1 )]
-margin_top = 108.0
-margin_right = 88.0
-margin_bottom = 140.0
+offset_top = 108.0
+offset_right = 88.0
+offset_bottom = 140.0
 color = Color( 0.4, 0.4, 0.4, 1 )
 text = "None"
 type = 8
 
 [node name="pageLabel" type="Label" parent="."]
-margin_left = 45.3077
-margin_top = 37.7568
-margin_right = 615.308
-margin_bottom = 78.7568
-rect_min_size = Vector2( 0, 24 )
+offset_left = 45.3077
+offset_top = 37.7568
+offset_right = 615.308
+offset_bottom = 78.7568
+minimum_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 3 )
 text = "J Parsing and Evaluation Rules"
 __meta__ = {
@@ -206,61 +206,61 @@ script = ExtResource( 4 )
 position = Vector2( 468.638, 426.795 )
 
 [node name="none4" parent="TokenLine/inputBuffer" instance=ExtResource( 1 )]
-margin_left = 14.9954
-margin_top = 13.4646
-margin_right = 25.9954
-margin_bottom = 45.4646
+offset_left = 14.9954
+offset_top = 13.4646
+offset_right = 25.9954
+offset_bottom = 45.4646
 
 [node name="iden2" parent="TokenLine/inputBuffer" instance=ExtResource( 1 )]
-margin_left = 38.9954
-margin_top = 13.4646
-margin_right = 49.9954
-margin_bottom = 45.4646
+offset_left = 38.9954
+offset_top = 13.4646
+offset_right = 49.9954
+offset_bottom = 45.4646
 color = Color( 0.4, 0.533333, 0.890196, 1 )
 text = "a"
 type = 6
 
 [node name="cop2" parent="TokenLine/inputBuffer" instance=ExtResource( 1 )]
-margin_left = 64.9954
-margin_top = 13.4646
-margin_right = 76.9954
-margin_bottom = 45.4646
+offset_left = 64.9954
+offset_top = 13.4646
+offset_right = 76.9954
+offset_bottom = 45.4646
 color = Color( 0.67451, 0.756863, 0.780392, 1 )
 text = "=."
 type = 7
 
 [node name="n2" parent="TokenLine/inputBuffer" instance=ExtResource( 1 )]
-margin_left = 104.995
-margin_top = 13.4646
-margin_right = 115.995
-margin_bottom = 45.4646
+offset_left = 104.995
+offset_top = 13.4646
+offset_right = 115.995
+offset_bottom = 45.4646
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "2"
 type = 0
 
 [node name="vplus" parent="TokenLine/inputBuffer" instance=ExtResource( 1 )]
-margin_left = 170.995
-margin_top = 11.4646
-margin_right = 181.995
-margin_bottom = 43.4646
+offset_left = 170.995
+offset_top = 11.4646
+offset_right = 181.995
+offset_bottom = 43.4646
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "+"
 type = 1
 
 [node name="adv2" parent="TokenLine/inputBuffer" instance=ExtResource( 1 )]
-margin_left = 207.141
-margin_top = 11.4646
-margin_right = 218.141
-margin_bottom = 43.4646
+offset_left = 207.141
+offset_top = 11.4646
+offset_right = 218.141
+offset_bottom = 43.4646
 color = Color( 0.690196, 0.576471, 0.133333, 1 )
 text = "/"
 type = 2
 
 [node name="noun2" parent="TokenLine/inputBuffer" instance=ExtResource( 1 )]
-margin_left = 238.995
-margin_top = 11.4646
-margin_right = 253.995
-margin_bottom = 43.4646
+offset_left = 238.995
+offset_top = 11.4646
+offset_right = 253.995
+offset_bottom = 43.4646
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "5 2 7"
 type = 0
@@ -270,21 +270,21 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = 706.0
-margin_top = 716.0
-margin_right = 1510.0
-margin_bottom = 758.0
-rect_min_size = Vector2( 0, 42 )
+offset_left = 706.0
+offset_top = 716.0
+offset_right = 1510.0
+offset_bottom = 758.0
+minimum_size = Vector2( 0, 42 )
 color = Color( 0.4, 0.4, 0.4, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="inputArea" parent="TokenLine" instance=ExtResource( 3 )]
-margin_left = 384.928
-margin_top = 716.189
-margin_right = 489.928
-margin_bottom = 758.189
+offset_left = 384.928
+offset_top = 716.189
+offset_right = 489.928
+offset_bottom = 758.189
 color = Color( 0.4, 0.4, 0.4, 1 )
 
 [node name="stackArea" type="ColorRect" parent="TokenLine"]
@@ -292,33 +292,33 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = 483.332
-margin_top = 716.0
-margin_right = 653.332
-margin_bottom = 758.0
-rect_min_size = Vector2( 0, 42 )
+offset_left = 483.332
+offset_top = 716.0
+offset_right = 653.332
+offset_bottom = 758.0
+minimum_size = Vector2( 0, 42 )
 color = Color( 0.266667, 0.360784, 0.454902, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="StackLabel" type="Label" parent="."]
-margin_left = 1440.41
-margin_top = 681.103
-margin_right = 1510.41
-margin_bottom = 742.103
-rect_min_size = Vector2( 0, 24 )
+offset_left = 1440.41
+offset_top = 681.103
+offset_right = 1510.41
+offset_bottom = 742.103
+minimum_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.266667, 0.360784, 0.454902, 1 )
 text = "Stack
 "
 
 [node name="InputLabel" type="Label" parent="."]
-margin_left = 379.847
-margin_top = 681.103
-margin_right = 449.847
-margin_bottom = 722.103
-rect_min_size = Vector2( 0, 24 )
+offset_left = 379.847
+offset_top = 681.103
+offset_right = 449.847
+offset_bottom = 722.103
+minimum_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.266667, 0.360784, 0.454902, 1 )
 text = "Input"
@@ -332,967 +332,967 @@ __meta__ = {
 [node name="RulesHBox" type="HBoxContainer" parent="Rules"]
 anchor_top = 1.0
 anchor_bottom = 1.0
-margin_right = 1123.0
-margin_bottom = 192.0
+offset_right = 1123.0
+offset_bottom = 192.0
 custom_constants/separation = 20
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Rule0Monad" type="VBoxContainer" parent="Rules/RulesHBox"]
-margin_right = 107.0
-margin_bottom = 192.0
-rect_min_size = Vector2( 107, 0 )
+offset_right = 107.0
+offset_bottom = 192.0
+minimum_size = Vector2( 107, 0 )
 custom_constants/separation = 0
 
 [node name="Label" type="Label" parent="Rules/RulesHBox/Rule0Monad"]
-margin_right = 107.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 0, 24 )
+offset_right = 107.0
+offset_bottom = 24.0
+minimum_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 2 )
 text = "0 Monad"
 
 [node name="TokenMatch2" parent="Rules/RulesHBox/Rule0Monad" instance=ExtResource( 2 )]
-margin_top = 24.0
-margin_right = 107.0
-margin_bottom = 66.0
+offset_top = 24.0
+offset_right = 107.0
+offset_bottom = 66.0
 pattern = "E"
 
 [node name="Token" parent="Rules/RulesHBox/Rule0Monad/TokenMatch2" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 text = "E"
 
 [node name="TokenMatch26" parent="Rules/RulesHBox/Rule0Monad" instance=ExtResource( 2 )]
-margin_top = 66.0
-margin_right = 107.0
-margin_bottom = 108.0
+offset_top = 66.0
+offset_right = 107.0
+offset_bottom = 108.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "V"
 
 [node name="Token" parent="Rules/RulesHBox/Rule0Monad/TokenMatch26" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "V"
 type = 1
 
 [node name="TokenMatch28" parent="Rules/RulesHBox/Rule0Monad" instance=ExtResource( 2 )]
-margin_top = 108.0
-margin_right = 107.0
-margin_bottom = 150.0
+offset_top = 108.0
+offset_right = 107.0
+offset_bottom = 150.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "N"
 
 [node name="Token" parent="Rules/RulesHBox/Rule0Monad/TokenMatch28" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "N"
 type = 0
 
 [node name="TokenMatch3" parent="Rules/RulesHBox/Rule0Monad" instance=ExtResource( 2 )]
-margin_top = 150.0
-margin_right = 107.0
-margin_bottom = 192.0
+offset_top = 150.0
+offset_right = 107.0
+offset_bottom = 192.0
 pattern = "*"
 
 [node name="Token" parent="Rules/RulesHBox/Rule0Monad/TokenMatch3" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.266667, 0.360784, 0.454902, 1 )
 text = "*"
 type = 9
 
 [node name="Rule1Monad" type="VBoxContainer" parent="Rules/RulesHBox"]
-margin_left = 127.0
-margin_right = 234.0
-margin_bottom = 192.0
-rect_min_size = Vector2( 107, 0 )
+offset_left = 127.0
+offset_right = 234.0
+offset_bottom = 192.0
+minimum_size = Vector2( 107, 0 )
 custom_constants/separation = 0
 
 [node name="Label2" type="Label" parent="Rules/RulesHBox/Rule1Monad"]
-margin_right = 107.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 0, 24 )
+offset_right = 107.0
+offset_bottom = 24.0
+minimum_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 2 )
 text = "1 Monad"
 
 [node name="TokenMatch" parent="Rules/RulesHBox/Rule1Monad" instance=ExtResource( 2 )]
-margin_top = 24.0
-margin_right = 107.0
-margin_bottom = 66.0
+offset_top = 24.0
+offset_right = 107.0
+offset_bottom = 66.0
 pattern = "EAVN"
 
 [node name="Token" parent="Rules/RulesHBox/Rule1Monad/TokenMatch" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 text = "E"
 
 [node name="Token2" parent="Rules/RulesHBox/Rule1Monad/TokenMatch" instance=ExtResource( 1 )]
-margin_left = 29.0
-margin_top = 5.0
-margin_right = 40.0
-margin_bottom = 37.0
+offset_left = 29.0
+offset_top = 5.0
+offset_right = 40.0
+offset_bottom = 37.0
 color = Color( 0.690196, 0.576471, 0.133333, 1 )
 text = "A"
 type = 2
 
 [node name="Token3" parent="Rules/RulesHBox/Rule1Monad/TokenMatch" instance=ExtResource( 1 )]
-margin_left = 53.0
-margin_top = 5.0
-margin_right = 64.0
-margin_bottom = 37.0
+offset_left = 53.0
+offset_top = 5.0
+offset_right = 64.0
+offset_bottom = 37.0
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "V"
 type = 1
 
 [node name="Token4" parent="Rules/RulesHBox/Rule1Monad/TokenMatch" instance=ExtResource( 1 )]
-margin_left = 77.0
-margin_top = 5.0
-margin_right = 88.0
-margin_bottom = 37.0
+offset_left = 77.0
+offset_top = 5.0
+offset_right = 88.0
+offset_bottom = 37.0
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "N"
 type = 0
 
 [node name="TokenMatch25" parent="Rules/RulesHBox/Rule1Monad" instance=ExtResource( 2 )]
-margin_top = 66.0
-margin_right = 107.0
-margin_bottom = 108.0
+offset_top = 66.0
+offset_right = 107.0
+offset_bottom = 108.0
 pattern = "V"
 
 [node name="Token" parent="Rules/RulesHBox/Rule1Monad/TokenMatch25" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "V"
 type = 1
 
 [node name="TokenMatch27" parent="Rules/RulesHBox/Rule1Monad" instance=ExtResource( 2 )]
-margin_top = 108.0
-margin_right = 107.0
-margin_bottom = 150.0
+offset_top = 108.0
+offset_right = 107.0
+offset_bottom = 150.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "V"
 
 [node name="Token" parent="Rules/RulesHBox/Rule1Monad/TokenMatch27" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "V"
 type = 1
 
 [node name="TokenMatch29" parent="Rules/RulesHBox/Rule1Monad" instance=ExtResource( 2 )]
-margin_top = 150.0
-margin_right = 107.0
-margin_bottom = 192.0
+offset_top = 150.0
+offset_right = 107.0
+offset_bottom = 192.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "N"
 
 [node name="Token" parent="Rules/RulesHBox/Rule1Monad/TokenMatch29" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "N"
 type = 0
 
 [node name="Rule2Dyad" type="VBoxContainer" parent="Rules/RulesHBox"]
-margin_left = 254.0
-margin_right = 361.0
-margin_bottom = 192.0
-rect_min_size = Vector2( 107, 0 )
+offset_left = 254.0
+offset_right = 361.0
+offset_bottom = 192.0
+minimum_size = Vector2( 107, 0 )
 custom_constants/separation = 0
 
 [node name="Label3" type="Label" parent="Rules/RulesHBox/Rule2Dyad"]
-margin_right = 107.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 0, 24 )
+offset_right = 107.0
+offset_bottom = 24.0
+minimum_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 2 )
 text = "2 Dyad"
 
 [node name="TokenMatch4" parent="Rules/RulesHBox/Rule2Dyad" instance=ExtResource( 2 )]
-margin_top = 24.0
-margin_right = 107.0
-margin_bottom = 66.0
+offset_top = 24.0
+offset_right = 107.0
+offset_bottom = 66.0
 pattern = "EAVN"
 
 [node name="Token" parent="Rules/RulesHBox/Rule2Dyad/TokenMatch4" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 text = "E"
 
 [node name="Token2" parent="Rules/RulesHBox/Rule2Dyad/TokenMatch4" instance=ExtResource( 1 )]
-margin_left = 29.0
-margin_top = 5.0
-margin_right = 40.0
-margin_bottom = 37.0
+offset_left = 29.0
+offset_top = 5.0
+offset_right = 40.0
+offset_bottom = 37.0
 color = Color( 0.690196, 0.576471, 0.133333, 1 )
 text = "A"
 type = 2
 
 [node name="Token3" parent="Rules/RulesHBox/Rule2Dyad/TokenMatch4" instance=ExtResource( 1 )]
-margin_left = 53.0
-margin_top = 5.0
-margin_right = 64.0
-margin_bottom = 37.0
+offset_left = 53.0
+offset_top = 5.0
+offset_right = 64.0
+offset_bottom = 37.0
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "V"
 type = 1
 
 [node name="Token4" parent="Rules/RulesHBox/Rule2Dyad/TokenMatch4" instance=ExtResource( 1 )]
-margin_left = 77.0
-margin_top = 5.0
-margin_right = 88.0
-margin_bottom = 37.0
+offset_left = 77.0
+offset_top = 5.0
+offset_right = 88.0
+offset_bottom = 37.0
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "N"
 type = 0
 
 [node name="TokenMatch30" parent="Rules/RulesHBox/Rule2Dyad" instance=ExtResource( 2 )]
-margin_top = 66.0
-margin_right = 107.0
-margin_bottom = 108.0
+offset_top = 66.0
+offset_right = 107.0
+offset_bottom = 108.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "N"
 
 [node name="Token" parent="Rules/RulesHBox/Rule2Dyad/TokenMatch30" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "N"
 type = 0
 
 [node name="TokenMatch24" parent="Rules/RulesHBox/Rule2Dyad" instance=ExtResource( 2 )]
-margin_top = 108.0
-margin_right = 107.0
-margin_bottom = 150.0
+offset_top = 108.0
+offset_right = 107.0
+offset_bottom = 150.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "V"
 
 [node name="Token" parent="Rules/RulesHBox/Rule2Dyad/TokenMatch24" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "V"
 type = 1
 
 [node name="TokenMatch31" parent="Rules/RulesHBox/Rule2Dyad" instance=ExtResource( 2 )]
-margin_top = 150.0
-margin_right = 107.0
-margin_bottom = 192.0
+offset_top = 150.0
+offset_right = 107.0
+offset_bottom = 192.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "N"
 
 [node name="Token" parent="Rules/RulesHBox/Rule2Dyad/TokenMatch31" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "N"
 type = 0
 
 [node name="Rule3Adverb" type="VBoxContainer" parent="Rules/RulesHBox"]
-margin_left = 381.0
-margin_right = 488.0
-margin_bottom = 192.0
-rect_min_size = Vector2( 107, 0 )
+offset_left = 381.0
+offset_right = 488.0
+offset_bottom = 192.0
+minimum_size = Vector2( 107, 0 )
 custom_constants/separation = 0
 
 [node name="Label4" type="Label" parent="Rules/RulesHBox/Rule3Adverb"]
-margin_right = 107.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 0, 24 )
+offset_right = 107.0
+offset_bottom = 24.0
+minimum_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 2 )
 text = "3 Adverb"
 
 [node name="TokenMatch5" parent="Rules/RulesHBox/Rule3Adverb" instance=ExtResource( 2 )]
-margin_top = 24.0
-margin_right = 107.0
-margin_bottom = 66.0
+offset_top = 24.0
+offset_right = 107.0
+offset_bottom = 66.0
 pattern = "EAVN"
 
 [node name="Token" parent="Rules/RulesHBox/Rule3Adverb/TokenMatch5" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 text = "E"
 
 [node name="Token2" parent="Rules/RulesHBox/Rule3Adverb/TokenMatch5" instance=ExtResource( 1 )]
-margin_left = 29.0
-margin_top = 5.0
-margin_right = 40.0
-margin_bottom = 37.0
+offset_left = 29.0
+offset_top = 5.0
+offset_right = 40.0
+offset_bottom = 37.0
 color = Color( 0.690196, 0.576471, 0.133333, 1 )
 text = "A"
 type = 2
 
 [node name="Token3" parent="Rules/RulesHBox/Rule3Adverb/TokenMatch5" instance=ExtResource( 1 )]
-margin_left = 53.0
-margin_top = 5.0
-margin_right = 64.0
-margin_bottom = 37.0
+offset_left = 53.0
+offset_top = 5.0
+offset_right = 64.0
+offset_bottom = 37.0
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "V"
 type = 1
 
 [node name="Token4" parent="Rules/RulesHBox/Rule3Adverb/TokenMatch5" instance=ExtResource( 1 )]
-margin_left = 77.0
-margin_top = 5.0
-margin_right = 88.0
-margin_bottom = 37.0
+offset_left = 77.0
+offset_top = 5.0
+offset_right = 88.0
+offset_bottom = 37.0
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "N"
 type = 0
 
 [node name="TokenMatch19" parent="Rules/RulesHBox/Rule3Adverb" instance=ExtResource( 2 )]
-margin_top = 66.0
-margin_right = 107.0
-margin_bottom = 108.0
+offset_top = 66.0
+offset_right = 107.0
+offset_bottom = 108.0
 color = Color( 0.505882, 0.588235, 0.666667, 1 )
 pattern = "VN"
 
 [node name="Token" parent="Rules/RulesHBox/Rule3Adverb/TokenMatch19" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "V"
 type = 1
 
 [node name="Token2" parent="Rules/RulesHBox/Rule3Adverb/TokenMatch19" instance=ExtResource( 1 )]
-margin_left = 29.0
-margin_top = 5.0
-margin_right = 40.0
-margin_bottom = 37.0
+offset_left = 29.0
+offset_top = 5.0
+offset_right = 40.0
+offset_bottom = 37.0
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "N"
 type = 0
 
 [node name="TokenMatch23" parent="Rules/RulesHBox/Rule3Adverb" instance=ExtResource( 2 )]
-margin_top = 108.0
-margin_right = 107.0
-margin_bottom = 150.0
+offset_top = 108.0
+offset_right = 107.0
+offset_bottom = 150.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "A"
 
 [node name="Token" parent="Rules/RulesHBox/Rule3Adverb/TokenMatch23" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.690196, 0.576471, 0.133333, 1 )
 text = "A"
 type = 2
 
 [node name="TokenMatch4" parent="Rules/RulesHBox/Rule3Adverb" instance=ExtResource( 2 )]
-margin_top = 150.0
-margin_right = 107.0
-margin_bottom = 192.0
+offset_top = 150.0
+offset_right = 107.0
+offset_bottom = 192.0
 pattern = "*"
 
 [node name="Token" parent="Rules/RulesHBox/Rule3Adverb/TokenMatch4" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.266667, 0.360784, 0.454902, 1 )
 text = "*"
 type = 9
 
 [node name="Rule4Conj" type="VBoxContainer" parent="Rules/RulesHBox"]
-margin_left = 508.0
-margin_right = 615.0
-margin_bottom = 192.0
-rect_min_size = Vector2( 107, 0 )
+offset_left = 508.0
+offset_right = 615.0
+offset_bottom = 192.0
+minimum_size = Vector2( 107, 0 )
 custom_constants/separation = 0
 
 [node name="Label5" type="Label" parent="Rules/RulesHBox/Rule4Conj"]
-margin_right = 107.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 0, 24 )
+offset_right = 107.0
+offset_bottom = 24.0
+minimum_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 2 )
 text = "4 Conj"
 
 [node name="TokenMatch6" parent="Rules/RulesHBox/Rule4Conj" instance=ExtResource( 2 )]
-margin_top = 24.0
-margin_right = 107.0
-margin_bottom = 66.0
+offset_top = 24.0
+offset_right = 107.0
+offset_bottom = 66.0
 pattern = "EAVN"
 
 [node name="Token" parent="Rules/RulesHBox/Rule4Conj/TokenMatch6" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 text = "E"
 
 [node name="Token2" parent="Rules/RulesHBox/Rule4Conj/TokenMatch6" instance=ExtResource( 1 )]
-margin_left = 29.0
-margin_top = 5.0
-margin_right = 40.0
-margin_bottom = 37.0
+offset_left = 29.0
+offset_top = 5.0
+offset_right = 40.0
+offset_bottom = 37.0
 color = Color( 0.690196, 0.576471, 0.133333, 1 )
 text = "A"
 type = 2
 
 [node name="Token3" parent="Rules/RulesHBox/Rule4Conj/TokenMatch6" instance=ExtResource( 1 )]
-margin_left = 53.0
-margin_top = 5.0
-margin_right = 64.0
-margin_bottom = 37.0
+offset_left = 53.0
+offset_top = 5.0
+offset_right = 64.0
+offset_bottom = 37.0
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "V"
 type = 1
 
 [node name="Token4" parent="Rules/RulesHBox/Rule4Conj/TokenMatch6" instance=ExtResource( 1 )]
-margin_left = 77.0
-margin_top = 5.0
-margin_right = 88.0
-margin_bottom = 37.0
+offset_left = 77.0
+offset_top = 5.0
+offset_right = 88.0
+offset_bottom = 37.0
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "N"
 type = 0
 
 [node name="TokenMatch17" parent="Rules/RulesHBox/Rule4Conj" instance=ExtResource( 2 )]
-margin_top = 66.0
-margin_right = 107.0
-margin_bottom = 108.0
+offset_top = 66.0
+offset_right = 107.0
+offset_bottom = 108.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "VN"
 
 [node name="Token" parent="Rules/RulesHBox/Rule4Conj/TokenMatch17" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "V"
 type = 1
 
 [node name="Token2" parent="Rules/RulesHBox/Rule4Conj/TokenMatch17" instance=ExtResource( 1 )]
-margin_left = 29.0
-margin_top = 5.0
-margin_right = 40.0
-margin_bottom = 37.0
+offset_left = 29.0
+offset_top = 5.0
+offset_right = 40.0
+offset_bottom = 37.0
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "N"
 type = 0
 
 [node name="TokenMatch22" parent="Rules/RulesHBox/Rule4Conj" instance=ExtResource( 2 )]
-margin_top = 108.0
-margin_right = 107.0
-margin_bottom = 150.0
+offset_top = 108.0
+offset_right = 107.0
+offset_bottom = 150.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "C"
 
 [node name="Token" parent="Rules/RulesHBox/Rule4Conj/TokenMatch22" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.690196, 0.368627, 0.133333, 1 )
 text = "C"
 type = 3
 
 [node name="TokenMatch18" parent="Rules/RulesHBox/Rule4Conj" instance=ExtResource( 2 )]
-margin_top = 150.0
-margin_right = 107.0
-margin_bottom = 192.0
+offset_top = 150.0
+offset_right = 107.0
+offset_bottom = 192.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "VN"
 
 [node name="Token" parent="Rules/RulesHBox/Rule4Conj/TokenMatch18" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "V"
 type = 1
 
 [node name="Token2" parent="Rules/RulesHBox/Rule4Conj/TokenMatch18" instance=ExtResource( 1 )]
-margin_left = 29.0
-margin_top = 5.0
-margin_right = 40.0
-margin_bottom = 37.0
+offset_left = 29.0
+offset_top = 5.0
+offset_right = 40.0
+offset_bottom = 37.0
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "N"
 type = 0
 
 [node name="Rule5Fork" type="VBoxContainer" parent="Rules/RulesHBox"]
-margin_left = 635.0
-margin_right = 742.0
-margin_bottom = 192.0
-rect_min_size = Vector2( 107, 0 )
+offset_left = 635.0
+offset_right = 742.0
+offset_bottom = 192.0
+minimum_size = Vector2( 107, 0 )
 custom_constants/separation = 0
 
 [node name="Label6" type="Label" parent="Rules/RulesHBox/Rule5Fork"]
-margin_right = 107.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 0, 24 )
+offset_right = 107.0
+offset_bottom = 24.0
+minimum_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 2 )
 text = "5 Fork"
 
 [node name="TokenMatch7" parent="Rules/RulesHBox/Rule5Fork" instance=ExtResource( 2 )]
-margin_top = 24.0
-margin_right = 107.0
-margin_bottom = 66.0
+offset_top = 24.0
+offset_right = 107.0
+offset_bottom = 66.0
 pattern = "EAVN"
 
 [node name="Token" parent="Rules/RulesHBox/Rule5Fork/TokenMatch7" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 text = "E"
 
 [node name="Token2" parent="Rules/RulesHBox/Rule5Fork/TokenMatch7" instance=ExtResource( 1 )]
-margin_left = 29.0
-margin_top = 5.0
-margin_right = 40.0
-margin_bottom = 37.0
+offset_left = 29.0
+offset_top = 5.0
+offset_right = 40.0
+offset_bottom = 37.0
 color = Color( 0.690196, 0.576471, 0.133333, 1 )
 text = "A"
 type = 2
 
 [node name="Token3" parent="Rules/RulesHBox/Rule5Fork/TokenMatch7" instance=ExtResource( 1 )]
-margin_left = 53.0
-margin_top = 5.0
-margin_right = 64.0
-margin_bottom = 37.0
+offset_left = 53.0
+offset_top = 5.0
+offset_right = 64.0
+offset_bottom = 37.0
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "V"
 type = 1
 
 [node name="Token4" parent="Rules/RulesHBox/Rule5Fork/TokenMatch7" instance=ExtResource( 1 )]
-margin_left = 77.0
-margin_top = 5.0
-margin_right = 88.0
-margin_bottom = 37.0
+offset_left = 77.0
+offset_top = 5.0
+offset_right = 88.0
+offset_bottom = 37.0
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "N"
 type = 0
 
 [node name="TokenMatch16" parent="Rules/RulesHBox/Rule5Fork" instance=ExtResource( 2 )]
-margin_top = 66.0
-margin_right = 107.0
-margin_bottom = 108.0
+offset_top = 66.0
+offset_right = 107.0
+offset_bottom = 108.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "VN"
 
 [node name="Token" parent="Rules/RulesHBox/Rule5Fork/TokenMatch16" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "V"
 type = 1
 
 [node name="Token2" parent="Rules/RulesHBox/Rule5Fork/TokenMatch16" instance=ExtResource( 1 )]
-margin_left = 29.0
-margin_top = 5.0
-margin_right = 40.0
-margin_bottom = 37.0
+offset_left = 29.0
+offset_top = 5.0
+offset_right = 40.0
+offset_bottom = 37.0
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "N"
 type = 0
 
 [node name="TokenMatch20" parent="Rules/RulesHBox/Rule5Fork" instance=ExtResource( 2 )]
-margin_top = 108.0
-margin_right = 107.0
-margin_bottom = 150.0
+offset_top = 108.0
+offset_right = 107.0
+offset_bottom = 150.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "V"
 
 [node name="Token" parent="Rules/RulesHBox/Rule5Fork/TokenMatch20" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "V"
 type = 1
 
 [node name="TokenMatch21" parent="Rules/RulesHBox/Rule5Fork" instance=ExtResource( 2 )]
-margin_top = 150.0
-margin_right = 107.0
-margin_bottom = 192.0
+offset_top = 150.0
+offset_right = 107.0
+offset_bottom = 192.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "V"
 
 [node name="Token" parent="Rules/RulesHBox/Rule5Fork/TokenMatch21" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "V"
 type = 1
 
 [node name="Rule6Bident" type="VBoxContainer" parent="Rules/RulesHBox"]
-margin_left = 762.0
-margin_right = 869.0
-margin_bottom = 192.0
-rect_min_size = Vector2( 107, 0 )
+offset_left = 762.0
+offset_right = 869.0
+offset_bottom = 192.0
+minimum_size = Vector2( 107, 0 )
 custom_constants/separation = 0
 
 [node name="Label7" type="Label" parent="Rules/RulesHBox/Rule6Bident"]
-margin_right = 107.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 0, 24 )
+offset_right = 107.0
+offset_bottom = 24.0
+minimum_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 2 )
 text = "6 Bident"
 
 [node name="TokenMatch3" parent="Rules/RulesHBox/Rule6Bident" instance=ExtResource( 2 )]
-margin_top = 24.0
-margin_right = 107.0
-margin_bottom = 66.0
+offset_top = 24.0
+offset_right = 107.0
+offset_bottom = 66.0
 pattern = "E"
 
 [node name="Token" parent="Rules/RulesHBox/Rule6Bident/TokenMatch3" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 text = "E"
 
 [node name="TokenMatch8" parent="Rules/RulesHBox/Rule6Bident" instance=ExtResource( 2 )]
-margin_top = 66.0
-margin_right = 107.0
-margin_bottom = 108.0
+offset_top = 66.0
+offset_right = 107.0
+offset_bottom = 108.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 
 [node name="Token" parent="Rules/RulesHBox/Rule6Bident/TokenMatch8" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.690196, 0.368627, 0.133333, 1 )
 text = "C"
 type = 3
 
 [node name="Token2" parent="Rules/RulesHBox/Rule6Bident/TokenMatch8" instance=ExtResource( 1 )]
-margin_left = 29.0
-margin_top = 5.0
-margin_right = 40.0
-margin_bottom = 37.0
+offset_left = 29.0
+offset_top = 5.0
+offset_right = 40.0
+offset_bottom = 37.0
 color = Color( 0.690196, 0.576471, 0.133333, 1 )
 text = "A"
 type = 2
 
 [node name="Token3" parent="Rules/RulesHBox/Rule6Bident/TokenMatch8" instance=ExtResource( 1 )]
-margin_left = 53.0
-margin_top = 5.0
-margin_right = 64.0
-margin_bottom = 37.0
+offset_left = 53.0
+offset_top = 5.0
+offset_right = 64.0
+offset_bottom = 37.0
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "V"
 type = 1
 
 [node name="Token4" parent="Rules/RulesHBox/Rule6Bident/TokenMatch8" instance=ExtResource( 1 )]
-margin_left = 77.0
-margin_top = 5.0
-margin_right = 88.0
-margin_bottom = 37.0
+offset_left = 77.0
+offset_top = 5.0
+offset_right = 88.0
+offset_bottom = 37.0
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "N"
 type = 0
 
 [node name="TokenMatch9" parent="Rules/RulesHBox/Rule6Bident" instance=ExtResource( 2 )]
-margin_top = 108.0
-margin_right = 107.0
-margin_bottom = 150.0
+offset_top = 108.0
+offset_right = 107.0
+offset_bottom = 150.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 
 [node name="Token" parent="Rules/RulesHBox/Rule6Bident/TokenMatch9" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.690196, 0.368627, 0.133333, 1 )
 text = "C"
 type = 3
 
 [node name="Token2" parent="Rules/RulesHBox/Rule6Bident/TokenMatch9" instance=ExtResource( 1 )]
-margin_left = 29.0
-margin_top = 5.0
-margin_right = 40.0
-margin_bottom = 37.0
+offset_left = 29.0
+offset_top = 5.0
+offset_right = 40.0
+offset_bottom = 37.0
 color = Color( 0.690196, 0.576471, 0.133333, 1 )
 text = "A"
 type = 2
 
 [node name="Token3" parent="Rules/RulesHBox/Rule6Bident/TokenMatch9" instance=ExtResource( 1 )]
-margin_left = 53.0
-margin_top = 5.0
-margin_right = 64.0
-margin_bottom = 37.0
+offset_left = 53.0
+offset_top = 5.0
+offset_right = 64.0
+offset_bottom = 37.0
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "V"
 type = 1
 
 [node name="Token4" parent="Rules/RulesHBox/Rule6Bident/TokenMatch9" instance=ExtResource( 1 )]
-margin_left = 77.0
-margin_top = 5.0
-margin_right = 88.0
-margin_bottom = 37.0
+offset_left = 77.0
+offset_top = 5.0
+offset_right = 88.0
+offset_bottom = 37.0
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "N"
 type = 0
 
 [node name="TokenMatch6" parent="Rules/RulesHBox/Rule6Bident" instance=ExtResource( 2 )]
-margin_top = 150.0
-margin_right = 107.0
-margin_bottom = 192.0
+offset_top = 150.0
+offset_right = 107.0
+offset_bottom = 192.0
 pattern = "*"
 
 [node name="Token" parent="Rules/RulesHBox/Rule6Bident/TokenMatch6" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.266667, 0.360784, 0.454902, 1 )
 text = "*"
 type = 9
 
 [node name="Rule7Is" type="VBoxContainer" parent="Rules/RulesHBox"]
-margin_left = 889.0
-margin_right = 996.0
-margin_bottom = 192.0
-rect_min_size = Vector2( 107, 0 )
+offset_left = 889.0
+offset_right = 996.0
+offset_bottom = 192.0
+minimum_size = Vector2( 107, 0 )
 custom_constants/separation = 0
 
 [node name="Label8" type="Label" parent="Rules/RulesHBox/Rule7Is"]
-margin_right = 107.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 0, 24 )
+offset_right = 107.0
+offset_bottom = 24.0
+minimum_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 2 )
 text = "7 Is"
 
 [node name="TokenMatch11" parent="Rules/RulesHBox/Rule7Is" instance=ExtResource( 2 )]
-margin_top = 24.0
-margin_right = 107.0
-margin_bottom = 66.0
+offset_top = 24.0
+offset_right = 107.0
+offset_bottom = 66.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "IN"
 
 [node name="Token" parent="Rules/RulesHBox/Rule7Is/TokenMatch11" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.4, 0.533333, 0.890196, 1 )
 text = "I"
 type = 6
 
 [node name="Token2" parent="Rules/RulesHBox/Rule7Is/TokenMatch11" instance=ExtResource( 1 )]
-margin_left = 29.0
-margin_top = 5.0
-margin_right = 40.0
-margin_bottom = 37.0
+offset_left = 29.0
+offset_top = 5.0
+offset_right = 40.0
+offset_bottom = 37.0
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "N"
 type = 0
 
 [node name="TokenMatch12" parent="Rules/RulesHBox/Rule7Is" instance=ExtResource( 2 )]
-margin_top = 66.0
-margin_right = 107.0
-margin_bottom = 108.0
+offset_top = 66.0
+offset_right = 107.0
+offset_bottom = 108.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "="
 
 [node name="Token" parent="Rules/RulesHBox/Rule7Is/TokenMatch12" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.67451, 0.756863, 0.780392, 1 )
 text = "="
 type = 7
 
 [node name="TokenMatch10" parent="Rules/RulesHBox/Rule7Is" instance=ExtResource( 2 )]
-margin_top = 108.0
-margin_right = 107.0
-margin_bottom = 150.0
+offset_top = 108.0
+offset_right = 107.0
+offset_bottom = 150.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 
 [node name="Token" parent="Rules/RulesHBox/Rule7Is/TokenMatch10" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.690196, 0.368627, 0.133333, 1 )
 text = "C"
 type = 3
 
 [node name="Token2" parent="Rules/RulesHBox/Rule7Is/TokenMatch10" instance=ExtResource( 1 )]
-margin_left = 29.0
-margin_top = 5.0
-margin_right = 40.0
-margin_bottom = 37.0
+offset_left = 29.0
+offset_top = 5.0
+offset_right = 40.0
+offset_bottom = 37.0
 color = Color( 0.690196, 0.576471, 0.133333, 1 )
 text = "A"
 type = 2
 
 [node name="Token3" parent="Rules/RulesHBox/Rule7Is/TokenMatch10" instance=ExtResource( 1 )]
-margin_left = 53.0
-margin_top = 5.0
-margin_right = 64.0
-margin_bottom = 37.0
+offset_left = 53.0
+offset_top = 5.0
+offset_right = 64.0
+offset_bottom = 37.0
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "V"
 type = 1
 
 [node name="Token4" parent="Rules/RulesHBox/Rule7Is/TokenMatch10" instance=ExtResource( 1 )]
-margin_left = 77.0
-margin_top = 5.0
-margin_right = 88.0
-margin_bottom = 37.0
+offset_left = 77.0
+offset_top = 5.0
+offset_right = 88.0
+offset_bottom = 37.0
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "N"
 type = 0
 
 [node name="TokenMatch7" parent="Rules/RulesHBox/Rule7Is" instance=ExtResource( 2 )]
-margin_top = 150.0
-margin_right = 107.0
-margin_bottom = 192.0
+offset_top = 150.0
+offset_right = 107.0
+offset_bottom = 192.0
 pattern = "*"
 
 [node name="Token" parent="Rules/RulesHBox/Rule7Is/TokenMatch7" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.266667, 0.360784, 0.454902, 1 )
 text = "*"
 type = 9
 
 [node name="Rule8Paren" type="VBoxContainer" parent="Rules/RulesHBox"]
-margin_left = 1016.0
-margin_right = 1123.0
-margin_bottom = 192.0
-rect_min_size = Vector2( 107, 0 )
+offset_left = 1016.0
+offset_right = 1123.0
+offset_bottom = 192.0
+minimum_size = Vector2( 107, 0 )
 custom_constants/separation = 0
 
 [node name="Label9" type="Label" parent="Rules/RulesHBox/Rule8Paren"]
-margin_right = 107.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 0, 24 )
+offset_right = 107.0
+offset_bottom = 24.0
+minimum_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 2 )
 text = "8 Paren"
 
 [node name="TokenMatch14" parent="Rules/RulesHBox/Rule8Paren" instance=ExtResource( 2 )]
-margin_top = 24.0
-margin_right = 107.0
-margin_bottom = 66.0
+offset_top = 24.0
+offset_right = 107.0
+offset_bottom = 66.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = "("
 
 [node name="Token" parent="Rules/RulesHBox/Rule8Paren/TokenMatch14" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.721569, 0.631373, 0.772549, 1 )
 text = "("
 type = 4
 
 [node name="TokenMatch13" parent="Rules/RulesHBox/Rule8Paren" instance=ExtResource( 2 )]
-margin_top = 66.0
-margin_right = 107.0
-margin_bottom = 108.0
+offset_top = 66.0
+offset_right = 107.0
+offset_bottom = 108.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 
 [node name="Token" parent="Rules/RulesHBox/Rule8Paren/TokenMatch13" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.690196, 0.368627, 0.133333, 1 )
 text = "C"
 type = 3
 
 [node name="Token2" parent="Rules/RulesHBox/Rule8Paren/TokenMatch13" instance=ExtResource( 1 )]
-margin_left = 29.0
-margin_top = 5.0
-margin_right = 40.0
-margin_bottom = 37.0
+offset_left = 29.0
+offset_top = 5.0
+offset_right = 40.0
+offset_bottom = 37.0
 color = Color( 0.690196, 0.576471, 0.133333, 1 )
 text = "A"
 type = 2
 
 [node name="Token3" parent="Rules/RulesHBox/Rule8Paren/TokenMatch13" instance=ExtResource( 1 )]
-margin_left = 53.0
-margin_top = 5.0
-margin_right = 64.0
-margin_bottom = 37.0
+offset_left = 53.0
+offset_top = 5.0
+offset_right = 64.0
+offset_bottom = 37.0
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "V"
 type = 1
 
 [node name="Token4" parent="Rules/RulesHBox/Rule8Paren/TokenMatch13" instance=ExtResource( 1 )]
-margin_left = 77.0
-margin_top = 5.0
-margin_right = 88.0
-margin_bottom = 37.0
+offset_left = 77.0
+offset_top = 5.0
+offset_right = 88.0
+offset_bottom = 37.0
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "N"
 type = 0
 
 [node name="TokenMatch15" parent="Rules/RulesHBox/Rule8Paren" instance=ExtResource( 2 )]
-margin_top = 108.0
-margin_right = 107.0
-margin_bottom = 150.0
+offset_top = 108.0
+offset_right = 107.0
+offset_bottom = 150.0
 color = Color( 0.506195, 0.587082, 0.667969, 1 )
 pattern = ")"
 
 [node name="Token" parent="Rules/RulesHBox/Rule8Paren/TokenMatch15" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.835294, 0.286275, 0.72549, 1 )
 text = ")"
 type = 5
 
 [node name="TokenMatch8" parent="Rules/RulesHBox/Rule8Paren" instance=ExtResource( 2 )]
-margin_top = 150.0
-margin_right = 107.0
-margin_bottom = 192.0
+offset_top = 150.0
+offset_right = 107.0
+offset_bottom = 192.0
 pattern = "*"
 
 [node name="Token" parent="Rules/RulesHBox/Rule8Paren/TokenMatch8" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.266667, 0.360784, 0.454902, 1 )
 text = "*"
 type = 9
@@ -1311,27 +1311,27 @@ script = SubResource( 6 )
 position = Vector2( -1492.2, 241.982 )
 
 [node name="LeftFog" type="ColorRect" parent="MatchSlider/Root/Fog"]
-margin_left = -3.82178
-margin_top = -5.6333
-margin_right = 1519.17
-margin_bottom = 311.367
+offset_left = -3.82178
+offset_top = -5.6333
+offset_right = 1519.17
+offset_bottom = 311.367
 color = Color( 0.360784, 0.403922, 0.462745, 0.94902 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="RightFog" type="ColorRect" parent="MatchSlider/Root/Fog"]
-margin_left = 1646.17
-margin_top = -3.6333
-margin_right = 3282.18
-margin_bottom = 322.367
+offset_left = 1646.17
+offset_top = -3.6333
+offset_right = 3282.18
+offset_bottom = 322.367
 color = Color( 0.360784, 0.403922, 0.462745, 0.94902 )
 
 [node name="StackPattern" type="VBoxContainer" parent="MatchSlider/Root"]
-margin_left = -11.8402
-margin_top = 270.432
-margin_right = 20.1598
-margin_bottom = 438.432
+offset_left = -11.8402
+offset_top = 270.432
+offset_right = 20.1598
+offset_bottom = 438.432
 custom_constants/separation = 0
 __meta__ = {
 "_edit_group_": true,
@@ -1339,50 +1339,50 @@ __meta__ = {
 }
 
 [node name="Stack0" parent="MatchSlider/Root/StackPattern" instance=ExtResource( 2 )]
-margin_right = 42.0
+offset_right = 42.0
 pattern = "V"
 
 [node name="Token" parent="MatchSlider/Root/StackPattern/Stack0" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.419608, 0.12549, 0.12549, 1 )
 text = "V"
 type = 1
 
 [node name="Stack1" parent="MatchSlider/Root/StackPattern" instance=ExtResource( 2 )]
-margin_top = 42.0
-margin_right = 42.0
-margin_bottom = 84.0
+offset_top = 42.0
+offset_right = 42.0
+offset_bottom = 84.0
 pattern = "A"
 
 [node name="Token" parent="MatchSlider/Root/StackPattern/Stack1" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.690196, 0.576471, 0.133333, 1 )
 text = "A"
 type = 2
 
 [node name="Stack2" parent="MatchSlider/Root/StackPattern" instance=ExtResource( 2 )]
-margin_top = 84.0
-margin_right = 42.0
-margin_bottom = 126.0
+offset_top = 84.0
+offset_right = 42.0
+offset_bottom = 126.0
 pattern = "N"
 
 [node name="Token" parent="MatchSlider/Root/StackPattern/Stack2" instance=ExtResource( 1 )]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 16.0
-margin_bottom = 37.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 16.0
+offset_bottom = 37.0
 color = Color( 0.0862745, 0.466667, 0.235294, 1 )
 text = "N"
 type = 0
 
 [node name="Stack3" parent="MatchSlider/Root/StackPattern" instance=ExtResource( 2 )]
-margin_top = 126.0
-margin_right = 42.0
-margin_bottom = 168.0
+offset_top = 126.0
+offset_right = 42.0
+offset_bottom = 168.0
 pattern = ""

@@ -1,6 +1,6 @@
-tool extends "AbstractTokenRow.gd"
+@tool extends "AbstractTokenRow.gd"
 
-export var pattern : String = "" setget set_pattern
+@export var pattern : String = "" : set = set_pattern
 
 const hints = {
 	"E": JTYPE.edge,

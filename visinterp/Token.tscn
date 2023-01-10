@@ -2,17 +2,17 @@
 
 [ext_resource path="res://visinterp/Token.gd" type="Script" id=1]
 
-[sub_resource type="DynamicFontData" id=1]
+[sub_resource type="FontFile" id=1]
 font_path = "res://fonts/DroidSansMono.ttf"
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="FontFile" id=2]
 size = 24
 font_data = SubResource( 1 )
 
 [node name="Token" type="ColorRect"]
-margin_right = 11.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 10, 32 )
+offset_right = 11.0
+offset_bottom = 32.0
+minimum_size = Vector2( 10, 32 )
 color = Color( 0, 0, 0, 1 )
 script = ExtResource( 1 )
 __meta__ = {
@@ -21,11 +21,11 @@ __meta__ = {
 text = " "
 
 [node name="text" type="Label" parent="."]
-margin_left = 5.0
-margin_top = 2.0
-margin_right = 6.0
-margin_bottom = 31.0
-rect_pivot_offset = Vector2( 35, 52 )
+offset_left = 5.0
+offset_top = 2.0
+offset_right = 6.0
+offset_bottom = 31.0
+pivot_offset = Vector2( 35, 52 )
 custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = " "
