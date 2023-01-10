@@ -188,5 +188,6 @@ limits/debugger_stdout/max_chars_per_second=65536
 
 [rendering]
 
+environment/defaults/default_clear_color=Color(0.176471, 0.247059, 0.34902, 1)
 textures/canvas_textures/default_texture_filter=0
 environment/default_clear_color=Color(0.176471, 0.247059, 0.34902, 1)
