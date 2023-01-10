@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://B4Cell.gd" type="Script" id=1]
+[ext_resource path="res://fonts/FiraCode-Regular.ttf" type="DynamicFontData" id=2]
+
+[sub_resource type="DynamicFont" id=1]
+use_filter = true
+font_data = ExtResource( 2 )
+
+[node name="B4Cell" type="Node2D"]
+script = ExtResource( 1 )
+type = 2
+value = 175
+op = 175
+
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_right = 24.0
+margin_bottom = 21.0
+color = Color( 0.133333, 0.133333, 0.133333, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+margin_right = 24.0
+margin_bottom = 21.0
+custom_colors/font_color = Color( 0.8, 0.8, 0.8, 1 )
+custom_fonts/font = SubResource( 1 )
+text = "yd"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}

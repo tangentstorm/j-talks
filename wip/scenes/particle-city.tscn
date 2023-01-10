@@ -1,0 +1,81 @@
+[gd_scene load_steps=7 format=2]
+
+[sub_resource type="Gradient" id=1]
+offsets = PoolRealArray( 0, 0.992366 )
+colors = PoolColorArray( 0.675829, 0.135407, 0.949219, 1, 0.697266, 0.109513, 0.405685, 1 )
+
+[sub_resource type="GradientTexture" id=2]
+gradient = SubResource( 1 )
+
+[sub_resource type="ParticlesMaterial" id=3]
+lifetime_randomness = 1.0
+trail_divisor = 5
+emission_shape = 1
+emission_sphere_radius = 27.76
+flag_align_y = true
+flag_disable_z = true
+direction = Vector3( 0, -100, 0 )
+spread = 180.0
+initial_velocity = 26.55
+initial_velocity_random = 0.43
+angular_velocity = -267.61
+angular_velocity_random = 0.44
+orbit_velocity = 0.5
+orbit_velocity_random = 0.58
+scale = 5.0
+scale_random = 1.0
+color_ramp = SubResource( 2 )
+hue_variation = 0.32
+hue_variation_random = 0.2
+
+[sub_resource type="Curve" id=4]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.303681 ), 0.61721, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=5]
+curve = SubResource( 4 )
+
+[sub_resource type="ParticlesMaterial" id=6]
+lifetime_randomness = 0.5
+emission_shape = 2
+emission_box_extents = Vector3( 32, 1, 0 )
+flag_rotate_y = true
+flag_disable_z = true
+direction = Vector3( 0, -2, 0 )
+flatness = 1.0
+gravity = Vector3( 0, -55, 0 )
+initial_velocity = 106.19
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+linear_accel = -74.34
+linear_accel_random = 1.0
+tangential_accel = 39.82
+tangential_accel_random = 0.66
+damping = 80.09
+damping_random = 0.71
+scale = 5.0
+scale_curve = SubResource( 5 )
+color_ramp = SubResource( 2 )
+hue_variation = 0.1
+hue_variation_random = 1.0
+
+[node name="Node2D" type="ColorRect"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -1.25989
+margin_bottom = -1.25989
+color = Color( 0, 0, 0, 1 )
+
+[node name="fireball" type="Particles2D" parent="."]
+position = Vector2( 1519.59, 641.906 )
+scale = Vector2( 8, 8 )
+amount = 5000
+lifetime = 2.0
+speed_scale = 0.5
+process_material = SubResource( 3 )
+
+[node name="neon beam" type="Particles2D" parent="."]
+position = Vector2( 1145.44, -43.7885 )
+rotation = -2.09439
+scale = Vector2( 1, 20 )
+amount = 128
+process_material = SubResource( 6 )
