@@ -1,18 +1,521 @@
 #+title: mandelbrot set demo
 
-* promise
-Here it is. One line of code to generaAte this picture of the mandelbrot set in J.
+* intro
+@hide("jp-editor")
 
-I promise you, if you watch to the end of this video,
-you'll understand exactly what this line is doing.
+- dramatic mandelbrot intro
 
-Let's go to the console to see how it works.
+- image of it printing out on dot matrix printer
+
+- what exactly is the mandelbrot set?
+
+- let's look at it in j, an executable math notation from jsoftware.com
+
+* the series equation (in j)
+- we'll start with real numbers
+
+- repeatedly square and then add the original number
+
+* the basic formula
+For the mandelbrot set itself, we need this formula:
+
+: NB. Z[i] = Z[i-1]^2 + Z[0]
+
+We can tranzlate that in j as:
+
+: {{ (y^2) + z0 }} z0 =: 1
+
+This is a function that takes an argument named y,
+squares it, and adds z0, which we've defined as one.
+
+So when you square one and add one you get two.
+
+* iteration
+To do it multiple times, we can use
+the power conjunction:
+
+: . ^bbb?^:5?
+
+: {{ (y^2) + z0 }}^:5 z0 =: 1
+
+And to see the interemediate results,
+we can put a box around the number 5.
+
+: <5
+
+: . ^^bbb<?(<?>?)?
+
+: {{ (y^2) + z0 }}^:(<5) z0 =: 1
+
+Notice that we have five results, but the first one
+is just the original number.
+
+So if we want to see the result of doing this 5 times,
+we need to pass in 6.
+
+: . ^___<__<_<_<_<_<_<_<_<_<__x__?6?
+
+: {{ (y^2) + z0 }}^:(<6) z0 =: 1
+
+* refactoring a bit (tacit version)
+J executes right to left so we can drop
+these parentheses by swapping the arguments to plus:
+
+: . ^bbbbXXXXXX<<<X?z0 + ?
+
+: {{ z0 + y^2 }}^:(<6) z0 =: 1
+
+So here y is like an accumulator, and z0 is the initial value.
+
+Whenever you've got this pattern where you need an accumululator and
+and a constant, you can put the constant on the left,
+
+call it x inside the function,
+
+and the power conjunction will do what you want:
+
+: . ^bbbbbbXX?x?0 ?z0 ?
+
+: z0 {{ x + y^2 }}^:(<6) z0 =: 1
+
+And whenever you have the same argument on the left and right of a verb,
+
+you can just put a tilde after the verb
+
+rather than specifying the same argument twice.
+
+: . ^bbb?~?0xxx
+
+: {{ x + y^2 }}^:(<6)~ z0 =: 1
+
+So now we don't even need to give z0 a name.
+
+: 
+
+: NB. 'v~ y' means 'y v y'
+
+: . ^^^bbbxxxxxx
+
+: {{ x + y^2 }}^:(<6)~ 1
+
+Better yet, whenever you have this pattern of a
+constant plus some verb applied to the y argument,
+you can use a hook.
+
+So first, let's use the special verb for square:
+
+: 
+
+: NB. '*:y' means 'y*y'
+
+: . ^^^bbXXb>?*: ?
+
+: {{ x + *: y }}^:(<6)~ 1
+
+And now we have two verbs so here's the hook.
+
+: 
+
+: NB. 'x (u v) y'  means 'x u (v y)'
+
+: . ^^^bbxxx?)?bxxbbbxx0xxx?(
+
+: (+ *:)^:(<6)~ 1
+
+* behavior of some examples on the real line
+Okay, so that's the formula used in the mandelbrot set.
+
+The set itself has to do with how each initial value behaves.
+
+Notice how starting with one very quickly takes you to a big number.
+
+With zero you get a different story:
+
+: . ^__X__?0?0>>x
+
+: (+*:)^:(<6)~ 0
+
+It just stays zero forever.
+
+With negative one, it bounces back and forth between zero and negative one.
+
+: . ^_X_?_1?
+
+: (+*:)^:(<6)~ _1
+
+And with negative two, you get a never-ending sequence of positive twos.
+
+Two squared is four, plus negative two is two, and so on forever.
+
+: . ^__X_?2?
+
+: (+*:)^:(<6)~ _2
+
+With negative 3, it's straight back to infinity.
+
+: . ^__X_?3?
+
+: (+*:)^:(<6)~ _3
+
+Sometimes it's a little hard to tell.
+
+0.3 looks like it's staying pretty small, but give
+it a little more time, and it's out of here.
+
+: . ^__X___?9?__X_X_?0?_?.?__?3?
+
+: (+*:)^:(<6)~ 0.3
+
+: . ^___h_h_h_h_h_h_h__x___?1?_?5?
+
+: (+*:)^:(<15)~ 0.3
+
+* boundary
+So that's the mandelbrot function.
+
+what's interesting is the boundary between the numbers that stay relatively stable vs the ones that diverge to infinity.
+
+on the real line, the boundary is easy to find by inspection.
+
+anything less than two or greater than 0.25 goes to infinity.
+
+anything inside that range is stable.
+# ref: https://www.maths.town/fractal-articles/mandelbrot/mandelbrot-real-line/
+
+but the real line is only one small slice of the mandelbrot set.
+
+* TODO show mandelbrot set inside the complex plane             :geogebra:
+The mandelbrot set is just the part of
+the complex plane that works like these numbers,
+and not the ones that go off to infinity.
+
+# confirm the boundary on real line
+# visualize the same points with the geogebra explorer thingy
+
+* TODO what is the complex plane?
+brief refresher on sqrt(-1)
+i in math
+j in engineering
+
+* TODO what does it mean to add and multiply complex numbers?
+adding is just a translation (shifting).
+for now just demonstrate in geogebra
+(shear+rotation)
+https://www.3blue1brown.com/lessons/matrix-multiplication
+
+* the "two forces"
+
+think of it as two forces:
+
+squaring force either pushes us out or pulls us in, but also rotates
+
+the boundary is the unit circle
+
+adding the original number just shifts the result
+
+and sometimes it shifts into or out of the circle
+
+so where it gets interesting is when the two operations overlap.
+instead of a clean circle, the border gets very very complicated.
+
+* complex numbers in j                                          :jprez:
+this is how to write the square root of negative one in j:
+
+: %: _1
+
+it produces the complex number 0j1, which is zero plus the constant i.
+
+you can't just write the imaginary part, you have to write it as a complex number.
+
+let's look at how some complex numbers behave in the mandelbrot function
+
+: . ^___X_X__?j?__?1?
+
+: 2<(+*:)^:(<15)~ 0j1
+
+: . ^0>>?|?
+
+: 2<|(+*:)^:(<15)~ 0j1
+
+: . ^___0__x__x_x
+
+: (+*:)^:(<15)~ 0j1
+
+* TODO pick complex number examples that diverge and converge
+* convergence / divergence
+So a decent test is to let the function
+run a few times for each point,
+and then check whether the value
+is outside the circle.
+
+when were looking at real numbers, we can just test whether it's greater than 2
+
+: . ^___0___?2?____?<?
+
+: 2<(+*:)^:(<15)~ 0.3
+
+Of course you can't just compare complex numbers
+because they're not well ordered.
+
+:   (+*:)^:(<15)~ 0j1
+
+: 2<(+*:)^:(<15)~ 0j1   NB. domain error
+
+But we can use the distance from the origin,
+it's called magnatude in j, and written with
+the vertical pipe character:
+
+: . ^__0__?|?
+
+: |(+*:)^:(<15)~ 0j1
+
+: . ^0?2<?
+
+: 2<|(+*:)^:(<15)~ 0j1
+
+* constructing the complex plane in j
+** TODO what the heck is curl?
+the arrows represent the "curl"
+for each pixel we actually have two quantities
+so this really ought to be a 4-dimensional plot
+  but then there should be some other dimension
+  and we can't show it, but that's what the arrows are doing
+  so the color and the arrows are plotting these two dimensions
+  but rather than having one be the real part and one the imaginary part
+  they're both showing something combined
+  the color is showing the magnitude
+  serving as a "height map" to bring this to 3 dimensions
+
+# maybe show this in passing but don't talk too much about it
+
+: viewmat ["0/~i:4 NB. real part
+
+: viewmat ]"0/~i:4 NB. imaginary part
+
+** console
+i'll stick to the console version for now:
+
+: . ^^_0___?vm ?
+
+: vm j./~ 0.1 * i:4
+
+We can make it bigger:
+
+: . ^_X__?16?
+
+: vm j./~ 0.1 * i:16
+
+* running mandelbrot on complex plane
+And now we can apply the mandelbrot function to the whole complex plane.
+
+: . ^0?vm ?w<XXXXX?9?>>K?j./~ 0.1 * i:16?
+
+: vm 2<|(+*:)^:9~ j./~ 0.1 * i:16
+
+So there's the mandelbrot set.
+The comparison always gives us either a one or zero,
+and so viewmat just draws it in black and white.
+
+And our table is oriented the wrong way, so let's transpose it.
+
+: . ^0>>>?|:?
+
+: vm |:2<|(+*:)^:9~ j./~ 0.1 * i:16
+
+It's actually still upside down,
+but since it happens to be symmetrical,
+we won't worry about it.
+
+But we can move the camera left
+just by subtracting one from all the values.
+
+: . ^bbbb>?_1+ ?
+
+: vm |:2<|(+*:)^:9~ _1+ j./~ 0.1 * i:16
+
+* sprite sheet
+So the black part actually is the mandelbrot set,
+but it's traditional to draw some colors
+to indicate how long the white part took
+to break away from black hole.
+
+So to show how that works, I'm going to scale
+the image down for a moment.
+
+: . ^_XX?8?_<<_<<<<<x?2?
+
+: vm |:2<|(+*:)^:9~ _1+ j./~ 0.2 * i:8
+
+Now if you recall, we can box this 9 to
+get the intermediate results.
+That's going to give us a 3 dimensional array -
+nine of these tables.
+
+Viewmat doesn't know how to draw a rank 3 array,
+but we can use dollar sign to see the shape:
+
+: . ^bbbbb<<?(<?>?)?__0____xx?$?
+
+: $ |:2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
+
+Well that's not what we want.
+The transpose is screwing it up.
+So let's remove that for a moment.
+
+: . ^0>>xx
+
+: $ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
+
+Now let's reshape that list of 9 tables
+into a 3x3 table of tables.
+
+: . ^0>? 3 3 $?
+
+: $ 3 3 $ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
+
+And now we can use comma dot between each
+array to stitch them together.
+
+: . ^0>>?,./ ?
+
+: $ ,./ 3 3 $ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
+
+And again to get a single image
+with all 9 sub-images.
+
+: . ^0>>?,./?
+
+: $ ,./,./ 3 3 $ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
+
+And now we can visualize it again:
+
+: . ^0x?vm?
+
+: vm ,./,./ 3 3 $ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
+
+And put the transpose back:
+
+: . ^0w? |:?
+
+: vm |: ,./,./ 3 3 $ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
+
+But now that we can see the intermediate steps,
+what we really want to do is just add all
+these tables of ones and zeros together.
+
+* gradients
+So for example, this area on the left is white from
+the very beginning, and so when we add all 9 layers,
+these should wind up as 9,
+
+and the parts in the middle that are always
+close to zero should sum to 0, and then the
+parts that change should have different
+numbers in between.
+
+: . ^0__xx_x__>>>_xxxxx_?+?__>>_xxxxxx
+
+: |: +/ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
+
+All that's left is to render the image...
+
+: . ^0?vm ?
+
+: vm |: +/ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
+
+And pick whatever color scheme we'd like.
+
+: . ^0?(16b221111 * i.8) ?
+
+: (16b221111 * i.8) vm |: +/ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
+
+* color gradient
+the colors represent magnitude
+we can override them
+
+The bytes are in blue-green-red order,
+so this makes some shades of blue.
+
+: . ^_0_?()?__? ?<<___?16b221111 ?_?* i.8?
+
+: (16b221111 * i.8) vm j./~ 0.1 * i:16
+
+Lowercase I-dot is just another range,
+but doesn't include the negatives.
+And we just multiply by this hex number to get the gradient.
+
+: . ^0?hfd ?xwwwxXK
+
+: hfd 16b221111 * i.8
+
+: . ^^bbbbK? i.8?
+
+: (16b221111 * i.8) vm i.8
+
+* show higher res picture
+: i:175  NB. or?
+
+* more iterations = more problems
+# demonstrate NaN error. why is this happening?
+
+* why NaN error?
+the numbers get so big that the 32-bit floating point representation overflows and becomes infinity.
+so then you try to multiply by infinity plus infinity times i, and J gives you a NaN error for Not a Number.
+
+:  0j_ * 3j2
+
+:  _j0 * 3j2
+
+:  _j_ * 3j2
+
+:  _j2 * 3j2
+
+:  2j_ * 3j2
+
+* fixing with power conjuction
+: ^:(2>|@])"0
+
+we saw earlier that the power conjunction runs something multiple times.
+here the expression in parentheses tests whether the intermediate magnitude
+less than 2, because we know if it's greater than 2 it's going to escape.
+the result is either a zero or a 1, and so we run the function either
+zero or one times on that particular step. so power is acting like a conditional.
+
+this almost works, but...
+
+# show high res image
+
+look at these little dots.
+they're all on the circle.
+so we could fix with 2.1 instead of 2
+
+: ^:(2>|@])"0
+
+* fixing with the adverse
+another way is to use the adverse conjunction (which is colon colon).
+this lets us provide a second verb to run instead of the first one if the first one fails.
+
+:  ((+*:) :: _:)
+
+and in this case, the second verb is underscore colon, which is the constant for infinity.
+
+this was my original solution, but it's actually slower
+
+: timespacex '+/|:2<|((+*:) ::_:)^:(<32)"0~_1+j./~0.01*i:175'
+
+: timespacex '+/|:2<|(+*:)^:(2.1>|@])^:(<32)"0~ _1+j./~0.01*i:175'
+
+* simpler solution:
+so the simplest solution is to just use 2.1
 
 * 1 line version
-: 
-: NB. (16b221111*i.8) viewmat |:+/2<|(+*:)^:(<9)~_1+j./~ 0.01*i:175 [ load'viewmat'
+#+begin_src j
 
-J executes right to left.
+(16b221111*i.8)viewmat+/|:2<|(+*:)^:(2>|@])^:(<32)"0~_1+j./~0.01*i:175[load'viewmat'
+
+#+end_src
+
+Remember, J executes right to left.
 
 So this part on the right is just loading
 a tool called viewmat that
@@ -30,348 +533,23 @@ so I'll reduce these two numbers
 to change the resolution.
 
 : . ^^0xxxxw>>xxx>xxw>>>x>>>>>xK?6?
+
 : (16b221111*i.8) vm |:+/2<|(+*:)^:(<9)~_1+j./~ 0.1*i:16
 
 Other than that, it's the same image.
 
-* derivation
-** complex plane
-
-lowercase i-colon generates a range of numbers
-in both the positive and negative directions.
-
-: . ?i:4?
-: i:4
-
-The asterisk is just plain old multiplication.
-
-: . ^0?0.1 * ?
-: 0.1 * i:4
-
-J-dot goes between two numbers to create a
-complex number. Forward slash tilde creates a table.
-So this is like an addition table using our range
-as input, but the right argument is imaginary.
-
-: . ^0_?j./~ ?
-: j./~ 0.1 * i:4
-: . 
-: 
-
-If we visualize that with viewmat,
-we see this rainbow circle.
-
-: . ^^_0___?vm ?
-: vm j./~ 0.1 * i:4
-
-We can make it bigger:
-
-: . ^_X__?16?
-: vm j./~ 0.1 * i:16
-
-** colors
-
-Viewmat can take a palette on the left.
-The bytes are in blue-green-red order,
-so this makes some shades of blue.
-
-: . ^_0_?()?__? ?<<___?16b221111 ?_?* i.8?
-: (16b221111 * i.8) vm j./~ 0.1 * i:16
-
-Lowercase I-dot is just another range,
-but doesn't include the negatives.
-And we just multiply by this hex number to get the gradient.
-
-: . ^0?hfd ?xwwwxXK
-: hfd 16b221111 * i.8
-: . ^^bbbbK? i.8?
-: (16b221111 * i.8) vm i.8
-
-** the mandlebrot set
-*** repeated powers
-
-For the mandelbrot set itself, we need this formula:
-
-: NB. Z[i] = Z[i-1]^2 + Z[0]
-
-We can tranzlate that in j as:
-
-: {{ (y^2) + z0 }} z0 =: 1
-
-This is a function that takes an argument named y,
-squares it, and adds z0, which we've defined as one.
-
-So when you square one and add one you get two.
-
-To do it multiple times, we can use
-the power conjunction:
-
-: . ^bbb?^:5?
-: {{ (y^2) + z0 }}^:5 z0 =: 1
-
-And to see the interemediate results,
-we can put a box around the number 5.
-
-: <5
-: . ^^bbb<?(<?>?)?
-: {{ (y^2) + z0 }}^:(<5) z0 =: 1
-
-Notice that we have five results, but the first one
-is just the original number. So if we want to
-see the result of doing this 5 times,
-we need to pass in 6.
-
-: . ^___<__<_<_<_<_<_<_<_<_<__x__?6?
-: {{ (y^2) + z0 }}^:(<6) z0 =: 1
-
-
-Again, j executes right to left so we can drop
-these parentheses by swapping the arguments to plus:
-
-: . ^bbbbXXXXXX<<<X?z0 + ?
-: {{ z0 + y^2 }}^:(<6) z0 =: 1
-
-So here y is like an accumulator, and z0 is
-the initial value. Whenever you've got this
-pattern where you need an accumululator and
-and a constant, you can put the constant on
-the left, call it x inside the function,
-and the power conjunction
-will do what you want:
-
-: . ^bbbbbbXX?x?0 ?z0 ?
-: z0 {{ x + y^2 }}^:(<6) z0 =: 1
-
-And whenever you have the same argument on
-the left and right, you can just put a tilde
-after the verb
-rather than specifying the argument twice.
-
-: . ^bbb?~?0xxx
-: {{ x + y^2 }}^:(<6)~ z0 =: 1
-
-And now we don't even need to give z0 a name.
-
-: 
-: NB. 'v~ y' means 'y v y'
-: . ^^^bbbxxxxxx
-: {{ x + y^2 }}^:(<6)~ 1
-
-Better yet, whenever you have this pattern of a
-constant plus some verb applied to the y argument,
-you can use a hook.
-
-So first, let's use the special verb for square:
-
-: 
-: NB. '*:y' means 'y*y'
-: . ^^^bbXXb>?*: ?
-: {{ x + *: y }}^:(<6)~ 1
-
-And now we have two verbs so here's the hook.
-
-: 
-: NB. 'x (u v) y'  means 'x u (v y)'
-: . ^^^bbxxx?)?bxxbbbxx0xxx?(
-: (+ *:)^:(<6)~ 1
-
-*** examples
-Okay, so that's the formula used in the
-mandelbrot set.
-
-The set itself has to do with how each
-initial value behaves. Notice how starting
-with one very quickly takes you to a big number.
-
-With zero you get a different story:
-
-: . ^__X__?0?0>>x
-: (+*:)^:(<6)~ 0
-
-It just stays zero forever.
-
-With negative one, it bounces back and
-forth between zero and negative one.
-
-: . ^_X_?_1?
-: (+*:)^:(<6)~ _1
-
-And with negative two, you get a
-never-ending sequence of positive twos.
-Two squared is four, plus negative
-two is two, and so on forever.
-
-: . ^__X_?2?
-: (+*:)^:(<6)~ _2
-
-With negative 3, it's straight back to infinity.
-
-: . ^__X_?3?
-: (+*:)^:(<6)~ _3
-
-The mandelbrot set is just the part of
-the complex plane that works like these numbers,
-and not the ones that go off to infinity.
-
-Sometimes it's a little hard to tell. 0.3,
-looks like it's staying pretty small, but give
-it a little more time, and it's out of here.
-
-: . ^__X___?9?__X_X_?0?_?.?__?3?
-: (+*:)^:(<6)~ 0.3
-: . ^___h_h_h_h_h_h_h__x___?1?_?5?
-: (+*:)^:(<15)~ 0.3
-
-*** convergence / divergence
-
-So a decent test is to let the function
-run a few times for each point,
-and then check whether the value
-is greater than 2.
-
-: . ^___0___?2?____?<?
-: 2<(+*:)^:(<15)~ 0.3
-
-Of course you can't just compare complex numbers
-because they're not well ordered.
-
-: . ^___X_X__?j?__?1?
-: 2<(+*:)^:(<15)~ 0j1
-
-: . ^0>>?|?
-: 2<|(+*:)^:(<15)~ 0j1
-: . ^___0__x__x_x
-: (+*:)^:(<15)~ 0j1
-
-But we can use the distance from the origin,
-which is the vertical bar:
-
-: . ^__0__?|?
-: |(+*:)^:(<15)~ 0j1
-: . ^0?2<?
-: 2<|(+*:)^:(<15)~ 0j1
-
-So that's the mandelbrot function.
-I'm only running it 9 times here, even though
-it's not as precise as it ought to be,
-just because otherwise you start hitting infinity
-and then you have to deal with that.
-
-And now we can apply this same sequence to
-that entire table of complex numbers we
-created earlier.
-
-: . ^0?vm ?w<XXXXX?9?>>K?j./~ 0.1 * i:16?
-: vm 2<|(+*:)^:9~ j./~ 0.1 * i:16
-
-So there's the mandelbrot set.
-The comparison always gives us either a one or zero,
-and so viewmat just draws it in black and white.
-
-And our table is oriented the wrong way, so let's transpose it.
-
-: . ^0>>>?|:?
-: vm |:2<|(+*:)^:9~ j./~ 0.1 * i:16
-
-It's actually still upside down,
-but since it happens to be symmetrical,
-we won't worry about it.
-
-But we can move the camera left
-just by subtracting one from all the values.
-
-: . ^bbbb>?_1+ ?
-: vm |:2<|(+*:)^:9~ _1+ j./~ 0.1 * i:16
-
-*** sprite sheet
-
-So the black part actually is the mandelbrot set,
-but it's traditional to draw some colors
-to indicate how long the white part took
-to break away from black hole.
-
-So to show how that works, I'm going to scale
-the image down for a moment.
-
-: . ^_XX?8?_<<_<<<<<x?2?
-: vm |:2<|(+*:)^:9~ _1+ j./~ 0.2 * i:8
-
-Now if you recall, we can box this 9 to
-get the intermediate results.
-That's going to give us a 3 dimensional array -
-nine of these tables.
-
-Viewmat doesn't know how to draw a rank 3 array,
-but we can use dollar sign to see the shape:
-
-: . ^bbbbb<<?(<?>?)?__0____xx?$?
-: $ |:2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
-
-Well that's not what we want.
-The transpose is screwing it up.
-So let's remove that for a moment.
-
-: . ^0>>xx
-: $ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
-
-Now let's reshape that list of 9 tables
-into a 3x3 table of tables.
-
-: . ^0>? 3 3 $?
-: $ 3 3 $ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
-
-And now we can use comma dot between each
-array to stitch them together.
-
-: . ^0>>?,./ ?
-: $ ,./ 3 3 $ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
-
-And again to get a single image
-with all 9 sub-images.
-
-: . ^0>>?,./?
-: $ ,./,./ 3 3 $ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
-
-And now we can visualize it again:
-
-: . ^0x?vm?
-: vm ,./,./ 3 3 $ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
-
-And put the transpose back:
-
-: . ^0w? |:?
-: vm |: ,./,./ 3 3 $ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
-
-But now that we can see the intermediate steps,
-what we really want to do is just add all
-these tables of ones and zeros together.
-
-*** gradients
-
-So for example, this area on the left is white from
-the very beginning, and so when we add all 9 layers,
-these should wind up as 9,
-
-and the parts in the middle that are always
-close to zero should sum to 0, and then the
-parts that change should have different
-numbers in between.
-
-: . ^0__xx_x__>>>_xxxxx_?+?__>>_xxxxxx
-: |: +/ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
-
-All that's left is to render the image...
-
-: . ^0?vm ?
-: vm |: +/ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
-
-And pick whatever color scheme we'd like.
-
-: . ^0?(16b221111 * i.8) ?
-: (16b221111 * i.8) vm |: +/ 2<|(+*:)^:(<9)~ _1+ j./~ 0.2 * i:8
+* gui version
+here's the repo
+see other videos about making guis in j
+but here's the place where you put the panning and zooming of the camera
+
+* shader code
+** TODO compare to shader code
+(special k version: https://beyondloom.com/tools/specialk.html#aGTT-0lC)
+https://tsmeets.itch.io/mandelbrot
+(or make my own in godot)
 
 * end
-
 Of course we can get as fancy as we like
 with the colors, and modify these constants
 to pan and zoom the camera, but that's
