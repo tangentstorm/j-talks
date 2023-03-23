@@ -16,9 +16,9 @@ dest_files=["res://.godot/imported/michal-eyes.png-dd9cce85a8df07be8a1072a04d074
 [params]
 
 compress/mode=0
+compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
-compress/bptc_ldr=0
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false

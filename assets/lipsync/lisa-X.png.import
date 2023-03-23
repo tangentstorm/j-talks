@@ -16,9 +16,9 @@ dest_files=["res://.godot/imported/lisa-X.png-10992eb281bb1395ae43f0c665a44a5e.c
 [params]
 
 compress/mode=0
+compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
-compress/bptc_ldr=0
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false
