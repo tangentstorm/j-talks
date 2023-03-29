@@ -1,0 +1,144 @@
+
+* specification
+
+**  abstract interface for trees
+
+*** load/save tree
+- token trees?
+- #lang whatever + reader?
+- maybe plain s-expressions for now
+
+*** tree builder (forward only)
+- https://tangentstorm.github.io/apljk/treebuild.ijs.html
+- emit
+- node
+- done
+
+*** traversal
+- =root_t nid -> nid=
+- =up_t nid= -> nid
+- =dn_t nid= -> [nid]
+- =val_t nid= -> any
+
+
+*** navigate with cursor
+nx -> next token
+pv -> prev token
+
+fw -> next group
+bw -> prev group
+up -> parent
+dn -> child (if relevant)
+crumbs -> [nid]
+
+*** typed trees
+- =tag_t nid= -> type
+- =val_t nid= -> (instance of type)
+
+*** display a tree on the screen
+"camera" follows the cursor
+
+*** editor interface
+- context (tree structure): show stack, siblings, children
+- clipboard for "scraps" off to the side
+- pretty-printed syntax
+
+* trees of tokens and nodes
+- tree is of nodes and has some tokens in it
+- tree structure of nodes is represented by parent column
+- tag for each node is represented by symbol column
+- to mix edges and tokens, we need a boxed list of children
+  - tag edges using sign:
+    - negative is a token
+    - positive is a node
+    - zero means not filled in yet
+- alternately, we could put tokens and nodes in one tree
+  - tokens would just be leaf nodes
+  - every node has a symbol / id representing its rule
+  - tokens would just have capital letters
+  - every token/parse rule/etc has start/end span
+  - so, parallel columns:
+    - parent
+    - tag/ruleid
+    - pos (position within the text)
+    - end (or length)
+    - seq (within parent) <- don't need for parsing, but maybe for syndir
+
+- possibly for syndir, we only track the len and then calculate pos/end
+
+
+* TODO class to make a tree interactively
+* TODO ui to make a tree interactively
+* TODO use grammar to decide what nodes are allowed
+* TODO render with pretty-printing according to grammar
+
+
+
+* spec for "parser"
+input is text.
+result is a parse tree,
+such that unparsing that tree produces the text.
+
+* spec for "syndir"
+input is sequence of keystrokes
+state is the state of the tree.
+similar to what you have with a parse state, but:
+user can move focus up, down and around in the tree.
+
+
+
+
+* ebnf:
+#+begin_src ebnf
+syntax = {production}.
+production = identifier "=" expression "." .
+expression = term {"|" term}.
+term = factor {factor}.
+factor = identifier | string | "(" expression ")" | "[" expression "]" | "{" expression "}".
+
+identifier = letter {letter | digit}.
+string = """ {character} """.
+letter = "A" | ... | "Z".
+digit = "0" | ... | "9".
+#+end_src
+-- from http://people.inf.ethz.ch/wirth/CompilerConstruction/CompilerConstruction1.pdf
+
+wirth's syntax is probbably faster than postfix notation,
+and doesn't require doing something with the last parsed item.
+
+
+* b4 ought to make postfix notation easier (??)
+
+
+
+
+
+* - read with rx
+- write nodes with wz
+- append tokens with wx
+- strings(uniform-type vectors)
+- chars
+- symbols
+- functions
+
+* representing the different types:
+- ints
+- addr: pointers
+- func: pointer to code
+
+we need arrays.
+- allocate
+- append
+- discard
+
+arrays of variants.
+- bits
+- bytes
+
+
+
+
+* syntax directed editor
+- input buffer
+- token array
+- node array

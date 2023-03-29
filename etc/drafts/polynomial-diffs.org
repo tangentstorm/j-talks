@@ -1,0 +1,33 @@
+mathologer video about using sequence differences to generate polynomials
+ https://www.youtube.com/watch?v=4AuV93LOPcE
+
+
+#+begin_src j
+
+  s =. 2 3 5 p. i. 20                NB. some sequence
+  d =. ,.(2-~/\])&.>^:(<5) <s        NB. repeat differences
+  r =. 1 + 1 i.~ ({.*./@:=}.) S:0 d  NB. 1st row where all same (rank of poly)
+  c =. {. S:0 r {. d                 NB. the coefficients
+  p%f
+
+#+end_src
+
+
+you do a bunch of diffs and then you get something like...
+
+well you get this infinite sum of falling powers over factorials,
+with the first items of each row of diffs as coefficients.
+
+this makes a ("maclauren series?")
+
+
+
+#+begin_src j
+  p =. (1,[:*/\[-i.@<:)              NB. falling powers of y
+  f =. !i.#p                         NB. n! for i.r-1
+#+end_src
+
+
+but to get the polynomial from this, you have to
+turn this into an expression of n symbolically.
+

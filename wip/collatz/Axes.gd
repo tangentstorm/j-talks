@@ -19,9 +19,9 @@ func set_unit(u:Vector2):
 	refresh()
 	
 func refresh():
-	update()
+	queue_redraw()
 	for child in get_children():
-		child.update()
+		child.queue_redraw()
 
 var gymax
 var gxmax
