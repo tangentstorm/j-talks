@@ -1,0 +1,34 @@
+#+title: template for a tech video
+
+* who is my audience?
+
+* how will people find this video?
+- search: how to xyz...
+- suggested content
+- returning viewer (subscription content)
+- direct advertising/promotion
+
+* what is the story or narrative i want to convey?
+
+
+* what reaction / emotion do i want to elicit?
+- the joy of mathematics
+- satisfaction / craftsmanship
+- understanding / inspiration
+
+* what images / animations can help me better convey the idea?
+- what's the general pattern of motion involved?
+- SQVID (dan roam, back of the napkin, ch. 6)
+  - simple vs elaborate
+  - quality vs quantity
+  - vision vs execution
+  - individual attributes vs comparison
+  - delta (change) vs status quo
+
+* balancing the high level with implementation details
+- top-down: stacks
+- bottom-up: trails
+
+
+* what other videos does this connect with?
+

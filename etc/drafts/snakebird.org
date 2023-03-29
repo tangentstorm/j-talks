@@ -1,0 +1,54 @@
+
+
+- snake theory
+  - world is a grid of zeros
+  - snake is always at least 2 squares long (head,tail)
+  - therefore, snake has a length >: 2
+  - the numbers >:i.len are arranged on a grid
+  - each segment is adjacent to another number
+  - to move the snake, add a new head:
+    - target cell must be in one of the 4 cardinal directions
+    - if target is empty, move the snake:
+      - create a new head in the new cell
+      - subtract one from each cell of the snake
+      - the tail becomes a 0, thus disappearing
+    - if target is occupied by food:
+      - do same operation as above, but skip the subtraction
+    - if target occupied by anything else, the move fails.
+      - classic snake: game over
+
+- classic snake game
+  - snake moves forward on its own at each tick
+
+- snakebird theory
+   - snakebird only moves when you move it
+   - there are other obstacles
+   - you can backtrack or reset
+   - there is a goal to reach
+   - there is gravity
+   - falling kills you
+   - touching other things kills you
+   - there are other snakebirds
+     - you can move them
+     - kill a snakebird to become it
+
+- game tree
+  - 0..3 moves from any state
+    - options are (left, right, straight)
+    - but you can be blocked
+  - so just look ahead at each sequence
+  - scoring function
+  - you don't know where the food will spawn
+  - exponential blowup, so probably use heuristics
+
+
+
+https://hogg.io/writings/snake-solution
+https://snake.hogg.io/  <- awesome visualizer with js editor for rules
+
+another guy's attempt:
+https://www.datagenetics.com/blog/april42013/index.html
+
+https://gsurma.medium.com/slitherin-solving-the-classic-game-of-snake-with-ai-part-1-domain-specific-solvers-d1f5a5ccd635
+https://gsurma.medium.com/slitherin-solving-the-classic-game-of-snake-with-ai-part-2-general-purpose-random-monte-25dc0dd4c4cf
+

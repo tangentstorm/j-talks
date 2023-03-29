@@ -1,0 +1,4 @@
+#+title: types from grammars
+
+* each rule or sub-rule defines a datatype
+* 

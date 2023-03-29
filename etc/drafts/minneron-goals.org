@@ -1,0 +1,34 @@
+#+title: minneron goals
+
+* what value am i trying to provide? (what constraints overcome?)
+
+** graphical ui (fnarbmlyx+godot)
+- make it easier to animate and visualize ideas.
+
+** j-kvm/ui
+- lower the cost of building simple widgets.
+- provide the mainloop/shell for applications.
+
+** portable environment (building on b4 virtual machine)
+- allows the toolset to work atop many languages/environments.
+- give students a common starting point for learning.
+
+** ampheck (specification language with proofs)
+- be able to derive programs from specifications
+  - get correct results
+  - get them more quickly (especially w/stackwise ui)
+
+** stackwise
+- dramatically lower the cost of writing useful software,
+  by making it easier to focus on important tasks that actually
+  make a difference.
+
+** narrative trail
+- build a small-but-complete computing system from the ground up,
+  that can fit in a single user's head, and provide instructions
+  for acuiring an understanding of that system, via narrative
+  programming.
+
+- provide interesting content to help build an audience on my
+  blog, youtube channel, etc.
+

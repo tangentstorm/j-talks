@@ -1,0 +1,32 @@
+
+* kragen sittaker
+
+ https://github.com/kragen
+ https://en.wiktionary.org/wiki/Kragen
+ https://github.com/kragen/stoneknifeforth/
+ [[https://github.com/kragen/stoneknifeforth/commits/master?after=35e919e2fd93b6de6ff53028201692c6177b7d28+104&branch=master&qualified_name=refs%2Fheads%2Fmaster][initial commit]]
+
+ blog is offline, but:
+ https://web.archive.org/web/20100704184116/http://www.bentwookie.org/blog/
+
+ still active:
+ http://canonical.org/~kragen/
+
+neat:
+http://canonical.org/~kragen/sw/dev3/paperalgo
+
+* 
+
+brian raiter's teensy elf executables:
+  http://www.muppetlabs.com/~breadbox/software/tiny/
+49 minute talk:
+  http://www.muppetlabs.com/~breadbox/software/tiny/techtalk.html
+
+brings smallest elf down to 45 bytes. (76 if it's actually an elf)
+
+has some other programs:
+
+   http://www.muppetlabs.com/~breadbox/software/tiny/useful.html
+
+   http://www.muppetlabs.com/~breadbox/software/tiny/snake.asm.txt
+

@@ -1,0 +1,18 @@
+
+* "user stories"
+You can write software just for fun, or to learn.
+You can write software because someone paid you to.
+
+But if you want to write software that makes a difference
+in the world, you should probably try to think in terms
+of the value you want to bring.
+
+Specifically, consider Eli Goldratt's questions:
+
+  - what will this change allow the user to do?
+  - what obstacle or constraint will it lift?
+  - what behaviors currently exist to work around that constraint?
+  - how must those behaviors change now that the constraint has been lifted?
+
+Apply these questions recursively, all the way down to the feature level.
+

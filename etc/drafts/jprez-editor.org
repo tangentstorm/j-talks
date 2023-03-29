@@ -1,0 +1,26 @@
+
+* welcome
+welcome to the ridiculously early j morning show
+
+I lost the first few minutes of this one due to some kind of setup mistake
+but you didn't miss much.
+
+Basically, jprez has this idea of slides, and each slide can
+contain j code that shows up in a text editor on the screen.
+
+But at this point in time, it's just being manually drawn to
+the screen rather than being part of a well-defined ui widget.
+
+So this episode is about factoring out a real editor widget.
+
+* existing editor code
+describe the current code
+
+* multi-line editor plan
+* extract jedit.ijs
+* add some text to screenplay
+* jcodeeditor extends UIList
+* extract syntaxline from repl to re-use in editor
+* =of_self=
+* (jedit) render the editor cursor
+

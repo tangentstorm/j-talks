@@ -1,0 +1,8 @@
+#+title: algebraic data types
+
+* sum types (enums/unions)  ('alt')
+- Data is tagged with a number/constructor indicating the choice.
+
+* product types (structs/tuples) ('seq')
+- Data is composed of fields.
+

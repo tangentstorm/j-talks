@@ -1,0 +1,57 @@
+* pretty printers and template engine
+
+- Templates without much formatting, or just simple indentation are easy enough.
+- Pretty templates are a bit trickier.
+- Do I really need pretty templates?
+
+- I want to define grammars.
+- I want to define templates.
+- There should be a template rule for each node-producing (or token-producing) grammar rule.
+- Some tokens have the same string representation for every instance.
+- Other tokens (like numbers, identifiers, strings) need to store the string data.
+
+* formatting rules (templates)
+
+each defined parse rule should have at least one corresponding template.
+(one for round-tripping/pretty-printing, and perhaps more for translations)
+The default template should produce text that can be parsed by the grammar rule.
+So: it may make sense to define the default template directly in the rule,
+or perhaps generate the templates from the grammar and let the user adjust them.
+
+* editing the tree
+- need to display only the visible portion of the formatted text
+- probably want to only render "dirty" parts of the tree.
+
+
+* tree structure
+- array of parents
+- array of node tags
+- main structure is one box per node
+- opt, rep, orp always produce a new node
+
+* how does the top-level files relate?
+** syndir vs proofed
+- syndir (boxed) is a wannabe kvm/ui/list, but horizontal
+- proofed wants to render the whole tree
+- at any given time, there should only be one currently-edited node
+- the node is always a list of tokens and other nodes
+- however, the list may not be wholly vertical /or/ horizontal.
+** TODO how to integrate those two?
+- as a start, let's ditch boxed.ijs, and make a plain old tree control
+- once that works, start simultaneously showing the unparsed tree
+** TODO except: in j (and forth), many definitions /are/ one horizontal line.
+
+* what is the specification for trees?
+- each tree node has a:
+  - nid (index in a list of boxes)
+  - parent (parallel vector of numbers)
+  - type (token/tag)
+  - position in text
+  - value
+    - if node: children (vector of boxed number arrays)
+      - child's nid
+      - slot in which to put it
+    - if token: pointer to string entry
+
+- generally you're looking at a handful of nodes at once
+- so maybe put everything related to the node in one box
