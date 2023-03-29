@@ -8,124 +8,6 @@
 
 config_version=5
 
-_global_script_classes=[{
-"base": "Line2D",
-"class": &"AntialiasedLine2D",
-"language": &"GDScript",
-"path": "res://addons/antialiased_line2d/antialiased_line2d.gd"
-}, {
-"base": "Polygon2D",
-"class": &"AntialiasedPolygon2D",
-"language": &"GDScript",
-"path": "res://addons/antialiased_line2d/antialiased_polygon2d.gd"
-}, {
-"base": "Polygon2D",
-"class": &"AntialiasedRegularPolygon2D",
-"language": &"GDScript",
-"path": "res://addons/antialiased_line2d/antialiased_regular_polygon2d.gd"
-}, {
-"base": "RefCounted",
-"class": &"AudioLoader",
-"language": &"GDScript",
-"path": "res://addons/waveform/AudioLoader.gd"
-}, {
-"base": "AntialiasedLine2D",
-"class": &"FnPlot",
-"language": &"GDScript",
-"path": "res://wip/binary-signal-space/FnPlot.gd"
-}, {
-"base": "Node",
-"class": &"JPrezPlayer",
-"language": &"GDScript",
-"path": "res://addons/jprez/JPrezPlayer.gd"
-}, {
-"base": "RefCounted",
-"class": &"Org",
-"language": &"GDScript",
-"path": "res://addons/orgprez/Org.gd"
-}, {
-"base": "Resource",
-"class": &"OrgChunk",
-"language": &"GDScript",
-"path": "res://addons/orgprez/OrgChunk.gd"
-}, {
-"base": "RefCounted",
-"class": &"OrgCursor",
-"language": &"GDScript",
-"path": "res://addons/orgprez/OrgCursor.gd"
-}, {
-"base": "Node",
-"class": &"OrgDeck",
-"language": &"GDScript",
-"path": "res://addons/orgprez/OrgDeck.gd"
-}, {
-"base": "Resource",
-"class": &"OrgNode",
-"language": &"GDScript",
-"path": "res://addons/orgprez/OrgNode.gd"
-}, {
-"base": "VBoxContainer",
-"class": &"OrgPrezAudioTab",
-"language": &"GDScript",
-"path": "res://addons/orgprez/OrgPrezAudioTab.gd"
-}, {
-"base": "VBoxContainer",
-"class": &"OrgPrezOutline",
-"language": &"GDScript",
-"path": "res://addons/orgprez/OrgPrezOutline.gd"
-}, {
-"base": "Control",
-"class": &"OrgPrezRuntime",
-"language": &"GDScript",
-"path": "res://addons/orgprez/OrgPrezRuntime.gd"
-}, {
-"base": "Node",
-"class": &"OrgPrezScriptEngine",
-"language": &"GDScript",
-"path": "res://addons/orgprez/OrgPrezScriptEngine.gd"
-}, {
-"base": "Window",
-"class": &"OrgPrezStepper",
-"language": &"GDScript",
-"path": "res://addons/orgprez/OrgPrezStepper.gd"
-}, {
-"base": "Resource",
-"class": &"OrgTime",
-"language": &"GDScript",
-"path": "res://addons/orgprez/OrgTime.gd"
-}, {
-"base": "ColorRect",
-"class": &"Waveform",
-"language": &"GDScript",
-"path": "res://addons/waveform/Waveform.gd"
-}, {
-"base": "PanelContainer",
-"class": &"WaveformPanel",
-"language": &"GDScript",
-"path": "res://addons/waveform/WaveformPanel.gd"
-}]
-_global_script_class_icons={
-"AntialiasedLine2D": "",
-"AntialiasedPolygon2D": "",
-"AntialiasedRegularPolygon2D": "",
-"AudioLoader": "",
-"FnPlot": "",
-"JPrezPlayer": "",
-"Org": "",
-"OrgChunk": "",
-"OrgCursor": "",
-"OrgDeck": "",
-"OrgNode": "",
-"OrgPrezAudioTab": "",
-"OrgPrezOutline": "",
-"OrgPrezRuntime": "",
-"OrgPrezScriptEngine": "",
-"OrgPrezStepper": "",
-"OrgTime": "",
-"Waveform": "",
-"WaveformPanel": ""
-}
-
 [application]
 
 config/name="j-talks"
@@ -145,6 +27,8 @@ AntialiasedLine2DTexture="*res://addons/antialiased_line2d/texture.gd"
 
 [display]
 
+window/size/viewport_width=1920
+window/size/viewport_height=1080
 window/size/resizable=false
 window/stretch/mode="2d"
 window/size/width=1920
@@ -153,32 +37,33 @@ window/size/fullscreen=true
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/antialiased_line2d/plugin.cfg", "res://addons/waveform/plugin.cfg", "res://addons/orgprez/plugin.cfg")
+enabled=PackedStringArray("res://addons/antialiased_line2d/plugin.cfg", "res://addons/orgprez/plugin.cfg", "res://addons/waveform/plugin.cfg")
 
 [global]
 
-default_org_file="res://wip/binary-signal-space/binary-signal-space.org"
+default_org_file="res://wip/mandelbrot/mandelbrot.org"
+latest_org_file="res://wip/mandelbrot/mandelbrot.org"
 
 [input]
 
 toggle1={
 "deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":0,"unicode":0,"echo":false,"script":null)
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":0,"key_label":0,"unicode":0,"echo":false,"script":null)
 ]
 }
 toggle2={
 "deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":0,"unicode":0,"echo":false,"script":null)
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":0,"key_label":0,"unicode":0,"echo":false,"script":null)
 ]
 }
 toggle3={
 "deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":0,"unicode":0,"echo":false,"script":null)
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":0,"key_label":0,"unicode":0,"echo":false,"script":null)
 ]
 }
 toggle4={
 "deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":0,"unicode":0,"echo":false,"script":null)
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":0,"key_label":0,"unicode":0,"echo":false,"script":null)
 ]
 }
 

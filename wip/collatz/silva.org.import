@@ -1,0 +1,14 @@
+[remap]
+
+importer="org.prez"
+type="Resource"
+uid="uid://cpevdqv2p4nfn"
+path="res://.godot/imported/silva.org-24a0c60d1358068ec00b5dadaee95506.res"
+
+[deps]
+
+source_file="res://wip/collatz/silva.org"
+dest_files=["res://.godot/imported/silva.org-24a0c60d1358068ec00b5dadaee95506.res"]
+
+[params]
+
