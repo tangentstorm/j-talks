@@ -1,0 +1,93 @@
+#+title: APL Programs for the Mathematics Classroom in J
+
+* Introduction
+: NB. need at least 1 j line in the file, or everything breaks
+# no code in here.
+
+* Arithmetic and Numbers
+
+** Basic Programs with Integers
+
+: . 
+: 1+i.y=.10    NB. first y positive integers
+: . ^__0__$__b_b___x_x_x_x_x_x_x_x_x_? ?_?e?_?v?_?e?_?n?_?t?__X__b__b_b____b__b_b___0____?2?__? ?_?*?__X_X_X__?2?_? ?__?(?_? ?__X_X__?*?_? ?
+: 2 * 1+i.y=.10    NB. first y even integers
+: . ^__0__x_x_x__?+?_?:?
+: +: 1+i.y=.10    NB. first y even integers
+: . ?n?___X__X__?t?
+: 3 {{x* 1+i.y}} 10    NB. first y multiples of x left argument
+: odds =: {{ _1 + 2 * 1+ i. y }}  NB. first y odd numbers
+: . !__?o?_?d?_?d?_?s?_? ?__?5?
+: odds 5
+: . ?2?_? ?__?*?___? ?_?i?_?.?__?y?__X_?1?_?0?___0___?1?_?+?
+: 1+2 * i.10
+: . ^__X__X_?5?
+: 1+2 * i.5
+: . ^__0__?o?_?d?_?d?_?s?_? ?_?=?_?:?_? ?__?{?_?{?__? ?__$__X_? ?_?y?__?}?__?}?__? ?__X
+: odds =: {{ 1+2 * i. y}}
+
+** square and triangular numbers
+
+** multiplication tables
+
+** log tables
+
+** trig tables
+
+** isomorphism
+
+** primes and factors
+
+** HCF and LCM
+
+** Recurring Decimals
+
+** Numbers in Different Bases
+
+** Roman Numerals
+
+** Encoding and Decoding
+
+** Problems Involving Base 10 Digits
+
+*** Casting out Nines
+
+** Computer Arithmetic
+
+** Counting Series Forwards and Backwards
+
+** Complex Numbers
+
+** Complex Roots of Unity
+
+you can use this to draw regular polygons.
+
+
+
+* Basic programs with integers.
+: . ?(?__?1?_?+?__?2?__?*?__?i?_?.?__?)?__? ?_?5?__? ?_? ?_?N?_?B?_?.?_? ?_?e?_?v?_?e?_?n?_? ?_?n?_?i?_?c?_?e?_?r?
+: (1+2*i.) 5  NB. even nicer
+
+* Algebra and Sets
+
+* Series
+
+* Formulae and Tables
+
+* Geometry and Pattern
+
+* Calculus
+
+* Probability and Statistics
+
+* Combinatorics
+
+* Games and Miscellaneous
+
+* Mastermind
+
+* Optical Illusions
+
+* Appendix 1. Graphics
+
+* Appendix 2.
