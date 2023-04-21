@@ -106,6 +106,8 @@ we can use the format verb to do that left part
 : . ^__<_<_<_<_<_<___<_<___X___X__X__<_<_<_<_<_<_<_<_<__>__?-?__$
 : {{10j3 ": |: 2 1 o./ -(2p1%y)*1+i.y}}3
 
+: NB. load 'plot'
+: NB. plot {{ (,~{:) j./"1 |: 2 1 o./ -(2p1%y)*1+i.y}}"0] 3 + i.8
 
 
 * Algebra and Sets
