@@ -1,0 +1,92 @@
+* motivation
+
+- want to write a parser
+
+- s is parse state
+- parser combinators map s -> s
+- input is part of the state
+- it doesn't change, so we're just copying pointers around
+
+* structs
+
+** what do you need for a matcher?
+  - input buffer
+  - mark and index
+  - current character
+  - match bit (the result)
+
+** later, for a parser...
+  - tree builder
+  - tree-in-progress
+
+** "on" converts input to initial state
+  - set the input buffer and first char
+
+** TODO "cb" gets the matched sequence (should be "ms")
+
+** nx: advance the machine
+** fw: advance y times (possible 0) ("backwards" so condition can go on right)
+** la: look ahead x chars
+- tacit getters and setters
+- AA (Apply at) and AP (append)
+- tk -> pop from buffer
+
+
+* the match combinators
+** on using adverbs
+we need to take arguments
+- individually we could just put the argument on the left as x
+- but actually we're building and combining verbs here
+- even then we could maybe use (x&opt) to bind the argument
+- but that's a lot of punctuation
+
+** emp
+- matching just means setting the match bit
+- I s
+
+** any -> match any character unless out of bounds
+
+** end (not any. could explicitly check end of input, but how about neg?)
+** TODO neg
+
+** chr -> literal char
+** try modifier for end of input
+** chs -> character set or choose
+
+** now the two main ones:
+*** seq
+*** alt
+
+** opt
+** lit
+** rep
+** orp
+** not (different from neg)
+** sep (just for fun)
+
+* a tokenizer
+** let's use the matcher to do some work
+** tok
+** sym
+** zap
+** ;: is much faster but not as easy
+** might be fun to convert to ;:
+
+* a parser
+** tree builder
+** t-node / t-ntup
+** t-emit
+** t-head
+** t-attr
+** t-done
+** tmb1/tbm2
+** tok / sym again
+** elm -> create tagged element from match
+** atr -> attribute
+** tag
+
+* examples
+** line splitter
+** s-expression parser
+*** ll
+*** se

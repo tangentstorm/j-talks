@@ -1,0 +1,38 @@
+if. then. else.
+
+these three words from your favorite programming language
+can be used to simplify any statement in propositional
+logic down to a truth table.
+
+ here's an example with three variables.
+
+pick one variable, and make two copies of the expression.
+
+we'll branch on that variable.
+
+IF that variable is true
+THEN we can replace it with the symbol for true
+ELSE we replace it with false.
+
+Then simplify the expression.
+
+Do the same with the next variable.
+
+And the next.
+
+Eventually, you'll have nothing but constants,
+and that's your truth table.
+
+Anyway, if you ever need a brute force way to
+solve a boolean expression
+
+just remember the magic words
+
+
+
+<loop>
+
+[add context in a comment:
+   This process is called Shannon decomposition after
+   Claude Shannon, although the idea goes back at least
+   as far as Boole. ]

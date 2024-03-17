@@ -1,0 +1,200 @@
+#+title: learntris
+
+* could you make tetris?
+
+could you make tetris?
+
+I don't mean could you have invented the game, but rather, with your current skillset knowing whatever you know about programming, could you make that?
+
+# ^ point to matrix in background
+
+* TODO narrow the audience
+
+  [ cut to blockdown ]
+- first tried it myself somewhere around 20 years, in macromedia flash
+- after reading an article that suggested you could learn game programming by building a series of small arcade games, starting with tetris
+- i'd been programming profesionally for a couple years at that point
+- but it was my first time using actionscript.
+- did it over christmas holidays while visiting my parents
+- remember my dad and i took our black labrador retriever out to the lake one day
+- he asked me why i was lost in thought
+- and I said i was trying to come up with an algorithm for rotating a grid.
+- so even with experience, there were things that were new to me, and it wasn't trivial.
+- somehow you can still play it on kongretate
+- my choice of keybindings now seems very uncomfortable,
+- and the input handling isn't timed right so it's really hard to position the pieces where you want them
+- and the game never really gets harder as you progress
+- and once you lose, there's no way to restart except refreshing the page
+- no question it deserves its two star rating.
+- but I had fun making it, learned a lot, and I got it done.
+
+- but could you make a game like that?
+- if you don't know how to program at all, then ... it's probably a bit too much to take on.
+- but, if you know about sequences and repetition and conditionals and basic data structures like strings and arrays, then you can probably do it.
+
+
+
+* TODO (revisit) prerequisites: what would you need to know?
+
+
+I think most people could do it, but they might have a whole lot of things they need to learn to make it happen.
+
+- You have to know at least the basics of programming. (which probably implies reading and writing), and then a bunch of concepts like structuring data and conditionals and iteration.
+
+- You have to know about tetris. this you can learn in a few minutes: steer and rotate falling tetrominos in a 10 by 22 matrix. fill rows to clear them, and fill more rows at once to earn more points. Clear enough lines and you level up, increasing the gravity and therefore the speed of falling tetrominos. There are many nuances and variations, but those are the basics.
+
+- So then the bulk of the actual work is taking those rules and figuring out how to express them in the programming language of your choice.
+
+So, what do you think? could you make tetris?
+could you make it in a weekend? or do you need to learn more on the programming side?
+
+
+* TODO what if i made it easier?
+you'd also have to know a game engine
+how to put pixels on the screen and read keyboard or gamepad events.
+but what if we just forgot all that?
+
+
+* TODO [0/0] origins
+- [ ]i started asking people that question in the early 2010s, when I was spending...
+
+i used to spend a lot of time in the #learnprogramming channel on IRC. people would come in for help with their homework or just asking for advice.
+
+often they don't know if they're ready or how skilled they are. it's actually pretty hard to evaluate your skill level in programming. (or anyone's!) and it's hard to give advice without knowing someone's level
+
+Tetris is a big enough project that I wouldn't recommend it to a complete beginner, but it also doesn't require years of experience. It requires a skill level somewhere in the middle of the range of the sorts of people who would come into a channel like #learnprogramming, and so it made a pretty good question:
+
+Hypothetically speaking, could you make tetris?
+
+Of course, the answers weren't always accurate. since it's hard to know your own skill level, some people who think it's easy will actually struggle and some people who think it's hard would knock it out ... if they were ever to actually try it.
+
+
+* the invention of learntris
+
+I wound up asking that question so often, one day I decided to start giving people an actual test, and I created learntris.
+
+it's a series of acceptance tests for a game like tetris. or rather it tests the game /logic/.
+
+# show these in tanco
+for example:
+- the q command quits (really just make sure your program runs)
+- the p command prints the matrix
+- the g command is followed by 22 lines in the same format
+
+it goes on. rotating the tetrominos, then placing them in the matrix adding movement, making sure they don't fall off the side or overlap blocks that are already there. then there's clearing lines, scoring, and so on.
+
+of course you don't need a test suite to make a block stacking game. you could just go try it on your own.
+
+but somehow, having a specific artifact to point at - a list of tests with a well-defined endpoint - seemed to make the problem a little more approachable. plus, i was only asking people to do the core logic, so it simplified the problem.
+
+
+* the game aspect
+
+More importantly, learntris was fun!
+
+Now usually when you make a test suite, you run all the tests at once,
+but it would be pretty overwhelming to just start with forty-something
+failing tests.
+
+So instead, the tests run in order, and they stop at the first one that fails.
+
+What I found is when you create tests this way, presenting them one by one,
+the process of working through the tests starts to feel like a game of its own.
+
+Since the tests communicate with your implementation through standard i/o, they don't make any assumptions or give any hints about how you implement it. It doesn't even matter what programming language you use.
+
+On the one hand, the tests give you a set path to follow, so there's a little bit
+of a tutorial structure to it, but unlike a tutorial, you have to figure out how to
+do each step on your own.
+
+So pretty soon learntris became my default answer to another common question:
+
+"I've worked through a bunch of tutorials but don't feel like I can make anything on my own. What should I do next?"
+
+
+* adoption
+
+"Well, you should take the learntris challenge."
+
+People started trying it, with different languages and different platforms, and some of the regulars from the learnprogramming channel pitched in to make the test runner better.
+
+As I worked on authoring the challenge, I wound up playing through myself several times.
+
+I wrote my own learntris implementations in python, free pascal, picolisp, rust, and red.
+
+I found that having a specific small project to work on was really effective for learning new programming languages. After all, I no longer had to think too much about what I needed to do, but could just focus on how to express the ideas I already understood in the new language.
+
+The logic of tetris usually only requires a small fraction of the tools a new language provides, but somehow it covers enough to get you familiar. You have to figure out how to do input and output and strings and arrays and by the time you're done with the challenge, you'll at least have a handle on the basics of the new language.
+
+so it started to seem like this one tool was becoming my go-to answer to many different questions.
+
+and in its day, it was pretty popular.
+
+at the time, you were supposed to fork the repository if you wanted to run the challenge, and there wound up being almost 200 forks. (many of those people never took the next step).
+
+Obviously, that's small potatoes on github today, but at the time, it seemed like a great success.
+
+I started to imagine the idea of making a whole programming course based on these ideas.
+
+
+* the dormant years
+
+But, around that time, I accepted a full time job across the country, and I didn't have much time for mentoring or learntris.
+
+Somewhere along the line, the irc network that the learnprogramming channel was on got sold, and many of us moved over to a new network. I'm still there, and it's still a great place to ask questions, but a lot of the regulars I used to know have moved on, and for whatever reason we no longer see the huge amount of traffic that we used to get.
+
+So with nobody left to work on learntris or promote it, and fewer new visitors looking for advice, learntris was more or less abandoned for almost a decade.
+
+I actually stayed at that same job the whole time, and it was a really nice place to work, but in late 2023 the company was acquired, the new owners decided to make some cuts, and well, I was one of the cuts.
+
+Well, that idea of building a business around programming challenges like learntris had been sitting in the back of my mind all this time, and so I decided it was time to go for it.
+
+I'll talk more about that in other videos, but my point right now is that I'm finally giving learntris the attention it deserves.
+
+
+* learntris revival
+
+So, in January I started patching up the test runner, porting it from Python 2.7 to python 3.10.
+
+And then I started evolving it from a simple terminal script to a web-based platform for working through these tests. (i've been livestreaming the whole process over on my second channel if you're into that)
+
+So now you can install tanco (short for tangentcode) and use it to run your code locally while
+talking to this nice ui.
+
+the tests still run locally, and you can still see the results in your terminal if you want to, but you also have the option of typing "tanco share" to open a websocket to the server, where you can browse the completed tests, run new tests, and even open an interactive shell.
+
+: quick demo
+
+Other courses are coming, and I'll talk about those in other videos, but I've decided to keep learntris free. If there's a demand for it, I may offer a followup course that covers some more advanced aspects of modern tetris, but the main challenge will always be free.
+
+But right now I'm mostly interested in getting this idea of test-driven programming challenges in front of people and seeing if other people are as enthusiastic about it as i am.
+
+
+* try learntris now!
+
+So if you're looking to test your skills, learn a new programming language, or just have some fun, I hope you give learntris a try.
+
+Just go to tangentcode.com/setup to get started. There's a link below.
+
+At the moment, it does take a few minutes to set up, but there's a video that walks you through the whole thing, and a discord server where you can ask questions if you run into problems or just want to talk to other people working through the challenge.
+
+I've been working through it myself in different languages as I test out the new UI. I'm also working on a graphical frontend in Godot, so you can actually play your implementation. Subscribe to this channel and click the bell icon if you want to get notified.
+
+Meanwhile, thanks for watching, and I'll see you again soon!
+
+
+
+* what i hope you get
+what i hope people get out of it is either the confidence that they really
+do know something about programming, or the knowledge of where they still
+need to learn
+#+begin_src text
+- self evaluation
+- challenge > tutorial
+- fun medium-sized project
+- good for learning new language
+- provides a nice trail so you can focus on coding
+- coding to spec so there's a client / toolset
+- and you can use any language
+- tests are already written (so you don't have to write your own)
+#+end_src

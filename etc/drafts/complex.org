@@ -1,0 +1,9 @@
+#+title: Implementing Complex Numbers
+
+* defining complex numbers
+
+* operations
+
+- add/subtract
+- multiplication
+- translate to/from polar coordinates
