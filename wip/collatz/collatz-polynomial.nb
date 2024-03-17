@@ -1,0 +1,199 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 13.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      7801,        191]
+NotebookOptionsPosition[      7214,        172]
+NotebookOutlinePosition[      7718,        190]
+CellTagsIndexPosition[      7675,        187]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"fInit", "[", "x_", "]"}], ":=", "x"}], "\n", 
+ RowBox[{
+  RowBox[{"fOdd", "[", "x_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{"3", "*", "x"}], "+", "1"}]}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"fEven", "[", "x_", "]"}], ":=", 
+   RowBox[{"x", "/", "2"}]}], "\[IndentingNewLine]"}], "\n", 
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"f0", ":=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"1", "-", "t"}], ")"}], " ", 
+       RowBox[{"fInit", "[", "x", "]"}]}], "+", 
+      RowBox[{"t", " ", 
+       RowBox[{"fOdd", "[", "x", "]"}]}]}]}], ";", 
+    RowBox[{"c0", ":=", 
+     RowBox[{"RGBColor", "[", "\"\<#333\>\"", "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"f1", ":=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"1", "-", "t"}], ")"}], " ", 
+       RowBox[{"fInit", "[", "x", "]"}]}], "+", 
+      RowBox[{"t", " ", 
+       RowBox[{"fEven", "[", "x", "]"}]}]}]}], ";", 
+    RowBox[{"c1", ":=", 
+     RowBox[{"RGBColor", "[", "\"\<#999\>\"", "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"Show", "[", 
+     RowBox[{
+      RowBox[{"Plot", "[", 
+       RowBox[{"f0", ",", 
+        RowBox[{"{", 
+         RowBox[{"x", ",", 
+          RowBox[{"-", "2"}], ",", "22"}], "}"}], ",", 
+        RowBox[{"PlotStyle", "\[Rule]", "c0"}]}], "]"}], ",", 
+      RowBox[{"Plot", "[", 
+       RowBox[{"f1", ",", 
+        RowBox[{"{", 
+         RowBox[{"x", ",", 
+          RowBox[{"-", "2"}], ",", "22"}], "}"}], ",", 
+        RowBox[{"PlotStyle", "\[Rule]", "c1"}]}], "]"}], ",", 
+      RowBox[{"DiscretePlot", "[", 
+       RowBox[{"f0", ",", 
+        RowBox[{"{", 
+         RowBox[{"x", ",", " ", "1", ",", "19", ",", "2"}], "}"}], ",", 
+        RowBox[{"PlotStyle", "\[Rule]", "c0"}], ",", 
+        RowBox[{"PlotMarkers", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{"Automatic", ",", "Small"}], "}"}]}]}], "]"}], ",", 
+      RowBox[{"DiscretePlot", "[", 
+       RowBox[{"f1", ",", 
+        RowBox[{"{", 
+         RowBox[{"x", ",", "0", ",", "20", ",", "2"}], "}"}], ",", 
+        RowBox[{"PlotStyle", "\[Rule]", "c1"}], ",", 
+        RowBox[{"PlotMarkers", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{"Automatic", ",", "Small"}], "}"}]}]}], "]"}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"PlotRange", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "4"}], ",", "50"}], "}"}]}], ",", " ", 
+      RowBox[{"PlotTheme", " ", "->", " ", "\"\<Marketing\>\""}]}], "]"}]}], 
+   ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{"t", ",", "0", ",", "1", ",", "0.01`"}], "}"}], ",", 
+   RowBox[{"AppearanceElements", "\[Rule]", "All"}]}], "]"}], "\n"}], "Input",
+ CellChangeTimes->{
+  3.893637810654153*^9, {3.893637906840624*^9, 3.8936379095621843`*^9}, 
+   3.893637942080826*^9, 3.893637974432398*^9, {3.893638005243024*^9, 
+   3.893638020198846*^9}, {3.8936381275187855`*^9, 3.8936381738187695`*^9}, {
+   3.893638216921891*^9, 3.893638309209592*^9}, {3.8936383793365765`*^9, 
+   3.89363842041074*^9}, {3.893638657331888*^9, 3.893638688662877*^9}, {
+   3.893638730059377*^9, 3.893638886520975*^9}, {3.8936390633241796`*^9, 
+   3.8936391699348774`*^9}, 3.8936394877610846`*^9, {3.8936399182326674`*^9, 
+   3.893640021681076*^9}, {3.8936401045572033`*^9, 3.893640376621379*^9}, {
+   3.8936405181699333`*^9, 3.8936405191477423`*^9}, {3.893640561343587*^9, 
+   3.8936405878488693`*^9}},
+ CellLabel->
+  "In[251]:=",ExpressionUUID->"75a4f711-ebfe-411d-ae66-801a9e0bebb3"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`t$$ = 0., Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{
+      Hold[$CellContext`t$$], 0, 1, 0.01}}, Typeset`size$$ = {
+    529.5, {161., 166.6309630543194}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = True}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, "Variables" :> {$CellContext`t$$ = 0}, 
+      "ControllerVariables" :> {}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> ($CellContext`f0 := (
+           1 - $CellContext`t$$) $CellContext`fInit[$CellContext`x] + \
+$CellContext`t$$ $CellContext`fOdd[$CellContext`x]; $CellContext`c0 := 
+        RGBColor[
+         "#333"]; $CellContext`f1 := (
+           1 - $CellContext`t$$) $CellContext`fInit[$CellContext`x] + \
+$CellContext`t$$ $CellContext`fEven[$CellContext`x]; $CellContext`c1 := 
+        RGBColor["#999"]; Show[
+         Plot[$CellContext`f0, {$CellContext`x, -2, 22}, 
+          PlotStyle -> $CellContext`c0], 
+         Plot[$CellContext`f1, {$CellContext`x, -2, 22}, 
+          PlotStyle -> $CellContext`c1], 
+         DiscretePlot[$CellContext`f0, {$CellContext`x, 1, 19, 2}, 
+          PlotStyle -> $CellContext`c0, PlotMarkers -> {Automatic, Small}], 
+         DiscretePlot[$CellContext`f1, {$CellContext`x, 0, 20, 2}, 
+          PlotStyle -> $CellContext`c1, PlotMarkers -> {Automatic, Small}], 
+         PlotRange -> {-4, 50}, PlotTheme -> "Marketing"]), 
+      "Specifications" :> {{$CellContext`t$$, 0, 1, 0.01}}, 
+      "Options" :> {AppearanceElements -> All}, "DefaultOptions" :> {}],
+     ImageSizeCache->{578., {205.13403309800196`, 210.86596690199804`}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{{3.8936382723396444`*^9, 3.893638309799593*^9}, 
+   3.8936384104549294`*^9, 3.8936386926168184`*^9, 3.8936387366400204`*^9, {
+   3.8936387783263273`*^9, 3.893638888458821*^9}, {3.8936390950257883`*^9, 
+   3.8936391382930646`*^9}, 3.8936391702958727`*^9, 3.8936394925238156`*^9, 
+   3.893639639941904*^9, 3.8936399292910566`*^9, {3.8936399597201185`*^9, 
+   3.8936400030392704`*^9}, 3.893640123317586*^9, {3.893640162267044*^9, 
+   3.8936403880384474`*^9}, 3.8936405200033493`*^9, {3.89364056321319*^9, 
+   3.893640588306092*^9}},
+ CellLabel->
+  "Out[254]=",ExpressionUUID->"5ee15eba-a91d-4300-811d-e40e370412cb"]
+}, Open  ]]
+},
+WindowSize->{922.5, 1051.5},
+WindowMargins->{{407.25, Automatic}, {216.75, Automatic}},
+TaggingRules-><|
+ "TryRealOnly" -> False, "SlideshowSettings" -> <|"Toolbar" -> True|>|>,
+FrontEndVersion->"13.2 for Microsoft Windows (64-bit) (January 30, 2023)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"c3868bc0-dc20-43f7-95af-9b36e2265566"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 3547, 88, 257, "Input",ExpressionUUID->"75a4f711-ebfe-411d-ae66-801a9e0bebb3"],
+Cell[4130, 112, 3068, 57, 458, "Output",ExpressionUUID->"5ee15eba-a91d-4300-811d-e40e370412cb"]
+}, Open  ]]
+}
+]
+*)
+
