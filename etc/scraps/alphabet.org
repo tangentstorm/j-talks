@@ -1,0 +1,16 @@
+
+wanted to generate a random base-36 number, which meant getting the characters 0..=9 and a..=z
+
+k version (using ok):
+: a@,/((a:`c$'!256)?"0a")+!:'10 26
+
+j version (simple):
+: a.{~;(a.i.'0a')(+i.)&.>10 26
+
+j version (complicated by boxes)
+: a.{~;((i.10);i.26)+L:0;/'0a'i.~a.
+
+k would be much shorter if there were an inverse for `c$x
+(maybe I just don't know it?)
+
+j is more complicated because it needs the ranks to match.
