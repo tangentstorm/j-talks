@@ -1,9 +1,6 @@
 #+title: thomas oliveira e silva's paper on verifying the 3x+1 conjecture. (2010)
-# p.189 in lagrarias
-
 
 * his binary tree is on equivalance classes, not polynomials
-
 but i'm pretty sure the two ideas are isomorphic.
 
 - n0
@@ -18,12 +15,13 @@ but i'm pretty sure the two ideas are isomorphic.
         - 16 n4 + 7  -> 27 n4 + 13
         - 16 n4 + 15 -> 81 n4 + 80
 
-
-
 * NOTE . so what's the difference?
 :PROPERTIES:
+
 :TS:       <2022-07-27 12:41AM>
+
 :ID:       s4odbb214jj0
+
 :END:
 
 so silva does his binary pruning on the equivalance classes,
@@ -40,15 +38,17 @@ whereas i'm doing something with the polynomials on which the answers fall.
 
 the 'equivalance class' is also a polynomial.
 
-
 * they don't grow the tree as they descend
 they look at one number and follow it "all the way" until they find the glide / stopping time
 but they don't look for further equivalance classes mod 2^k where k>46 or whatever the fixed depth is.
 
 * working with contiguous number ranges
 :PROPERTIES:
+
 :TS:       <2022-07-27 01:08AM>
+
 :ID:       ard6bk314jj0
+
 :END:
 these guys always want to fill in the complete range of numbers from 1 to n.
 
@@ -63,11 +63,13 @@ but: the collatz path for the number 27 takes 96 steps, which means you have to 
 * TODO test this idea to see if i understand correctly:
 I suspect this means that any number of the form 2^96+27 also has a stopping time of 96.
 
-
 * NOTE . the "two polynomials"
 :PROPERTIES:
+
 :TS:       <2022-07-27 01:20AM>
+
 :ID:       ggad15414jj0
+
 :END:
 
 - "my" polynomial is the line on which the output lives after performing that many steps.
@@ -82,11 +84,13 @@ my numbers are going to have weird fractions.
 their numbers are always simple powers of two + some number.
 (and always map to powers of 3 + some number)
 
-
 * NOTE . coefficient stopping time
 :PROPERTIES:
+
 :TS:       <2022-07-27 01:36AM>
+
 :ID:       ouzequ414jj0
+
 :END:
 my polynomials consist of a coefficient and a y-intercept.
 the conjecture is that the stopping time (glide) is the same as the "coefficient stopping time"
@@ -102,11 +106,13 @@ might grow to make a difference.
 
 according to silva, he tested and it doesn't make the difference for n<2^46.
 
-
 * NOTE . so can i reconcile these two ideas?
 :PROPERTIES:
+
 :TS:       <2022-07-27 01:45AM>
+
 :ID:       p2cgz9514jj0
+
 :END:
 i think i can.
 the binary tree can track /both/ the polynomial and the equivalance class.
@@ -131,3 +137,4 @@ it does suggest that we could consider an alternate way to explore: via the poly
 also: having both the "output" (my thing) and "input" polynomials (their thing) means that
 when we look at the intercept for my thing with f(x)=x, and we see an integer, we can test
 whether that integer is a member of the equivalance class.
+
