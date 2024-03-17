@@ -2,16 +2,16 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="640"
-   height="480"
-   viewBox="0 0 169.33333 127"
+   width="1920"
+   height="1080"
+   viewBox="0 0 507.99999 285.75"
    version="1.1"
    id="svg5"
-   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   inkscape:version="1.2 (dc2aedaf03, 2022-05-15)"
    sodipodi:docname="disk-border.svg"
-   inkscape:export-filename="D:\ver\j-talks\disk-mask.png"
-   inkscape:export-xdpi="72"
-   inkscape:export-ydpi="72"
+   inkscape:export-filename="disk-border.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -27,15 +27,17 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="0.67081229"
-     inkscape:cx="329.45133"
-     inkscape:cy="264.60457"
+     inkscape:cx="900.40092"
+     inkscape:cy="544.86181"
      inkscape:window-width="2173"
      inkscape:window-height="1004"
      inkscape:window-x="245"
      inkscape:window-y="534"
      inkscape:window-maximized="0"
      inkscape:current-layer="layer1"
-     units="px" />
+     units="px"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1" />
   <defs
      id="defs2" />
   <g
@@ -43,10 +45,10 @@
      inkscape:groupmode="layer"
      id="layer1">
     <circle
-       style="opacity:1;fill:none;fill-opacity:1;stroke:#2b2200;stroke-width:2.64583333;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#806600;stroke-width:5.81545;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
        id="path39"
-       cx="87.758965"
-       cy="63.304787"
-       r="61.727089" />
+       cx="254"
+       cy="142.875"
+       r="135.67415" />
   </g>
 </svg>
