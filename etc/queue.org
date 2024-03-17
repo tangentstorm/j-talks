@@ -1,10 +1,155 @@
 #+title: j-talks queue
 
+# focus on things I can do with jprez as-it-is until i get a publishing queue set up
+https://trello.com/b/6FIrgu5D/j-talks
+
+
+* -- inbox --
+* stream: a better j-bot? https://github.com/tangentstorm/j-bot/blob/master/j-bot.ijs
+* pretty sure espresso was written in apl:
+https://en.wikipedia.org/wiki/Espresso_heuristic_logic_minimizer
+* TODO try to calculate ramsey numbers with sat
+https://www.quantamagazine.org/after-nearly-a-century-a-new-limit-for-patterns-in-graphs-20230502/
+*
+* TODO collatz sat attempts
+:PROPERTIES:
+:TS:       <2023-05-10 07:53AM>
+:ID:       qzgj8eq0ntj0
+:END:
+https://www.quantamagazine.org/computer-scientists-attempt-to-corner-the-collatz-conjecture-20200826
+https://www.cmu.edu/news/stories/archives/2020/october/scientists-solve-geometry-problem.html
+https://github.com/emreyolcu/rewriting-collatz
+https://www.cs.cmu.edu/~eyolcu/research/rewriting-collatz.pdf
+
+* TODO study this article on "value speculation" for optimization
+:PROPERTIES:
+:TS:       <2023-05-10 08:02AM>
+:ID:       i6menuq0ntj0
+:END:
+https://www.lortex.org/articles/value-speculation-ocaml/
+
+* TODO "making reasoning explicit" (with prolog)
+:PROPERTIES:
+:TS:       <2023-05-10 08:05AM>
+:ID:       3397lzq0ntj0
+:END:
+this is a fascinating concept:
+https://emiruz.com/post/2023-04-30-prolog-for-data-science/
+
+> Despite the importance of reasoning in my work, I never made it explicit, nor did I consciously separate it from its subject matter. Adding Prolog to the mix enabled explicit reasoning. A very general modus operandi is to generate facts about your data and reason about them in Prolog.
+
+> Despite the importance of reasoning in my work, I never made it explicit, nor did I consciously separate it from its subject matter. When I became aware of this, it seemed to me that I should make my reasoning explicit at least so that I could (1) reason more accurately, and (2) directly learn to reason better.
+
+
+* TODO verlet integration
+:PROPERTIES:
+:TS:       <2023-05-10 08:09AM>
+:ID:       s37126r0ntj0
+:END:
+
+
+* TODO polynomial stuff from my K intern presentations
+* TODO magic squares
+- dig up my old implementation
+compare to apl-math book on page  143-144
+
+
+
+
+* -- terminal-only, super fast ideas ----
+
+* TODO simple histogram demo
+** TODO histogram from phrasebook
+** TODO drawing it with ascii art
+** TODO utf-8 (box-drawing characters)
+** TODO binning with I.
+** TODO binomial distribution example
+plot >1{/:~&.|:hist+/"1<:+:#:?(2^16)$~5000000
+
+* TODO fibonacci sequence
+* TODO text stereogram thing
+* TODO propositional logic in J (intro to sat)
+* TODO roman numerals
+apl for math has this on p18
+* TODO floodfill
+could use array as a queue with an index and keep taking the nub
+array version  (On^2 worst case?)
+* TODO all subsets (recursive and array versions)
+* TODO triangle solver
+* --- do exercises on stream ---
+
+
+* -- could be terminal-only (but longer talks) ----
+* TODO tic tac toe
+* TODO grammar combinators
+* TODO unification algorithm (after parsers)
+* TODO the lightswitch (locker) puzzle
+* TODO tacit accessors : lenses in j
+** tacit examples: filter
+(#~ )
+** scalar example
+simplest might be a simple variable:
+: var=: {{ 3 : (m; ':' ; (quote m),'=:x') }}
+
+and with an initializer:
+the label bit just lets you put two statements on one line
+
+: varA =: {{ (m)=:n label_then. 3 : (m; ':' ; m,'=:x') }}
+: data =: 'DATA' varA 123
+: data =: 'DATA' varA DATA  NB. if data already exists
+
+here's a version that drops the initializer:
+
+: varA =: {{ 3 : (m; ':' ; m,'=:x') }}
+: (data =: 'DATA'varA) i. 10
+
+: (1 + data)''
+: data''
+: (data~ 1 + data)''
+: data i.10    NB. ignores y, returns DATA
+: data~ i.10   NB. sets DATA to y
+
+** index accessors
+this one isn't actually a lens
+: idxA =: {{ 3 : (('(y&{)^:(-.y-:_)',m) ;':'; (m,'=: x y }',m)) }}
+
+** map interface
+: keyA =: {{ 3 : ('n get ',y) ; ':' ; (m,'=: x n put ',y) }}
+
+** TODO field accessors and method calls (parser style)
+
+** TODO ideas
+- box path things (amend at depth)
+I haven't really found a need for this yet, so i'll stop there.
+
+** TODO compare code with/without this
+
+* TODO quadratic equation
+* TODO common list operations
+insert
+
+* TODO how the line editor works
+* TODO diff algorithm
+
+* --- console art-------------------
+* TODO how to make a jkvm console widget
+* TODO [[~/ver/b4/web/apljk/wireworld.ijs.org][wireworld]]
+* TODO poker card paradox? (deck with jokers)
+* TODO towers of hanoi
+* TODO draw a chessboard?
+* TODO sat solver stepper
+* TODO build the "dream terminal" thing
+
+* --- not too much extra ---
+* TODO boolean logic for adding/multiplying
+* TODO mandelbrot set in one line of j
+* TODO ahnentafel (uses graphviz demo)
+
+* -- bigger presentations ------------
 * TODO #23 the editor component                                 :live:
 - trim last section
 * - - - - - - - - - - - - -
 
-* TODO propositional logic in J
 * TODO mandelbrot set
 * TODO collatz conjecture
 * TODO boids in J and K
@@ -12,15 +157,8 @@
 * TODO gridpad code review                                      :live:
 * - - - - - - - - - - - - -
 
-* ---- missing features
-- ability to write directly in jprez
-- how to motivate / show why it's interesting?
-- code snippets without a repl
-- maybe just add the repl?
-- showing and animating bex graph structures
-
-* ---- idea phase
 * TODO lexer combinators
+* TODO binaural beats
 * TODO virtual machine
 * TODO grammar combinators
 * TODO bootstrapping vm
@@ -33,10 +171,7 @@
 * TODO deciphering gerard langlet
 * TODO lights-out
 * TODO blender: dodecahedron
-* TODO binaural beats
 * TODO rubik's cube
-* TODO [[~/ver/b4/web/apljk/wireworld.ijs.org][wireworld]]
-
 * ---- footage (queue)
 * TODO #24 curse of mummy-nub                                   :live:
 * TODO #25 jkvm speedup                                         :live:
@@ -47,4 +182,5 @@
 
 * ---- blocked
 * TODO sandpiles golf [blocked: editor macros]
-* TODO quadratic equation [blocked: token animations]
+* TODO n queens problem [would like to do this in a language that supports refinement]
+http://sunnyday.mit.edu/16.355/wirth-refinement.html
