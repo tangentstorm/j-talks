@@ -96,10 +96,10 @@ text = "hello"
 text_len = 7
 
 [node name="animation" type="AnimationPlayer" parent="."]
-autoplay = "init"
 libraries = {
 "": SubResource("AnimationLibrary_u6qxe")
 }
+autoplay = "init"
 next/reveal = &"init"
 
 [node name="stripe" type="ColorRect" parent="."]
