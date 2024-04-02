@@ -1,3 +1,5 @@
+* short
+
 if. then. else.
 
 these three words from your favorite programming language

@@ -48,6 +48,8 @@ For rendering the sandpiles, I used viewmat, which is part of the J library.
 
 : load 'viewmat'
 
+: viewmat =: 0:  NB. to avoid pop-ups (TODO)
+
 : viewmat i. 2 2
 
 Viewmat's normal behavior is to render an image to a standalone file and open it in a new window.

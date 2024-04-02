@@ -2,6 +2,7 @@
 
 * intro
 @hide("jp-editor")
+: viewmat =: 0:  NB. to prevent popups
 
 - dramatic mandelbrot intro
 
