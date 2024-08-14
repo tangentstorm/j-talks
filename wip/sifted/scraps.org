@@ -1,0 +1,461 @@
+
+
+* -( temporary scraps that i may move to short "appendix" videos )
+** scraps on initial search
+*** 
+
+
+If this notation is completely alien to you, let's read it.
+
+This theorem is basically a program we can use to construct a proof that n is prime.
+The colon separates the assumptions or arguments from the conclusion or the return value.
+The return type is "Nat.Prime n", which is a proposition that this input variable n is prime.
+
+The assumptions are inputs to the programs. n is of type Nat. This chalkboard N
+is just another way to write the word "Nat" as far as lean is concerned.
+
+h1 is proof that n is greater than 1. The convention in mathlib
+is to prefer writing less than, even if it seems a little backwards.
+
+h says tha for any natural number m, if m is less than n, and m is not zero,
+then n is coprime to m. Coprime just means that m and n don't have any common
+divisors except 1.
+
+so this is in the ballpark of what we want to prove.
+
+if we happen to scroll up a bit, we'll see another familiar statement.
+this one seems to be talking about the square root shortcut we found earlier.
+
+And there are some more.
+
+But all of these talk about natural numbers, and so far we only know that
+our candidate prime is not divisible by primes. So it seems like what we're
+going to have to do is prove that
+
+*** 
+The h1 argument is a proof that n is greater than one. The convention in mathlib
+is to prefer writing less than, even if it seems a little backwards.
+
+But the real idea here is that this phrase `1 < n` is a type.
+So if you want to use this, you have to pass in a natural number
+for n, and then you have to pass in a value of this type.
+
+Most programming languages don't have this concept, where the type of
+one variable can be a statement about some other variable. It's called
+dependent typing. In this case, the type of h1 depends on the value n.
+
+If you've done any programming before, it's pretty easy to see what n is.
+
+So if you pass in a natural number, that means at the programming level
+you're passing in a pointer to an actual number in memory. But what does
+a value of this type look like?
+
+The answer is it doesn't look like anything at run time, and at compile time,
+it's basically just a dummy value that serves as a proof that the statement is true.
+
+Okay and then this h is just another statement. This statement says
+
+These are inputs to the program.
+
+
+
+what about sieve... lots of category theory stuff... this is way over my head.
+
+(back)
+
+scroll up and down a bit... actually this square root thing is kind of
+like the shortcut we were taking by hand. so that might come in handy too.
+
+And in fact there are a number of =prime_def_something= theorems. Good to know.
+
+But if you notice, all of these are just talking about natural numbers less
+than whatever we're concluding is prime. Whereas what we have is the fact
+that
+
+** scrap about =axiom=
+
+Okay, so now this is a valid proof, but it's only valid because we've
+bascially introduced this rule as an axiom.
+
+sorryAx is an axiom for making axioms.
+
+In fact, we could just be explicit and use the `axiom` keyword,
+and call it a day.
+
+: axiom prime_of_sifted (c:Nat) (hfac: ∀p < c, p.Prime → ¬p∣c)
+: c.Prime
+
+But unless you're inventing your own system of logic, you should
+probably never use this keyword, because it has all the potential
+problems of proof by sorry, without giving a warning.
+
+# (undo)
+
+** sidebar on llms
+I imagine it might involve conveying the goal and assumptions
+to a large language model trained on hundreds of years of
+archived math papers and textbooks, but even now, the LLMs can't do it.
+** scrap: proofs as programs
+Okay, I want to point out one more thing before we move on.
+theorems are just functions that return proofs, and possibly
+take proofs as arguments.
+
+in the example, we're calling `prime_of_sifted` and passing it
+two arguments, the number seven, and an automatically generated
+proof that forall p less than 7, p.prime implies not p divides seven.
+Let's make this explicit for a moment. (just paste this in)
+
+: theorem sifted_seven : ∀p < 7, p.Prime → ¬p∣7 := by decide
+: #print sifted_seven
+: example : Nat.Prime 7 := prime_of_sifted 7 sifted_seven
+: example : Nat.Prime 7 := prime_of_sifted 7 (by decide)
+
+if we look at what gets printed out over here, you can see
+that `by decide` turns into this, and we can actually just
+copy and paste it in, instead of using by decide or sifted_seven.
+
+: (of_decide_eq_true (Eq.refl true))
+
+This version looks like a function call because that's exactly what it is.
+Under the hood, every proof is converted to this form.
+
+The word `by` is a keyword that puts lean into tactic mode.
+tatics are programs written in lean that generate terms.
+decide is a tactic, sorry is a tactic. and we'll encounter a few
+more along the way.
+
+You can always put your cursor on this #print line to see what
+the tactics we're using get compiled into.
+
+You can also turn a term proof into a tactic proof by using the
+words `by exact`. `exact` is a proof tactic that just wraps a proof
+term, and any time you see `by exact` you can just delete those two words.
+
+If any of that was overwhelming, don't worry about it. The key idea
+is that statements like `hfac` are types, a value of that type
+is a proof of the statement, and theorems are like functions
+that return proofs.
+
+** more about sorry
+
+The point I wanted to make is that it's very possible to define
+a theorem that takes as an argument that can never be true.
+
+For example, we could easily put it (h:c<0) and sorry and
+then try to write a proof that c is prime. In fact, it's
+very possible that you could do that, because the statement
+that c is less than 0 directly contradicts the statement that
+c is a natural number, and so from these two assumptions you
+can derive a contradiction and thus prove anything you want.
+
+So this example line at the bottom is serving as something
+like a sanity check. If we can write it without the word
+sorry, it serves as proof that it's actually possible to
+generate these arguments, and we're not about to spend
+what could be several hours building a theorem you can't
+actually use.
+
+So now that we have our sanity check, let's write a proof!
+
+now if we click to move the cursor before the word sorry, and
+look over here on the right, we see that this statement
+after the colon is copied after the turnstile.
+actually it expanded it a tiny bity to Nat.Prime c but
+those are just two different ways of writing the same thing.
+
+the turnstile on the right indicates what we're trying to prove,
+and the lines above it indicate the facts that are currently in scope.
+
+Now as it turns out, Mathlib has a variety of definitions of prime numbers,
+but it doesn't have any specific statement about smaller primes.
+
+So our job is to find out what mathlib considers to be a valid definition
+of primes, and somehow build a bridge between the facts we have and
+whatever definition we pick.
+
+** =scrap= fake 6 is prime
+
+...
+
+Okay, sorry I can't do it.
+
+I was going to let this problem sit there on the screen for ten minutes.
+
+There's still a problem.
+
+Right now we can still prove 6 is prime.
+
+
+
+
+** the howard conjecture
+
+But this isn't the worst of it.
+
+We can use this fact to prove ANYTHING.
+
+For example, we can use our proof that six is prime to prove
+the howard conjecture:
+
+: example : 1 * 1 = 2 := by
+:   have : ¬ Nat.Prime 6 := by decide
+:   have : Nat.Prime 6 := prime_of_sifted 6
+:   contradiction
+
+Somewhere in mathlib, there's an algorithm that tells
+lean how to decide whether a number is prime. Decide
+finds that algorithm and uses it to determine that 6
+is not prime.
+
+But now we also have a proof that 6 IS prime.
+
+And once you have two conflicting statements like this,
+you can use the =contradiction= to prove whatever the
+goal happens to be.
+
+It might not be terribly satisfying, but proof by contradiction
+is a perfectly valid logical technique, at least in classical
+logic, and lean supports reasoning this way.
+
+In fact, we're going to use it ourselves for this proof.
+
+But it only works if your axioms are consistent with each
+other, and `sorry` let us introduce an inconsistent axiom.
+
+So the bottom line is that a proof in lean doesn't count if
+it uses sorry.
+
+And so that's the point of this squiggly line. If you hover
+over it, you'll see lean is warning you that the proof is using
+sorry.
+
+# delete howard "proof"
+
+** scrap: naming convention
+First I want to take just a second to talk about the name I picked.
+You want names to be descriptive but as we'll see, a big part of working
+with lean is searching for theorems that are already defined and that might
+help your proof.
+
+The lean community has adopted some standard naming conventions
+to help make things easier to find.
+
+If you click on this menu icon in the upper right corner and then click
+lean community, you'll find a ton of great links about lean and mathlib,
+and if you search for naming, you'll see the conventions.
+
+: menu-> community
+: naming
+
+I'm not going to spend much more time on this now but it's worth reading
+at some point, because you'll do a lot of searching and this standard
+naming convention will make it much easier to make guesses about search.
+
+# search for naming
+
+we're working on a theorem where the conclusion is that something is prime
+so we should call it =prime_of_something=, and that's what i did.
+
+# so prime_of_something
+
+https://leanprover-community.github.io/contribute/naming.html
+
+** searching for the proof
+In fact, before we write this proof, it's worth checking whether it already
+exists.
+
+So hit back and search for "api documentation"
+
+and here's the search box. There are a number of interesting search tools
+for lean, including some that claim to use AI to let you search with natural
+language, but so far, this documentation site is the one that's worked
+best for me.
+
+let's search for =prime_of=... Well... Nat.prime of coprime.
+This actually looks like a fact we might use.
+
+I'm not going to go too deep into how to read this, but very quickly, it
+takes these arguments as input to produce a fact that n is prime.
+first, n is some natural number
+n is greater than 1
+and for any natural number m, if m is less than n and m is not 0, then n and m are coprime.
+coprime just means there's no shared divisors.
+
+and in fact if you scroll up a bit, you'll see there are are also some definitions
+using this double arrow to show two statements are equivalent.
+we'll come back to that in a bit.
+
+but the main thing to notice here is that all of these talk about arbitrary natural
+numbers and how they relate to the number we want to show is prime. But we don't
+actually have that fact yet. We only know our number isn't divisible by any
+smaller prime.
+
+You might say that one statement implies the other, and you'd be correct,
+but the point is Lean does not know this, and so we're going to have to
+teach this fact to lean step by step.
+
+And maybe that gives you a hint as to where the time goes.
+** sorryAx
+The proof is performed by calling this =sorryAx= function.
+
+: NB. #print sorryAx
+
+So this is an axiom in the logical system that lets you
+introduce any fact you like, without proof. It's basically
+an axiom for introducing new axioms, but that's a very
+dangerous thing to do.
+** possible error: impossible assumptions
+
+One more point.
+
+This example line isn't just for documentation.
+
+It's also acting as a sanity check.
+
+It's entirely possible to write an asusmption
+that can never be filled in.
+
+for example, here's an assumption that directly
+contradicts hfac:
+
+: (hfac2: ¬∀p < c, p.Prime → ¬p∣c)
+
+it's not possible for both these statements to be
+true, so it's still possible to derive a
+contradiction here, and again prove any number
+is prime.
+
+In one sense, the damage this time is not so bad,
+because if we notice the error on line 9 and attempt
+to fill in the missing proof, we'll hopefully notice
+we can't prove the second fact.
+
+# add (by decide)
+
+But imagine we didn't have line 9. And also imagine that
+the contradiction wasn't so obvious.
+
+For example, let's delete these two not signs. The contradiction
+is still there, but now we'd have to work for it, and that's the
+real danger: if you're not careful, you could easily waste an hour
+trying to prove this statement.
+
+So the example is serving as a sanity check.
+
+Okay, so let's put it back:
+
+# the following contains a bug. the c and p are swapped in the 'divides' clause
+#+begin_src text
+theorem prime_of_sifted
+  (c:Nat) (hfac: ∀p < c, p.Prime → ¬c∣p)
+: c.Prime := by sorry
+#+end_src
+
+and remove the extra parameter on line 9.
+
+All good, right?
+
+You still have to be careful, but at least we know it will be possible to
+use this theorem.
+
+Okay, so let's finally prove this.
+
+If we put the cursor on line 5, right between the words 'by' and 'sorry', then
+the info panel on the right tells us we have 1 goal.
+** natural number drama
+
+
+what we normally think of as division and subtraction aren't total
+functions on the natural numbers. there are no negatives and no
+fractions, and no infinity or "not a number". but in lean,
+
+#guard 0-1 = 0
+#guard 1/0 = 0
+#guard 1/2 = 0
+#guard  1∣0
+#guard ¬0∣1
+
+#eval 0∣5 -> false
+
+
+well if n isn't one then it might be zero.
+
+have hnpos : 0 < n :=?
+have hnpos : 0 < n := Nat.pos_of_dvd_of_pos hndc (Nat.zero_lt_of_lt h2c)
+
+
+show that you can choose to write
+- `by omega` for 0 < c
+- but `by exact` is kind of the best because
+  you can see the actual rule being introduced
+  and it's faster when your file gets very big.
+
+- also you can inline:
+- `by exact` can almost always be taken out, giving you a term proof (basically a function call)
+- replace `this` with the actual definition
+  (and now we're actually calling a function.)
+
+
+import Mathlib.Tactic; by positivity
+omega
+
+tactics go away.
+#print prime_sifted
+
+and in fact, within the program, nothing actually happens here at runtime.
+since proofs are types, pretty much all of the proof verification
+happens at compile time.
+
+* axioms and assumptions
+
+Okay so back to our proof. What do we have so far?
+
+: NB. #print prime_of_sifted
+
+Now we can see the actual definition on the right.
+What we've typed so far gets desugared into this:
+
+: NB. theorem prime_of_sifted : ∀ (c : ℕ), Nat.Prime c :=
+: NB. fun c => sorryAx (Nat.Prime c)
+
+As you can see, this theorem is translated into a function
+that takes a natural number and returns a proof that the
+number is prime.
+
+This sorryAx is an axiom that lets you prove anything.
+
+For example, because we can use this axiom to prove that six is prime:
+
+: NB. example : Nat.Prime 6 := prime_of_sifted 6
+
+This is why we have to apologize :)
+
+Obviously 6 is not prime, but the word `sorry` let us
+bypass the proof checker and produce a valid proof of a
+statement that isn't actually true.
+
+From there, we show all kinds of things:
+
+#+begin_src
+theorem howard_conjecture : 1 * 1 = 2 := by
+  have : ¬ Nat.Prime 6 := by decide
+  have :   Nat.Prime 6 := prime_of_sifted 6
+  contradiction
+#+end_src
+
+Proof by contradiction is an important tactic but not if
+your axioms give you contradictions for free.
+
+We'll talk about what `decide` means in a bit.
+
+But for now, just remember that you can't trust a proof
+that has the word sorry in it.
+
+Instead, think of sorry as an indicator that you still
+have work to do. You can introduce a temporary axiom
+with sorry, go on to prove something with it, and
+then come back and fill in the proof later.
+
+But the danger is that the statement you promised to prove
+might not be provable. Like in this case.
+
