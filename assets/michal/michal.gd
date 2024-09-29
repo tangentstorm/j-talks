@@ -41,4 +41,4 @@ enum HeadPosition { U, D, L, R, C }
 			HeadPosition.D: head_node.position = Vector2.DOWN  * 2
 			HeadPosition.L: head_node.position = Vector2.LEFT  * 2
 			HeadPosition.R: head_node.position = Vector2.RIGHT * 2
-			_: $"head-anchor/head".position = Vector2.ZERO
+			_: head_node.position = Vector2.ZERO
