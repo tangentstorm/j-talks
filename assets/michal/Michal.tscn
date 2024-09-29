@@ -1,304 +1,53 @@
-[gd_scene load_steps=20 format=3 uid="uid://b55yhmdeyt70y"]
+[gd_scene load_steps=7 format=3 uid="uid://b55yhmdeyt70y"]
 
 [ext_resource type="Texture2D" uid="uid://ct8ryesd3c2uf" path="res://assets/michal/michal-eyes.png" id="1"]
+[ext_resource type="Script" path="res://assets/michal/michal.gd" id="1_il725"]
 [ext_resource type="Texture2D" uid="uid://bchk7ov2apxrp" path="res://assets/michal/michal-mouth.png" id="2"]
 [ext_resource type="Texture2D" uid="uid://hk5828r6isuq" path="res://assets/michal/michal-body.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://l82sqa6wgyyd" path="res://assets/michal/michal-eyebrows.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://oid1i7fvcmeb" path="res://assets/michal/michal-face.png" id="5"]
 
-[sub_resource type="Animation" id="Animation_cgnxn"]
-resource_name = "A"
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Michal/Michal-mouth:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [0]
-}
+[node name="Michal" type="Node2D"]
+script = ExtResource("1_il725")
 
-[sub_resource type="Animation" id="Animation_isnko"]
-resource_name = "B"
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Michal/Michal-mouth:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [1]
-}
-
-[sub_resource type="Animation" id="Animation_o24pf"]
-resource_name = "C"
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Michal/Michal-mouth:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [2]
-}
-
-[sub_resource type="Animation" id="Animation_81oxr"]
-resource_name = "D"
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Michal/Michal-mouth:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [3]
-}
-
-[sub_resource type="Animation" id="6"]
-resource_name = "E"
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Michal/Michal-mouth:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [4]
-}
-
-[sub_resource type="Animation" id="7"]
-resource_name = "F"
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Michal/Michal-mouth:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [5]
-}
-
-[sub_resource type="Animation" id="8"]
-resource_name = "G"
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Michal/Michal-mouth:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [6]
-}
-
-[sub_resource type="Animation" id="9"]
-resource_name = "H"
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Michal/Michal-mouth:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [7]
-}
-
-[sub_resource type="Animation" id="Animation_afuev"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Michal/Michal-mouth:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Michal/Michal-body:frame")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [1]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Michal/Michal-eyes:frame")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [1]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Michal/Michal-eyebrows:frame")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [3]
-}
-
-[sub_resource type="Animation" id="10"]
-resource_name = "X"
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Michal/Michal-mouth:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [8]
-}
-
-[sub_resource type="Animation" id="13"]
-resource_name = "eyebrows-up"
-length = 0.1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Michal/Michal-eyebrows:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [0]
-}
-
-[sub_resource type="Animation" id="11"]
-resource_name = "eyes-closed"
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Michal/Michal-eyes:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [3]
-}
-
-[sub_resource type="Animation" id="12"]
-resource_name = "eyes-open"
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Michal/Michal-eyes:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [1]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_ji60y"]
-_data = {
-"A": SubResource("Animation_cgnxn"),
-"B": SubResource("Animation_isnko"),
-"C": SubResource("Animation_o24pf"),
-"D": SubResource("Animation_81oxr"),
-"E": SubResource("6"),
-"F": SubResource("7"),
-"G": SubResource("8"),
-"H": SubResource("9"),
-"RESET": SubResource("Animation_afuev"),
-"X": SubResource("10"),
-"eyebrows-up": SubResource("13"),
-"eyes-closed": SubResource("11"),
-"eyes-open": SubResource("12")
-}
-
-[node name="Michal" type="AnimationPlayer"]
-autoplay = "RESET"
-libraries = {
-"": SubResource("AnimationLibrary_ji60y")
-}
-
-[node name="Michal-body" type="Sprite2D" parent="."]
+[node name="body" type="Sprite2D" parent="."]
 scale = Vector2(8, 8)
 texture = ExtResource("3")
 centered = false
 hframes = 4
-frame = 1
+frame = 3
 
-[node name="Michal-face" type="Sprite2D" parent="."]
+[node name="neck" type="Node2D" parent="."]
+position = Vector2(256, 396)
+
+[node name="head" type="Node2D" parent="neck"]
+position = Vector2(0, -2)
+
+[node name="face" type="Sprite2D" parent="neck/head"]
+position = Vector2(-265, -400.75)
 scale = Vector2(8, 8)
 texture = ExtResource("5")
 centered = false
 
-[node name="Michal-mouth" type="Sprite2D" parent="."]
+[node name="mouth" type="Sprite2D" parent="neck/head"]
+position = Vector2(-265, -400.75)
 scale = Vector2(8, 8)
 texture = ExtResource("2")
 centered = false
 hframes = 9
+frame = 8
 region_rect = Rect2(518.158, 110.396, 0, 1.05408)
 
-[node name="Michal-eyes" type="Sprite2D" parent="."]
+[node name="eyes" type="Sprite2D" parent="neck/head"]
+position = Vector2(-265, -400.75)
 scale = Vector2(8, 8)
 texture = ExtResource("1")
 centered = false
 hframes = 4
 frame = 1
 
-[node name="Michal-eyebrows" type="Sprite2D" parent="."]
+[node name="brow" type="Sprite2D" parent="neck/head"]
+position = Vector2(-265, -401)
 scale = Vector2(8, 8)
 texture = ExtResource("4")
 centered = false
