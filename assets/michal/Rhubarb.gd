@@ -4,46 +4,42 @@
 @export var stream_player_nodepath: NodePath = '../AudioStreamPlayer2D'
 @export var character_nodepath: NodePath = '../Michal'
 @export var clip: AudioStreamWAV
-@export var text # (String, MULTILINE)
-@export var codes # (String, MULTILINE)
-@export var rhubarb_flag: bool = false : set = set_rhubarb_flag
-@export var script_flag: bool = false : set = set_script_flag
-@export var rhubarb_dir = "d:/Rhubarb-Lip-Sync-1.12.0-Windows/" # (String, DIR, GLOBAL)
-@export var temp_dir = "d:/tmp/" # (String, DIR, GLOBAL)
+@export_multiline var text : String
+@export_multiline var codes : String
+@export var run_rhubarb: bool = false :
+	set(x): if x: on_run_rhubarb()
+
+@export var build_animation: bool = false :
+	set(x): if x: on_build_animation()
+
+@export_global_dir var rhubarb_dir = "d:/Rhubarb-Lip-Sync-1.12.0-Windows/"
+@export_global_dir var temp_dir = "d:/tmp/"
 @export var animation_name: String = 'lipsync.000'
 
 
-func rhubarb():
-	var f = File.new()
+func on_run_rhubarb():
 	var p = temp_dir + 'rhubarb.txt' 
-	f.open(p, File.WRITE)
+	var f = FileAccess.open(p, FileAccess.WRITE)
 	f.store_string(text)
 	f.close()
 	var c = ProjectSettings.globalize_path(clip.resource_path)
 	var out = []
-	OS.execute(rhubarb_dir + 'rhubarb', ["-d", p, c], true, out)
+	OS.execute(rhubarb_dir + 'rhubarb', ["-d", p, c], out)
 	self.codes = out[0]
 
-func set_rhubarb_flag(x):
-	if x: rhubarb()
-
-func set_script_flag(x):
-	if x: build_animation()
-
-
-func build_animation():
+func on_build_animation():
 	var ap:AnimationPlayer = get_node(animation_player_nodepath)
 	var sp = get_node(stream_player_nodepath)
 	var ch = get_node(character_nodepath)
 	var anim:Animation = ap.get_animation(animation_name) if ap.has_animation(animation_name) else Animation.new()
 #	for i in range(anim.get_track_count()):
 #		print('track %02d: ' % i, anim.track_get_path(i))
-	var t_sp = anim.find_track(ap.get_node(ap.root_node).get_path_to(sp))
-	var t_ch = anim.find_track(ap.get_node(ap.root_node).get_path_to(ch))
+	var t_sp = anim.find_track(ap.get_node(ap.root_node).get_path_to(sp), Animation.TYPE_AUDIO)
+	var t_ch = anim.find_track(ap.get_node(ap.root_node).get_path_to(ch), Animation.TYPE_ANIMATION)
 	
 	# TODO: actually, it should warn if the tracks do NOT exist
-	if t_sp == -1: return printerr('todo: add sp track')
-	if t_ch == -1: return printerr('todo: add ch track')
+	if t_sp == -1: printerr('todo: add sp track'); return
+	if t_ch == -1: printerr('todo: add ch track'); return
 	
 	assert(1 == anim.track_get_key_count(t_sp)) #," no key checked audio track")
 	assert(0 == anim.track_get_key_time(t_sp, 0)) #,"audio track not checked frame 0")
