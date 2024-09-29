@@ -35,7 +35,7 @@ func on_build_animation():
 #	for i in range(anim.get_track_count()):
 #		print('track %02d: ' % i, anim.track_get_path(i))
 	var t_sp = anim.find_track(ap.get_node(ap.root_node).get_path_to(sp), Animation.TYPE_AUDIO)
-	var t_ch = anim.find_track(ap.get_node(ap.root_node).get_path_to(ch), Animation.TYPE_ANIMATION)
+	var t_ch = anim.find_track('Michal-Lipsync/Michal:mouth', Animation.TYPE_VALUE)
 	
 	# TODO: actually, it should warn if the tracks do NOT exist
 	if t_sp == -1: printerr('todo: add sp track'); return
@@ -53,10 +53,10 @@ func on_build_animation():
 		anim.track_remove_key(t_ch, 0)
 	var lines:PackedStringArray = codes.trim_suffix('\n').split('\n')
 	for line in lines:
-		var x = line.split('\t')
+		var x = line.strip_edges().split('\t')
 		var t = float(x[0]) # timecode
 		var f = x[1] # animation frame
-		print(t,'->',f)
+		print(t,'->',f, '=', "ABCDEFGHX".find(f))
 		anim.track_insert_key(t_ch, t, f)
 	
 	assert(len(lines) == anim.track_get_key_count(t_ch)) #,'should have cleared out all the keys.?')
